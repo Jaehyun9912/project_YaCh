@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
@@ -9,6 +10,9 @@ class MapScreen extends StatefulWidget {
 class _MapScreen extends State<MapScreen> {
   double _x = 0.0;
   double _y = 0.0;
+
+  double max_x = 500;
+  double max_y = 1000;
 
   @override
   void initState() {
@@ -21,8 +25,8 @@ class _MapScreen extends State<MapScreen> {
     return GestureDetector(
       onPanUpdate: (details) {
         setState(() {
-          _x += details.delta.dx;
-          _y += details.delta.dy;
+          _x = max(-max_x, min(max_x, _x+details.delta.dx));
+          _y = max(-max_y, min(max_y, _y+details.delta.dy));
         });
       },
       child: Stack(
@@ -31,10 +35,10 @@ class _MapScreen extends State<MapScreen> {
               left: _x,
               top: _y,
               child: Container(
-                width: MediaQuery.of(context).size.width * 2,
-                height: MediaQuery.of(context).size.height * 2,
+                width: MediaQuery.of(context).size.width * 3,
+                height: MediaQuery.of(context).size.height * 3,
                 decoration: const BoxDecoration(
-                  color: Colors.green
+                  color: Colors.orange
                 ),
                 /*decoration: BoxDecoration(
                   image: DecorationImage(
