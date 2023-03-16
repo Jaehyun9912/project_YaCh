@@ -35,17 +35,46 @@ class _MapScreen extends State<MapScreen> {
               left: _x,
               top: _y,
               child: Container(
-                width: MediaQuery.of(context).size.width * 3,
-                height: MediaQuery.of(context).size.height * 3,
+                width: 4000,
+                height: 3000,
                 decoration: const BoxDecoration(
-                  color: Colors.orange
-                ),
-                /*decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/images/map.png'),
+                    image: AssetImage('assets/images/testMap.png'),
                     fit: BoxFit.cover,
                   )
-                ),*/
+                ),
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: 50.0,
+                      left: 100.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          debugPrint("Position 1 clicked! 50, 100");
+                        },
+                        child: Container(
+                          width: 30.0,
+                          height: 30.0,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 150.0,
+                      left: 250.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          debugPrint("Position 2 clicked! 150, 250");
+                        },
+                        child: Container(
+                          width: 30.0,
+                          height: 30.0,
+                          color: Colors.red,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               )
           )
         ],
