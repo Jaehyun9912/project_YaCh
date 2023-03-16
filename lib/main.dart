@@ -87,8 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
           // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Press the button to acess MAP',
+            Text(
+              'Press the button to access MAP',
             ),
           ],
         ),
@@ -99,6 +99,11 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+
+        ],
+      )
     );
   }
 }

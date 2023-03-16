@@ -12,7 +12,7 @@ class _MapScreen extends State<MapScreen> {
   double _y = 0.0;
 
   double max_x = 500;
-  double max_y = 1000;
+  double max_y = 300;
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _MapScreen extends State<MapScreen> {
     return GestureDetector(
       onPanUpdate: (details) {
         setState(() {
-          _x = max(-max_x, min(max_x, _x+details.delta.dx));
+          _x = max(-max_x, min(0, _x+details.delta.dx));
           _y = max(-max_y, min(max_y, _y+details.delta.dy));
         });
       },
@@ -35,8 +35,8 @@ class _MapScreen extends State<MapScreen> {
               left: _x,
               top: _y,
               child: Container(
-                width: 4000,
-                height: 3000,
+                width: 1000,
+                height: 750,
                 decoration: const BoxDecoration(
                   image: DecorationImage(
                     image: AssetImage('assets/images/testMap.png'),
