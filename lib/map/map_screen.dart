@@ -11,7 +11,7 @@ class _MapScreen extends State<MapScreen> {
   double _x = 0.0;
   double _y = 0.0;
 
-  double max_x = 500;
+  double max_x = 2000;
   double max_y = 300;
 
   @override
@@ -76,6 +76,26 @@ class _MapScreen extends State<MapScreen> {
                   ],
                 ),
               )
+          ),
+          GestureDetector(
+            onTap: () {
+              showModalBottomSheet(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return Container(
+                      height: 400,
+                      decoration: const BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10),
+                        )
+                      ),
+
+                    );
+                  },
+              );
+            },
           )
         ],
       ),
