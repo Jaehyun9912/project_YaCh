@@ -4,15 +4,17 @@ import 'dart:math';
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
   @override
-  _MapScreen createState() => _MapScreen();
+  State<MapScreen> createState() => _MapScreen();
 }
 
 class _MapScreen extends State<MapScreen> {
+  // 현재 페이지 위치
   double _x = 0.0;
   double _y = 0.0;
 
-  double max_x = 2000;
-  double max_y = 300;
+  // 페이지 최대 크기
+  double maxX = 2000;
+  double maxY = 300;
 
   @override
   void initState() {
@@ -21,20 +23,23 @@ class _MapScreen extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("X = $_x Y + $_y");
+    debugPrint("X = $_x Y + $_y");  // 위치 로그 표시
     return GestureDetector(
       onPanUpdate: (details) {
         setState(() {
-          _x = max(-max_x, min(0, _x+details.delta.dx));
-          _y = max(-max_y, min(max_y, _y+details.delta.dy));
+          // 위치 갱신
+          _x = max(-maxX, min(0, _x+details.delta.dx));
+          _y = max(-maxY, min(maxY, _y+details.delta.dy));
         });
       },
       child: Stack(
         children: [
           Positioned(
+            // 드래그 가능한 맵
               left: _x,
               top: _y,
               child: Container(
+                // 전체 맵 크기
                 width: 1000,
                 height: 750,
                 decoration: const BoxDecoration(
@@ -46,13 +51,16 @@ class _MapScreen extends State<MapScreen> {
                 child: Stack(
                   children: [
                     Positioned(
+                      // 디버그용 전투 구역
                       top: 50.0,
                       left: 100.0,
                       child: GestureDetector(
                         onTap: () {
+                          // 전투구역 터치 테스트
                           debugPrint("Position 1 clicked! 50, 100");
                         },
                         child: Container(
+                          // 전투구역 아이콘
                           width: 30.0,
                           height: 30.0,
                           color: Colors.red,
@@ -60,13 +68,16 @@ class _MapScreen extends State<MapScreen> {
                       ),
                     ),
                     Positioned(
+                      // 디버그용 길드 구역
                       top: 150.0,
                       left: 250.0,
                       child: GestureDetector(
                         onTap: () {
+                          // 길드구역 터치 테스트
                           debugPrint("Position 2 clicked! 150, 250");
                         },
                         child: Container(
+                          // 길드구역 아이콘
                           width: 30.0,
                           height: 30.0,
                           color: Colors.red,
