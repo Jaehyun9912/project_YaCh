@@ -87,26 +87,6 @@ class _MapScreen extends State<MapScreen> {
                   ],
                 ),
               )
-          ),
-          GestureDetector(
-            onTap: () {
-              showModalBottomSheet(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return Container(
-                      height: 400,
-                      decoration: const BoxDecoration(
-                        color: Colors.grey,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(10),
-                          topRight: Radius.circular(10),
-                        )
-                      ),
-
-                    );
-                  },
-              );
-            },
           )
         ],
       ),
