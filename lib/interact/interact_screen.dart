@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 class InteractScreen extends StatefulWidget {
   final String pointData = "";
