@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class InteractScreen extends StatefulWidget {
-  final String pointData = "";
-  const InteractScreen({Key? key}) : super(key: key);
+  // 맵 정보 데이터 필요
+  final Map<String, dynamic> locationData;
+  const InteractScreen({Key? key, required this.locationData}) : super(key: key);
+
   @override
   State<InteractScreen> createState() => _InteractScreenState();
 }
@@ -16,7 +18,11 @@ class _InteractScreenState extends State<InteractScreen> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("");  // 로그 표시
+    // locationData 가져오기
+    final Map<String, dynamic> locationData = widget.locationData;
+    debugPrint("상호작용 페이지 로드됨 :" + locationData['title']);
+
+    // interact 화면 정보
     return Column(
       children: [
         // 위쪽 이미지 화면
