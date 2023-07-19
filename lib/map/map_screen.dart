@@ -9,7 +9,7 @@ import '../area/interact_screen.dart';
 const String mapJsonData = '''
 {
   "mapName": "StartWorld",
-  "mapSize": {"x":500.0,"y":300.0},
+  "mapSize": {"x":2000.0,"y":800.0},
   "locations": [
     {
       "id": 1,
