@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:project_yach/area/battle_screen.dart';
 import 'dart:math';
@@ -123,9 +125,9 @@ class _MapScreen extends State<MapScreen> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => page));
   }
 
-  Map<String, dynamic> _getLocationData(String fileName) {
-    // TODO: json파일 로드 및 파싱 필요
-
+  Future<Map<String, dynamic>> _getLocationData(String fileName) async {
+    var input = await File(fileName).readAsString();
+    var map = jsonDecode(input);
     return {'title': 'Location Info', 'description': 'This is Location'};
   }
 }
