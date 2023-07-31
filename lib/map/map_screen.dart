@@ -40,9 +40,13 @@ class _MapScreen extends State<MapScreen> {
   // 현재 페이지 위치
   double _x = 0.0;
   double _y = 0.0;
+  final String fileName = "locationData";
+
+  late final Map<String, dynamic> locationData;
 
   @override
   void initState() {
+    _getLocationData(fileName).then((value) => locationData);
     super.initState();
   }
 
@@ -85,7 +89,7 @@ class _MapScreen extends State<MapScreen> {
                 top: location['position']['y'] + _y,
                 child: GestureDetector(
                   onTap: () {
-                    _loadLocation(context, location);
+                    _loadLocation(context);
                   },
                   child: const Icon(
                     Icons.add_business,
@@ -102,9 +106,9 @@ class _MapScreen extends State<MapScreen> {
   }
 
   // 지역 페이지 로드
-  void _loadLocation(BuildContext context, Map<String, dynamic> location) {
+  void _loadLocation(BuildContext context) {
     // 지역 데이터 json 불러오기
-    final locationData = _getLocationData(location['infoJsonFile']);
+    final location = locationData['infoJsonFile'];
 
     // 타입에 맞춰 페이지 생성
     Widget page;
