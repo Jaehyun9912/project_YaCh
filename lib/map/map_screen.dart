@@ -1,65 +1,36 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:project_yach/area/battle_screen.dart';
 import 'dart:math';
-import 'dart:convert';
 
 import '../area/interact_screen.dart';
-
-//////////////////////////// TEST JSON//////////
-const String mapJsonData = '''
-{
-  "mapName": "StartWorld",
-  "mapSize": {"x":2000.0,"y":800.0},
-  "locations": [
-    {
-      "id": 1,
-      "position": {"x": 50.0, "y": 100.0},
-      "type": "interact",
-      "infoJsonFile": "location1.json"
-    },
-    {
-      "id": 2,
-      "position": {"x": 150.0, "y": 250.0},
-      "type": "battle",
-      "infoJsonFile": "location2.json"
-    }
-  ]
-}
-''';
+import '../area/battle_screen.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  final Map<String, dynamic> mapData;
+  const MapScreen({Key? key, required this.mapData}) : super(key: key);
 
   @override
   State<MapScreen> createState() => _MapScreen();
 }
 
 class _MapScreen extends State<MapScreen> {
-  // 현재 페이지 위치
+  // 현재 페이지 내 정보
   double _x = 0.0;
   double _y = 0.0;
-  final String fileName = "locationData";
-
-  late final Map<String, dynamic> locationData;
+  late final Map<String, dynamic> mapData;
 
   @override
   void initState() {
-    _getLocationData(fileName).then((value) => locationData);
     super.initState();
+    mapData = widget.mapData;
   }
 
   @override
   Widget build(BuildContext context) {
-    // 맵 json 파일
-    final jsonData = jsonDecode(mapJsonData);
-
     //현재 맵 정보
-    final mapName = jsonData['mapName'];
-    final List<dynamic> locations = jsonData['locations'];
-    final double maxX = jsonData['mapSize']['x'] as double;
-    final double maxY = jsonData['mapSize']['y'] as double;
+    final mapName = mapData['mapName'];
+    final List<dynamic> locations = mapData['locations'];
+    final double maxX = mapData['mapSize']['x'] as double;
+    final double maxY = mapData['mapSize']['y'] as double;
 
     debugPrint("X = $_x Y + $_y"); // 위치 로그 표시
 
@@ -77,7 +48,7 @@ class _MapScreen extends State<MapScreen> {
               top: _y,
               left: _x,
               child: Image.asset(
-                  'assets/images/testMap.png',
+                  'assets/images/${mapData['mapImage']}',
                 width: maxX,
                 height: maxY,
                 fit: BoxFit.contain,
@@ -89,7 +60,7 @@ class _MapScreen extends State<MapScreen> {
                 top: location['position']['y'] + _y,
                 child: GestureDetector(
                   onTap: () {
-                    _loadLocation(context);
+                    _loadLocation(context, location);
                   },
                   child: const Icon(
                     Icons.add_business,
@@ -106,14 +77,11 @@ class _MapScreen extends State<MapScreen> {
   }
 
   // 지역 페이지 로드
-  void _loadLocation(BuildContext context) {
-    // 지역 데이터 json 불러오기
-    final location = locationData['infoJsonFile'];
-
+  void _loadLocation(BuildContext context, dynamic locationData) {
     // 타입에 맞춰 페이지 생성
     Widget page;
-    switch (location['type']) {
-      // 상호작용 지역
+    switch (locationData['type']) {
+      // 상호 작용 지역
       case 'interact':
         page = InteractScreen(locationData: locationData);
         break;
@@ -127,11 +95,5 @@ class _MapScreen extends State<MapScreen> {
     }
 
     Navigator.push(context, MaterialPageRoute(builder: (context) => page));
-  }
-
-  Future<Map<String, dynamic>> _getLocationData(String fileName) async {
-    var input = await File(fileName).readAsString();
-    var map = jsonDecode(input);
-    return {'title': 'Location Info', 'description': 'This is Location'};
   }
 }

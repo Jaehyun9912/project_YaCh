@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project_yach/map/map_loading.dart';
 import 'map/map_screen.dart';
 
 void main() {
@@ -50,7 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // 맵 페이지 로드를 위한 임시 디버그 버튼
         onPressed: () {
           // 클릭시 맵 페이지로 로드
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>const MapScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>const MapLoadingScreen(mapName: "testArea")));
         },
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
