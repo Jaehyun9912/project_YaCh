@@ -14,6 +14,8 @@ class MapLoadingScreen extends StatefulWidget {
 }
 
 class _MapLoadingScreen extends State<MapLoadingScreen> {
+  late final Map<String, dynamic> mapData;
+
   @override
   void initState() {
     super.initState();
@@ -26,7 +28,6 @@ class _MapLoadingScreen extends State<MapLoadingScreen> {
       builder: (context, snapshot) {
         // 로딩 완료
         if (snapshot.connectionState == ConnectionState.done) {
-          debugPrint(snapshot.data as String?);
           return const Loading();
           /*// 데이터 정상 로드 후 맵 페이지 활성화
           if (snapshot.hasData) {
@@ -45,10 +46,11 @@ class _MapLoadingScreen extends State<MapLoadingScreen> {
     );
   }
 
-  Future<Map<String, dynamic>> _getMapData(String fileName) async {
-    final input = await File('assets/data/maps/$fileName').readAsString();
+  Future<void> _getMapData(String fileName) async {
+    final input = await File('assets/data/maps/$fileName.json').readAsString();
+    debugPrint(input);
     var map = jsonDecode(input);
-    return map;
+    mapData = map;
   }
 }
 
