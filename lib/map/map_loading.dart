@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 
 import '../map/map_screen.dart';
@@ -26,19 +26,18 @@ class _MapLoadingScreen extends State<MapLoadingScreen> {
       builder: (context, snapshot) {
         // 로딩 완료
         if (snapshot.connectionState == ConnectionState.done) {
-          debugPrint(snapshot.data as String?);
-          return const Loading();
-          /*// 데이터 정상 로드 후 맵 페이지 활성화
+          // 데이터 정상 로드 후 맵 페이지 활성화
           if (snapshot.hasData) {
               return MapScreen(mapData: snapshot.data!);
             }
           // 데이터 로드 오류
           else {
             throw Error();
-          }*/
+          }
         }
         // 로딩 중
         else {
+          debugPrint("Waiting...");
           return const Loading();
         }
       },
@@ -46,7 +45,8 @@ class _MapLoadingScreen extends State<MapLoadingScreen> {
   }
 
   Future<Map<String, dynamic>> _getMapData(String fileName) async {
-    final input = await File('assets/data/maps/$fileName').readAsString();
+    debugPrint("Reading MAP : $fileName");
+    final input = await rootBundle.loadString('assets/data/maps/$fileName.json');
     var map = jsonDecode(input);
     return map;
   }

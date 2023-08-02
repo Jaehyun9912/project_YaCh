@@ -16,6 +16,7 @@ class _MapScreen extends State<MapScreen> {
   // 현재 페이지 내 정보
   double _x = 0.0;
   double _y = 0.0;
+  static const double mapSizeMultiplier = 0.3;
   late final Map<String, dynamic> mapData;
 
   @override
@@ -29,8 +30,9 @@ class _MapScreen extends State<MapScreen> {
     //현재 맵 정보
     final mapName = mapData['mapName'];
     final List<dynamic> locations = mapData['locations'];
-    final double maxX = mapData['mapSize']['x'] as double;
-    final double maxY = mapData['mapSize']['y'] as double;
+
+    final double maxX = mapData['mapSize']['x'] * mapSizeMultiplier;
+    final double maxY = mapData['mapSize']['y'] * mapSizeMultiplier;
 
     debugPrint("X = $_x Y + $_y"); // 위치 로그 표시
 
@@ -38,8 +40,9 @@ class _MapScreen extends State<MapScreen> {
       onPanUpdate: (details) {
         setState(() {
           // 위치 갱신
-          _x = max(-maxX, min(0, _x + details.delta.dx));
-          _y = max(-maxY, min(maxY, _y + details.delta.dy));
+          _x = max(-maxX + MediaQuery.of(context).size.width, min(0, _x + details.delta.dx));
+          _y = max(-maxY + MediaQuery.of(context).size.height, min(0, _y + details.delta.dy));
+          debugPrint("Position: $_x,$_y");
         });
       },
       child: Stack(
@@ -51,7 +54,7 @@ class _MapScreen extends State<MapScreen> {
                   'assets/images/${mapData['mapImage']}',
                 width: maxX,
                 height: maxY,
-                fit: BoxFit.contain,
+                fit: BoxFit.cover,
               )
           ),
           ...locations.map((location) {
@@ -77,7 +80,7 @@ class _MapScreen extends State<MapScreen> {
   }
 
   // 지역 페이지 로드
-  void _loadLocation(BuildContext context, dynamic locationData) {
+  void _loadLocation(BuildContext context, Map<String, dynamic> locationData) {
     // 타입에 맞춰 페이지 생성
     Widget page;
     switch (locationData['type']) {

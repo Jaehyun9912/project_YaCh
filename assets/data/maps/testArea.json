@@ -1,6 +1,6 @@
 {
   "mapName": "StartWorld",
-  "mapSize": {"x":2000.0,"y":800.0},
+  "mapSize": {"x":3255.0,"y":3255.0},
   "mapImage": "testMap.png",
   "locations": [
     {
