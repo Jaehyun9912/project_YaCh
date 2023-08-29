@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import '../area/interact_screen.dart';
-import '../area/battle_screen.dart';
+import 'battle_screen.dart';
 
 class MapScreen extends StatefulWidget {
   final Map<String, dynamic> mapData;

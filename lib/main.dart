@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:project_yach/map/map_loading.dart';
-import 'map/map_screen.dart';
+import 'package:project_yach/area/map_loading.dart';
+import 'area/map_screen.dart';
 
 void main() {
   runApp(const MyApp());

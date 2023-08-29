@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'dart:convert';
 
-import '../map/map_screen.dart';
+import 'map_screen.dart';
 
 class MapLoadingScreen extends StatefulWidget {
   // 로드할 맵 이름 필요
