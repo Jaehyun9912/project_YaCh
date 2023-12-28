@@ -1,3 +1,23 @@
-[gd_scene format=3 uid="uid://do7bbpvoabqdh"]
+[gd_scene load_steps=3 format=3 uid="uid://do7bbpvoabqdh"]
+
+[ext_resource type="PackedScene" uid="uid://bpgurardg7lfa" path="res://Worlds/TestCountry.tscn" id="1_0686h"]
+[ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://InteractPanels/3ButtonInteract.tscn" id="2_1yht7"]
 
 [node name="Node" type="Node"]
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="TestCountry" parent="World" instance=ExtResource("1_0686h")]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Interact" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="3ButtonInteract" parent="CanvasLayer/Interact" instance=ExtResource("2_1yht7")]
+layout_mode = 1
