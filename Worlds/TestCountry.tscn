@@ -1,6 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://bpgurardg7lfa"]
+[gd_scene load_steps=10 format=3 uid="uid://bpgurardg7lfa"]
 
-[ext_resource type="PackedScene" uid="uid://dyrh7tsgn4e55" path="res://player.tscn" id="1_30w74"]
+[ext_resource type="PackedScene" uid="uid://dbw3xaioclsdb" path="res://player.tscn" id="1_30w74"]
+[ext_resource type="PackedScene" uid="uid://c5r4qotlmev2a" path="res://Objects/Ground/countrytower.glb" id="2_x1tif"]
+[ext_resource type="PackedScene" uid="uid://s5i2tybb2ol5" path="res://Objects/Ground/forest.glb" id="3_j1flj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3l6fm"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -15,11 +17,15 @@ sky = SubResource("Sky_2hoo8")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_rmixx"]
-size = Vector2(10, 10)
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dnoeh"]
+albedo_color = Color(0.137255, 0.294118, 0.00784314, 1)
 
-[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_cgxmy"]
-data = PackedVector3Array(5, 0, 5, -5, 0, 5, 5, 0, -5, -5, 0, 5, -5, 0, -5, 5, 0, -5)
+[sub_resource type="PlaneMesh" id="PlaneMesh_rmixx"]
+material = SubResource("StandardMaterial3D_dnoeh")
+size = Vector2(100, 100)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ctuce"]
+points = PackedVector3Array(-50, 0, -50, -50, 0, 50, 50, 0, -50, 50, 0, 50)
 
 [node name="TestCountry" type="Node3D"]
 
@@ -31,15 +37,22 @@ transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.948257, 0.317503, 0, -0.317503, 0.948257, 0, 3.74786, 5.98138)
+transform = Transform3D(-3.70908e-08, 0.529135, -0.848538, 2.31292e-08, 0.848538, 0.529135, 1, 0, -4.37114e-08, -16.5825, 10.067, -27.3378)
+fov = 90.0
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_rmixx")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
-shape = SubResource("ConcavePolygonShape3D_cgxmy")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ctuce")
+
+[node name="countrytower" parent="." instance=ExtResource("2_x1tif")]
+transform = Transform3D(0.873721, -0.486427, -2.12624e-08, 0, -4.37114e-08, 1, -0.486427, -0.873721, -3.81916e-08, 29.5964, 0, -38.8243)
+
+[node name="forest" parent="." instance=ExtResource("3_j1flj")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 36.7329, 0, -11.1321)
 
 [node name="Player" parent="." instance=ExtResource("1_30w74")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.2724, 1.65898, -23.5338)
