@@ -1,11 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://do7bbpvoabqdh"]
+[gd_scene load_steps=4 format=3 uid="uid://do7bbpvoabqdh"]
 
 [ext_resource type="PackedScene" uid="uid://bpgurardg7lfa" path="res://Worlds/TestCountry.tscn" id="1_0686h"]
+[ext_resource type="Script" path="res://Scripts/System/ViewManager.gd" id="1_r8jkg"]
 [ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://InteractPanels/3ButtonInteract.tscn" id="2_1yht7"]
 
 [node name="Node" type="Node"]
 
 [node name="World" type="Node3D" parent="."]
+script = ExtResource("1_r8jkg")
 
 [node name="TestCountry" parent="World" instance=ExtResource("1_0686h")]
 
