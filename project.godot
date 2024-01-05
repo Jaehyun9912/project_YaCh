@@ -24,6 +24,10 @@ window/size/viewport_height=772
 
 project/assembly_name="YaCh"
 
+[filesystem]
+
+import/fbx/enabled=false
+
 [rendering]
 
 renderer/rendering_method="mobile"
