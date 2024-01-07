@@ -1,6 +1,6 @@
 extends Node3D
 
-current_location
+var current_location
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
