@@ -1,26 +1,14 @@
 [gd_scene load_steps=4 format=3 uid="uid://do7bbpvoabqdh"]
 
 [ext_resource type="PackedScene" uid="uid://bpgurardg7lfa" path="res://Worlds/TestCountry.tscn" id="1_0686h"]
-[ext_resource type="Script" path="res://Scripts/System/ViewManager.gd" id="1_r8jkg"]
-[ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://InteractPanels/3ButtonInteract.tscn" id="2_1yht7"]
+[ext_resource type="Script" path="res://Scripts/System/ViewManager.gd" id="1_ckdbo"]
+[ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://InteractPanels/3Button.tscn" id="2_1yht7"]
 
 [node name="Node" type="Node"]
+script = ExtResource("1_ckdbo")
 
-[node name="World" type="Node3D" parent="."]
-script = ExtResource("1_r8jkg")
-metadata/location = "TestCountry"
+[node name="TestCountry" parent="." instance=ExtResource("1_0686h")]
 
-[node name="TestCountry" parent="World" instance=ExtResource("1_0686h")]
+[node name="Interact" type="CanvasLayer" parent="."]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-
-[node name="Interact" type="Control" parent="CanvasLayer"]
-layout_mode = 3
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 1.0
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="3ButtonInteract" parent="CanvasLayer/Interact" instance=ExtResource("2_1yht7")]
-layout_mode = 1
+[node name="3Button" parent="Interact" instance=ExtResource("2_1yht7")]

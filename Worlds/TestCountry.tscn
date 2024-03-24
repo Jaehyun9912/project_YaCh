@@ -7,12 +7,12 @@
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 
-[sub_resource type="Sky" id="Sky_2hoo8"]
+[sub_resource type="Sky" id="Sky_cs8in"]
 sky_material = SubResource("ProceduralSkyMaterial_3l6fm")
 
 [sub_resource type="Environment" id="Environment_gfexo"]
 background_mode = 2
-sky = SubResource("Sky_2hoo8")
+sky = SubResource("Sky_cs8in")
 tonemap_mode = 2
 glow_enabled = true
 
@@ -32,12 +32,11 @@ points = PackedVector3Array(-50, 0, -50, -50, 0, 50, 50, 0, -50, 50, 0, 50)
 environment = SubResource("Environment_gfexo")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 0, 0, 0)
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 50, 0)
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-3.70908e-08, 0.529135, -0.848538, 2.31292e-08, 0.848538, 0.529135, 1, 0, -4.37114e-08, -16.5825, 10.067, -27.3378)
-fov = 90.0
+transform = Transform3D(-4.37114e-08, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 3.09086e-08, -3.09086e-08, -13.3217, 20.2786, -29.5667)
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_rmixx")
@@ -49,10 +48,8 @@ shape = SubResource("ConvexPolygonShape3D_ctuce")
 
 [node name="CountryTower" parent="." instance=ExtResource("1_4y7yr")]
 transform = Transform3D(0.901077, 0, 0.433659, 0, 1, 0, -0.433659, 0, 0.901077, 37.8081, 5.09986, -41.355)
-metadata/name = "타워"
+metadata/name = "CountryTower"
 
 [node name="forest" parent="." instance=ExtResource("2_5u1m3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5438, 0, -11.3792)
-metadata/name = "숲"
-
-[connection signal="input_event" from="forest" to="forest" method="_on_location_clicked"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5438, 0, -21.7805)
+metadata/name = "Forest"
