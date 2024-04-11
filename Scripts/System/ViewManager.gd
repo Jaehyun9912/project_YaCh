@@ -18,16 +18,20 @@ func _process(delta):
 	pass
 
 
-func load_world(world_path: String, panel_path: String = "3Button") -> void :
+func load_world(world_name: String, panel_name: String = "3Button") -> void :
 	# remove current world instance
 	if world_instance != null:
 		world_instance.queue_free()
 		
 	# load new world
-	var world_scene = load(WORLD_PATH + world_path + ".tscn")
-	print(WORLD_PATH + world_path)
+	var world_scene = load(WORLD_PATH + world_name + ".tscn")
+	print(WORLD_PATH + world_name)
 	world_instance = world_scene.instantiate()
 	add_child(world_instance)
 	
 	# load new Panel
-	current_panel = panel_path
+	var interact_panel = load(PANEL_PATH + panel_name + ".tscn")
+	print(WORLD_PATH + world_name)
+	world_instance = world_scene.instantiate()
+	add_child(world_instance)
+	current_panel = panel_name

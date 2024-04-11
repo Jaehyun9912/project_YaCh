@@ -18,4 +18,4 @@ func _on_location_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
 		print("Area3D가 클릭되었습니다!" + address)
 		print(view_manager)
-		view_manager.load_world(address, "3Button")
+		view_manager.load_world(address, "Battle")

@@ -32,9 +32,9 @@ alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 30
+theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 15
+theme_override_constants/margin_bottom = 20
 
 [node name="Button1" type="Button" parent="VBoxContainer/MarginContainer"]
 layout_mode = 2
@@ -45,9 +45,9 @@ text = "상호작용 버튼1"
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 15
+theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 15
+theme_override_constants/margin_bottom = 20
 
 [node name="Button2" type="Button" parent="VBoxContainer/MarginContainer2"]
 layout_mode = 2
@@ -58,9 +58,9 @@ text = "상호작용 버튼2"
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/margin_left = 30
-theme_override_constants/margin_top = 15
+theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 30
-theme_override_constants/margin_bottom = 30
+theme_override_constants/margin_bottom = 20
 
 [node name="Button3" type="Button" parent="VBoxContainer/MarginContainer3"]
 layout_mode = 2

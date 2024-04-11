@@ -7,20 +7,20 @@
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
 
-[sub_resource type="Sky" id="Sky_cs8in"]
+[sub_resource type="Sky" id="Sky_pso7u"]
 sky_material = SubResource("ProceduralSkyMaterial_3l6fm")
 
 [sub_resource type="Environment" id="Environment_gfexo"]
 background_mode = 2
-sky = SubResource("Sky_cs8in")
+sky = SubResource("Sky_pso7u")
 tonemap_mode = 2
 glow_enabled = true
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dnoeh"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2v754"]
 albedo_color = Color(0.137255, 0.294118, 0.00784314, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_rmixx"]
-material = SubResource("StandardMaterial3D_dnoeh")
+material = SubResource("StandardMaterial3D_2v754")
 size = Vector2(100, 100)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ctuce"]
@@ -52,4 +52,4 @@ metadata/name = "CountryTower"
 
 [node name="forest" parent="." instance=ExtResource("2_5u1m3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5438, 0, -21.7805)
-metadata/name = "Forest"
+metadata/name = "Battle"

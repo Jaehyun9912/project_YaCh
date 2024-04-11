@@ -1,2 +1,19 @@
 # Godot 4+ specific ignores
 .godot/
+
+# Rider cache directory
+.idea/
+
+# Visual Studio cache directory
+.vs/
+.vscode/
+
+# Mac Finder cache
+.DS_Store
+._.DS_Store
+**/.DS_Store
+**/._.DS_Store
+
+
+# Gradle cache directory
+.gradle/
