@@ -48,8 +48,10 @@ shape = SubResource("ConvexPolygonShape3D_ctuce")
 
 [node name="CountryTower" parent="." instance=ExtResource("1_4y7yr")]
 transform = Transform3D(0.901077, 0, 0.433659, 0, 1, 0, -0.433659, 0, 0.901077, 37.8081, 5.09986, -41.355)
-metadata/name = "CountryTower"
+metadata/address = "CountryTower"
+metadata/type = "ChoicePanel"
 
 [node name="forest" parent="." instance=ExtResource("2_5u1m3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5438, 0, -21.7805)
-metadata/name = "Battle"
+metadata/address = "Battle"
+metadata/type = "BattlePanel"

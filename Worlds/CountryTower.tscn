@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bu1jsgqdr01s7"]
 
-[ext_resource type="Texture2D" uid="uid://dr8amy5ax7j1n" path="res://20240105_181301.jpg" id="1_v3msv"]
+[ext_resource type="Texture2D" uid="uid://dr8amy5ax7j1n" path="res://Objects/20240105_181301.jpg" id="1_v3msv"]
 
 [node name="CountryTower" type="Control"]
 layout_mode = 3
