@@ -1,0 +1,57 @@
+[gd_scene load_steps=8 format=3 uid="uid://6pfqnfdd6ia8"]
+
+[ext_resource type="PackedScene" uid="uid://cqw8d6pmimxyb" path="res://Objects/Character/testPing.glb" id="1_x2mqr"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_cs8in"]
+sky_material = SubResource("ProceduralSkyMaterial_glxg7")
+
+[sub_resource type="Environment" id="Environment_hacdw"]
+background_mode = 2
+sky = SubResource("Sky_cs8in")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dnoeh"]
+albedo_color = Color(0.137255, 0.294118, 0.00784314, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_k8c6t"]
+material = SubResource("StandardMaterial3D_dnoeh")
+size = Vector2(100, 100)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_c1tgd"]
+points = PackedVector3Array(-50, 0, -50, -50, 0, 50, 50, 0, -50, 50, 0, 50)
+
+[node name="BattleScene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_hacdw")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 50, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.992574, 0.121644, 0, -0.121644, 0.992574, 0, 1.52962, 0)
+fov = 90.0
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -4.086, 2.08165e-12, -28.054)
+mesh = SubResource("PlaneMesh_k8c6t")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_c1tgd")
+
+[node name="testPing3" parent="." instance=ExtResource("1_x2mqr")]
+transform = Transform3D(0.999915, -0.0130372, 0, 0.0130372, 0.999915, 0, 0, 0, 1, 5.96134, -0.108985, -20.625)
+
+[node name="testPing2" parent="." instance=ExtResource("1_x2mqr")]
+transform = Transform3D(0.999962, -0.00869163, 0, 0.00869163, 0.999962, 0, 0, 0, 1, -2.33413, -1.89395, -9.06887)
+
+[node name="testPing" parent="." instance=ExtResource("1_x2mqr")]
+transform = Transform3D(0.999991, -0.00434586, 0, 0.00434586, 0.999991, 0, 0, 0, 1, 1.27814, 1.90735e-06, -21.3017)

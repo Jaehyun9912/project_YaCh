@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ckfx4fnhhqrdh"]
+
+[ext_resource type="PackedScene" uid="uid://s5i2tybb2ol5" path="res://Objects/Ground/forest.glb" id="1_omao5"]
+[ext_resource type="Script" path="res://Scripts/Location.gd" id="2_2od58"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_n5xf2"]
+size = Vector3(20, 10, 18)
+
+[node name="forest" type="Area3D"]
+script = ExtResource("2_2od58")
+metadata/address = "forest"
+
+[node name="Mesh" parent="." instance=ExtResource("1_omao5")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.80188, -0.607637)
+shape = SubResource("BoxShape3D_n5xf2")
+
+[connection signal="input_event" from="." to="." method="_on_location_clicked"]

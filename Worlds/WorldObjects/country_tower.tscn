@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://bmy7udp4256gu"]
+
+[ext_resource type="Script" path="res://Scripts/Location.gd" id="1_4ly7p"]
+[ext_resource type="PackedScene" uid="uid://c5r4qotlmev2a" path="res://Objects/Ground/countrytower.glb" id="1_40voy"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1r5ol"]
+size = Vector3(5, 5, 10)
+
+[node name="CountryTower" type="Area3D"]
+script = ExtResource("1_4ly7p")
+metadata/address = "countrytower"
+
+[node name="Mesh" parent="." instance=ExtResource("1_40voy")]
+transform = Transform3D(1, -6.97574e-16, -1.52459e-23, -1.52459e-23, -4.37114e-08, 1, -6.97574e-16, -1, -4.37114e-08, 2.08165e-12, -4.85109, 2.08165e-12)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, -6.97574e-16, -3.04919e-23, 0, -4.37114e-08, 1, -6.97574e-16, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("BoxShape3D_1r5ol")
+
+[connection signal="input_event" from="." to="." method="_on_location_clicked"]

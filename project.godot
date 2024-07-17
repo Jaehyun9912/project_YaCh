@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="YaCh"
-run/main_scene="res://Worlds/TestCountry.tscn"
-config/features=PackedStringArray("4.2", "C#", "Mobile")
+run/main_scene="res://MainView.tscn"
+config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
+
+[autoload]
+
+PlayerData="*res://Player.gd"
 
 [display]
 
@@ -23,6 +27,10 @@ window/size/viewport_height=772
 [dotnet]
 
 project/assembly_name="YaCh"
+
+[filesystem]
+
+import/fbx/enabled=false
 
 [rendering]
 
