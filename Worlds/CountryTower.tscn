@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://bu1jsgqdr01s7"]
-
-[ext_resource type="Texture2D" uid="uid://dr8amy5ax7j1n" path="res://Objects/20240105_181301.jpg" id="1_v3msv"]
+[gd_scene format=3 uid="uid://bu1jsgqdr01s7"]
 
 [node name="CountryTower" type="Control"]
 layout_mode = 3
@@ -25,5 +23,4 @@ anchor_left = 0.1
 anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
-texture = ExtResource("1_v3msv")
 expand_mode = 4
