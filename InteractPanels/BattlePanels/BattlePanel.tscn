@@ -1,11 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://c3h3jildcn5gm"]
+[gd_scene load_steps=6 format=3 uid="uid://c3h3jildcn5gm"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_panel.gd" id="1_r1wv5"]
 [ext_resource type="Script" path="res://InteractPanels/BattlePanels/SkillManager.gd" id="2_7cqoy"]
+[ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/button_theme.tres" id="3_hgji6"]
+[ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/RoundButton/round_button.tscn" id="3_hy333"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]
-
-[sub_resource type="Texture2DRD" id="Texture2DRD_v3ltx"]
 
 [node name="BattlePanel" type="Control" node_paths=PackedStringArray("action_point")]
 layout_mode = 3
@@ -25,7 +25,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(180, 193)
-color = Color(0.32549, 0.435294, 0.301961, 1)
+color = Color(0.607843, 0.607843, 0.607843, 1)
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
 layout_mode = 1
@@ -43,66 +43,63 @@ size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_7x350")
 script = ExtResource("2_7cqoy")
 
-[node name="Button1" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
+[node name="SkillButton" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.05
-anchor_top = 0.4
-anchor_right = 0.2
-anchor_bottom = 0.8
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(30, 30)
-icon = SubResource("Texture2DRD_v3ltx")
-
-[node name="Button2" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.25
-anchor_top = 0.1
-anchor_right = 0.4
+anchors_preset = 4
+anchor_top = 0.5
 anchor_bottom = 0.5
-grow_horizontal = 2
+offset_left = 9.0
+offset_top = -9.10001
+offset_right = 79.0
+offset_bottom = 80.9
 grow_vertical = 2
-pivot_offset = Vector2(30, 30)
-icon = SubResource("Texture2DRD_v3ltx")
+ButtonNumber = 1
 
-[node name="Button3" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
+[node name="SkillButton2" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.6
-anchor_top = 0.1
-anchor_right = 0.75
-anchor_bottom = 0.5
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(30, 30)
-icon = SubResource("Texture2DRD_v3ltx")
+offset_left = 72.0
+offset_top = 2.39999
+offset_right = 142.0
+offset_bottom = 92.4
+ButtonNumber = 2
 
-[node name="Button4" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
+[node name="SkillButton3" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.8
-anchor_top = 0.4
-anchor_right = 0.95
-anchor_bottom = 0.8
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(30, 30)
-icon = SubResource("Texture2DRD_v3ltx")
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -130.0
+offset_top = 4.39999
+offset_right = -60.0
+offset_bottom = 94.4
+grow_horizontal = 0
+ButtonNumber = 3
 
-[node name="Center Button" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
+[node name="SkillButton4" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -81.0
+offset_top = 86.4
+offset_right = -11.0
+offset_bottom = 176.4
+grow_horizontal = 0
+ButtonNumber = 4
+
+[node name="CenterButton" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
+layout_mode = 1
+anchors_preset = 8
 anchor_left = 0.5
-anchor_top = 1.0
+anchor_top = 0.5
 anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -30.0
-offset_top = -75.0
-offset_right = 30.0
-pivot_offset = Vector2(30, 75)
-icon = SubResource("Texture2DRD_v3ltx")
+anchor_bottom = 0.5
+offset_left = -50.0
+offset_top = -1.10001
+offset_right = 50.0
+offset_bottom = 98.9
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GridContainer" type="GridContainer" parent="ColorRect/VBoxContainer"]
 layout_mode = 2
@@ -121,7 +118,10 @@ theme_override_constants/margin_bottom = 20
 [node name="Button1" type="Button" parent="ColorRect/VBoxContainer/GridContainer/MarginContainer4"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "상호작용 버튼1"
+focus_mode = 0
+theme = ExtResource("3_hgji6")
+keep_pressed_outside = true
+text = "가방"
 
 [node name="MarginContainer" type="MarginContainer" parent="ColorRect/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -135,7 +135,10 @@ theme_override_constants/margin_bottom = 20
 [node name="Button1" type="Button" parent="ColorRect/VBoxContainer/GridContainer/MarginContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "상호작용 버튼1"
+focus_mode = 0
+theme = ExtResource("3_hgji6")
+keep_pressed_outside = true
+text = "대화"
 
 [node name="MarginContainer2" type="MarginContainer" parent="ColorRect/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -149,7 +152,10 @@ theme_override_constants/margin_bottom = 20
 [node name="Button1" type="Button" parent="ColorRect/VBoxContainer/GridContainer/MarginContainer2"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "상호작용 버튼1"
+focus_mode = 0
+theme = ExtResource("3_hgji6")
+keep_pressed_outside = true
+text = "퀘스트"
 
 [node name="MarginContainer3" type="MarginContainer" parent="ColorRect/VBoxContainer/GridContainer"]
 layout_mode = 2
@@ -163,7 +169,11 @@ theme_override_constants/margin_bottom = 20
 [node name="Button1" type="Button" parent="ColorRect/VBoxContainer/GridContainer/MarginContainer3"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "상호작용 버튼1"
+focus_mode = 0
+theme = ExtResource("3_hgji6")
+keep_pressed_outside = true
+text = "도망
+"
 
 [node name="PanelContainer" type="PanelContainer" parent="ColorRect/VBoxContainer"]
 layout_mode = 2
@@ -178,5 +188,3 @@ offset_top = -21.6
 offset_right = -1.0
 offset_bottom = 1.39999
 grow_horizontal = 0
-
-[connection signal="button_down" from="ColorRect/VBoxContainer/Panel/Center Button" to="." method="_on_center_button_button_down"]

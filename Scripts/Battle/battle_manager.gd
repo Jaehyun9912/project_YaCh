@@ -11,15 +11,15 @@ signal turn_character_changed(new_character : BattleCharacter)
 signal turn_end
 
 # 캐릭터들의 정보를 담은 리스트
-@export var characters: Array[BattleCharacter]
+@onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
 
-@onready var turn_char := characters.duplicate()
+# 현재 턴인 캐릭터의 정보
+var now_character: BattleCharacter
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	BattleManager.instance = self
 	
-	_battle_set()
 	_battle()
 	
 # 행동력 계산하는 함수
@@ -31,25 +31,35 @@ func _battle_set():
 		
 	for i in turn_char:
 		i.point = 50 + i.speed / total * 50
-		print(i.speed, " ", total)
-		print(i.speed / total * 50)
+		#print(i.speed, " ", total)
+		#print(i.speed / total * 50)
 	
-	turn_char.sort_custom(func(a, b): return a.point > b.point)
-	for i in turn_char:
-		print(i.point, " ", i.speed)
+	turn_char.sort_custom(func(a, b): return a.speed > b.speed)
 
 # 전투를 관리하는 함수 (await 이용) 
 func _battle():
+	_battle_set()
+	
 	while true:
 		for i in turn_char:
+			now_character = i
 			turn_character_changed.emit(i)
 			
 			if i.is_player == true:
 				print("player turn")
+				
+				# turn_end 신호가 emit 할때까지 대기
 				await turn_end
+				
 			else:
-				print("enemy turn")
-				pass
+				print("enemy turn")	
 				# 적 AI
-	
-	
+		#break # for test
+
+func _on_battle_panel_skill_actived(index: ):
+	match index:
+		BattlePanel.Buttons.CENTER:
+			print("center")
+		BattlePanel.Buttons.SKILL1:
+			print("skill1")
+			now_character.current_point -= 10
