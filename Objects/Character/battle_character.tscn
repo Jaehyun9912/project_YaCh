@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://drsabvdulmx23"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/battle_character.gd" id="1_o7t35"]
+[ext_resource type="PackedScene" uid="uid://cqw8d6pmimxyb" path="res://Objects/Character/testPing.glb" id="1_ytaoa"]
+
+[node name="BattleCharacter" type="Node3D"]
+script = ExtResource("1_o7t35")
+
+[node name="testPing" parent="." instance=ExtResource("1_ytaoa")]
+transform = Transform3D(0.999991, -0.00434586, 0, 0.00434586, 0.999991, 0, 0, 0, 1, 0, 0, 0)

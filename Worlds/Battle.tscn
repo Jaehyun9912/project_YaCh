@@ -1,6 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://6pfqnfdd6ia8"]
+[gd_scene load_steps=10 format=3 uid="uid://6pfqnfdd6ia8"]
 
-[ext_resource type="PackedScene" uid="uid://cqw8d6pmimxyb" path="res://Objects/Character/testPing.glb" id="1_x2mqr"]
+[ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
+[ext_resource type="PackedScene" uid="uid://c3h3jildcn5gm" path="res://InteractPanels/BattlePanels/BattlePanel.tscn" id="1_x0p33"]
+[ext_resource type="PackedScene" uid="uid://drsabvdulmx23" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -25,7 +27,9 @@ size = Vector2(100, 100)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_c1tgd"]
 points = PackedVector3Array(-50, 0, -50, -50, 0, 50, 50, 0, -50, 50, 0, 50)
 
-[node name="BattleScene" type="Node3D"]
+[node name="BattleScene" type="Node3D" node_paths=PackedStringArray("characters")]
+script = ExtResource("1_sql8d")
+characters = [NodePath("PlayerCharacter"), NodePath("BattleCharacter"), NodePath("BattleCharacter2")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_hacdw")
@@ -47,11 +51,27 @@ mesh = SubResource("PlaneMesh_k8c6t")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_c1tgd")
 
-[node name="testPing3" parent="." instance=ExtResource("1_x2mqr")]
-transform = Transform3D(0.999915, -0.0130372, 0, 0.0130372, 0.999915, 0, 0, 0, 1, 5.96134, -0.108985, -20.625)
+[node name="PlayerCharacter" parent="." instance=ExtResource("3_2h6hx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.33413, -1.89395, -9.06887)
+speed = 100.0
+mana = 100
+hp = 100
+is_player = true
 
-[node name="testPing2" parent="." instance=ExtResource("1_x2mqr")]
-transform = Transform3D(0.999962, -0.00869163, 0, 0.00869163, 0.999962, 0, 0, 0, 1, -2.33413, -1.89395, -9.06887)
+[node name="BattleCharacter2" parent="." instance=ExtResource("3_2h6hx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.96134, -0.108985, -20.625)
+speed = 120.0
+mana = 100
+hp = 100
 
-[node name="testPing" parent="." instance=ExtResource("1_x2mqr")]
-transform = Transform3D(0.999991, -0.00434586, 0, 0.00434586, 0.999991, 0, 0, 0, 1, 1.27814, 1.90735e-06, -21.3017)
+[node name="BattleCharacter" parent="." instance=ExtResource("3_2h6hx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27814, 1.90735e-06, -21.3017)
+speed = 70.0
+mana = 100
+hp = 100
+
+[node name="InteractPanel" type="CanvasLayer" parent="."]
+
+[node name="BattlePanel" parent="InteractPanel" instance=ExtResource("1_x0p33")]
+
+[connection signal="turn_character_changed" from="." to="InteractPanel/BattlePanel" method="_on_battle_scene_turn_character_changed"]

@@ -1,20 +1,21 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3h3jildcn5gm"]
 
-[ext_resource type="Script" path="res://Scripts/Panel/PanelManager.gd" id="1_auamu"]
+[ext_resource type="Script" path="res://Scripts/Battle/battle_panel.gd" id="1_r1wv5"]
 [ext_resource type="Script" path="res://InteractPanels/BattlePanels/SkillManager.gd" id="2_7cqoy"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]
 
 [sub_resource type="Texture2DRD" id="Texture2DRD_v3ltx"]
 
-[node name="BattlePanel" type="Control"]
+[node name="BattlePanel" type="Control" node_paths=PackedStringArray("action_point")]
 layout_mode = 3
-anchor_top = 0.5
+anchor_top = 0.55
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 pivot_offset = Vector2(180, 193)
-script = ExtResource("1_auamu")
+script = ExtResource("1_r1wv5")
+action_point = NodePath("Label")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -42,7 +43,7 @@ size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxEmpty_7x350")
 script = ExtResource("2_7cqoy")
 
-[node name="Button1" type="Button" parent="ColorRect/VBoxContainer/Panel"]
+[node name="Button1" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -54,7 +55,7 @@ grow_vertical = 2
 pivot_offset = Vector2(30, 30)
 icon = SubResource("Texture2DRD_v3ltx")
 
-[node name="Button2" type="Button" parent="ColorRect/VBoxContainer/Panel"]
+[node name="Button2" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.25
@@ -66,7 +67,7 @@ grow_vertical = 2
 pivot_offset = Vector2(30, 30)
 icon = SubResource("Texture2DRD_v3ltx")
 
-[node name="Button3" type="Button" parent="ColorRect/VBoxContainer/Panel"]
+[node name="Button3" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.6
@@ -78,7 +79,7 @@ grow_vertical = 2
 pivot_offset = Vector2(30, 30)
 icon = SubResource("Texture2DRD_v3ltx")
 
-[node name="Button4" type="Button" parent="ColorRect/VBoxContainer/Panel"]
+[node name="Button4" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.8
@@ -90,7 +91,7 @@ grow_vertical = 2
 pivot_offset = Vector2(30, 30)
 icon = SubResource("Texture2DRD_v3ltx")
 
-[node name="Center Button" type="Button" parent="ColorRect/VBoxContainer/Panel"]
+[node name="Center Button" type="Button" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"]]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -166,3 +167,16 @@ text = "상호작용 버튼1"
 
 [node name="PanelContainer" type="PanelContainer" parent="ColorRect/VBoxContainer"]
 layout_mode = 2
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -115.0
+offset_top = -21.6
+offset_right = -1.0
+offset_bottom = 1.39999
+grow_horizontal = 0
+
+[connection signal="button_down" from="ColorRect/VBoxContainer/Panel/Center Button" to="." method="_on_center_button_button_down"]
