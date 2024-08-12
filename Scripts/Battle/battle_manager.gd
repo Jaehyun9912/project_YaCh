@@ -12,6 +12,8 @@ signal turn_end
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
+var player_character : BattleCharacter
+var enemy_character : Array[BattleCharacter]
 
 # 현재 턴인 캐릭터의 정보
 var now_character: BattleCharacter
@@ -27,6 +29,11 @@ func _battle_set():
 	var total := 0
 	
 	for i in turn_char:
+		if i.is_player == true:
+			player_character = i
+		else:
+			enemy_character.append(i)
+		
 		total += i.speed
 		
 	for i in turn_char:
@@ -53,13 +60,18 @@ func _battle():
 				
 			else:
 				print("enemy turn")	
+				await get_tree().create_timer(1).timeout
+				player_character.hp -= 10
 				# 적 AI
 		#break # for test
 
-func _on_battle_panel_skill_actived(index: ):
+func _on_battle_panel_skill_actived(index):
 	match index:
 		BattlePanel.Buttons.CENTER:
 			print("center")
+			turn_end.emit()
 		BattlePanel.Buttons.SKILL1:
 			print("skill1")
 			now_character.current_point -= 10
+			for i in enemy_character:
+				i.hp -= 10

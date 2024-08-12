@@ -53,7 +53,7 @@ offset_top = -9.10001
 offset_right = 79.0
 offset_bottom = 80.9
 grow_vertical = 2
-ButtonNumber = 1
+button_number = 1
 
 [node name="SkillButton2" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
 layout_mode = 1
@@ -61,7 +61,7 @@ offset_left = 72.0
 offset_top = 2.39999
 offset_right = 142.0
 offset_bottom = 92.4
-ButtonNumber = 2
+button_number = 2
 
 [node name="SkillButton3" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
 layout_mode = 1
@@ -73,7 +73,7 @@ offset_top = 4.39999
 offset_right = -60.0
 offset_bottom = 94.4
 grow_horizontal = 0
-ButtonNumber = 3
+button_number = 3
 
 [node name="SkillButton4" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
 layout_mode = 1
@@ -85,7 +85,7 @@ offset_top = 86.4
 offset_right = -11.0
 offset_bottom = 176.4
 grow_horizontal = 0
-ButtonNumber = 4
+button_number = 4
 
 [node name="CenterButton" parent="ColorRect/VBoxContainer/Panel" groups=["battle_buttons"] instance=ExtResource("3_hy333")]
 layout_mode = 1
