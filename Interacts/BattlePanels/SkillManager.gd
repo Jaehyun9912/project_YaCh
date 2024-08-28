@@ -1,3 +1,4 @@
+extends Panel
 
 class_name SkillManager
 
