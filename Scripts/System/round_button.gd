@@ -1,4 +1,6 @@
 extends TextureRect
+# basebutton을 상속받았으면 편했을것같았으나 늦었으므로 이대로 사용 
+class_name RoundButton
 
 # 버튼 시그널 별 함수가 아닌 하나의 함수에서 관리하기 위한 넘버
 @export var button_number: int

@@ -54,4 +54,4 @@ metadata/type = "ChoicePanel"
 [node name="forest" parent="." instance=ExtResource("2_5u1m3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5438, 0, -21.7805)
 metadata/address = "Battle"
-metadata/type = "BattlePanel"
+metadata/type = "BattlePanels/BattlePanel"
