@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://ckfx4fnhhqrdh"]
 
 [ext_resource type="PackedScene" uid="uid://s5i2tybb2ol5" path="res://Objects/Ground/forest.glb" id="1_omao5"]
-[ext_resource type="Script" path="res://Scripts/Location.gd" id="2_2od58"]
+[ext_resource type="Script" path="res://Scripts/World/Location.gd" id="2_2od58"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n5xf2"]
 size = Vector3(20, 10, 18)

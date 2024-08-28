@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bmy7udp4256gu"]
 
-[ext_resource type="Script" path="res://Scripts/Location.gd" id="1_4ly7p"]
+[ext_resource type="Script" path="res://Scripts/World/Location.gd" id="1_4ly7p"]
 [ext_resource type="PackedScene" uid="uid://c5r4qotlmev2a" path="res://Objects/Ground/countrytower.glb" id="1_40voy"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_1r5ol"]
