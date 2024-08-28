@@ -1,13 +1,13 @@
-[gd_scene load_steps=4 format=3 uid="uid://do7bbpvoabqdh"]
+[gd_scene load_steps=3 format=3 uid="uid://do7bbpvoabqdh"]
 
-[ext_resource type="Script" path="res://Scripts/System/ViewManager.gd" id="1_e1kir"]
 [ext_resource type="PackedScene" uid="uid://bpgurardg7lfa" path="res://Worlds/TestCountry.tscn" id="2_mrgdm"]
-[ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://InteractPanels/ChoicePanel.tscn" id="3_5ejod"]
+[ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://Interacts/ChoicePanel.tscn" id="3_5ejod"]
 
 [node name="Node" type="Node"]
-script = ExtResource("1_e1kir")
 
-[node name="TestCountry" parent="." instance=ExtResource("2_mrgdm")]
+[node name="World" type="Node3D" parent="."]
+
+[node name="TestCountry" parent="World" instance=ExtResource("2_mrgdm")]
 
 [node name="Interact" type="CanvasLayer" parent="."]
 
