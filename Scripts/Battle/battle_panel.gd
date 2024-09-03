@@ -1,7 +1,8 @@
-extends PanelManager
+extends Control
 class_name BattlePanel
 
-@export var action_point: Label
+@onready var action_point = $ActionPoint as Label
+var manager: BattleManager
 var action_text := "행동력 %d/%d"
 
 enum Buttons {
@@ -24,11 +25,18 @@ var current_charcter: BattleCharacter
 
 # 시작시
 func _ready():
+	manager = ViewManager.world_instance.get_node("BattleScene") as BattleManager
+	
+	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
+	skill_actived.connect(manager.on_battle_panel_skill_actived)
+	
 	var buttons = get_tree().get_nodes_in_group("battle_buttons")
 	for i in buttons:
 		i.disabled = true
 		if i is RoundButton:
 			i.button_down.connect(_on_skill_buttons_down)
+			
+	manager.turn_end.emit()
 
 # 턴 변경되었음을 받는 함수
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):

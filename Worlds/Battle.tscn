@@ -1,7 +1,6 @@
-[gd_scene load_steps=11 format=3 uid="uid://6pfqnfdd6ia8"]
+[gd_scene load_steps=10 format=3 uid="uid://6pfqnfdd6ia8"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
-[ext_resource type="PackedScene" uid="uid://c3h3jildcn5gm" path="res://InteractPanels/BattlePanels/BattlePanel.tscn" id="1_x0p33"]
 [ext_resource type="PackedScene" uid="uid://drsabvdulmx23" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
@@ -72,11 +71,9 @@ speed = 70.0
 mana = 100
 max_hp = 50
 
-[node name="InteractPanel" type="CanvasLayer" parent="."]
+[node name="Interact" type="CanvasLayer" parent="."]
 
-[node name="BattlePanel" parent="InteractPanel" instance=ExtResource("1_x0p33")]
-
-[node name="EndMsg" type="Label" parent="InteractPanel"]
+[node name="EndMsg" type="Label" parent="Interact"]
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
@@ -87,6 +84,3 @@ offset_bottom = 123.0
 grow_horizontal = 2
 label_settings = SubResource("LabelSettings_kco12")
 horizontal_alignment = 1
-
-[connection signal="turn_character_changed" from="." to="InteractPanel/BattlePanel" method="_on_battle_scene_turn_character_changed"]
-[connection signal="skill_actived" from="InteractPanel/BattlePanel" to="." method="_on_battle_panel_skill_actived"]

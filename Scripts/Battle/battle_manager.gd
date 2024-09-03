@@ -27,6 +27,8 @@ var dead_player: Array[BattleCharacter]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	await turn_end
+	
 	_battle()
 	
 # 행동력 계산하는 함수
@@ -76,7 +78,7 @@ func _battle():
 		#break # for test
 
 # 버튼 눌렀을때
-func _on_battle_panel_skill_actived(index):
+func on_battle_panel_skill_actived(index):
 	match index:
 		BattlePanel.Buttons.CENTER:
 			print("center")
@@ -114,8 +116,8 @@ func _check_dead_char():
 func _battle_end(type):
 	# 도망, 적 전부 처치 전투 종료 구현하기 
 	
-	$InteractPanel/BattlePanel.set_all_button(false)
-	var msg = $InteractPanel/EndMsg as Label
+	ViewManager.current_panel.get_node("BattlePanel").set_all_button(false)
+	var msg = $Interact/EndMsg as Label
 	
 	match type:
 		0:
@@ -127,7 +129,8 @@ func _battle_end(type):
 	
 	await get_tree().create_timer(2).timeout
 	
-	queue_free()
+	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
+	
 
 # 캐릭터가 사망할시 일단 배열에 넣어놓고 나중에 처리
 func _on_character_died(dead : BattleCharacter):
