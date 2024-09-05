@@ -11,4 +11,4 @@
 
 [node name="Interact" type="CanvasLayer" parent="."]
 
-[node name="3Button" parent="Interact" instance=ExtResource("3_5ejod")]
+[node name="ChoicePanel" parent="Interact" instance=ExtResource("3_5ejod")]
