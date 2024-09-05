@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3h3jildcn5gm"]
 
 [ext_resource type="Script" path="res://Scripts/Panel/PanelManager.gd" id="1_qwdr4"]
-[ext_resource type="Script" path="res://Interacts/BattlePanels/SkillManager.gd" id="2_1psmx"]
+[ext_resource type="Script" path="res://Scripts/Skills/SkillManager.gd" id="2_1psmx"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]
 
