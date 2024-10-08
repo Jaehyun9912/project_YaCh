@@ -9,7 +9,8 @@ var hp_text_string := "HP : %d / %d"
 @export var speed: float
 @export var mana: int
 @export var max_hp: int
-@onready var hp = max_hp :
+var attack: int
+var hp:
 	get:
 		return hp
 	set(value):
@@ -30,3 +31,15 @@ func _ready():
 
 func _died():
 	character_died.emit(self)
+	
+func set_character(data: Dictionary):
+	#name = data.name
+	#attack = data.attack
+	if (data.has("max_hp")):
+		max_hp = data.max_hp
+	else:
+		max_hp = data.hp
+	speed = data.speed
+	mana = data.mana
+	hp = data.hp	
+	print(data)

@@ -59,13 +59,13 @@ mana = 100
 max_hp = 50
 is_player = true
 
-[node name="BattleCharacter2" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
+[node name="BattleCharacter1" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.96134, -0.108985, -20.625)
 speed = 120.0
 mana = 100
 max_hp = 40
 
-[node name="BattleCharacter" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
+[node name="BattleCharacter2" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27814, 1.90735e-06, -21.3017)
 speed = 70.0
 mana = 100
