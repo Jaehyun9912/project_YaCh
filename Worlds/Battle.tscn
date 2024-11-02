@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://6pfqnfdd6ia8"]
+[gd_scene load_steps=11 format=3 uid="uid://6pfqnfdd6ia8"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
 [ext_resource type="PackedScene" uid="uid://drsabvdulmx23" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
+[ext_resource type="PackedScene" uid="uid://blyo26b6351jw" path="res://Objects/UI/attribute_bar.tscn" id="3_tulg3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -84,3 +85,5 @@ offset_bottom = 123.0
 grow_horizontal = 2
 label_settings = SubResource("LabelSettings_kco12")
 horizontal_alignment = 1
+
+[node name="AttributeBar" parent="Interact" instance=ExtResource("3_tulg3")]

@@ -19,6 +19,7 @@ var disabled = false :
 		else:
 			self_modulate = Color(1, 1, 1)
 
+# 마우스로 버튼을 눌렀을 때 발동하는 시그널 
 signal button_down(number: int)
 
 func _on_button_mouse_entered():

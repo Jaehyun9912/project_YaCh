@@ -31,13 +31,18 @@ func _ready():
 	
 	_battle()
 	
-# 행동력 계산하는 함수
+# 전투 전 설정
+# 맵 정보 불러오기, 캐릭터 정보 할당하기, 행동력 구해주고 턴 순서에 맞추어 정렬하기
 func _battle_set():
 	var total := 0
+	
+	# 맵 정보 불러오기
 	var map_name = "World/" + ViewManager.now_map_name
 	var data = DataManager.get_data(map_name)
+	
 	var idx = 0
 	
+	# 행동력 총합 및 캐릭터 정보 설정하기.
 	for i in turn_char:
 		if i.is_player == true:
 			player_character = i
@@ -47,15 +52,15 @@ func _battle_set():
 			i.set_character(data["enemys"][idx])
 			idx += 1
 			
-		
 		i.character_died.connect(_on_character_died)
 		total += i.speed
 		
+	# 캐릭터별 행동력 설정하고 턴 순서 설정하기 
 	for i in turn_char:
 		i.point = BASE_POINT + i.speed / total * ADDITIONAL_POINT
 		#print(i.speed, " ", total)
 		print(i.name, " ", i.speed / total * ADDITIONAL_POINT)
-	
+		
 	turn_char.sort_custom(func(a, b): return a.speed > b.speed)
 
 # 전투를 관리하는 함수 (await 이용) 
@@ -82,7 +87,6 @@ func _battle():
 			_check_dead_char()
 						
 			print("turn end")
-		#break # for test
 
 # 버튼 눌렀을때
 func on_battle_panel_skill_actived(index):

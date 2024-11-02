@@ -24,6 +24,7 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	# get current scene
 	get_view()
 	
+	# 이전 맵 정보 저장
 	old_map = world_instance.get_child(0).name
 	old_panel = current_panel.get_child(0).name
 	now_map_name = map_name
