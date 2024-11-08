@@ -38,7 +38,9 @@ func _battle_set():
 	
 	# 맵 정보 불러오기
 	var map_name = "World/" + ViewManager.now_map_name
-	var data = DataManager.get_data(map_name)
+	var data := DataManager.get_data(map_name)
+	
+	$Interact/AttributeBar.init(data["attribute"])
 	
 	var idx = 0
 	
@@ -99,6 +101,12 @@ func on_battle_panel_skill_actived(index):
 			now_character.current_point -= 10
 			for i in enemy_character:
 				i.hp -= 10
+		BattlePanel.Buttons.SKILL2:
+			$Interact/AttributeBar.add_value("Fire", 10);
+		BattlePanel.Buttons.SKILL3:
+			$Interact/AttributeBar.add_value("Water", 7);
+		BattlePanel.Buttons.SKILL4:
+			$Interact/AttributeBar.add_value("Dirt", 13);
 		BattlePanel.Buttons.RUN:
 			_battle_end(0)		
 				

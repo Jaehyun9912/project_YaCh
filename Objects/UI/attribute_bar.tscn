@@ -25,28 +25,3 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 alignment = 2
-
-[node name="Button" type="Button" parent="."]
-layout_mode = 0
-offset_left = 37.0
-offset_top = 435.0
-offset_right = 137.0
-offset_bottom = 535.0
-
-[node name="Button2" type="Button" parent="."]
-layout_mode = 0
-offset_left = 208.0
-offset_top = 432.0
-offset_right = 308.0
-offset_bottom = 532.0
-
-[node name="Button3" type="Button" parent="."]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 607.0
-offset_right = 140.0
-offset_bottom = 707.0
-
-[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
-[connection signal="pressed" from="Button2" to="." method="_on_button_2_pressed"]
-[connection signal="pressed" from="Button3" to="." method="_on_button_3_pressed"]

@@ -10,9 +10,9 @@ var type : Dictionary
 var max_value : float
 var total_value : float
 
-func _ready():
-	init(100)
-	add_value("Fire", 10)
+#func _ready():
+	#init(100)
+	#add_value("Fire", 10)
 	
 # max_value 및 none 설정 
 func init(max):
@@ -27,9 +27,11 @@ func add_value(name : String, amount : float):
 	if name in type:
 		type[name][0] += amount
 		
-		if type[name][0] < 0:
+		if type[name][0] <= 0:
 			amount -= type[name][0]
 			type[name][0] = 0
+			type[name][1].queue_free()
+			type.erase(name)
 		elif type[name][0] > max_value:
 			amount -= type[name][0] - max_value
 			type[name][0] = max_value
@@ -42,7 +44,7 @@ func add_value(name : String, amount : float):
 	print("total:", total_value)
 	if total_value > max_value:
 		# 빈 속성을 우선적으로 제거 
-		if type["none"][0] > 0:
+		if "none" in type and type["none"][0] > 0:
 			add_value("none", max_value - total_value)
 		# 빈 속성이 없을 경우 가장 작은 속성을 제거
 		else:
@@ -69,25 +71,14 @@ func add_new_bar(name : String, amount : float):
 
 # 속성 중 가장 작은 속성 추출 (0이거나 인자로 주어진 속성 제외) 
 func find_min(skip : String) -> String:
-	var min = max_value
-	var n : String
+	if (type.size() == 1): 
+		return type.keys[0]
+		
+	var n = "none"
+	var min = max_value + 10
 	for i in type:
 		if i == skip or type[i][0] == 0: continue
-		
 		if type[i][0] < min:
 			min = type[i][0]
 			n = i
 	return n
-
-
-
-func _on_button_pressed():
-	add_value("Fire", 10)
-
-
-func _on_button_2_pressed():
-	add_value("Water", 3)
-
-
-func _on_button_3_pressed():
-	add_value("Dirt", 7)
