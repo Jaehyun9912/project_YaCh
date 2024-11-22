@@ -1,10 +1,14 @@
-[gd_scene load_steps=2 format=3 uid="uid://blyo26b6351jw"]
+[gd_scene load_steps=3 format=3 uid="uid://blyo26b6351jw"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/attribute_bar.gd" id="1_p66x6"]
+[ext_resource type="PackedScene" uid="uid://cefcg2vd84nbg" path="res://Objects/UI/attribute_infomation.tscn" id="2_m48fb"]
 
 [node name="AttributeBar" type="Control"]
 layout_mode = 3
-anchor_right = 0.0138889
+anchor_left = -0.0111111
+anchor_top = 0.015544
+anchor_right = -0.0111111
+anchor_bottom = 0.015544
 offset_right = 40.0
 offset_bottom = 293.0
 script = ExtResource("1_p66x6")
@@ -25,3 +29,5 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 0
 alignment = 2
+
+[node name="AttributeInfomation" parent="." instance=ExtResource("2_m48fb")]

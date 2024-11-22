@@ -1,0 +1,34 @@
+{
+	"base_attack": {
+		"type": "attack",
+		"attack": 1,
+		"cost": 2,
+	},
+	"base_fire": {
+		"type": "magic",
+		"attack": 3,
+		"cost": 4,
+		"attribute": {
+			"type": "fire",
+			"amount": 10
+		}
+	},
+	"base_water": {
+		"type": "magic",
+		"attack": 5,
+		"cost": 7,
+		"attribute": {
+			"type": "water",
+			"amount": 11
+		}
+	},
+	"base_dirt": {
+		"type": "magic",
+		"attack": 9,
+		"cost": 10,
+		"attribute": {
+			"type": "dirt",
+			"amount": 14
+		}
+	}
+}

@@ -20,7 +20,7 @@ func get_data(data_path: String) -> Dictionary:
 	if error == OK:
 		return json.data
 	else:
-		print(json.get_error_message())
+		printerr(json.get_error_message())
 		return Dictionary()
 	
 # 프로젝의 user 경로에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
@@ -29,7 +29,7 @@ func load_data(data_path: String) -> Dictionary:
 	
 	# 만약 불러오기에 실패할 경우 빈 딕셔너리를 반환함
 	if not FileAccess.file_exists(path):
-		print("NoFileInPath")
+		printerr("NoFileInPath")
 		return Dictionary()
 		
 	var file = FileAccess.open(path, FileAccess.READ)
@@ -41,7 +41,7 @@ func load_data(data_path: String) -> Dictionary:
 	if error == OK:
 		return json.data
 	else:
-		print(json.get_error_message())
+		printerr(json.get_error_message())
 		return Dictionary()
 	
 	return Dictionary() 

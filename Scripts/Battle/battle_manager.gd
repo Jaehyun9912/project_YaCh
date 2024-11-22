@@ -74,12 +74,14 @@ func _battle():
 			now_character = i
 			turn_character_changed.emit(i)
 			
+			# 플레이어 턴 
 			if i.is_player == true:
 				print("player turn")
 				
 				# turn_end 신호가 emit 할때까지 대기
 				await turn_end
-				
+			
+			# 적 턴 
 			else:
 				print("enemy turn")	
 				await get_tree().create_timer(0.5).timeout
@@ -93,20 +95,18 @@ func _battle():
 # 버튼 눌렀을때
 func on_battle_panel_skill_actived(index):
 	match index:
+		# 버튼에 해당하는 효과 발동 
 		BattlePanel.Buttons.CENTER:
 			print("center")
 			turn_end.emit()
 		BattlePanel.Buttons.SKILL1:
-			print("skill1")
-			now_character.current_point -= 10
-			for i in enemy_character:
-				i.hp -= 10
+			use_skill(0)
 		BattlePanel.Buttons.SKILL2:
-			$Interact/AttributeBar.add_value("Fire", 10);
+			use_skill(1)
 		BattlePanel.Buttons.SKILL3:
-			$Interact/AttributeBar.add_value("Water", 7);
+			use_skill(2)
 		BattlePanel.Buttons.SKILL4:
-			$Interact/AttributeBar.add_value("Dirt", 13);
+			use_skill(3)
 		BattlePanel.Buttons.RUN:
 			_battle_end(0)		
 				
@@ -114,7 +114,28 @@ func on_battle_panel_skill_actived(index):
 			turn_end.emit()
 			
 	_check_dead_char()
+
+# 스킬 인덱스에 해당하는 스킬 발동 
+func use_skill(index):
+	# 플레이어의 스킬을 가져와서 그에 해당하는 스킬 정보를 얻어옴 
+	var cur_skill = PlayerData.skill[index]
+	var cur_skill_info = $SkillManager.get_skill(cur_skill)
 	
+	print(cur_skill_info)
+	
+	# 스킬의 코스트 감소만큼 감소시키기 
+	now_character.current_point -= cur_skill_info["cost"]
+	# 스킬의 유형에 따라 효과 결정 
+	match cur_skill_info["type"]:
+		"attack":
+			# 일단 임시로 전체 공격 
+			for i in enemy_character:
+				i.hp -= cur_skill_info["attack"]
+		"magic":
+			# 일단 임시로 속성만 채우도록 
+			$Interact/AttributeBar.add_value(cur_skill_info["attribute"]["type"], cur_skill_info["attribute"]["amount"])
+	
+
 # 죽은 캐릭터 처리하는 함수
 func _check_dead_char():
 # 턴 종료 후 사망한 캐릭터 처리
@@ -125,6 +146,7 @@ func _check_dead_char():
 			print("player dead")
 			_battle_end(2)
 		else:
+			turn_char.erase(dead)
 			dead.queue_free()
 			enemy_character.erase(dead)
 		
@@ -148,7 +170,9 @@ func _battle_end(type):
 	
 	await get_tree().create_timer(2).timeout
 	
-	PlayerData.data.hp = player_character.hp
+	# 체력 반영 임시로 비활성화
+	#PlayerData.data.hp = player_character.hp
+	
 	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
 	
 

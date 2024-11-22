@@ -72,3 +72,4 @@ text = "상호작용 버튼3"
 
 [connection signal="pressed" from="VBoxContainer/MarginContainer/Button1" to="." method="_on_button_1_pressed"]
 [connection signal="pressed" from="VBoxContainer/MarginContainer2/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer3/Button3" to="." method="_on_button_3_pressed"]

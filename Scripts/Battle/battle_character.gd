@@ -43,4 +43,4 @@ func set_character(data: Dictionary):
 	speed = data.speed
 	mana = data.mana
 	hp = data.hp	
-	print(data)
+	#print(data)

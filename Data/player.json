@@ -2,5 +2,12 @@
 	"max_hp": 50,
 	"hp": 50,
 	"speed": 100,
-	"mana": 100
+	"mana": 100,
+	
+	"skills": [
+		"none",
+		"none",
+		"none",
+		"none",
+	]
 }

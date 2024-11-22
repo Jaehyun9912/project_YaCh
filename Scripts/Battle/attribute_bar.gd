@@ -23,10 +23,12 @@ func init(max):
 
 # 기존 속성 업데이트 또는 새로운 속성 추가 
 func add_value(name : String, amount : float):
+	
 	# 기존 속성에 값 추가 (0 ~ max_value로 범위 고정) 
 	if name in type:
 		type[name][0] += amount
 		
+		# 0이 되면 속성 제거
 		if type[name][0] <= 0:
 			amount -= type[name][0]
 			type[name][0] = 0
@@ -41,7 +43,7 @@ func add_value(name : String, amount : float):
 		
 	# 만약 총합이 최대치보다 많아질 경우 
 	total_value += amount
-	print("total:", total_value)
+	#print("total:", total_value) 
 	if total_value > max_value:
 		# 빈 속성을 우선적으로 제거 
 		if "none" in type and type["none"][0] > 0:
@@ -56,15 +58,21 @@ func add_value(name : String, amount : float):
 # 모든 속성 바를 자신이 차지하는 값만큼 비율을 계산해 막대 길이 조정 
 func update_value():
 	for name in type:
-		print(name, ":", type[name][0] / max_value)
+		#print(name, ":", type[name][0] / max_value)
 		type[name][1].size_flags_stretch_ratio = type[name][0] / max_value
 	
 # 새로운 속성 바를 추가하기 
 func add_new_bar(name : String, amount : float):
 	var newBar = ColorRect.new()
 	
+	# ColorRect를 생성해서 설정.
 	$VBoxContainer.add_child(newBar)
-	newBar.color = attribute_color[name]
+	#newBar.color = attribute_color[name]
+	var new_color = $AttributeInfomation.get_attribute_color(name)
+	if new_color == null:
+		printerr("속성 이름 잘못됨!")
+		return
+	newBar.color = new_color
 	newBar.size_flags_vertical = Control.SIZE_EXPAND_FILL
 
 	type[name] = [amount, newBar]
@@ -73,7 +81,8 @@ func add_new_bar(name : String, amount : float):
 func find_min(skip : String) -> String:
 	if (type.size() == 1): 
 		return type.keys[0]
-		
+	
+	# 주어진 속성을 제외한 최소값 구하기.
 	var n = "none"
 	var min = max_value + 10
 	for i in type:
