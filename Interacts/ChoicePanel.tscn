@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://rabd1cpa64l1"]
+[gd_scene load_steps=2 format=3 uid="uid://rabd1cpa64l1"]
+
+[ext_resource type="Script" path="res://Scripts/Panel/choice_panel.gd" id="1_uwqk4"]
 
 [node name="ChoicePanel" type="Control"]
 layout_mode = 3
@@ -9,6 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+script = ExtResource("1_uwqk4")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
@@ -66,3 +69,6 @@ theme_override_constants/margin_bottom = 20
 layout_mode = 2
 size_flags_vertical = 3
 text = "상호작용 버튼3"
+
+[connection signal="pressed" from="VBoxContainer/MarginContainer/Button1" to="." method="_on_button_1_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer2/Button2" to="." method="_on_button_2_pressed"]
