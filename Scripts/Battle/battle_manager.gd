@@ -34,19 +34,12 @@ func _ready():
 # 행동력 계산하는 함수
 func _battle_set():
 	var total := 0
-	var map_name = "World/" + ViewManager.now_map_name
-	var data = DataManager.get_data(map_name)
-	var idx = 0
 	
 	for i in turn_char:
 		if i.is_player == true:
 			player_character = i
-			player_character.set_character(PlayerData.data)
 		else:
 			enemy_character.append(i)
-			i.set_character(data["enemys"][idx])
-			idx += 1
-			
 		
 		i.character_died.connect(_on_character_died)
 		total += i.speed
@@ -136,7 +129,6 @@ func _battle_end(type):
 	
 	await get_tree().create_timer(2).timeout
 	
-	PlayerData.data.hp = player_character.hp
 	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
 	
 

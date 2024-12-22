@@ -7,8 +7,6 @@ var current_scene: Node = null
 var world_instance: Node3D = null
 var current_panel: CanvasLayer = null
 
-var now_map_name: String
-
 var old_map: String
 var old_panel: String
 
@@ -20,13 +18,12 @@ func get_view():
 	pass
 
 
-func load_world(world_name: String, panel_name: String = "3Button", map_name: String = "") -> void :
+func load_world(world_name: String, panel_name: String = "3Button") -> void :
 	# get current scene
 	get_view()
 	
 	old_map = world_instance.get_child(0).name
 	old_panel = current_panel.get_child(0).name
-	now_map_name = map_name
 	print(old_panel)
 	
 	# remove current world instance
@@ -46,5 +43,3 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	var new_panel = load(PANEL_PATH + panel_name + ".tscn")
 	print(PANEL_PATH + panel_name)
 	current_panel.add_child(new_panel.instantiate())
-	
-	
