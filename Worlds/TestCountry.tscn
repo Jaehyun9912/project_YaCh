@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bpgurardg7lfa"]
+[gd_scene load_steps=10 format=3 uid="uid://bpgurardg7lfa"]
 
 [ext_resource type="PackedScene" uid="uid://bmy7udp4256gu" path="res://Worlds/WorldObjects/country_tower.tscn" id="1_4y7yr"]
 [ext_resource type="PackedScene" uid="uid://ckfx4fnhhqrdh" path="res://Worlds/WorldObjects/forest.tscn" id="2_5u1m3"]
+[ext_resource type="PackedScene" uid="uid://dvcbn4soei6m1" path="res://Objects/Quest/QuestNPC.tscn" id="3_m1rnr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3l6fm"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -55,3 +56,6 @@ metadata/type = "ChoicePanel"
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5438, 0, -21.7805)
 metadata/address = "Battle"
 metadata/type = "BattlePanel"
+
+[node name="QuestNpc" parent="." instance=ExtResource("3_m1rnr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.618, 6.4533, -33.2634)
