@@ -54,7 +54,7 @@ func _battle_set():
 	for i in turn_char:
 		i.point = BASE_POINT + i.speed / total * ADDITIONAL_POINT
 		#print(i.speed, " ", total)
-		print(i.name, " ", i.speed / total * ADDITIONAL_POINT)
+		print(i.name, " ", i.speed / total * ADDITIONAL_POINT) 
 	
 	turn_char.sort_custom(func(a, b): return a.speed > b.speed)
 

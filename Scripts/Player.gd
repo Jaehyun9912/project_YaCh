@@ -26,3 +26,13 @@ func reset_player():
 	data = new_player
 	
 	DataManager.save_data(data, "player")
+
+
+#수주 중인 퀘스트 리스트
+var quest_list : Array[Quest]
+
+func ReceiveQuest(quest : Quest):
+	quest_list.append(quest)
+	print( quest.id," Receive, Current QuestCount :",quest_list.size())
+
+

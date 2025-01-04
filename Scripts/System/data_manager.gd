@@ -13,6 +13,7 @@ func get_data(data_path: String) -> Dictionary:
 	
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
+	print(json.data)
 	if error == OK:
 		return json.data
 	else:

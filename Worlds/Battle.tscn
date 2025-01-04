@@ -1,7 +1,7 @@
 [gd_scene load_steps=10 format=3 uid="uid://6pfqnfdd6ia8"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
-[ext_resource type="PackedScene" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
+[ext_resource type="PackedScene" uid="uid://cfalpw5wnu5ff" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)

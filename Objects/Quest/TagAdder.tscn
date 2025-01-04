@@ -1,0 +1,16 @@
+[gd_scene load_steps=4 format=3 uid="uid://d2t82rft22it8"]
+
+[ext_resource type="Script" path="res://Scripts/Quest/TagAdder.gd" id="1_7844j"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_06xmx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_aqhqp"]
+
+[node name="TagAdder" type="Area3D"]
+script = ExtResource("1_7844j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_06xmx")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_aqhqp")
