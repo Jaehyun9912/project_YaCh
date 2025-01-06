@@ -35,7 +35,6 @@ func get_quest_data() -> Dictionary:
 	var dict = {
 		"TAG" : TAG,
 		"id" : id,
-		#"Value" : value,
 		"condition" : conditions,
 		"ClearNPCName" : ClearNPCName
 	}
@@ -45,7 +44,6 @@ func _init(data : Dictionary) ->void:
 	ClearNPCName = data["ClearNPCName"]
 	TAG = data["TAG"]
 	id = data["id"]
-	#value = data["Value"]
 	conditions = data["condition"]
 	
 #퀘스트 클리어 태그 확인하기

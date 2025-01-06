@@ -1,1 +1,8 @@
-{"AddTags":["Alpha"],"CompareTags":["Quest1"],"Value":5}
+{
+	"AddTags":["Alpha"],
+	"CompareTags":["Quest1"],
+	"CompareValue":{
+		"Count" : 3
+	},
+	"Disposable" : true
+}

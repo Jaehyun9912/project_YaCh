@@ -1,0 +1,8 @@
+{
+	"AddTags":["More50"],
+	"CompareTags":["Quest2"],
+	"CompareValue":{
+		"max_hp" : 50
+	},
+	"Disposable" : false
+}

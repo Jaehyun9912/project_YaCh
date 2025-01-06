@@ -76,5 +76,9 @@ shape = SubResource("BoxShape3D_ukn7v")
 
 [node name="QuestManager" parent="Area3D" instance=ExtResource("3_m1rnr")]
 
+[node name="TagAdder" parent="Area3D" instance=ExtResource("2_aytmn")]
+adder_name = "Box"
+
 [connection signal="input_event" from="forest" to="forest/TagAdder" method="_on_location_clicked"]
 [connection signal="input_event" from="Area3D" to="Area3D/QuestManager" method="_on_NPC_clicked"]
+[connection signal="input_event" from="Area3D" to="Area3D/TagAdder" method="_on_location_clicked"]
