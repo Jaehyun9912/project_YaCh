@@ -1,0 +1,42 @@
+{"NPC1":[
+	{
+		"ClearNPCName": "NPC1",
+		"TAG":1,
+		"Value" : 5,
+		"condition":
+			{
+				"Before":["A"],
+				"NonBefore":["A-1","Quest1|C"],
+				"NonProcess":["B-1"],
+				"Process":["Alpha"]
+			},
+		"id":"Quest1"
+	},
+	{
+		"ClearNPCName": "NPC1",
+		"TAG":1,
+		"Value" : "Count",
+		"condition":
+			{
+				"Before":["A"],
+				"NonBefore":["A-1","Quest3|C"],
+				"NonProcess":["B-1"],
+				"Process":["Quest2|C"]
+			},
+		"id":"Quest3"
+	},
+	{
+		"ClearNPCName": "NPC1",
+		"TAG":2,
+		"Value" : "TT",
+		"condition":
+			{
+				"Before":["Quest1|C"],
+				"NonBefore":["A-1"],
+				"NonProcess":["C-1"],
+				"Process":["C"]
+			},
+		"id":"Quest2"
+	}
+]
+}

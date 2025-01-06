@@ -1,4 +1,4 @@
-extends Area3D
+extends Node3D
 class_name QuestManager
 
 @export var NPC_name : String
@@ -43,7 +43,7 @@ func enqueue_quest():
 func import_quest():
 	#print("importQuest")
 	quest_list.clear()
-	var data = DataManager.get_data("Quest/"+NPC_name)
+	var data = DataManager.get_data("Quest/"+"Quest")
 	#print(data)
 	for datum in data[NPC_name]:
 		var quest = Quest.new(datum)
@@ -59,7 +59,7 @@ func PrintNPCQuestThatPlayerHas():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	#디버그용 수주 가능 태그
-	TagManager.add_tag("A", get_node("/root/PlayerData"))
+	TagManager.add_tag("A", PlayerData)
 	import_quest()
 	pass # Replace with function body.
 
@@ -101,32 +101,23 @@ func _receive_quest(quest : Quest):
 	TagManager.add_tag(quest.id,PlayerData)
 	#플레이어의 퀘스트 리스트에 퀘스트 추가
 	PlayerData.ReceiveQuest(quest)
-		
 
 func _clear_quest(quest: Quest):
 	#해당 퀘스트 도착지가 해당 NPC가 맞는지 확인
 	if quest.ClearNPCName != NPC_name:
 		print("isNotClearNPC =",quest.ClearNPCName," != ",NPC_name)
 		return false
-	#퀘스트에 필요한 태그 확인
-	for i in quest.conditions["Process"]:
-		if !TagManager.has_tag(i,PlayerData):
-			print(quest.id," Can't Clear")
-			return false
-	for i in quest.conditions["NonProcess"]:
-		if TagManager.has_tag(i,PlayerData):
-			print(quest.id," Can't Clear")
-			return false
+	if !quest.is_clearable():
+		return false
 	#해당 퀘스트 클리어 시 수주중 태그 삭제 후 클리어 태그 부여
+	PlayerData.PrintQuestList()
 	PlayerData.quest_list.erase(quest)
 	TagManager.remove_tag(quest.id,PlayerData)
-	TagManager.add_tag(quest.id +"!C",PlayerData)
+	TagManager.add_tag(quest.id +"|C",PlayerData)
 	print(quest.id," Clear")
 	#클리어 횟수 1증가
 	quest.TAG +=1
-	return true
-
-
+	return quest.TAG
 
 #임의의 물체에 태그 부여하기
 func AddNodeTag(tag,nodeName):
@@ -138,9 +129,6 @@ func AddNodeTag(tag,nodeName):
 	TagManager.add_tag(tag,node)
 	print(TagManager.get_tags(node))
 	pass
-
-
-
 
 var Quest_PATH = "res://Data/Quest/"
 #디버그용 퀘스트 생성 방식 
