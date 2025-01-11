@@ -8,12 +8,11 @@ var TAG : int
 @export var id : String
 @export var ClearNPCName : String
 var conditions
+#태그 값 사용 금지 문자 : = > < ! .(.은 태그 트리용)
 #Before : 수주에 필요한 태그(태그 : 카운트)
-#NonBefore : 수주에 없어야하는 태그(태그 배열)
 #Process : 클리어에 필요한 태그(태그 : 카운트)
-#NonProcess : 클리어에 없어야하는 태그(태그 배열)
 #수주 중일 때 태그 id 값 부여
-#클리어 시 태그 id + "C" 값 부여
+#클리어 시 Clear.id 값 부여
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -45,14 +44,13 @@ func _init(data : Dictionary) ->void:
 func is_clearable():
 	if !TagManager.has_tag(PlayerData,id):
 		return false
-	#퀘스트에 필요한 태그 확인
 	for i in conditions["Process"]:
-		if !TagManager.has_tag(PlayerData,i):
-			print(id," Can't Clear")
-			return false
-	for i in conditions["NonProcess"]:
-		if TagManager.has_tag(PlayerData,i):
+		if !TagManager.tag_check(PlayerData,i):
 			print(id," Can't Clear")
 			return false
 	#퀘스트 클리어 조건을 모두 충족함
 	return true
+
+
+
+

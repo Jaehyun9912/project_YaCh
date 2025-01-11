@@ -63,9 +63,7 @@ metadata/address = "Battle"
 metadata/type = "BattlePanel"
 
 [node name="TagAdder" parent="forest" instance=ExtResource("2_aytmn")]
-compare_tags = {
-"Quest1": 1
-}
+compare_tags = Array[String](["!Quest1<1"])
 add_tags = Array[String](["Quest1.Alpha"])
 
 [node name="Area3D" type="Area3D" parent="."]

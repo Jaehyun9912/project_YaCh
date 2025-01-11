@@ -1,7 +1,7 @@
 extends Node
 
 #태그 이름 : 태그 카운트
-@export var compare_tags : Dictionary
+@export var compare_tags : Array[String]
 #비교할 스탯값(없으면 스킵)(문자열 하나에 변수이름부등호int값 붙여서 작성)
 @export var CompareValue : Array[String]
 #추가할 태그 이름(있으면 태그 카운트 1개 추가)
@@ -10,14 +10,12 @@ extends Node
 
 func tag_process():
 	print(TagManager.get_tags(PlayerData))
-	#
-	for i in compare_tags.keys():
-		if !TagManager.has_tag(PlayerData,i):
+	for i in compare_tags:
+		#태그를 가지고 있는지 확인
+		if !TagManager.tag_check(PlayerData,i):
 			print("Player don't Have ",i)
 			return false 
-		if TagManager.get_tag_count(PlayerData,i)< compare_tags[i]:
-			print("Not enough count",i)
-			return false
+	#스탯이 충족되는지 확인
 	if !StatCompare():
 		return false
 	for i in add_tags:
@@ -26,7 +24,7 @@ func tag_process():
 	return true
 
 func StatCompare():
-	var comparer  =["<=",">=","=","<",">" ]
+	var comparer  =["<",">","=" ]
 	if CompareValue.size()<=0:
 		return true
 	for str in CompareValue:
@@ -37,13 +35,9 @@ func StatCompare():
 					print(PlayerData.data[arr[0]],i,arr[1].to_int())
 					if i == "<" && PlayerData.data[arr[0]] < arr[1].to_int():
 						return true
-					if i == "<=" && PlayerData.data[arr[0]] <= arr[1].to_int():
-						return true
 					if i == "=" && PlayerData.data[arr[0]] == arr[1].to_int():
 						return true
 					if i == ">" && PlayerData.data[arr[0]] > arr[1].to_int():
-						return true
-					if i == ">=" && PlayerData.data[arr[0]] >= arr[1].to_int():
 						return true
 	return false
 

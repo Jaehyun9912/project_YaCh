@@ -4,10 +4,8 @@
 		"TAG":0,
 		"condition":
 			{
-				"Before":[],
-				"NonBefore":["Clear.Quest1"],
-				"NonProcess":[],
-				"Process":["Quest1.Alpha"]
+				"Before":["!Clear.Quest1"],
+				"Process":["Quest1.Alpha>2"]
 			},
 		"id":"Quest1"
 	},
@@ -16,9 +14,7 @@
 		"TAG":0,
 		"condition":
 			{
-				"Before":["Clear.Quest1"],
-				"NonBefore":["Clear.Quest2"],
-				"NonProcess":[],
+				"Before":["Clear.Quest1","!Clear.Quest2"],
 				"Process":["Quest2.More50"]
 			},
 		"id":"Quest2"
@@ -28,9 +24,7 @@
 		"TAG":0,
 		"condition":
 			{
-				"Before":[],
-				"NonBefore":["Clear.Quest3"],
-				"NonProcess":[],
+				"Before":["!Clear.Quest3"],
 				"Process":["Clear.Quest2"]
 			},
 		"id":"Quest3"

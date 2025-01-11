@@ -17,12 +17,7 @@ func check_quest(quest : Quest)-> bool:
 		return false
 	#수주에 필요한 태그 존재여부 확인
 	for i in quest.conditions["Before"]:
-		if !TagManager.has_tag(PlayerData,i):
-			#print(quest.id," is not Receivable")
-			return false
-	#수주에 없어야하는 태그 존재여부 확인
-	for i in quest.conditions["NonBefore"]:
-		if TagManager.has_tag(PlayerData,i):
+		if !TagManager.tag_check(PlayerData,i):
 			#print(quest.id," is not Receivable")
 			return false
 	#print(quest.id," is Receivable")
@@ -101,6 +96,7 @@ func _clear_quest(quest: Quest):
 	#퀘스트 클리어 태그 추가(Clear태그 없으면 생성)
 	var clear_tag = "Clear." + quest.id
 	TagManager.add_tag_tree(PlayerData,clear_tag)
+	print(quest.id , " Clear")
 	#클리어 횟수 1증가(현재 태그 카운트로 태그 적용 횟수(퀘스트 클리어 횟수) 확인 가능 굳이?
 	quest.TAG +=1
 	return quest.TAG

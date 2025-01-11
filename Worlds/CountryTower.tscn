@@ -24,3 +24,20 @@ anchor_top = 0.1
 anchor_right = 0.9
 anchor_bottom = 0.9
 expand_mode = 4
+
+[node name="Button" type="Button" parent="ColorRect"]
+layout_mode = 0
+offset_left = 69.0
+offset_top = 86.0
+offset_right = 133.0
+offset_bottom = 117.0
+text = "aaaaaa"
+
+[node name="Button2" type="Button" parent="ColorRect"]
+layout_mode = 0
+offset_left = 201.0
+offset_top = 105.0
+offset_right = 272.0
+offset_bottom = 136.0
+text = "Button1
+"

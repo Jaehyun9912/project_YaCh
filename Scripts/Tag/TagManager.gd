@@ -60,6 +60,7 @@ func remove_tag(node : Node, tag : String) -> bool:
 		return true
 	return false
 
+
 #태그 제거 시 하위 태그도 동시에 제거(하위 태그는 상위태그.태그로 구분)
 #하위 태그 삭제 시 상위태그를 동시에 작성 요망(상위태그.하위태그)
 func remove_tag_tree(node : Node, tag : String) -> bool:
@@ -87,7 +88,40 @@ func has_tag(node : Node, tag : String) -> bool:
 		return true
 	#태그가 없으면 false
 	return false
+	
 
+#앞의 !비교해서 있으면 뒤의 값비교가 false일때 true 반환
+func tag_check(node : Node, tag : String):
+	var negative = false
+	if tag.begins_with("!"):
+		tag = tag.split("!",true,2)[1]
+		negative = true
+	var check = tag_compare(node,tag)
+	print(tag," is ","Negative : ",negative," , TagCompare : ",check)
+	return check != negative
+	
+#태그의 부등호 비교해서 충족 시 true 반환
+func tag_compare(node : Node,tag : String) -> bool:
+	#퀘스트에 필요한 태그 확인(부등호로 태그 카운트 세기)
+	var comparer = [">" , "<", "="]#필요하면 이상 이하도 추가
+	for i in comparer:
+		var str = tag.split(i,true,2)
+		if str.size()==2:
+			print(str[0]," ",i," ",str[1])
+			#태그가 있는지 없는지부터 확인
+			if !TagManager.has_tag(node,str[0]):
+				return false
+			if i == ">" && TagManager.get_tag_count(node,str[0]) > str[1].to_int():
+				return true
+			if i == "<" && TagManager.get_tag_count(node,str[0]) < str[1].to_int():
+				return true
+			if i == "=" && TagManager.get_tag_count(node,str[0]) == str[1].to_int():
+				return true
+	#태그가 있는지 없는지만 확인(태그에 부등호가 없는경우)
+	if TagManager.has_tag(node,tag):
+		return true
+	return false
+	
 
 #태그의 카운트 1 감소. 0이면 태그 삭제(아직 사용처 없음, 생기면 변형 예정)
 func decrease_tag(node : Node, tag : String) -> void:
