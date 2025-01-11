@@ -105,7 +105,7 @@ func _clear_quest(quest: Quest):
 
 
 #임의의 물체에 태그 부여하기
-func AddNodeTag(tag,nodeName):
+func add_node_tag(tag,nodeName):
 	var node = get_tree().root.get_node(nodeName)
 	print(node.name)
 	if node ==null:

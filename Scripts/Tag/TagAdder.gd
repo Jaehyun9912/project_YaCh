@@ -3,7 +3,7 @@ extends Node
 #태그 이름 : 태그 카운트
 @export var compare_tags : Array[String]
 #비교할 스탯값(없으면 스킵)(문자열 하나에 변수이름부등호int값 붙여서 작성)
-@export var CompareValue : Array[String]
+@export var compare_value : Array[String]
 #추가할 태그 이름(있으면 태그 카운트 1개 추가)
 @export var add_tags : Array[String]
 
@@ -16,30 +16,14 @@ func tag_process():
 			print("Player don't Have ",i)
 			return false 
 	#스탯이 충족되는지 확인
-	if !StatCompare():
-		return false
+	for i in compare_value:
+		if !PlayerData.stat_check(i):
+			return false
 	for i in add_tags:
 		TagManager.add_tag_tree(PlayerData,i)
 	print(TagManager.get_tags(PlayerData))
 	return true
 
-func StatCompare():
-	var comparer  =["<",">","=" ]
-	if CompareValue.size()<=0:
-		return true
-	for str in CompareValue:
-		for i in comparer:
-			var arr = str.split(i,true,2)
-			if arr.size()>1:
-				if PlayerData.data.has(arr[0]):
-					print(PlayerData.data[arr[0]],i,arr[1].to_int())
-					if i == "<" && PlayerData.data[arr[0]] < arr[1].to_int():
-						return true
-					if i == "=" && PlayerData.data[arr[0]] == arr[1].to_int():
-						return true
-					if i == ">" && PlayerData.data[arr[0]] > arr[1].to_int():
-						return true
-	return false
 
 	
 func _on_location_clicked(_camera, _event, _pos, _n, _shape_idx):

@@ -107,7 +107,7 @@ func tag_compare(node : Node,tag : String) -> bool:
 	for i in comparer:
 		var str = tag.split(i,true,2)
 		if str.size()==2:
-			print(str[0]," ",i," ",str[1])
+			print(TagManager.get_tag_count(node,str[0])," ",i," ",str[1])
 			#태그가 있는지 없는지부터 확인
 			if !TagManager.has_tag(node,str[0]):
 				return false
