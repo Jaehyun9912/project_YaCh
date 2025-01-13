@@ -1,4 +1,4 @@
-extends Node3D
+extends Node
 class_name QuestManager
 
 @export var NPC_name : String
@@ -58,7 +58,7 @@ func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
 		#플레이어가 가지고 있는 퀘스트 클리어 확인
 		for i in PlayerData.quest_list:
-			_clear_quest(i)
+			clear_quest(i)
 		
 		#수주 가능 퀘스트 정리
 		#없으면 실행 X
@@ -69,19 +69,19 @@ func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 		#클릭 시 수주 가능 퀘스트 중 첫번째 퀘스트 수주
 		if quest_queue.size()>0:
 			var quest = quest_queue[0]
-			_receive_quest(quest)
+			receive_quest(quest)
 		
 		
 		
 		
 
-func _receive_quest(quest : Quest):
+func receive_quest(quest : Quest):
 	#수주한 퀘스트 태그 추가(이 퀘스트 재 수주 불가능)
 	TagManager.add_tag(PlayerData,quest.id)
 	#플레이어의 퀘스트 리스트에 퀘스트 추가
 	PlayerData.ReceiveQuest(quest)
 
-func _clear_quest(quest: Quest):
+func clear_quest(quest: Quest):
 	#해당 퀘스트 도착지가 해당 NPC가 맞는지 확인
 	if quest.ClearNPCName != NPC_name:
 		#print("isNotClearNPC =",quest.ClearNPCName," != ",NPC_name)
