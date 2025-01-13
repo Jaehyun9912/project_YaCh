@@ -1,9 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://6pfqnfdd6ia8"]
+[gd_scene load_steps=11 format=3 uid="uid://6pfqnfdd6ia8"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
 [ext_resource type="PackedScene" uid="uid://drsabvdulmx23" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
-[ext_resource type="PackedScene" uid="uid://blyo26b6351jw" path="res://Objects/UI/attribute_bar.tscn" id="3_tulg3"]
-[ext_resource type="Script" path="res://Scripts/Skills/SkillManager.gd" id="4_w365o"]
+[ext_resource type="PackedScene" uid="uid://blyo26b6351jw" path="res://Objects/UI/Battle/attribute_bar.tscn" id="3_tulg3"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -93,5 +92,5 @@ offset_top = 8.0
 offset_right = 48.0
 offset_bottom = 301.0
 
-[node name="SkillManager" type="Node" parent="."]
-script = ExtResource("4_w365o")
+[node name="EnemyTimer" type="Timer" parent="."]
+wait_time = 0.5

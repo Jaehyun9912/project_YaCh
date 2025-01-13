@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://blyo26b6351jw"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/attribute_bar.gd" id="1_p66x6"]
-[ext_resource type="PackedScene" uid="uid://cefcg2vd84nbg" path="res://Objects/UI/attribute_infomation.tscn" id="2_m48fb"]
+[ext_resource type="PackedScene" uid="uid://cefcg2vd84nbg" path="res://Objects/UI/Battle/attribute_infomation.tscn" id="2_m48fb"]
 
 [node name="AttributeBar" type="Control"]
 layout_mode = 3

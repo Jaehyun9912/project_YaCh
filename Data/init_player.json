@@ -1,0 +1,28 @@
+{
+	"max_hp": 50,
+	"hp": 50,
+	"speed": 100,
+	"mana": 100,
+	
+	"skills": [
+		"none",
+		"none",
+		"none",
+		"none",
+	],
+	
+	"inventory": [
+		{
+			"id": "item:potion",
+			"count": 1,
+			"slot": 0
+		},
+		{
+			"id": "item:bomb",
+			"count": 1,
+			"slot": 1
+		}
+	],
+	
+	"artifacts" : {}
+}

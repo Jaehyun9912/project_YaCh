@@ -13,7 +13,7 @@ func get_skill(id : String) -> Dictionary:
 	if id in skills.keys():
 		return skills[id]
 	else:
-		printerr("잘못된 스킬 ID!")
+		printerr("잘못된 스킬 ID! : " + id)
 		return Dictionary()
 	
 	

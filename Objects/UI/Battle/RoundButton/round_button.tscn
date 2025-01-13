@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://dd7ne0vnk7lh7"]
 
-[ext_resource type="Texture2D" uid="uid://h3udoxqqu1wd" path="res://Objects/UI/RoundButton/round_button.png" id="1_ck00n"]
+[ext_resource type="Texture2D" uid="uid://h3udoxqqu1wd" path="res://Objects/UI/Battle/RoundButton/round_button.png" id="1_ck00n"]
 [ext_resource type="Script" path="res://Scripts/System/round_button.gd" id="2_h7tp8"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_0kr68"]

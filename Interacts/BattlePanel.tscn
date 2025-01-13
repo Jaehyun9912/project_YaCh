@@ -2,8 +2,8 @@
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_panel.gd" id="1_njjyf"]
 [ext_resource type="Script" path="res://Scripts/Skills/SkillManager.gd" id="2_1psmx"]
-[ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/RoundButton/round_button.tscn" id="3_4k28p"]
-[ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/button_theme.tres" id="4_bijw2"]
+[ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/Battle/RoundButton/round_button.tscn" id="3_4k28p"]
+[ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/Battle/button_theme.tres" id="4_bijw2"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]
 
@@ -186,7 +186,7 @@ offset_right = -1.0
 offset_bottom = 1.39999
 grow_horizontal = 0
 
-[connection signal="button_up" from="ColorRect/VBoxContainer/GridContainer/BagButtonContainer/Button1" to="." method="_on_button_bag_button_up"]
+[connection signal="button_up" from="ColorRect/VBoxContainer/GridContainer/BagButtonContainer/Button1" to="." method="_on_button_inventoy_button_up"]
 [connection signal="button_up" from="ColorRect/VBoxContainer/GridContainer/TalkButtonContainer/Button1" to="." method="_on_button_talk_button_up"]
 [connection signal="button_up" from="ColorRect/VBoxContainer/GridContainer/QuestButtonContainer/Button1" to="." method="_on_button_quest_button_up"]
 [connection signal="button_up" from="ColorRect/VBoxContainer/GridContainer/RunButtonContatiner/Button1" to="." method="_on_button_run_button_up"]
