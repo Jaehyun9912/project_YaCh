@@ -26,6 +26,7 @@ func set_button(quest : Quest, pos : Vector2):
 	btn = Button.new()
 	add_child(btn)
 	btn.text = quest.id
+	btn.add_to_group("Quest")
 	btn.set_position(pos)
 	btn.button_down.connect(receive_quest.bind(quest))
 	btn.button_down.connect(remove_child.bind(btn))

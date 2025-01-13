@@ -79,7 +79,8 @@ func receive_quest(quest : Quest):
 	#수주한 퀘스트 태그 추가(이 퀘스트 재 수주 불가능)
 	TagManager.add_tag(PlayerData,quest.id)
 	#플레이어의 퀘스트 리스트에 퀘스트 추가
-	PlayerData.ReceiveQuest(quest)
+	PlayerData.receive_quest(quest)
+	quest_queue.erase(quest)
 
 func clear_quest(quest: Quest):
 	#해당 퀘스트 도착지가 해당 NPC가 맞는지 확인

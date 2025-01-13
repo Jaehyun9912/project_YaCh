@@ -28,21 +28,16 @@ func reset_player():
 	DataManager.save_data(data, "player")
 
 
+
 #수주 중인 퀘스트 리스트
 var quest_list : Array[Quest]
 #값 비교용
 
-func ReceiveQuest(quest : Quest):
-	#퀘스트 리스트에 추가
+func receive_quest(quest : Quest):
 	quest_list.append(quest)
-	#퀘스트에 필요한 스탯을 찾고 없으면 추가(이러면 태그 시스템이 없어도 되지 않나...?)
-	#if !data.has(quest.value):
-	#	data[quest.value] = 0
-	#quest.is_clearable()
-	#print("data",data[quest.value])
 	print( quest.id," Receive, Current QuestCount :",quest_list.size())
 
-func PrintQuestList():
+func print_quest_list():
 	var list = "Quest : "
 	for i in quest_list:
 		list += i.id+", "
