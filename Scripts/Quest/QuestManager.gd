@@ -8,11 +8,17 @@ var quest_list : Array[Quest]
 #수주 가능한 퀘스트
 var quest_queue : Array[Quest]
 
+const accept_tree = "Quest.acceptable."
+const unaccept_tree = "Quest.unacceptable."
+const process_tree = "Quest.process."
+const clear_tree = "Quest.clear."
+
+
 #퀘스트 수주 조건 확인(수주 가능 여부 반환)
 func check_quest(quest : Quest)-> bool:
 	#print("Player tag",TagManager.get_tags(PlayerData))
 	#퀘스트를 수주 중일 때는 추가 수주 불가능
-	if TagManager.has_tag(PlayerData,quest.id):
+	if TagManager.has_tag(PlayerData,process_tree+quest.id):
 		#print(quest.id," is Already Received")
 		return false
 	#수주에 필요한 태그 존재여부 확인
@@ -34,7 +40,14 @@ func enqueue_quest():
 		if check_quest(i):
 			str += " " + i.id
 			quest_queue.append(i)
-	print(str)
+			#태그 수주 가능으로 변경
+			TagManager.remove_tag_tree(self,unaccept_tree+i.id)
+			TagManager.add_tag_tree(self,accept_tree+i.id)
+	for i in quest_list:
+		if TagManager.has_tag(PlayerData,process_tree+i.id):
+			#태그 수주 중으로 변경
+			TagManager.remove_tag_tree(self,unaccept_tree+i.id)
+			TagManager.add_tag_tree(self,process_tree+i.id)
 	return !quest_queue.is_empty()
 
 #json에서 퀘스트 로드
@@ -45,42 +58,52 @@ func import_quest():
 	for datum in data[NPC_name]:
 		var quest = Quest.new(datum)
 		quest_list.append(quest)
-		
+		#기본 값(수주 불가능) 부여
+		TagManager.add_tag_tree(self,unaccept_tree+quest.id)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	TagManager.clean_dict()
+
 	#json에서 퀘스트 리스트 받아오기
 	import_quest()
+
+
+	
 	
 #NPC 상호작용 시
 func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
 		#플레이어가 가지고 있는 퀘스트 클리어 확인
+		
 		for i in PlayerData.quest_list:
 			clear_quest(i)
 		
 		#수주 가능 퀘스트 정리
-		#없으면 실행 X
-		if !enqueue_quest():
-			print("No Receivable Quest")
-			return
+		enqueue_quest()
 		
 		#클릭 시 수주 가능 퀘스트 중 첫번째 퀘스트 수주
 		if quest_queue.size()>0:
 			var quest = quest_queue[0]
 			receive_quest(quest)
-		
-		
-		
-		
+		else:
+			print("No Receivable Quest")
+		print(TagManager.dict)
 
+
+#퀘스트 수주(가능한지 확인은 enqueue_quest에서 체크)
 func receive_quest(quest : Quest):
 	#수주한 퀘스트 태그 추가(이 퀘스트 재 수주 불가능)
-	TagManager.add_tag(PlayerData,quest.id)
+	TagManager.add_tag_tree(PlayerData,process_tree+quest.id)
+	#퀘스트 매니저 태그 수주 가능 -> 수주 중으로 전환
+	TagManager.remove_tag_tree(self,accept_tree+quest.id)
+	TagManager.add_tag_tree(self,process_tree+quest.id)
+	
 	#플레이어의 퀘스트 리스트에 퀘스트 추가
 	PlayerData.receive_quest(quest)
 	quest_queue.erase(quest)
+	
 
 func clear_quest(quest: Quest):
 	#해당 퀘스트 도착지가 해당 NPC가 맞는지 확인
@@ -89,19 +112,19 @@ func clear_quest(quest: Quest):
 		return false
 	if !quest.is_clearable():
 		return false		
-	PlayerData.PrintQuestList()
 	#해당 퀘스트 클리어 시 수주중 태그 삭제 후 클리어 태그 부여
 	PlayerData.quest_list.erase(quest)
 	#퀘스트 진행에 사용 태그들 삭제(퀘스트 진행 태그 트리 삭제)한
-	TagManager.remove_tag_tree(PlayerData,quest.id)
+	TagManager.remove_tag_tree(PlayerData,process_tree+quest.id)
+	TagManager.remove_tag_tree(self,process_tree+quest.id)
 	#퀘스트 클리어 태그 추가(Clear태그 없으면 생성)
-	var clear_tag = "Clear." + quest.id
-	TagManager.add_tag_tree(PlayerData,clear_tag)
+	TagManager.add_tag_tree(PlayerData,clear_tree+quest.id)
+	TagManager.add_tag_tree(self,clear_tree+quest.id)
 	print(quest.id , " Clear")
-	#클리어 횟수 1증가(현재 태그 카운트로 태그 적용 횟수(퀘스트 클리어 횟수) 확인 가능 굳이?
-	quest.TAG +=1
-	return quest.TAG
-	#return TagManager.get_tag_count(PlayerData,clear_tag)
+
+#태그의 일정부분으로 태그 트리의 태그 반환
+func find_tag():
+	pass
 
 
 

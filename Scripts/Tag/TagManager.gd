@@ -18,24 +18,24 @@ func get_tag_count(node : Node, tag : String)-> int:
 	return 0
 
 #단일 태그 추가
-func add_tag(node : Node, tag : String) -> void:
+func add_tag(node : Node, tag : String, count = 1) -> void:
 	#태그가 1개 이상 있을 경우
 	if dict.has(node):
 		var tags = dict[node] as Dictionary
-		#태그를 가지고 있을 경우 count 1 추가
+		#태그를 가지고 있을 경우 count 추가
 		if tags.has(tag):
-			tags[tag]+=1
+			tags[tag]+=count
 			return
 		#태그 추가
-		tags[tag] = 1
+		tags[tag] = count
 	else:
 		#없으면 태그 딕셔너리 추가
-		var arr = { tag : 1}
+		var arr = { tag : count}
 		dict[node] = arr
 
 func add_tags(node : Node, tags : PackedStringArray):
 	for tag in tags:
-		add_tag(node,tag)
+		add_tag_tree(node,tag)
 
 #태그 트리 추가(.으로 구분해서 상위부터 하위태그까지 전부 추가)
 func add_tag_tree(node : Node, tag : String):
@@ -65,6 +65,7 @@ func remove_tag(node : Node, tag : String) -> bool:
 #하위 태그 삭제 시 상위태그를 동시에 작성 요망(상위태그.하위태그)
 func remove_tag_tree(node : Node, tag : String) -> bool:
 	#시작 태그가 있으면 삭제 없으면 반환
+	var count = get_tag_count(node,tag)
 	if !remove_tag(node,tag):
 		return false
 	var tags = dict[node] as Dictionary
@@ -89,6 +90,9 @@ func has_tag(node : Node, tag : String) -> bool:
 	#태그가 없으면 false
 	return false
 	
+#태그 일정 부분으로 해당 태그 찾기
+func find_tag(node : Node, tag : String):
+	pass
 
 #앞의 !비교해서 있으면 뒤의 값비교가 false일때 true 반환
 func tag_check(node : Node, tag : String):
@@ -97,7 +101,7 @@ func tag_check(node : Node, tag : String):
 		tag = tag.split("!",true,2)[1]
 		negative = true
 	var check = tag_compare(node,tag)
-	print(tag," is ","Negative : ",negative," , TagCompare : ",check)
+	#print(tag," is ","Negative : ",negative," , TagCompare : ",check)
 	return check != negative
 	
 #태그의 부등호 비교해서 충족 시 true 반환
@@ -122,15 +126,40 @@ func tag_compare(node : Node,tag : String) -> bool:
 		return true
 	return false
 	
+#씬 로드 될때 할당 해제된 노드 제거
+func clean_dict():
+	for i in dict.keys():
+		if i == null:
+			print(i)
+			dict.erase(i)
 
 #태그의 카운트 1 감소. 0이면 태그 삭제(아직 사용처 없음, 생기면 변형 예정)
-func decrease_tag(node : Node, tag : String) -> void:
+func decrease_tag(node : Node, tag : String, count = 1) -> int:
 	if !dict.has(node):
-		return
+		return 0
 	var tags = dict[node] as Dictionary
 	if !tags.has(tag):
-		return
-	tags[tag] -=1
+		return 0
+	tags[tag] -=count
 	if tags[tag] <=0 :
 		remove_tag_tree(node,tag)
+		return 0
+	return tags[tag]
+
+func decrease_tag_tree(node : Node, tag :String, count = 1):
+	decrease_tag(node,tag,count)
+	var upper_tag = get_upper_tag(tag)
+	if upper_tag == "":
+		return
+	decrease_tag_tree(node,upper_tag,count)
+
+func get_upper_tag(tag : String):
+	var s = tag.reverse()
+	var str = s.split(".",true,1)
+	if str.size() < 2:
+		return ""
+	return str[1].reverse()
 	
+
+
+
