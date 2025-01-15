@@ -10,6 +10,12 @@ func get_tags(node : Node)-> PackedStringArray:
 	#없으면 새 딕셔너리 반환
 	return PackedStringArray()
 
+func get_tag_tree(node :Node, tag : String) -> PackedStringArray:
+	if dict.has(node):
+		if dict[node].has(tag):
+			return dict[node][tag]
+	return PackedStringArray()
+
 #노드에 태그가 붙은 횟수 반환
 func get_tag_count(node : Node, tag : String)-> int:
 	if has_tag(node,tag):
@@ -17,7 +23,7 @@ func get_tag_count(node : Node, tag : String)-> int:
 	#없으면 0 반환
 	return 0
 
-#단일 태그 추가
+#단일 태그 추가(외부 사용 X)
 func add_tag(node : Node, tag : String, count = 1) -> void:
 	#태그가 1개 이상 있을 경우
 	if dict.has(node):
@@ -33,22 +39,18 @@ func add_tag(node : Node, tag : String, count = 1) -> void:
 		var arr = { tag : count}
 		dict[node] = arr
 
-func add_tags(node : Node, tags : PackedStringArray):
-	for tag in tags:
-		add_tag_tree(node,tag)
-
 #태그 트리 추가(.으로 구분해서 상위부터 하위태그까지 전부 추가)
-func add_tag_tree(node : Node, tag : String):
+func add_tag_tree(node : Node, tag : String, count =1):
 	#해당 태그를 각 태그 부분으로 분류
-	var tag_tree = tag.split(".",true)
+	var tag_tree = tag.split(".")
 	
 	#상위 태그부터 .하위태그 추가
 	var lower_tag = tag_tree[0]
 	tag_tree.remove_at(0)
-	add_tag(node,lower_tag)
+	add_tag(node,lower_tag,count)
 	for str in tag_tree:
 		lower_tag += "." + str
-		add_tag(node,lower_tag)
+		add_tag(node,lower_tag,count)
 
 #단일 태그 제거 성공 시 true 실패 시 false
 func remove_tag(node : Node, tag : String) -> bool:
@@ -75,6 +77,8 @@ func remove_tag_tree(node : Node, tag : String) -> bool:
 		#해당 태그가 상위태그로 시작하면 제거
 		if str.begins_with(upper_tag):
 			remove_tag(node,str)
+	#삭제한 태그의 상위 태그에 카운트 값 감소
+	decrease_tag_tree(node,get_upper_tag(tag),count)
 	return true
 	
 
@@ -91,8 +95,16 @@ func has_tag(node : Node, tag : String) -> bool:
 	return false
 	
 #태그 일정 부분으로 해당 태그 찾기
-func find_tag(node : Node, tag : String):
-	pass
+func find_tag(node : Node, tag : String) -> String:
+	var tags = get_tags(node)
+	tag = "." + tag
+	for i in tags:
+		#해당 태그를 가지고 있으면 반환(앞뒤로 .추가해서 단어속 태그 방지)
+		if i.ends_with(tag):
+			return i
+	return String()
+
+
 
 #앞의 !비교해서 있으면 뒤의 값비교가 false일때 true 반환
 func tag_check(node : Node, tag : String):
@@ -133,7 +145,7 @@ func clean_dict():
 			print(i)
 			dict.erase(i)
 
-#태그의 카운트 1 감소. 0이면 태그 삭제(아직 사용처 없음, 생기면 변형 예정)
+#태그의 카운트 1 감소. 0이면 태그 삭제
 func decrease_tag(node : Node, tag : String, count = 1) -> int:
 	if !dict.has(node):
 		return 0
@@ -142,10 +154,11 @@ func decrease_tag(node : Node, tag : String, count = 1) -> int:
 		return 0
 	tags[tag] -=count
 	if tags[tag] <=0 :
-		remove_tag_tree(node,tag)
+		remove_tag(node,tag)
 		return 0
 	return tags[tag]
 
+#하위 태그부터 하나씩 카운트 만큼 감소(0보다 작아지면 해당 태그 삭제)
 func decrease_tag_tree(node : Node, tag :String, count = 1):
 	decrease_tag(node,tag,count)
 	var upper_tag = get_upper_tag(tag)
