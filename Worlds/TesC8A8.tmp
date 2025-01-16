@@ -63,8 +63,7 @@ metadata/address = "Battle"
 metadata/type = "BattlePanel"
 
 [node name="TagAdder" parent="forest" instance=ExtResource("2_aytmn")]
-compare_tags = Array[String](["Quest.process.quest1"])
-add_tags = Array[String](["Quest.process.quest1.alpha"])
+adder_name = "Forest"
 
 [node name="Area3D" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.8172, 7.96549, -33.2232)
@@ -77,5 +76,9 @@ shape = SubResource("BoxShape3D_ukn7v")
 
 [node name="QuestManager" parent="Area3D" instance=ExtResource("3_m1rnr")]
 
+[node name="TagAdder" parent="Area3D" instance=ExtResource("2_aytmn")]
+adder_name = "Box"
+
 [connection signal="input_event" from="forest" to="forest/TagAdder" method="_on_location_clicked"]
 [connection signal="input_event" from="Area3D" to="Area3D/QuestManager" method="_on_NPC_clicked"]
+[connection signal="input_event" from="Area3D" to="Area3D/TagAdder" method="_on_location_clicked"]
