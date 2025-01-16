@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://blyo26b6351jw"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/attribute_bar.gd" id="1_p66x6"]
+[ext_resource type="PackedScene" uid="uid://cefcg2vd84nbg" path="res://Objects/UI/Battle/attribute_infomation.tscn" id="2_m48fb"]
+
+[node name="AttributeBar" type="Control"]
+layout_mode = 3
+anchor_left = -0.0111111
+anchor_top = 0.015544
+anchor_right = -0.0111111
+anchor_bottom = 0.015544
+offset_right = 40.0
+offset_bottom = 293.0
+script = ExtResource("1_p66x6")
+attribute_color = {
+"Dirt": Color(0.709804, 0.427451, 0.211765, 1),
+"Fire": Color(1, 0, 0, 1),
+"Water": Color(0.054902, 0, 0.803922, 1),
+"none": Color(0.196078, 0.207843, 0.196078, 1)
+}
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+alignment = 2
+
+[node name="AttributeInfomation" parent="." instance=ExtResource("2_m48fb")]

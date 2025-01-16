@@ -1,4 +1,5 @@
 {
+	"attribute": 100,
 	"enemys":
 		[
 			{
@@ -16,6 +17,12 @@
 				"speed": 80,
 				"mana": 100
 			},
-		]
-	
+		],
+	"rewards":
+		{
+			"item": [
+				{"id": "potion", "count": 1},
+				{"id": "artifact:pandora_cube"}
+			]
+		}
 }

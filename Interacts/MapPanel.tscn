@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://ujhj8734sgr6"]
 
 [ext_resource type="Texture2D" uid="uid://u5xpa8c8cx13" path="res://Interacts/Image/Under Bar.png" id="1_nowo1"]
-[ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/button_theme.tres" id="2_evs1w"]
+[ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/Battle/button_theme.tres" id="2_evs1w"]
 
 [node name="ChoicePanel" type="VBoxContainer"]
 anchors_preset = 15

@@ -20,10 +20,11 @@ var hp:
 		if hp <= 0:
 			_died()
 		
+# 행동력 
 @export var point: int
 var current_point: int
 
-# for test
+# 플레이어인지 확인용 
 @export var is_player := false
 
 func _ready():
@@ -42,4 +43,4 @@ func set_character(data: Dictionary):
 	speed = data.speed
 	mana = data.mana
 	hp = data.hp	
-	print(data)
+	#print(data)

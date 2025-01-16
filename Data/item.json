@@ -1,0 +1,14 @@
+{
+	"potion": {
+		"type": "self_heal",
+		"value": 10,
+		"name": "하급 포션",
+		"description": "체력을 {%f}만큼 회복합니다"
+	},
+	"bomb": {
+		"type": "attack_all",
+		"value": 20,
+		"name": "폭탄",
+		"description": "적 전체에게 {%f}의 데미지를 줍니다"
+	}
+}

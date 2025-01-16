@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://cefcg2vd84nbg"]
+
+[ext_resource type="Script" path="res://Scripts/Skills/attribute_infomation.gd" id="1_he4ny"]
+
+[node name="Attributes" type="Node"]
+script = ExtResource("1_he4ny")
