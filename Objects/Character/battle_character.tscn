@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://drsabvdulmx23"]
+[gd_scene load_steps=3 format=3 uid="uid://cfalpw5wnu5ff"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_character.gd" id="1_o7t35"]
 [ext_resource type="PackedScene" uid="uid://cqw8d6pmimxyb" path="res://Objects/Character/testPing.glb" id="1_ytaoa"]

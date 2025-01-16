@@ -1,0 +1,11 @@
+Tagger 종류
+1. TagAdder
+	variable :
+		CompareTags : 작동하기 위해 필요한 태그 조건들(String : count)
+		AddTags : 작동 시 추가될 태그들
+2. StatComparer (extend TagAdder)
+	variable :
+		CompareValue : 캐릭터의 스탯, 비교값(String : count)
+		
+		
+	
