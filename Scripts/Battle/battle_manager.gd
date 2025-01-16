@@ -183,8 +183,8 @@ func _battle_end(type):
 			msg.text = "전투에서 승리했다!"
 			
 			# 보상 부여
-			if map_data.has("rewards"):
-				for i in map_data["rewards"]:
+			if map_data.has("rewards") and map_data["rewards"].has("item"):
+				for i in map_data["rewards"]["item"]:
 					if (i.has("id") == false):
 						printerr("No Item ID in rewards!")
 					elif (i.has("count") == false):

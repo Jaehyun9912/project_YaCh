@@ -43,6 +43,11 @@ func _ready():
 			if i.button_number != Buttons.CENTER:
 				var index = i.button_number-1
 				var skill = PlayerData.skills[index]
+				if skill_info.has(skill) == false:
+					i.disabled = true
+					i.lock_disable = true
+					action_points_list[index] = [0, null]
+					continue
 				
 				action_points_list[index] = [skill_info[skill]["cost"], i]
 		

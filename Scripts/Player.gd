@@ -3,6 +3,9 @@ class_name Player
 
 const max_inventory_slots = 9
 
+func _ready():
+	load_player()
+	
 #region Data
 var data : Dictionary
 
@@ -80,9 +83,6 @@ func reset_player():
 	DataManager.save_data(data, "player")
 #endregion
 
-func _ready():
-	load_player()
-
 #region Inventory
 func add_new_item(id : String, count : int):
 	var sp = id.split(":")
@@ -134,18 +134,21 @@ func add_new_item(id : String, count : int):
 # 아티팩트 획득 
 func _get_artifact(id : String):
 	var item = DataManager.get_artifact_data(id)
+	
+	# 파일 형식 체크 
 	if item.size() == 0:
 		printerr("Wrong Artifact ID! " + id)
 	elif item.has("location") == false:
 		printerr("No Location " + id)
-	#elif ViewManager.now_map_name != item["location"]:
-		#printerr("need same location " + ViewManager.now_map_name + " != " + item["location"])
-		#return
+	elif ViewManager.now_map_name != item["location"]:
+		printerr("need same location " + ViewManager.now_map_name + " != " + item["location"])
+		return
 	elif item.has("type") == false:
 		printerr("No type " + id)
 	elif artifact.has(id) == true:
-		printerr("Already has Artifact!" + id)
+		print("Already has Artifact! " + id)
 	else:
+		# 아이템 부여 
 		artifact[id] = true
 		print(artifact)
 
