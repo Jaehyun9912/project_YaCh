@@ -4,3 +4,5 @@
 
 [node name="TagAdder" type="Node3D"]
 script = ExtResource("1_6v5ke")
+conditions = null
+add_tags = null

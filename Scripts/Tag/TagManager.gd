@@ -110,11 +110,9 @@ func find_tag(node : Node, tag : String) -> String:
 func tag_check(node : Node, tag : String):
 	var negative = false
 	if tag.begins_with("!"):
-		tag = tag.split("!",true,2)[1]
 		negative = true
-	var check = tag_compare(node,tag)
-	#print(tag," is ","Negative : ",negative," , TagCompare : ",check)
-	return check != negative
+		tag = tag.right(-1)
+	return negative != tag_compare(node,tag)
 	
 #태그의 부등호 비교해서 충족 시 true 반환
 func tag_compare(node : Node,tag : String) -> bool:
@@ -123,16 +121,15 @@ func tag_compare(node : Node,tag : String) -> bool:
 	for i in comparer:
 		var str = tag.split(i,true,2)
 		if str.size()==2:
-			print(TagManager.get_tag_count(node,str[0])," ",i," ",str[1])
-			#태그가 있는지 없는지부터 확인
-			if !TagManager.has_tag(node,str[0]):
+			var tag_count = TagManager.get_tag_count(node,str[0])
+			if i == ">" && tag_count > str[1].to_int():
+				return true
+			elif i == "<" && tag_count < str[1].to_int():
+				return true
+			elif i == "=" && tag_count == str[1].to_int():
+				return true
+			else:
 				return false
-			if i == ">" && TagManager.get_tag_count(node,str[0]) > str[1].to_int():
-				return true
-			if i == "<" && TagManager.get_tag_count(node,str[0]) < str[1].to_int():
-				return true
-			if i == "=" && TagManager.get_tag_count(node,str[0]) == str[1].to_int():
-				return true
 	#태그가 있는지 없는지만 확인(태그에 부등호가 없는경우)
 	if TagManager.has_tag(node,tag):
 		return true

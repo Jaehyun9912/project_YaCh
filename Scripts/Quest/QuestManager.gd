@@ -18,14 +18,10 @@ const clear_tree = "Quest.clear."
 func check_quest(quest : Quest)-> bool:
 	#퀘스트를 수주 중일 때는 추가 수주 불가능
 	if TagManager.has_tag(PlayerData,process_tree+quest.id):
-		#print(quest.id," is Already Received")
 		return false
 	#수주에 필요한 태그 존재여부 확인
-	for i in quest.conditions["Before"]:
-		if !TagManager.tag_check(PlayerData,i):
-			#print(quest.id," is not Receivable")
-			return false
-	#print(quest.id," is Receivable")
+	if !Quest.condition_check(quest.accept_condition):
+		return false
 	return true
 	
 
@@ -72,7 +68,6 @@ func _ready():
 	TagManager.clean_dict()
 	#json에서 퀘스트 리스트 받아오기
 	import_quest()
-	print(TagManager.dict)
 	
 #NPC 상호작용 시
 func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
@@ -112,17 +107,28 @@ func clear_quest(quest: Quest):
 	if quest.ClearNPCName != NPC_name:
 		#print("isNotClearNPC =",quest.ClearNPCName," != ",NPC_name)
 		return false
+	#클리어 여부 확인
 	if !quest.is_clearable():
 		return false		
-	#해당 퀘스트 클리어 시 수주중 태그 삭제 후 클리어 태그 부여
 	PlayerData.quest_list.erase(quest)
-	#퀘스트 진행에 사용 태그들 삭제(퀘스트 진행 태그 트리 삭제)
+	#플레이어한테 수주중 태그 삭제 후 클리어 태그 부여
 	TagManager.remove_tag_tree(PlayerData,process_tree+quest.id)
-	TagManager.remove_tag_tree(self,process_tree+quest.id)
-	#퀘스트 클리어 태그 추가(Clear태그 없으면 생성)
 	TagManager.add_tag_tree(PlayerData,clear_tree+quest.id)
+	#본인에 수주중 태그 삭제 후 클리어 태그 부여
+	TagManager.remove_tag_tree(self,process_tree+quest.id)
 	TagManager.add_tag_tree(self,clear_tree+quest.id)
+	#퀘스트 보상 부여
+	give_reward(quest)
 	print(quest.id , " Clear")
+
+func give_reward(quest : Quest):
+	#보상 값 순회하면서 플레이어 인벤에 추가하기
+	#퀘스트 조건으로 아이템 가져가는 거 체크로 개수 확인 하고 보상에 -개수 넣으면 될듯?
+	var rewards = quest.rewards
+	for i in rewards:
+		PlayerData.add_new_item(i.id,i.count)
+
+
 
 
 #임의의 물체에 태그 부여하기

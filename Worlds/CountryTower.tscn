@@ -1,6 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://bu1jsgqdr01s7"]
-
-[ext_resource type="Script" path="res://Scripts/Quest/QuestPanel.gd" id="1_o3dnk"]
+[gd_scene format=3 uid="uid://bu1jsgqdr01s7"]
 
 [node name="CountryTower" type="Control"]
 layout_mode = 3
@@ -8,8 +6,6 @@ anchor_right = 1.0
 anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_o3dnk")
-NPC_name = "NPC1"
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1

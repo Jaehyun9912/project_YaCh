@@ -4,27 +4,45 @@
 		"condition":
 			{
 				"Before":["!Quest.clear.quest1"],
-				"Process":["Quest.process.quest1.alpha>2"]
+				"Process":["Quest.process.quest1.alpha","!stat:max_hp>50","item:potion"]
 			},
-		"id":"quest1"
+		"id":"quest1",
+		"rewards" : [
+			{
+				"id": "potion",
+				"count": 5,
+			},
+		]
 	},
 	{
 		"ClearNPCName": "NPC1",
 		"condition":
 			{
 				"Before":["Quest.clear.quest1","!Quest.clear.quest2"],
-				"Process":["Quest2.More50"]
+				"Process":["item:potion>5"]
 			},
-		"id":"quest2"
+		"id":"quest2",
+		"rewards" : [
+			{
+				"id": "potion",
+				"count": 88,
+			},
+			]
 	},
 	{
 		"ClearNPCName": "NPC1",
 		"condition":
 			{
 				"Before":["!Quest.clear.quest3"],
-				"Process":["Quest.clear.quest2"]
+				"Process":["Quest.clear.quest1"]
 			},
-		"id":"quest3"
+		"id":"quest3",
+		"rewards" : [
+			{
+				"id": "potion",
+				"count": 5,
+			},
+			]
 	},
 	
 ]

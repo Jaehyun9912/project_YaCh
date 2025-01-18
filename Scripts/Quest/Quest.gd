@@ -3,32 +3,28 @@ class_name Quest
 
 
 #퀘스트 비교 목적 값(스탯은 스탯 비교, 그 외엔 data에 스탯 추가)
-#var value : Dictionary
-@export var id : String
-@export var ClearNPCName : String
+var id : String
+var ClearNPCName : String
 var conditions
-#태그 값 사용 금지 문자 : = > < ! .(.은 태그 트리용)
-#Before : 수주에 필요한 태그(태그 : 카운트)
-#Process : 클리어에 필요한 태그(태그 : 카운트)
-#수주 중일 때 태그 id 값 부여
-#클리어 시 Clear.id 값 부여
+#수주 조건
+var accept_condition:
+	get:
+		return conditions["Before"]
+#클리어 조건
+var process_condition:
+	get:
+		return conditions["Process"]
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+var rewards
 
-func is_met():
-	pass
-	
+
 func get_quest_data() -> Dictionary:
 	var dict = {
 		"id" : id,
 		"condition" : conditions,
-		"ClearNPCName" : ClearNPCName
+		"ClearNPCName" : ClearNPCName,
+		"rewards" : rewards
 	}
 	return dict
 
@@ -36,18 +32,47 @@ func _init(data : Dictionary) ->void:
 	ClearNPCName = data["ClearNPCName"]
 	id = data["id"]
 	conditions = data["condition"]
+	rewards = data["rewards"]
 	
-#퀘스트 클리어 태그 확인하기(카운트는 체크 안함)
-func is_clearable():
+#퀘스트 클리어 조건 확인하기
+func is_clearable() -> bool:
 	if !TagManager.has_tag(PlayerData,"Quest.process."+id):
 		return false
-	for i in conditions["Process"]:
-		if !TagManager.tag_check(PlayerData,i):
-			print(id," Can't Clear")
+	#클리어 조건 확인 후 가능하면 true 반환
+	if Quest.condition_check(process_condition):
+		return true
+	return false
+
+#조건 문자열 배열로 받아서 순회. 하나라도 미충족 시 false 반환
+static func condition_check(condition : PackedStringArray)-> bool:
+	for i in condition:
+		print("process1 : ",i)
+		#반전 확인
+		var negative = false
+		var str = i
+		if str.begins_with("!"):
+			str = str.right(-1)
+			negative = true
+		print("process2 : ",str)
+		#조건 분야 확인(태그, 아이템, 스탯)
+		var arr = str.split(":",true,1)
+		print("process3 : ",arr)
+		var check : bool
+		if arr.size()==1:
+			check = TagManager.tag_compare(PlayerData,arr[0])
+		elif arr[0] == "tag":
+			check = TagManager.tag_compare(PlayerData,arr[1])
+		elif arr[0] == "stat":
+			check = PlayerData.stat_compare(arr[1])
+		elif arr[0] == "item":
+			check = PlayerData.item_compare(arr[1])
+		elif arr[0] == "artifact":
+			check = PlayerData.artifact_compare(arr[1])
+		#조건 문자열이 이상할 경우
+		else:
+			printerr("Condition Error")
 			return false
-	#퀘스트 클리어 조건을 모두 충족함
+		print("result : ", negative != check)
+		if negative == check:
+			return false
 	return true
-
-
-
-
