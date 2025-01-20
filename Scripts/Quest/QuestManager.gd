@@ -73,7 +73,6 @@ func _ready():
 func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
 		#플레이어가 가지고 있는 퀘스트 클리어 확인
-		
 		for i in PlayerData.quest_list:
 			clear_quest(i)
 		
@@ -86,7 +85,6 @@ func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 			receive_quest(quest)
 		else:
 			print("No Receivable Quest")
-		print(TagManager.dict)
 
 
 #퀘스트 수주(가능한지 확인은 enqueue_quest에서 체크)
@@ -96,7 +94,8 @@ func receive_quest(quest : Quest):
 	#퀘스트 매니저 태그 수주 가능 -> 수주 중으로 전환
 	TagManager.remove_tag_tree(self,accept_tree+quest.id)
 	TagManager.add_tag_tree(self,process_tree+quest.id)
-	
+	#퀘스트 명, 클리어 조건 서술
+	print(quest.title ," 수주 : " , quest.description)
 	#플레이어의 퀘스트 리스트에 퀘스트 추가
 	PlayerData.receive_quest(quest)
 	quest_queue.erase(quest)
@@ -118,6 +117,7 @@ func clear_quest(quest: Quest):
 	TagManager.remove_tag_tree(self,process_tree+quest.id)
 	TagManager.add_tag_tree(self,clear_tree+quest.id)
 	#퀘스트 보상 부여
+	submit_item(quest)
 	give_reward(quest)
 	print(quest.id , " Clear")
 
@@ -128,6 +128,11 @@ func give_reward(quest : Quest):
 	for i in rewards:
 		PlayerData.add_new_item(i.id,i.count)
 
+func submit_item(quest : Quest):
+	var submit = quest.submit
+	for i in submit:
+		PlayerData.add_new_item(i.id,-i.count)
+	
 
 
 

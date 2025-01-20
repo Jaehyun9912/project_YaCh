@@ -139,7 +139,6 @@ func tag_compare(node : Node,tag : String) -> bool:
 func clean_dict():
 	for i in dict.keys():
 		if i == null:
-			print(i)
 			dict.erase(i)
 
 #태그의 카운트 1 감소. 0이면 태그 삭제

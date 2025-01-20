@@ -165,13 +165,6 @@ func receive_quest(quest : Quest):
 	quest_list.append(quest)
 	print( quest.id," Receive, Current QuestCount :",quest_list.size())
 
-func print_quest_list():
-	var list = "Quest : "
-	for i in quest_list:
-		list += i.id+", "
-	print(list)
-
-
 #스탯값 부등호 비교
 func stat_compare(condition : String) -> bool:
 	#퀘스트에 필요한 태그 확인(부등호로 태그 카운트 세기)
