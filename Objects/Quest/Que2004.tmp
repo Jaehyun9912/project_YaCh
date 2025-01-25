@@ -5,6 +5,6 @@
 
 [node name="QuestManager" type="Node3D"]
 script = ExtResource("1_idi6u")
-npc_name = "NPC1"
+NPC_name = "NPC1"
 
 [node name="QuestManagerPanel" parent="." instance=ExtResource("2_vhodf")]

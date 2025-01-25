@@ -1,63 +1,49 @@
 { "NPC1":[
 	{
-		"ClearNPCName": "NPC1",
-		"condition":
-			{
-				"Before":["!Quest.clear.quest1"],
-				"Process":["Quest.process.quest1.alpha","!stat:max_hp>50"]
-			},
-		"description" : "alpha태그, 최대체력<=50, 포션 1개 제출",
 		"id":"quest1",
 		"title" : "테스트 퀘스트 1",
-		"rewards" : [
-			{
-				"id": "potion",
-				"count": 5,
-			},
-		],
+		"description" : "alpha태그, 최대체력<=50, 포션 1개 제출",
+		"clear_NPC": "NPC1",
+		"accept_condition":["!Quest.clear.quest1"],
+		"process_condition":["Quest.process.quest1.alpha","!stat:max_hp>50"],
 		"submit" : [
 			{
 				"id" : "bomb",
 				"count" : 1
 			}
-		]
-	},
-	{
-		"ClearNPCName": "NPC1",
-		"condition":
-			{
-				"Before":["Quest.clear.quest1","!Quest.clear.quest2"],
-				"Process":["item:potion>5"]
-			},
-		"description" : "포션 6개 소지",
-		"id":"quest2",
-		"title" : "테스트 퀘스트 2",
-		"rewards" : [
-			{
-				"id": "potion",
-				"count": -3,
-			},
 		],
-		"submit" : []
-	},
-	{
-		"ClearNPCName": "NPC1",
-		"condition":
-			{
-				"Before":["!Quest.clear.quest3"],
-				"Process":["Quest.clear.quest1"]
-			},
-		"description" : "퀘스트 1 클리어",
-		"id":"quest3",
-		"title" : "테스트 퀘스트 3",
 		"rewards" : [
 			{
 				"id": "potion",
 				"count": 5,
-			},
-		],
-		"submit" : []
+			}
+		]
 	},
-	
+	{
+		"id":"quest2",
+		"title" : "테스트 퀘스트 2",
+		"description" : "테스트테스트테스트테스트테스트",
+		"clear_NPC": "NPC1",
+		"process_condition":["Quest.clear"],
+		"rewards" : [
+			{
+				"id": "potion",
+				"count": 5,
+			}
+		]
+	},
+	{
+		"id":"quest3",
+		"title" : "테스트 퀘스트 3",
+		"description" : "테스트3테스트3테스트3테스트3테스트",
+		"clear_NPC": "NPC1",
+		"accept_condition":["Quest.clear.quest3"],
+		"rewards" : [
+			{
+				"id": "potion",
+				"count": 5,
+			}
+		]
+	},
 ]
 }

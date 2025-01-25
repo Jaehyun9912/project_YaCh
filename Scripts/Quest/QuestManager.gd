@@ -1,7 +1,7 @@
 extends Node
 class_name QuestManager
 
-@export var NPC_name : String
+@export var npc_name : String
 
 #캐릭터가 제공하는 퀘스트 리스트
 var quest_list : Array[Quest]
@@ -13,6 +13,7 @@ const unaccept_tree = "Quest.unacceptable."
 const process_tree = "Quest.process."
 const clear_tree = "Quest.clear."
 
+#signal quest_updated
 
 #퀘스트 수주 조건 확인(수주 가능 여부 반환)
 func check_quest(quest : Quest)-> bool:
@@ -36,14 +37,15 @@ func enqueue_quest():
 			#태그 수주 가능으로 변경
 			TagManager.remove_tag_tree(self,unaccept_tree+i.id)
 			TagManager.add_tag_tree(self,accept_tree+i.id)
-	return !quest_queue.is_empty()
+	return quest_queue
+	#quest_updated.emit()
 
 #json에서 퀘스트 로드
 func import_quest():
 	quest_list.clear()
-	var data = DataManager.get_data("Quest/"+NPC_name)
+	var data = DataManager.get_data("Quest/"+npc_name)
 	#print(data)
-	for datum in data[NPC_name]:
+	for datum in data[npc_name]:
 		var quest = Quest.new(datum)
 		quest_list.append(quest)
 		#플레이어에 태그(process,clear)있는지 확인 후 맞게 조정
@@ -64,6 +66,7 @@ func import_quest():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	
 	#할당 해제된 노드 제거(나중에 씬 이동할 때 사용)
 	TagManager.clean_dict()
 	#json에서 퀘스트 리스트 받아오기
@@ -72,25 +75,29 @@ func _ready():
 #NPC 상호작용 시
 func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
+		var panel = $"QuestManagerPanel".duplicate()
+		panel.quest_manager = self
+		ViewManager.push_panel(panel)
+		
 		#플레이어가 가지고 있는 퀘스트 클리어 확인
-		for i in PlayerData.quest_list:
-			clear_quest(i)
+		#for i in PlayerData.quest_list:
+		#	clear_quest(i)
 		
 		#수주 가능 퀘스트 정리
-		enqueue_quest()
-		
+		#enqueue_quest()
 		#클릭 시 수주 가능 퀘스트 중 첫번째 퀘스트 수주
-		if quest_queue.size()>0:
-			var quest = quest_queue[0]
-			receive_quest(quest)
-		else:
-			print("No Receivable Quest")
+		#if quest_queue.size()>0:
+		#	var quest = quest_queue[0]
+		#	receive_quest(quest)
+		#else:
+		#	print("No Receivable Quest")
 
 
 #퀘스트 수주(가능한지 확인은 enqueue_quest에서 체크)
 func receive_quest(quest : Quest):
 	#수주한 퀘스트 태그 추가(이 퀘스트 재 수주 불가능)
 	TagManager.add_tag_tree(PlayerData,process_tree+quest.id)
+	print(TagManager.get_tags(PlayerData))
 	#퀘스트 매니저 태그 수주 가능 -> 수주 중으로 전환
 	TagManager.remove_tag_tree(self,accept_tree+quest.id)
 	TagManager.add_tag_tree(self,process_tree+quest.id)
@@ -98,16 +105,11 @@ func receive_quest(quest : Quest):
 	print(quest.title ," 수주 : " , quest.description)
 	#플레이어의 퀘스트 리스트에 퀘스트 추가
 	PlayerData.receive_quest(quest)
-	quest_queue.erase(quest)
 	
 
 func clear_quest(quest: Quest):
-	#해당 퀘스트 도착지가 해당 NPC가 맞는지 확인
-	if quest.ClearNPCName != NPC_name:
-		#print("isNotClearNPC =",quest.ClearNPCName," != ",NPC_name)
-		return false
-	#클리어 여부 확인
-	if !quest.is_clearable():
+	#클리어 가능 여부 확인
+	if !quest.is_clearable(npc_name):
 		return false		
 	PlayerData.quest_list.erase(quest)
 	#플레이어한테 수주중 태그 삭제 후 클리어 태그 부여
@@ -120,6 +122,7 @@ func clear_quest(quest: Quest):
 	submit_item(quest)
 	give_reward(quest)
 	print(quest.id , " Clear")
+	#quest_updated.emit()
 
 func give_reward(quest : Quest):
 	#보상 값 순회하면서 플레이어 인벤에 추가하기
@@ -159,9 +162,9 @@ func save_quest():
 			var qData = quest.get_quest_data()
 			arr.append(qData)
 	var dict = {
-		NPC_name : arr
+		npc_name : arr
 	}
-	save_data(dict,NPC_name)
+	save_data(dict,npc_name)
 
 #디버그용 데이터 저장
 func save_data(save: Dictionary, data_path: String) -> void:
@@ -169,6 +172,5 @@ func save_data(save: Dictionary, data_path: String) -> void:
 	var save_file = FileAccess.open(path, FileAccess.WRITE)
 	
 	var json_string = JSON.stringify(save)
-	
 	save_file.store_line(json_string)
 	

@@ -10,6 +10,7 @@ func _on_button_1_pressed():
 	PlayerData.save_player()
 	print("변경 후 저장됨 ")
 	
+#디버그용으로 잠시
 func _on_button_2_pressed():
 	PlayerData.reset_player()
 	print("리셋됨")

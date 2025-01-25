@@ -10,5 +10,6 @@
 [node name="TestCountry" parent="World" instance=ExtResource("2_mrgdm")]
 
 [node name="Interact" type="CanvasLayer" parent="."]
+layer = 0
 
 [node name="ChoicePanel" parent="Interact" instance=ExtResource("3_5ejod")]
