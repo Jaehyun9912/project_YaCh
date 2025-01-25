@@ -49,11 +49,13 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 
 var panel_stack : Array
 #패널만 추가 하기
-func push_panel(panel : Control):
+func push_panel(panel_name : String):
 	get_view()
+	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
 	panel_stack.append(panel)
 	#print(panel_stack.size())
 	current_panel.add_child(panel as Node)
+	return panel
 
 func pop_panel():
 	var last_panel = panel_stack.pop_back()

@@ -45,5 +45,12 @@
 			}
 		]
 	},
+	{
+		"id":"quest4",
+		"title" : "테스트 퀘스트 4",
+		"description" : "테스트4",
+		"clear_NPC": "NPC1",
+		"accept_condition":["!Quest.clear.quest4"]
+	},
 ]
 }

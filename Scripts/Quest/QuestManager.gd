@@ -75,10 +75,8 @@ func _ready():
 #NPC 상호작용 시
 func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
-		var panel = $"QuestManagerPanel".duplicate()
+		var panel = ViewManager.push_panel("QuestManagerPanel")
 		panel.quest_manager = self
-		ViewManager.push_panel(panel)
-		
 		#플레이어가 가지고 있는 퀘스트 클리어 확인
 		#for i in PlayerData.quest_list:
 		#	clear_quest(i)

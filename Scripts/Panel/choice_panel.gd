@@ -12,8 +12,14 @@ func _on_button_1_pressed():
 	
 #디버그용으로 잠시
 func _on_button_2_pressed():
-	PlayerData.reset_player()
-	print("리셋됨")
+	#PlayerData.reset_player()
+	#print("리셋됨")
+	var panel = ViewManager.push_panel("QuestPanel")
+	panel.set_quest_buttons(PlayerData.quest_list)
+	panel.mode = panel.Mode.process
+	print("수주중인 퀘스트 보기")
+	
+	
 
 func _on_button_3_pressed():
 	PlayerData.add_new_item("bomb", 1)

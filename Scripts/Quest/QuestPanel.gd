@@ -34,6 +34,13 @@ func set_quest_button(quest : Quest):
 	container.add_child(button)
 
 func set_quest_buttons(list : Array[Quest]):
+	print(mode)
+	if mode == Mode.process:
+		$QuestList/Label.text = "수주중인 퀘스트"
+	elif mode == Mode.clear:
+		$QuestList/Label.text = "제출 가능 퀘스트"
+	else:
+		$QuestList/Label.text = "수주 가능 퀘스트"
 	for i in container.get_children():
 		i.queue_free()
 	for i in list:
