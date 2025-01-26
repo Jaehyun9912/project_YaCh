@@ -1,10 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://ba7nk0nm4bu2k"]
+[gd_scene load_steps=2 format=3 uid="uid://ba7nk0nm4bu2k"]
 
 [ext_resource type="Script" path="res://Scripts/Quest/QuestManager.gd" id="1_idi6u"]
-[ext_resource type="PackedScene" uid="uid://cl1j5b3vvf35v" path="res://Interacts/QuestManagerPanel.tscn" id="2_vhodf"]
 
 [node name="QuestManager" type="Node3D"]
 script = ExtResource("1_idi6u")
 npc_name = "NPC1"
-
-[node name="QuestManagerPanel" parent="." instance=ExtResource("2_vhodf")]

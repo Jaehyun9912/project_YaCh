@@ -159,11 +159,22 @@ func _get_artifact(id : String):
 #region Quest
 #수주 중인 퀘스트 리스트
 var quest_list : Array[Quest]
+signal quest_updated
 #값 비교용
 
 func receive_quest(quest : Quest):
 	quest_list.append(quest)
+	#수주한 퀘스트 태그 추가(이 퀘스트 재 수주 불가능)
+	TagManager.add_tag_tree(PlayerData,"Quest.process."+quest.id)
 	print( quest.id," Receive, Current QuestCount :",quest_list.size())
+	quest_updated.emit(quest_list)
+
+func clear_quest(quest: Quest):
+	PlayerData.quest_list.erase(quest)
+	#플레이어한테 수주중 태그 삭제 후 클리어 태그 부여
+	TagManager.remove_tag_tree(PlayerData,"Quest.process."+quest.id)
+	TagManager.add_tag_tree(PlayerData,"Quest.clear."+quest.id)
+	quest_updated.emit(quest_list)
 
 #스탯값 부등호 비교
 func stat_compare(condition : String) -> bool:

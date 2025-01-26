@@ -16,6 +16,7 @@ func _on_button_2_pressed():
 	#print("리셋됨")
 	var panel = ViewManager.push_panel("QuestPanel")
 	panel.set_quest_buttons(PlayerData.quest_list)
+	PlayerData.quest_updated.connect(panel.set_quest_buttons)
 	panel.mode = panel.Mode.process
 	print("수주중인 퀘스트 보기")
 	

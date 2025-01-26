@@ -13,7 +13,7 @@ const unaccept_tree = "Quest.unacceptable."
 const process_tree = "Quest.process."
 const clear_tree = "Quest.clear."
 
-#signal quest_updated
+signal quest_updated
 
 #퀘스트 수주 조건 확인(수주 가능 여부 반환)
 func check_quest(quest : Quest)-> bool:
@@ -38,7 +38,7 @@ func enqueue_quest():
 			TagManager.remove_tag_tree(self,unaccept_tree+i.id)
 			TagManager.add_tag_tree(self,accept_tree+i.id)
 	return quest_queue
-	#quest_updated.emit()
+	quest_updated.emit()
 
 #json에서 퀘스트 로드
 func import_quest():
@@ -71,16 +71,18 @@ func _ready():
 	TagManager.clean_dict()
 	#json에서 퀘스트 리스트 받아오기
 	import_quest()
-	
+
+func show_manager_panel():
+	var panel = ViewManager.push_panel("QuestManagerPanel")
+	#본인에 대한 퀘스트 조건, 수주 가능한 퀘스트 리스트 설정
+	panel.quest_manager = self
 #NPC 상호작용 시
 func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
-		var panel = ViewManager.push_panel("QuestManagerPanel")
-		panel.quest_manager = self
+		show_manager_panel()
 		#플레이어가 가지고 있는 퀘스트 클리어 확인
 		#for i in PlayerData.quest_list:
 		#	clear_quest(i)
-		
 		#수주 가능 퀘스트 정리
 		#enqueue_quest()
 		#클릭 시 수주 가능 퀘스트 중 첫번째 퀘스트 수주
@@ -93,9 +95,6 @@ func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 
 #퀘스트 수주(가능한지 확인은 enqueue_quest에서 체크)
 func receive_quest(quest : Quest):
-	#수주한 퀘스트 태그 추가(이 퀘스트 재 수주 불가능)
-	TagManager.add_tag_tree(PlayerData,process_tree+quest.id)
-	print(TagManager.get_tags(PlayerData))
 	#퀘스트 매니저 태그 수주 가능 -> 수주 중으로 전환
 	TagManager.remove_tag_tree(self,accept_tree+quest.id)
 	TagManager.add_tag_tree(self,process_tree+quest.id)
@@ -103,16 +102,13 @@ func receive_quest(quest : Quest):
 	print(quest.title ," 수주 : " , quest.description)
 	#플레이어의 퀘스트 리스트에 퀘스트 추가
 	PlayerData.receive_quest(quest)
-	
+	quest_updated.emit()
 
 func clear_quest(quest: Quest):
 	#클리어 가능 여부 확인
 	if !quest.is_clearable(npc_name):
 		return false		
-	PlayerData.quest_list.erase(quest)
-	#플레이어한테 수주중 태그 삭제 후 클리어 태그 부여
-	TagManager.remove_tag_tree(PlayerData,process_tree+quest.id)
-	TagManager.add_tag_tree(PlayerData,clear_tree+quest.id)
+	PlayerData.clear_quest(quest)
 	#본인에 수주중 태그 삭제 후 클리어 태그 부여
 	TagManager.remove_tag_tree(self,process_tree+quest.id)
 	TagManager.add_tag_tree(self,clear_tree+quest.id)
@@ -120,7 +116,7 @@ func clear_quest(quest: Quest):
 	submit_item(quest)
 	give_reward(quest)
 	print(quest.id , " Clear")
-	#quest_updated.emit()
+	quest_updated.emit()
 
 func give_reward(quest : Quest):
 	#보상 값 순회하면서 플레이어 인벤에 추가하기
