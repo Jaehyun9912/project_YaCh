@@ -14,7 +14,7 @@ const process_tree = "Quest.process."
 const clear_tree = "Quest.clear."
 
 signal quest_updated
-
+var ui_open : bool
 #퀘스트 수주 조건 확인(수주 가능 여부 반환)
 func check_quest(quest : Quest)-> bool:
 	#퀘스트를 수주 중일 때는 추가 수주 불가능
@@ -66,7 +66,6 @@ func import_quest():
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	
 	#할당 해제된 노드 제거(나중에 씬 이동할 때 사용)
 	TagManager.clean_dict()
 	#json에서 퀘스트 리스트 받아오기
@@ -74,23 +73,17 @@ func _ready():
 
 func show_manager_panel():
 	var panel = ViewManager.push_panel("QuestManagerPanel")
+	panel.tree_exited.connect(func(): ui_open = false)
 	#본인에 대한 퀘스트 조건, 수주 가능한 퀘스트 리스트 설정
 	panel.quest_manager = self
+	ui_open = true
+
+
 #NPC 상호작용 시
 func _on_NPC_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
-		show_manager_panel()
-		#플레이어가 가지고 있는 퀘스트 클리어 확인
-		#for i in PlayerData.quest_list:
-		#	clear_quest(i)
-		#수주 가능 퀘스트 정리
-		#enqueue_quest()
-		#클릭 시 수주 가능 퀘스트 중 첫번째 퀘스트 수주
-		#if quest_queue.size()>0:
-		#	var quest = quest_queue[0]
-		#	receive_quest(quest)
-		#else:
-		#	print("No Receivable Quest")
+		if !ui_open:
+			show_manager_panel()
 
 
 #퀘스트 수주(가능한지 확인은 enqueue_quest에서 체크)
@@ -168,3 +161,4 @@ func save_data(save: Dictionary, data_path: String) -> void:
 	var json_string = JSON.stringify(save)
 	save_file.store_line(json_string)
 	
+
