@@ -75,7 +75,7 @@ func show_manager_panel():
 	var panel = ViewManager.push_panel("QuestManagerPanel")
 	panel.tree_exited.connect(func(): ui_open = false)
 	#본인에 대한 퀘스트 조건, 수주 가능한 퀘스트 리스트 설정
-	panel.quest_manager = self
+	panel.set_panel(self)
 	ui_open = true
 
 

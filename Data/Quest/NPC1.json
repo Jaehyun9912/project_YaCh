@@ -37,7 +37,7 @@
 		"title" : "테스트 퀘스트 3",
 		"description" : "테스트3테스트3테스트3테스트3테스트",
 		"clear_NPC": "NPC1",
-		"accept_condition":["Quest.clear.quest3"],
+		"process_condition":["Quest.clear.quest3"],
 		"rewards" : [
 			{
 				"id": "potion",
@@ -48,6 +48,41 @@
 	{
 		"id":"quest4",
 		"title" : "테스트 퀘스트 4",
+		"description" : "테스트4",
+		"clear_NPC": "NPC1",
+		"accept_condition":["!Quest.clear.quest4"]
+	},
+	{
+		"id":"quest5",
+		"title" : "테스트 퀘스트 5",
+		"description" : "테스트4",
+		"clear_NPC": "NPC1",
+		"accept_condition":["!Quest.clear.quest4"]
+	},
+	{
+		"id":"quest6",
+		"title" : "테스트 퀘스트 6",
+		"description" : "테스트4",
+		"clear_NPC": "NPC1",
+		"accept_condition":["!Quest.clear.quest4"]
+	},
+	{
+		"id":"quest7",
+		"title" : "테스트 퀘스트 7",
+		"description" : "테스트4",
+		"clear_NPC": "NPC1",
+		"accept_condition":["!Quest.clear.quest4"]
+	},
+	{
+		"id":"quest8",
+		"title" : "테스트 퀘스트 8",
+		"description" : "테스트4",
+		"clear_NPC": "NPC1",
+		"accept_condition":["!Quest.clear.quest4"]
+	},
+	{
+		"id":"quest9",
+		"title" : "테스트 퀘스트 9",
 		"description" : "테스트4",
 		"clear_NPC": "NPC1",
 		"accept_condition":["!Quest.clear.quest4"]
