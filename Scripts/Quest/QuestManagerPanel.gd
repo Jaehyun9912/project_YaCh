@@ -9,7 +9,6 @@ var select_quest : Quest
 enum Mode{
 	receive, process, clear
 }
-signal option_pressed
 func set_panel(manager):
 	quest_manager = manager
 	if !quest_manager:
@@ -24,22 +23,18 @@ func show_quest_detail(mode :Mode):
 	curMode = mode
 	#디테일 패널 활성화 및 설정
 	$QuestDetail.show()
-	$QuestDetail/Label.text = select_quest.title
-	$QuestDetail/RichTextLabel.text = select_quest.description
-	var option_btn = $QuestDetail/OptionBtn
+	$QuestDetail/QuestDescription/Label.text = select_quest.title
+	$QuestDetail/QuestDescription/RichTextLabel.text = select_quest.description
+	var option_panel = $QuestDetail/Btns/VBoxContainer/OptionPanel
 	if mode == Mode.process:
-		option_btn.hide()
+		option_panel.hide()
 	else:
-		option_btn.show()
+		option_panel.show()
+	if mode == Mode.clear:
+		option_panel.get_child(0).text = "제출"
+	elif mode == Mode.receive:
+		option_panel.get_child(0).text = "수주"
 		
-
-func option_press():
-	if curMode == Mode.process:
-		return
-	elif curMode == Mode.clear:
-		quest_manager.clear_quest(select_quest)
-	elif curMode == Mode.receive:
-		quest_manager.receive_quest(select_quest)
 #왼쪽 패널에 수주 가능한 퀘스트 리스트 업데이트
 func update_accept_panel():
 	var parent = $QuestList/ScrollContainer/VBoxContainer
@@ -63,6 +58,11 @@ func update_panel():
 		var button = set_quest_button(i,parent)
 		#클리어 가능하면 옵션 버튼 활성화 아니면 비활성화
 		if i.is_clearable(quest_manager.npc_name):
+			#클리어 가능한 퀘스트는 버튼 색 변경
+			var style = StyleBoxFlat.new()
+			style.bg_color = Color.CHOCOLATE
+			button.add_theme_stylebox_override("normal", style)
+			
 			button.pressed.connect(show_quest_detail.bind(Mode.clear))
 		else:
 			button.pressed.connect(show_quest_detail.bind(Mode.process))
@@ -80,6 +80,14 @@ func close_panel():
 	ViewManager.erase_panel(self)
 
 func option_btn_pressed():
-	option_pressed.emit(select_quest)
-	option_pressed.emit()
+	#현재 모드에 맞는 함수 실행
+	if curMode == Mode.process:
+		return
+	elif curMode == Mode.clear:
+		quest_manager.clear_quest(select_quest)
+	elif curMode == Mode.receive:
+		quest_manager.receive_quest(select_quest)
+	#퀘스트 리스트 업데이트
+	update_accept_panel()
+	update_panel()
 	print("Option_pressed")
