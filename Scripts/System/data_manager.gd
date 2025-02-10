@@ -3,7 +3,6 @@ extends Node
 const DEFAULT_PATH = "res://Data/"
 const USER_PATH = "user://"
 
-@onready var skills = get_data("skill_info")
 @onready var items = get_data("item")
 @onready var artifacts = get_data("artifact")
 
@@ -59,14 +58,6 @@ func save_data(save: Dictionary, data_path: String) -> void:
 	var json_string = JSON.stringify(save)
 	
 	save_file.store_line(json_string)
-	
-# 들어온 ID에 해당하는 스킬의 정보가 담긴 딕셔너리 반환 
-func get_skill_data(id : String) -> Dictionary:
-	if skills.has(id):
-		return skills[id]
-	else:
-		printerr("잘못된 스킬 ID! : " + id)
-		return Dictionary()
 		
 # 들어온 ID에 해당하는 아이템의 정보가 담긴 딕셔너리 반환 
 func get_item_data(id : String) -> Dictionary:

@@ -4,15 +4,17 @@ extends Control
 # 속성의 수치와 해당하는 사각형 반환 
 var type : Dictionary
 
+func get_element(id):
+	if id in type.keys():
+		return type[id][0]
+	else:
+		return 0
+
 # (임시) 속성의 색을 정해주는 사전 
 @export var attribute_color : Dictionary
 
 var max_value : float
 var total_value : float
-
-#func _ready():
-	#init(100)
-	#add_value("Fire", 10)
 	
 # max_value 및 none 설정 
 func init(max):
@@ -23,7 +25,6 @@ func init(max):
 
 # 기존 속성 업데이트 또는 새로운 속성 추가 
 func add_value(name : String, amount : float):
-	
 	# 기존 속성에 값 추가 (0 ~ max_value로 범위 고정) 
 	if name in type:
 		type[name][0] += amount
@@ -55,12 +56,15 @@ func add_value(name : String, amount : float):
 			
 	update_value()	
 
+func remove_value(name : String, amount : float):
+	add_value(name, -amount)
+
 # 모든 속성 바를 자신이 차지하는 값만큼 비율을 계산해 막대 길이 조정 
 func update_value():
 	for name in type:
 		#print(name, ":", type[name][0] / max_value)
 		type[name][1].size_flags_stretch_ratio = type[name][0] / max_value
-	
+
 # 새로운 속성 바를 추가하기 
 func add_new_bar(name : String, amount : float):
 	var newBar = ColorRect.new()

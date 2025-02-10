@@ -2,10 +2,9 @@ extends Control
 class_name BattlePanel
 
 @onready var action_point = $ActionPoint as Label
+@onready var buttons = get_tree().get_nodes_in_group("battle_buttons")
 var manager: BattleManager
 var action_text := "행동력 %d/%d"
-
-var action_points_list := [0, 0, 0, 0]
 
 enum Buttons {
 	CENTER = 0,
@@ -32,24 +31,17 @@ func _ready():
 	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
 	
-	var skill_info = DataManager.get_data("skill_info")
-	
-	var buttons = get_tree().get_nodes_in_group("battle_buttons")
+	# 버튼에 함수 설정, 플레이어 스킬 맞지 않으면 버튼 비활성화 
 	for i in buttons:
 		i.disabled = true
 		if i is RoundButton:
 			i.button_down.connect(_on_skill_buttons_down)
-			
 			if i.button_number != Buttons.CENTER:
-				var index = i.button_number-1
-				var skill = PlayerData.skills[index]
-				if skill_info.has(skill) == false:
+				var skill = manager.skill_manager.get_player_skill(i.button_number-1)
+				if skill == null:
 					i.disabled = true
 					i.lock_disable = true
-					action_points_list[index] = [0, null]
 					continue
-				
-				action_points_list[index] = [skill_info[skill]["cost"], i]
 		
 	manager.turn_end.emit()
 
@@ -75,11 +67,9 @@ func _process(delta):
 
 # 현재 행동력보다 많은 행동력 소모하는 버튼 비활성화
 func _check_skill_is_possible():
-	var point = current_charcter.current_point
-	for i in action_points_list:
-		if point < i[0]:
-			i[1].disabled = true
-	
+	for i in buttons:
+		if i is RoundButton and i.button_number != Buttons.CENTER:
+			i.disabled = not manager.skill_manager.check_requirement(i.button_number-1, current_charcter.current_point)
 # 모든 버튼 설정하기 (true : 활성화, false : 비활성화)
 func set_all_button(OnOff : bool) -> void:
 	for i in get_tree().get_nodes_in_group("battle_buttons"):
