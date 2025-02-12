@@ -15,6 +15,6 @@ layer = 0
 
 [node name="ChoicePanel" parent="Interact" instance=ExtResource("3_5ejod")]
 
-[node name="SidePanel" parent="Interact" instance=ExtResource("3_hlh70")]
+[node name="SidePanel" parent="." instance=ExtResource("3_hlh70")]
 offset_right = 0.0
 offset_bottom = 0.0
