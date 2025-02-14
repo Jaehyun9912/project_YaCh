@@ -9,36 +9,30 @@ var select_quest : Quest
 enum Mode{
 	receive, process, clear
 }
+
+
+func _ready():
+	var npc_name = get_meta("npc_name")
+	if not npc_name:
+		npc_name = ViewManager.now_map_name
+	print(npc_name)
+	quest_manager = QuestManager.new()
+	quest_manager.npc_name = npc_name
+	set_panel(quest_manager)
+
 func set_panel(manager):
 	quest_manager = manager
 	if !quest_manager:
 		return
+	quest_manager.import_quest()
 	#왼쪽 패널 업데이트
 	update_accept_panel()
 	#오른쪽 패널 업데이트
 	update_panel()
 
-var curMode :Mode
-func show_quest_detail(mode :Mode):
-	curMode = mode
-	#디테일 패널 활성화 및 설정
-	$QuestDetail.show()
-	$QuestDetail/QuestDescription/Label.text = select_quest.title
-	$QuestDetail/QuestDescription/RichTextLabel.text = select_quest.description
-	var option_panel = $QuestDetail/Btns/VBoxContainer/OptionPanel
-	if mode == Mode.process:
-		option_panel.hide()
-	else:
-		option_panel.show()
-	if mode == Mode.clear:
-		option_panel.get_child(0).text = "제출"
-	elif mode == Mode.receive:
-		option_panel.get_child(0).text = "수주"
-		
 #왼쪽 패널에 수주 가능한 퀘스트 리스트 업데이트
 func update_accept_panel():
 	var parent = $QuestList/ScrollContainer/VBoxContainer
-	quest_manager.import_quest()
 	quest_manager.enqueue_quest()
 	for i in parent.get_children():
 		i.queue_free()
@@ -46,7 +40,7 @@ func update_accept_panel():
 	for i in quest_manager.quest_queue:
 		var button = set_quest_button(i,parent)
 		#퀘스트 수주 모드로 디테일 패널 열기
-		button.pressed.connect(show_quest_detail.bind(Mode.receive))
+		button.pressed.connect($"QuestDetail".set_quest.bind(i,Mode.receive))
 
 #오른쪽 패널 현재 수주중인 퀘스트 리스트 업데이트
 func update_panel():
@@ -63,9 +57,9 @@ func update_panel():
 			style.bg_color = Color.CHOCOLATE
 			button.add_theme_stylebox_override("normal", style)
 			
-			button.pressed.connect(show_quest_detail.bind(Mode.clear))
+			button.pressed.connect($"QuestDetail".set_quest.bind(i,Mode.clear))
 		else:
-			button.pressed.connect(show_quest_detail.bind(Mode.process))
+			button.pressed.connect($"QuestDetail".set_quest.bind(i,Mode.process))
 
 #단일 버튼 생성 후 퀘스트와 바인딩
 func set_quest_button(quest : Quest,parent):
@@ -76,18 +70,20 @@ func set_quest_button(quest : Quest,parent):
 	parent.add_child(button)
 	return button
 
-func close_panel():
-	ViewManager.erase_panel(self)
 
-func option_btn_pressed():
+#디테일 패널의 option_pressed 시그널 연결
+func detail_interact(quest, mode : Mode):
 	#현재 모드에 맞는 함수 실행
-	if curMode == Mode.process:
+	if mode == Mode.process:
 		return
-	elif curMode == Mode.clear:
-		quest_manager.clear_quest(select_quest)
-	elif curMode == Mode.receive:
-		quest_manager.receive_quest(select_quest)
+	elif mode == Mode.clear:
+		quest_manager.clear_quest(quest)
+	elif mode == Mode.receive:
+		quest_manager.receive_quest(quest)
 	#퀘스트 리스트 업데이트
 	update_accept_panel()
 	update_panel()
-	print("Option_pressed")
+
+#디버그용 처음씬으로 돌아가기
+func go_main_scene():
+	ViewManager.load_world("TestCountry","ChoicePanel","TestCountry")

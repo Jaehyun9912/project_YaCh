@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://cl1j5b3vvf35v"]
+[gd_scene load_steps=4 format=3 uid="uid://cl1j5b3vvf35v"]
 
 [ext_resource type="Script" path="res://Scripts/Quest/QuestManagerPanel.gd" id="1_27wlm"]
+[ext_resource type="PackedScene" uid="uid://b7aw1kxcq4mpl" path="res://Interacts/QuestDetailPanel.tscn" id="2_342yy"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_jhu43"]
 font_size = 15
@@ -14,7 +15,7 @@ script = ExtResource("1_27wlm")
 [node name="QuestList" type="ColorRect" parent="."]
 layout_mode = 0
 offset_top = 410.0
-offset_right = 150.0
+offset_right = 180.0
 offset_bottom = 770.0
 
 [node name="Label" type="Label" parent="QuestList"]
@@ -35,7 +36,7 @@ label_settings = SubResource("LabelSettings_jhu43")
 layout_mode = 0
 offset_left = 10.0
 offset_top = 40.0
-offset_right = 140.0
+offset_right = 170.0
 offset_bottom = 340.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="QuestList/ScrollContainer"]
@@ -46,9 +47,9 @@ theme_override_constants/separation = 10
 
 [node name="QuestList2" type="ColorRect" parent="."]
 layout_mode = 0
-offset_left = 150.0
+offset_left = 180.0
 offset_top = 410.0
-offset_right = 300.0
+offset_right = 360.0
 offset_bottom = 770.0
 color = Color(0.839216, 1, 0.705882, 1)
 
@@ -69,8 +70,8 @@ label_settings = SubResource("LabelSettings_jhu43")
 layout_mode = 0
 offset_left = 10.0
 offset_top = 40.0
-offset_right = 140.0
-offset_bottom = 340.0
+offset_right = 170.0
+offset_bottom = 310.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="QuestList2/ScrollContainer"]
 layout_mode = 2
@@ -78,85 +79,17 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="Button" type="Button" parent="."]
 layout_mode = 0
-offset_left = 300.0
-offset_top = 410.0
-offset_right = 360.0
-offset_bottom = 770.0
-color = Color(0, 0.67451, 0.733333, 1)
+offset_left = 284.0
+offset_top = 730.0
+offset_right = 340.0
+offset_bottom = 761.0
+text = "나가기"
 
-[node name="QuestDetail" type="Control" parent="."]
+[node name="QuestDetail" parent="." instance=ExtResource("2_342yy")]
 visible = false
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
 
-[node name="QuestDescription" type="ColorRect" parent="QuestDetail"]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 30.0
-offset_right = 330.0
-offset_bottom = 330.0
-color = Color(0.611765, 0.611765, 0.611765, 1)
-
-[node name="Label" type="Label" parent="QuestDetail/QuestDescription"]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 30.0
-offset_right = 137.0
-offset_bottom = 53.0
-text = "제목 : 퀘스트 1"
-
-[node name="RichTextLabel" type="RichTextLabel" parent="QuestDetail/QuestDescription"]
-layout_mode = 0
-offset_left = 23.0
-offset_top = 90.0
-offset_right = 252.0
-offset_bottom = 262.0
-text = "밥먹기
-자기
-운동하기"
-
-[node name="Btns" type="ColorRect" parent="QuestDetail"]
-layout_mode = 0
-offset_top = 410.0
-offset_right = 359.0
-offset_bottom = 772.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="QuestDetail/Btns"]
-layout_mode = 0
-offset_right = 360.0
-offset_bottom = 360.0
-
-[node name="OptionPanel" type="MarginContainer" parent="QuestDetail/Btns/VBoxContainer"]
-visible = false
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="OptionBtn" type="Button" parent="QuestDetail/Btns/VBoxContainer/OptionPanel"]
-layout_mode = 2
-text = "옵션"
-
-[node name="MarginContainer" type="MarginContainer" parent="QuestDetail/Btns/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
-
-[node name="Button" type="Button" parent="QuestDetail/Btns/VBoxContainer/MarginContainer"]
-layout_mode = 2
-text = "닫기"
-
-[connection signal="pressed" from="QuestDetail/Btns/VBoxContainer/OptionPanel/OptionBtn" to="." method="option_btn_pressed"]
-[connection signal="pressed" from="QuestDetail/Btns/VBoxContainer/OptionPanel/OptionBtn" to="QuestDetail" method="hide"]
-[connection signal="pressed" from="QuestDetail/Btns/VBoxContainer/MarginContainer/Button" to="QuestDetail" method="hide"]
+[connection signal="pressed" from="Button" to="." method="go_main_scene"]
+[connection signal="option_pressed" from="QuestDetail" to="." method="detail_interact"]

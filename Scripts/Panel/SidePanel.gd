@@ -21,6 +21,10 @@ var mode :
 func _ready():
 	pass
 
+func _process(delta):
+	if is_visible:
+		set_panel()
+
 func set_panel():
 	if mode == Mode.Hp:
 		set_hp_panel()

@@ -44,8 +44,7 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	var new_panel = load(PANEL_PATH + panel_name + ".tscn")
 	print(PANEL_PATH + panel_name)
 	current_panel.add_child(new_panel.instantiate())
-	#패널 스택 만들어서 한 맵에서 UI 추가 시 stack에 추가 후 order 정렬
-	panel_stack.clear()
+	
 
 
 #region UI_Panel

@@ -21,3 +21,4 @@ func _on_location_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
 		print("Location Clicked : " + address)
 		ViewManager.load_world(address, type, map_name)
+		

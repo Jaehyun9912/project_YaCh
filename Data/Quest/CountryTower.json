@@ -1,9 +1,9 @@
-{ "NPC1":[
+{ "CountryTower":[
 	{
 		"id":"quest1",
 		"title" : "테스트 퀘스트 1",
 		"description" : "alpha태그, 최대체력<=50, 포션 1개 제출",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"accept_condition":["!Quest.clear.quest1"],
 		"process_condition":["Quest.process.quest1.alpha","!stat:max_hp>50"],
 		"submit" : [
@@ -23,7 +23,7 @@
 		"id":"quest2",
 		"title" : "테스트 퀘스트 2",
 		"description" : "테스트테스트테스트테스트테스트",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"process_condition":["Quest.clear"],
 		"rewards" : [
 			{
@@ -36,7 +36,7 @@
 		"id":"quest3",
 		"title" : "테스트 퀘스트 3",
 		"description" : "테스트3테스트3테스트3테스트3테스트",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"process_condition":["Quest.clear.quest3"],
 		"rewards" : [
 			{
@@ -49,42 +49,42 @@
 		"id":"quest4",
 		"title" : "테스트 퀘스트 4",
 		"description" : "테스트4",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"accept_condition":["!Quest.clear.quest4"]
 	},
 	{
 		"id":"quest5",
 		"title" : "테스트 퀘스트 5",
 		"description" : "테스트4",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"accept_condition":["!Quest.clear.quest4"]
 	},
 	{
 		"id":"quest6",
 		"title" : "테스트 퀘스트 6",
 		"description" : "테스트4",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"accept_condition":["!Quest.clear.quest4"]
 	},
 	{
 		"id":"quest7",
 		"title" : "테스트 퀘스트 7",
 		"description" : "테스트4",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"accept_condition":["!Quest.clear.quest4"]
 	},
 	{
 		"id":"quest8",
 		"title" : "테스트 퀘스트 8",
 		"description" : "테스트4",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"accept_condition":["!Quest.clear.quest4"]
 	},
 	{
 		"id":"quest9",
 		"title" : "테스트 퀘스트 9",
 		"description" : "테스트4",
-		"clear_NPC": "NPC1",
+		"clear_NPC": "CountryTower",
 		"accept_condition":["!Quest.clear.quest4"]
 	},
 ]

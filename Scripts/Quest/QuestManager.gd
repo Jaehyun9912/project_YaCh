@@ -1,7 +1,7 @@
 extends Node
 class_name QuestManager
 
-@export var npc_name : String
+var npc_name : String
 
 #캐릭터가 제공하는 퀘스트 리스트
 var quest_list : Array[Quest]
@@ -122,43 +122,5 @@ func submit_item(quest : Quest):
 	var submit = quest.submit
 	for i in submit:
 		PlayerData.add_new_item(i.id,-i.count)
-	
-
-
-
-#임의의 물체에 태그 부여하기
-func add_node_tag(tag,nodeName):
-	var node = get_tree().root.get_node(nodeName)
-	print(node.name)
-	if node ==null:
-		printerr("NoNode")
-		return
-	TagManager.add_tag(tag,node)
-	print(TagManager.get_tags(node))
-	pass
-
-var Quest_PATH = "res://Data/Quest/"
-#디버그용 퀘스트 생성 방식 
-func save_quest():
-	var children = get_children()
-	var arr : Array[Dictionary]
-	for child in children:
-		if child is Quest:
-			var quest = child as Quest
-			quest_list.append(quest)
-			var qData = quest.get_quest_data()
-			arr.append(qData)
-	var dict = {
-		npc_name : arr
-	}
-	save_data(dict,npc_name)
-
-#디버그용 데이터 저장
-func save_data(save: Dictionary, data_path: String) -> void:
-	var path = Quest_PATH + data_path + ".json"
-	var save_file = FileAccess.open(path, FileAccess.WRITE)
-	
-	var json_string = JSON.stringify(save)
-	save_file.store_line(json_string)
 	
 

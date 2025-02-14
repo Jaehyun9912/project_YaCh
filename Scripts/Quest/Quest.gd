@@ -117,7 +117,7 @@ static func condition_check(condition : PackedStringArray)-> bool:
 		else:
 			printerr("Condition Error")
 			return false
-		print(i," : ", negative != check)
+		#print(i," : ", negative != check)
 		if negative == check:
 			return false
 	return true

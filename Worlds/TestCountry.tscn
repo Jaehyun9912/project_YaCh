@@ -1,9 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://bpgurardg7lfa"]
+[gd_scene load_steps=10 format=3 uid="uid://bpgurardg7lfa"]
 
 [ext_resource type="PackedScene" uid="uid://bmy7udp4256gu" path="res://Worlds/WorldObjects/country_tower.tscn" id="1_4y7yr"]
 [ext_resource type="PackedScene" uid="uid://ckfx4fnhhqrdh" path="res://Worlds/WorldObjects/forest.tscn" id="2_5u1m3"]
 [ext_resource type="PackedScene" uid="uid://d2t82rft22it8" path="res://Objects/Quest/TagAdder.tscn" id="2_aytmn"]
-[ext_resource type="PackedScene" uid="uid://ba7nk0nm4bu2k" path="res://Objects/Quest/QuestManager.tscn" id="3_m1rnr"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3l6fm"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -28,10 +27,6 @@ size = Vector2(100, 100)
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ctuce"]
 points = PackedVector3Array(-50, 0, -50, -50, 0, 50, 50, 0, -50, 50, 0, 50)
 
-[sub_resource type="BoxMesh" id="BoxMesh_gne7d"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_ukn7v"]
-
 [node name="TestCountry" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -55,7 +50,7 @@ shape = SubResource("ConvexPolygonShape3D_ctuce")
 [node name="CountryTower" parent="." instance=ExtResource("1_4y7yr")]
 transform = Transform3D(0.901077, 0, 0.433659, 0, 1, 0, -0.433659, 0, 0.901077, 37.8081, 5.09986, -41.355)
 metadata/address = "CountryTower"
-metadata/type = "ChoicePanel"
+metadata/type = "QuestManagerPanel"
 
 [node name="forest" parent="." instance=ExtResource("2_5u1m3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5438, 0, -21.7805)
@@ -66,16 +61,4 @@ metadata/type = "BattlePanel"
 conditions = Array[String](["stat:max_hp>40"])
 add_tags = Array[String](["Quest.process.quest1.alpha"])
 
-[node name="Area3D" type="Area3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.8172, 7.96549, -33.2232)
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Area3D"]
-mesh = SubResource("BoxMesh_gne7d")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-shape = SubResource("BoxShape3D_ukn7v")
-
-[node name="QuestManager" parent="Area3D" instance=ExtResource("3_m1rnr")]
-
 [connection signal="input_event" from="forest" to="forest/TagAdder" method="_on_location_clicked"]
-[connection signal="input_event" from="Area3D" to="Area3D/QuestManager" method="_on_NPC_clicked"]
