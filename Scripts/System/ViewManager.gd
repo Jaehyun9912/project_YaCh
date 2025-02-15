@@ -20,7 +20,7 @@ func get_view():
 	pass
 
 
-func load_world(world_name: String, panel_name: String = "3Button", map_name: String = "") -> void :
+func load_world(world_name: String, panel_name: String = "3Button", map_name: String = "", side_mode : int = 0) -> void :
 	# get current scene
 	get_view()
 	
@@ -45,6 +45,8 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	print(PANEL_PATH + panel_name)
 	current_panel.add_child(new_panel.instantiate())
 	
+	var side_panel = current_scene.get_node("SidePanel")
+	side_panel.mode = side_mode
 
 
 #region UI_Panel

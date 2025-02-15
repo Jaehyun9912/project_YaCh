@@ -11,7 +11,7 @@ enum Mode{
 	Hp,
 	Budget
 }
-var mode :
+var mode : 
 	get:
 		return mode
 	set(value):
@@ -19,6 +19,7 @@ var mode :
 		set_panel()
 
 func _ready():
+	mode = Mode.Hp
 	pass
 
 func _process(delta):
