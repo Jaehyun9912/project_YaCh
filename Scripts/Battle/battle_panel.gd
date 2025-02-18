@@ -3,7 +3,10 @@ class_name BattlePanel
 
 @onready var action_point = $ActionPoint as Label
 @onready var buttons = get_tree().get_nodes_in_group("battle_buttons")
+@onready var choicePanel = $CharacterChoicePanel as CharacterChoicePanel
+
 var manager: BattleManager
+
 var action_text := "행동력 %d/%d"
 
 enum Buttons {
@@ -23,6 +26,7 @@ signal skill_actived(index: Buttons)
 
 # 현재 턴 캐릭터의 정보
 var current_charcter: BattleCharacter
+var skill_target
 
 # 시작시
 func _ready():
@@ -58,9 +62,8 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 	current_charcter.current_point = current_charcter.point
 	action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
 	
-	
 # 무한 반복
-func _process(delta):
+func _process(_delta):
 	# 행동력 표시 반영
 	if current_charcter != null:
 		action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
@@ -70,6 +73,7 @@ func _check_skill_is_possible():
 	for i in buttons:
 		if i is RoundButton and i.button_number != Buttons.CENTER:
 			i.disabled = not manager.skill_manager.check_requirement(i.button_number-1, current_charcter.current_point)
+			
 # 모든 버튼 설정하기 (true : 활성화, false : 비활성화)
 func set_all_button(OnOff : bool) -> void:
 	for i in get_tree().get_nodes_in_group("battle_buttons"):
@@ -77,9 +81,37 @@ func set_all_button(OnOff : bool) -> void:
 
 # 스킬 버튼 눌렸을때 발동. 
 func _on_skill_buttons_down(num):
-	#print(num, " clicked")
-	skill_actived.emit(num)
+	
+	# 스킬 대상 정하기 
+	skill_target = manager.skill_manager.get_target(num-1)
+	
+	if skill_target is String and skill_target == "self":
+		choicePanel.set_self_panel()
+	else:
+		var target_count = skill_target.get("count", 0)
+		# 0이하 : 전부 대상 
+		if target_count < 1:
+			choicePanel.set_all_panel()
+		
+		var cnt := 0
+		if skill_target["team"]:
+			cnt = manager.ally_count
+		else:
+			cnt = manager.enemy_count
+		
+		# 한명만 남아서 선택 할 필요 없음
+		if cnt == 1:
+			choicePanel.set_all_panel()
+		else:
+			choicePanel.set_choice_panel(cnt, target_count)
+			
+	var end = await choicePanel.choice_end
+	print(end)
+	#skill_actived.emit(num)
 	_check_skill_is_possible()
+	
+func _callback_choice(clicked_index):
+	pass
 	
 # 해당 버튼들은 특별한 기능을 가질 수 도 있기에 별도의 함수로 구현함
 # 대화 버튼

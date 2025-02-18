@@ -6,18 +6,14 @@ class_name AttackManager
 
 var cur_skill : Dictionary
 
-func _ready():
-	battle.use_skill.connect(use_skill)
-
 # 스킬 인덱스에 해당하는 스킬 발동 
-func use_skill(index):
+func _on_battle_use_skill(index):
 	# 버튼이 자동으로 비활성화되니 굳이 체크하지 않음 
 	#if not skill_manager.check_requirement(index, battle.turn_cost):
 		#print("No Cost")
 		#return
 	
 	cur_skill = skill_manager.get_player_skill(index)
-	
 	skill_manager.remove_cost(index)
 	
 	# 스킬의 유형에 따라 효과 결정 
@@ -30,7 +26,6 @@ func use_skill(index):
 		"effect":
 			# 일단 임시로 속성만 채우도록 
 			do_effect()
-			#$Interact/AttributeBar.add_value(cur_skill_info["attribute"]["type"], cur_skill_info["attribute"]["amount"])
 		"summon":
 			do_summon()
 		"field":

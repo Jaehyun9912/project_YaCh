@@ -102,3 +102,5 @@ script = ExtResource("4_3ewvu")
 
 [node name="SkillManager" type="Node" parent="."]
 script = ExtResource("5_5si2s")
+
+[connection signal="use_skill" from="." to="AttackManager" method="_on_battle_use_skill"]

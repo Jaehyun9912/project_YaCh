@@ -23,7 +23,13 @@ var min_point_use = 1
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
 var player_character : BattleCharacter
+var ally_character : Array[BattleCharacter]
 var enemy_character : Array[BattleCharacter]
+
+var enemy_count: 
+	get: return len(enemy_character)
+var ally_count: 
+	get: return len(ally_character) + 1
 
 # 현재 턴인 캐릭터의 정보
 var now_character: BattleCharacter

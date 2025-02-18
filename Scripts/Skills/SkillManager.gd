@@ -81,3 +81,28 @@ func remove_cost(player_skill_index: int):
 		var element = cost.get("element", {})
 		for e in element:
 			attribute.remove_value(e, element[e])
+			
+# 스킬의 target 정볼르 얻어오는 함수
+func get_target(player_skill_index: int):
+	var skill = get_player_skill(player_skill_index)
+	var type = skill.get("type", "")
+	var target = skill.get("target", {})
+	
+	match type:
+		"attack":
+			if target is float:
+				return {"team": false, "count": target}
+			printerr("Wrong target format in attack : ", target)
+		"effect":
+			if target == "self":
+				return target
+			elif target is Dictionary:
+				if not "count" in target: target["count"] = 0
+				if not "team" in target: target["team"] = false
+				return target
+		"summon":
+			printerr("Summon Target is WIP")
+		"field":
+			printerr("Field Target is WIP")
+		_:
+			printerr("Wrong Type : " + type)

@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://c3h3jildcn5gm"]
+[gd_scene load_steps=7 format=3 uid="uid://c3h3jildcn5gm"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_panel.gd" id="1_njjyf"]
 [ext_resource type="Script" path="res://Scripts/Skills/SkillManager.gd" id="2_1psmx"]
 [ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/Battle/RoundButton/round_button.tscn" id="3_4k28p"]
 [ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/Battle/button_theme.tres" id="4_bijw2"]
+[ext_resource type="PackedScene" uid="uid://qjplq7pr8npp" path="res://Objects/UI/Battle/character_choice_panel.tscn" id="5_squtx"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]
 
@@ -174,6 +175,13 @@ theme = ExtResource("4_bijw2")
 keep_pressed_outside = true
 text = "도망
 "
+
+[node name="CharacterChoicePanel" parent="." instance=ExtResource("5_squtx")]
+layout_mode = 1
+anchors_preset = 15
+anchor_bottom = 1.0
+offset_bottom = 0.0
+grow_vertical = 2
 
 [node name="ActionPoint" type="Label" parent="."]
 layout_mode = 1
