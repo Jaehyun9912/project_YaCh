@@ -48,8 +48,8 @@ func add_tag_tree(node : Node, tag : String, count =1):
 	var lower_tag = tag_tree[0]
 	tag_tree.remove_at(0)
 	add_tag(node,lower_tag,count)
-	for str in tag_tree:
-		lower_tag += "." + str
+	for tag_part in tag_tree:
+		lower_tag += "." + tag_part
 		add_tag(node,lower_tag,count)
 
 #단일 태그 제거 성공 시 true 실패 시 false
@@ -62,44 +62,41 @@ func remove_tag(node : Node, tag : String) -> bool:
 		return true
 	return false
 
-
-#태그 제거 시 하위 태그도 동시에 제거(하위 태그는 상위태그.태그로 구분)
-#하위 태그 삭제 시 상위태그를 동시에 작성 요망(상위태그.하위태그)
+# 해당 태그 삭제 및 상위 태그 카운트 감소
 func remove_tag_tree(node : Node, tag : String) -> bool:
-	#시작 태그가 있으면 삭제 없으면 반환
+	# 시작 태그가 있으면 삭제 없으면 반환
 	var count = get_tag_count(node,tag)
 	if !remove_tag(node,tag):
 		return false
 	var tags = dict[node] as Dictionary
-	#상위태그 존재시 모든 태그 순회 후 하위태그 삭제
+	# 해당 태그로 시작 시 하위태그 제거
 	for str in tags.keys():
 		var upper_tag = tag + "."
-		#해당 태그가 상위태그로 시작하면 제거
 		if str.begins_with(upper_tag):
 			remove_tag(node,str)
-	#삭제한 태그의 상위 태그에 카운트 값 감소
+	# 삭제한 태그의 상위 태그에 카운트 값 감소
 	decrease_tag_tree(node,get_upper_tag(tag),count)
 	return true
 	
 
-#해당 태그가 있는지 확인
+# 해당 태그가 있는지 확인
 func has_tag(node : Node, tag : String) -> bool:
-	#해당 노드가 태그가 없을 경우 false 반환
+	# 해당 노드가 태그가 없을 경우 false 반환
 	if !dict.has(node):
 		return false
 	var tags = dict[node] as Dictionary
-	#찾는 태그가 있을 경우 true 반환
+	# 찾는 태그가 있을 경우 true 반환
 	if tags.has(tag):
 		return true
-	#태그가 없으면 false
+	# 태그가 없으면 false
 	return false
 	
-#태그 일정 부분으로 해당 태그 찾기
+# 태그 일정 부분으로 해당 태그 찾기
 func find_tag(node : Node, tag : String) -> String:
 	var tags = get_tags(node)
 	tag = "." + tag
 	for i in tags:
-		#해당 태그를 가지고 있으면 반환(앞뒤로 .추가해서 단어속 태그 방지)
+		# 해당 부분 태그로 종료하는 태그만 반환
 		if i.ends_with(tag):
 			return i
 	return String()
@@ -119,14 +116,14 @@ func tag_compare(node : Node,tag : String) -> bool:
 	#퀘스트에 필요한 태그 확인(부등호로 태그 카운트 세기)
 	var comparer = [">" , "<", "="]#필요하면 이상 이하도 추가
 	for i in comparer:
-		var str = tag.split(i,true,2)
-		if str.size()==2:
-			var tag_count = TagManager.get_tag_count(node,str[0])
-			if i == ">" && tag_count > str[1].to_int():
+		var tag_part = tag.split(i,true,2)
+		if tag_part.size()==2:
+			var tag_count = TagManager.get_tag_count(node,tag_part[0])
+			if i == ">" && tag_count > tag_part[1].to_int():
 				return true
-			elif i == "<" && tag_count < str[1].to_int():
+			elif i == "<" && tag_count < tag_part[1].to_int():
 				return true
-			elif i == "=" && tag_count == str[1].to_int():
+			elif i == "=" && tag_count == tag_part[1].to_int():
 				return true
 			else:
 				return false
@@ -164,10 +161,10 @@ func decrease_tag_tree(node : Node, tag :String, count = 1):
 
 func get_upper_tag(tag : String):
 	var s = tag.reverse()
-	var str = s.split(".",true,1)
-	if str.size() < 2:
+	var tag_part = s.split(".",true,1)
+	if tag_part.size() < 2:
 		return ""
-	return str[1].reverse()
+	return tag_part[1].reverse()
 	
 
 

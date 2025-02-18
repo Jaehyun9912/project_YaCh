@@ -7,6 +7,7 @@ var text:
 	get:
 		return $"ColorRect/VBoxContainer/Detail"
 
+# 패널 정보 모드
 enum Mode{
 	Hp,
 	Budget

@@ -10,9 +10,9 @@ enum Mode{
 	receive, process, clear
 }
 
-
+#
 func _ready():
-	var npc_name = get_meta("npc_name")
+	var npc_name# = get_meta("npc_name")
 	if not npc_name:
 		npc_name = ViewManager.now_map_name
 	print(npc_name)
@@ -30,7 +30,7 @@ func set_panel(manager):
 	#오른쪽 패널 업데이트
 	update_panel()
 
-#왼쪽 패널에 수주 가능한 퀘스트 리스트 업데이트
+# 왼쪽 패널에 수주 가능한 퀘스트 리스트 업데이트
 func update_accept_panel():
 	var parent = $QuestList/ScrollContainer/VBoxContainer
 	quest_manager.enqueue_quest()
@@ -42,7 +42,7 @@ func update_accept_panel():
 		#퀘스트 수주 모드로 디테일 패널 열기
 		button.pressed.connect($"QuestDetail".set_quest.bind(i,Mode.receive))
 
-#오른쪽 패널 현재 수주중인 퀘스트 리스트 업데이트
+# 오른쪽 패널 현재 수주중인 퀘스트 리스트 업데이트
 func update_panel():
 	var parent = $QuestList2/ScrollContainer/VBoxContainer
 	for i in parent.get_children():
@@ -61,17 +61,18 @@ func update_panel():
 		else:
 			button.pressed.connect($"QuestDetail".set_quest.bind(i,Mode.process))
 
-#단일 버튼 생성 후 퀘스트와 바인딩
+# 단일 버튼 생성 후 퀘스트와 바인딩
 func set_quest_button(quest : Quest,parent):
 	var button = Button.new()
 	button.text = quest.title
-	button.pressed.connect(func(): select_quest = quest)
-	#button.pressed.connect(show_quest_detail.bind(mode))
+	button.pressed.connect(func(): 
+			select_quest = quest 
+			$"QuestDetail".show())
 	parent.add_child(button)
 	return button
 
 
-#디테일 패널의 option_pressed 시그널 연결
+# 디테일 패널의 option_pressed 시그널 연결
 func detail_interact(quest, mode : Mode):
 	#현재 모드에 맞는 함수 실행
 	if mode == Mode.process:

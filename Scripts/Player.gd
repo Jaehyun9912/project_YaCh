@@ -8,7 +8,6 @@ func _ready():
 	
 #region Data
 var data : Dictionary
-
 # data에서 알아서 값을 뽑아오거나 넣어줌 
 var max_hp:
 	get:
@@ -16,11 +15,13 @@ var max_hp:
 	set(value):
 		data["max_hp"] = value
 
+signal hp_changed
 var hp:
 	get:
 		return data["hp"]
 	set(value):
 		data["hp"] = value
+		hp_changed.emit(value)
 
 var speed:
 	get:

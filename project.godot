@@ -21,6 +21,7 @@ PlayerData="*res://Scripts/Player.gd"
 ViewManager="*res://Scripts/System/ViewManager.gd"
 DataManager="*res://Scripts/System/data_manager.gd"
 TagManager="*res://Scripts/Tag/TagManager.gd"
+SidePanel="*res://Interacts/SidePanel.tscn"
 
 [display]
 

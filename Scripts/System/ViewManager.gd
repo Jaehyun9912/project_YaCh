@@ -45,32 +45,28 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	print(PANEL_PATH + panel_name)
 	current_panel.add_child(new_panel.instantiate())
 	
-	var side_panel = current_scene.get_node("SidePanel")
-	side_panel.mode = side_mode
+	# 사라진 오브젝트의 태그 값 제거
+	TagManager.clean_dict()
+	get_node("/root/SidePanel").mode = side_mode
 
 
 #region UI_Panel
 var panel_stack : Array
-#패널 추가하기
+# 패널 추가하기
 func push_panel(panel_name : String):
 	get_view()
-	#패널 생성, 전시 후 반환
+	# 패널 생성, 전시 후 해당 패널 반환
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
 	panel_stack.append(panel)
 	current_panel.add_child(panel as Node)
 	return panel
 
-func pop_panel():
-	#가장 마지막에 추가된 패널 제거
-	var last_panel = panel_stack.pop_back()
-	erase_panel(last_panel)
-
 func erase_panel(panel):
-	#해당 패널 소유 시 제거
+	# 해당 패널 소유 시 제거
 	if panel_stack.has(panel):
 		panel_stack.erase(panel)
 		current_panel.remove_child(panel)
 		panel.queue_free()
-	print("UI count : ",panel_stack.size())
+	#print("UI count : ",panel_stack.size())
 
 #endregion

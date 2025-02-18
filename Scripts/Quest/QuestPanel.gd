@@ -7,12 +7,12 @@ var container:
 
 
 var select_quest : Quest
-#퀘스트 상세내용 및 옵션 제공
+# 퀘스트 디테일 패널 표시
 func show_quest_detail():
 	#디테일 패널 활성화 및 설정
-	$"ColorRect2".show()
-	$"ColorRect2/Label".text = select_quest.title
-	$"ColorRect2/RichTextLabel".text = select_quest.description
+	var detail_panel = $"QuestDetail"
+	detail_panel.show()
+	detail_panel.set_quest(select_quest,1)
 
 #버튼 1개와 퀘스트 연결
 func set_quest_button(quest : Quest):

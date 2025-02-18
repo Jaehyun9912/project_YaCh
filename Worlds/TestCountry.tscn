@@ -58,7 +58,7 @@ metadata/address = "Battle"
 metadata/type = "BattlePanel"
 
 [node name="TagAdder" parent="forest" instance=ExtResource("2_aytmn")]
-conditions = Array[String](["stat:max_hp>40"])
+conditions = Array[String](["Quest.process.quest1"])
 add_tags = Array[String](["Quest.process.quest1.alpha"])
 
 [connection signal="input_event" from="forest" to="forest/TagAdder" method="_on_location_clicked"]
