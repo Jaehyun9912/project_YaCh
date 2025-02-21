@@ -3,6 +3,7 @@ class_name Quest
 
 # 퀘스트 데이터
 var data
+
 # 퀘스트 id
 var id:
 	get:
@@ -10,6 +11,7 @@ var id:
 			return data["id"]
 		else:
 			return ""
+
 # 퀘스트 제목
 var title:
 	get:
@@ -17,6 +19,7 @@ var title:
 			return data["title"]
 		else:
 			return ""
+
 # 퀘스트 설명
 var description:
 	get:
@@ -24,30 +27,35 @@ var description:
 			return data["description"]
 		else:
 			return ""
-# 퀘스트 클리어 NPC(다른 NPC한테서 퀘스트 클리어 불가능)
+
+# 퀘스트 클리어 NPC
 var clear_NPC:
 	get:
 		if data.has("clear_NPC"):
 			return data["clear_NPC"]
-		return null
+		return ""
+
 # 수주 조건
 var accept_condition:
 	get:
 		if data.has("accept_condition"):
 			return data["accept_condition"]
 		return PackedStringArray()
+
 # 클리어 조건
 var process_condition:
 	get:
 		if data.has("process_condition"):
 			return data["process_condition"]
 		return PackedStringArray()
+
 # 제출 아이템(해당 개수도 조건에 자동으로 포함)
 var submit:
 	get:
 		if data.has("submit"):
 			return data["submit"]
 		return PackedStringArray()
+
 # 보상 아이템
 var rewards:
 	get:
@@ -56,6 +64,9 @@ var rewards:
 		return PackedStringArray()
 
 
+
+
+# 퀘스트 데이터(딕셔너리) 반환
 func get_quest_data() -> Dictionary:
 	var dict = {
 		"title" : title,
@@ -68,25 +79,28 @@ func get_quest_data() -> Dictionary:
 	}
 	return dict
 
+
+# 퀘스트 생성자
 func _init(quest_data : Dictionary) ->void:
 	data = quest_data
-	
+
+
 # 퀘스트 클리어 조건 확인하기
 func is_clearable(npc_name : String) -> bool:
-	# 해당 퀘스트 도착지가 해당 NPC가 맞는지 확인
+	# 클리어 NPC 확인
 	if clear_NPC != npc_name:
-		#print("isNotClearNPC =",quest.clear_NPC," != ",npc_name)
 		return false
 	if !TagManager.has_tag(PlayerData,"Quest.process."+id):
 		return false
-	# 클리어 조건 확인 후 가능하면 true 반환
+	# 클리어 조건 확인
 	var condition = process_condition as Array[String]
 	for i in submit:
 		var item_tag = "!item:"+i["id"]+"<" + str(i["count"])
 		condition.append(item_tag)
 	if Quest.condition_check(condition):
 		return true
-	return false
+	else:
+		return false
 
 # 조건 순회. 하나라도 미충족 시 false 반환
 static func condition_check(conditions : PackedStringArray)-> bool:
@@ -114,7 +128,6 @@ static func condition_check(conditions : PackedStringArray)-> bool:
 		else:
 			printerr("Condition Error")
 			return false
-		#print(i," : ", negative != check)
 		if negative == check:
 			return false
 	return true
