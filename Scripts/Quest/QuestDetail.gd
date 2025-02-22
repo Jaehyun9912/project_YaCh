@@ -1,10 +1,13 @@
 extends Control
 
+# 수주, 클리어 관련 버튼 이벤트
+signal option_pressed(quest:Quest, mode: Mode)
+
 # 디테일 패널 모드 설정
 enum Mode{
-	receive, 
-	process,
-	clear
+	RECEIVE, 
+	PROCESS,
+	CLEAR,
 }
 
 # 현재 모드
@@ -12,10 +15,6 @@ var curMode : Mode
 
 # 현재 표시중인 퀘스트
 var quest : Quest
-
-# 수주, 클리어 관련 버튼 이벤트
-signal option_pressed(quest:Quest, mode: Mode)
-
 
 
 
@@ -29,13 +28,13 @@ func set_quest(get_quest : Quest, mode : Mode) -> void:
 	$"QuestDescription/RichTextLabel".text = quest.description
 	# 모드에 따른 수주/클리어 버튼 활성화 여부 설정
 	var option_panel = $"Btns/VBoxContainer/OptionPanel"
-	if mode == Mode.process:
+	if mode == Mode.PROCESS:
 		option_panel.hide()
 	else:
 		option_panel.show()
-	if mode == Mode.clear:
+	if mode == Mode.CLEAR:
 		option_panel.get_child(0).text = "제출"
-	elif mode == Mode.receive:
+	elif mode == Mode.RECEIVE:
 		option_panel.get_child(0).text = "수주"
 
 # 버튼 선택 시 시그널 발생

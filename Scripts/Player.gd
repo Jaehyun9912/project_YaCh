@@ -158,34 +158,39 @@ func _get_artifact(id : String):
 
 
 #region Quest
-#수주 중인 퀘스트 리스트
-var quest_list : Array[Quest]
-signal quest_updated
-#값 비교용
 
+signal quest_updated
+
+# 수주 중인 퀘스트 리스트
+var quest_list : Array[Quest]
+
+
+
+
+# 퀘스트 수주(수주중 태그 추가)
 func receive_quest(quest : Quest):
 	quest_list.append(quest)
-	#수주한 퀘스트 태그 추가(이 퀘스트 재 수주 불가능)
 	TagManager.add_tag_tree(PlayerData,"Quest.process."+quest.id)
 	print( quest.id," Receive, Current QuestCount :",quest_list.size())
 	quest_updated.emit(quest_list)
 
+
+# 퀘스트 클리어(클리어 태그 추가)
 func clear_quest(quest: Quest):
 	PlayerData.quest_list.erase(quest)
-	#플레이어한테 수주중 태그 삭제 후 클리어 태그 부여
 	TagManager.remove_tag_tree(PlayerData,"Quest.process."+quest.id)
 	TagManager.add_tag_tree(PlayerData,"Quest.clear."+quest.id)
 	quest_updated.emit(quest_list)
 
-#스탯값 부등호 비교
+
+# 스탯 비교
 func stat_compare(condition : String) -> bool:
-	#퀘스트에 필요한 태그 확인(부등호로 태그 카운트 세기)
-	var comparer = [">" , "<", "="]#필요하면 이상 이하도 추가
+	var comparer = [">" , "<", "="]
 	for i in comparer:
 		var str = condition.split(i,true,2)
 		if str.size()==2:
 			print(data[str[0]]," ",i," ",str[1])
-			#태그가 있는지 없는지부터 확인
+			# 태그 보유 여부 확인
 			if !data.has(str[0]):
 				return false
 			if i == ">" && data[str[0]] > str[1].to_int():
@@ -198,13 +203,14 @@ func stat_compare(condition : String) -> bool:
 				return false
 	return false
 
-#인벤토리 아이템 개수 확인
+
+# 인벤토리 아이템 개수 비교
 func item_compare(condition : String) -> bool:
-	var comparer = [">" , "<", "="]#필요하면 이상 이하도 추가
+	var comparer = [">" , "<", "="]
 	for i in comparer:
 		var str = condition.split(i,true,2)
 		if str.size()==2:
-			#해당 아이템이 인벤토리에 얼마나 있는지 확인
+			# 아이템이 인벤토리에 얼마나 있는지 확인
 			var item_count = get_item_count(str[0])
 			print(str[0],".count : ",item_count)
 			if i == ">" && item_count > str[1].to_int():
@@ -215,24 +221,22 @@ func item_compare(condition : String) -> bool:
 				return true
 			else:
 				return false
-	#비교값이 없을 때는 있는지 없는지만 확인
 	var item_count = get_item_count(condition)
 	if item_count>0:
 		return true
 	return false
 
-#플레이어가 해당 아티펙트를 가지고 있는지 확인
+
+# 아티펙트 보유 여부 확인
 func artifact_compare(condition : String) -> bool:
-	print(condition,"//",artifact)
 	return artifact.has(condition)
 
-#플레이어 인벤토리에 아이템이 몇개 있는지 확인
+
+# 보유 중인 아이템 개수 가져오기
 func get_item_count(id : String) -> int:
 	for i in inventory:
 		if i["id"] == "item:"+id:
 			return i["count"]
 	return 0
-
-
 
 #endregion

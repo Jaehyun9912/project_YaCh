@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://b47r1s8a281dn"]
+[gd_scene load_steps=2 format=3 uid="uid://b5j4j6di77vyx"]
 
 [ext_resource type="Script" path="res://Scripts/Quest/QuestManager.gd" id="1_smh0j"]
 

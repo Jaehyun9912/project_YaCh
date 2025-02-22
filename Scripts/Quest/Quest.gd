@@ -1,5 +1,6 @@
-extends Node
 class_name Quest
+extends Node
+
 
 # 퀘스트 데이터
 var data
@@ -66,42 +67,6 @@ var rewards:
 
 
 
-# 퀘스트 데이터(딕셔너리) 반환
-func get_quest_data() -> Dictionary:
-	var dict = {
-		"title" : title,
-		"description" : description,
-		"id" : id,
-		"accept_condition" : accept_condition,
-		"process_condition" : process_condition,
-		"clear_NPC" : clear_NPC,
-		"rewards" : rewards
-	}
-	return dict
-
-
-# 퀘스트 생성자
-func _init(quest_data : Dictionary) ->void:
-	data = quest_data
-
-
-# 퀘스트 클리어 조건 확인하기
-func is_clearable(npc_name : String) -> bool:
-	# 클리어 NPC 확인
-	if clear_NPC != npc_name:
-		return false
-	if !TagManager.has_tag(PlayerData,"Quest.process."+id):
-		return false
-	# 클리어 조건 확인
-	var condition = process_condition as Array[String]
-	for i in submit:
-		var item_tag = "!item:"+i["id"]+"<" + str(i["count"])
-		condition.append(item_tag)
-	if Quest.condition_check(condition):
-		return true
-	else:
-		return false
-
 # 조건 순회. 하나라도 미충족 시 false 반환
 static func condition_check(conditions : PackedStringArray)-> bool:
 	for i in conditions:
@@ -131,3 +96,41 @@ static func condition_check(conditions : PackedStringArray)-> bool:
 		if negative == check:
 			return false
 	return true
+
+
+# 퀘스트 생성자
+func _init(quest_data : Dictionary) ->void:
+	data = quest_data
+
+
+# 퀘스트 데이터(딕셔너리) 반환
+func get_quest_data() -> Dictionary:
+	var dict = {
+		"title" : title,
+		"description" : description,
+		"id" : id,
+		"accept_condition" : accept_condition,
+		"process_condition" : process_condition,
+		"clear_NPC" : clear_NPC,
+		"rewards" : rewards
+	}
+	return dict
+
+
+# 퀘스트 클리어 조건 확인하기
+func is_clearable(npc_name : String) -> bool:
+	# 클리어 NPC 확인
+	if clear_NPC != npc_name:
+		return false
+	if !TagManager.has_tag(PlayerData,"Quest.process."+id):
+		return false
+	# 클리어 조건 확인
+	var condition = process_condition as Array[String]
+	for i in submit:
+		var item_tag = "!item:"+i["id"]+"<" + str(i["count"])
+		condition.append(item_tag)
+	if Quest.condition_check(condition):
+		return true
+	else:
+		return false
+

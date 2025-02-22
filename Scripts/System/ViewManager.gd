@@ -52,7 +52,7 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 
 #region UI_Panel
 var panel_stack : Array
-# 패널 추가하기
+# 패널 추가
 func push_panel(panel_name : String):
 	get_view()
 	# 패널 생성, 전시 후 해당 패널 반환
@@ -61,8 +61,9 @@ func push_panel(panel_name : String):
 	current_panel.add_child(panel as Node)
 	return panel
 
+
+# 패널 제거
 func erase_panel(panel):
-	# 해당 패널 소유 시 제거
 	if panel_stack.has(panel):
 		panel_stack.erase(panel)
 		current_panel.remove_child(panel)
