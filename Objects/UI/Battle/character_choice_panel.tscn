@@ -1,6 +1,9 @@
-[gd_scene load_steps=2 format=3 uid="uid://qjplq7pr8npp"]
+[gd_scene load_steps=3 format=3 uid="uid://qjplq7pr8npp"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/character_choice_panel.gd" id="1_q30dr"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_jq5p0"]
+font_size = 30
 
 [node name="CharacterChoicePanel" type="Control"]
 layout_mode = 3
@@ -71,6 +74,23 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1, 0.88)
 theme_override_constants/separation = 15
+
+[node name="Label" type="Label" parent="ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -145.0
+offset_top = -65.9
+offset_right = 145.0
+offset_bottom = -9.89997
+grow_horizontal = 2
+grow_vertical = 2
+text = "나에게 적용하기"
+label_settings = SubResource("LabelSettings_jq5p0")
 
 [connection signal="pressed" from="ColorRect/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="ColorRect/Done" to="." method="_on_done_pressed"]

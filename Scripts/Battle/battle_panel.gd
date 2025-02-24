@@ -22,7 +22,7 @@ enum Buttons {
 }
 
 # 버튼 신호를 외부와 연결해주는 신호
-signal skill_actived(index: Buttons)
+signal skill_actived(index: Buttons, target)
 
 # 현재 턴 캐릭터의 정보
 var current_charcter: BattleCharacter
@@ -81,6 +81,10 @@ func set_all_button(OnOff : bool) -> void:
 
 # 스킬 버튼 눌렸을때 발동. 
 func _on_skill_buttons_down(num):
+	print("button pressed ", num)
+	
+	if num == Buttons.CENTER:
+		skill_actived.emit(Buttons.CENTER, null)
 	
 	# 스킬 대상 정하기 
 	skill_target = manager.skill_manager.get_target(num-1)
@@ -93,6 +97,7 @@ func _on_skill_buttons_down(num):
 		if target_count < 1:
 			choicePanel.set_all_panel()
 		
+		# 타겟 유형에 따라 적/아군 개수 가져오기 
 		var cnt := 0
 		if skill_target["team"]:
 			cnt = manager.ally_count
@@ -102,12 +107,17 @@ func _on_skill_buttons_down(num):
 		# 한명만 남아서 선택 할 필요 없음
 		if cnt == 1:
 			choicePanel.set_all_panel()
+		# 아니면 선택 시작 
 		else:
 			choicePanel.set_choice_panel(cnt, target_count)
 			
+	# 결과 받아오기 
 	var end = await choicePanel.choice_end
-	print(end)
-	#skill_actived.emit(num)
+	# 취소 시 null 이 반환됨 
+	if end == null:
+		return
+
+	skill_actived.emit(num, end)
 	_check_skill_is_possible()
 	
 func _callback_choice(clicked_index):
@@ -116,15 +126,15 @@ func _callback_choice(clicked_index):
 # 해당 버튼들은 특별한 기능을 가질 수 도 있기에 별도의 함수로 구현함
 # 대화 버튼
 func _on_button_talk_button_up():
-	skill_actived.emit(Buttons.TALK)
+	skill_actived.emit(Buttons.TALK, null)
 
 # 퀘스트 버튼 
 func _on_button_quest_button_up():
-	skill_actived.emit(Buttons.QUEST)
+	skill_actived.emit(Buttons.QUEST, null)
 
 # 도망가기 버튼
 func _on_button_run_button_up():
-	skill_actived.emit(Buttons.RUN)
+	skill_actived.emit(Buttons.RUN, null)
 
 # 인벤토리 버튼 
 func _on_button_inventoy_button_up():

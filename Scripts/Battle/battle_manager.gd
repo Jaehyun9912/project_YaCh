@@ -8,7 +8,7 @@ signal turn_character_changed(new_character : BattleCharacter)
 signal turn_end
 
 # 스킬을 처리해줄 함수를 호출하는 신호 
-signal use_skill(index)
+signal use_skill(index, target)
 
 # 행동력 포인트 (나중에 변수로 변경해도 무방)
 const BASE_POINT = 50
@@ -125,21 +125,22 @@ func _battle():
 			print("turn end")
 
 # 버튼 눌렀을때
-func on_battle_panel_skill_actived(index : BattlePanel.Buttons):
+func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
 	var cost := 0
+	print("target : ", target)
 	match index:
 		# 버튼에 해당하는 효과 발동 
 		BattlePanel.Buttons.CENTER:
 			print("center")
 			turn_end.emit()
 		BattlePanel.Buttons.SKILL1:
-			use_skill.emit(0)
+			use_skill.emit(0, target)
 		BattlePanel.Buttons.SKILL2:
-			use_skill.emit(1)
+			use_skill.emit(1, target)
 		BattlePanel.Buttons.SKILL3:
-			use_skill.emit(2)
+			use_skill.emit(2, target)
 		BattlePanel.Buttons.SKILL4:
-			use_skill.emit(3)
+			use_skill.emit(3, target)
 		BattlePanel.Buttons.RUN:
 			_battle_end(0)
 	

@@ -1,14 +1,15 @@
 extends Control
 class_name CharacterChoicePanel
 
-@onready var hbox = $ColorRect/HBoxContainer
+@onready var hbox := $ColorRect/HBoxContainer
+@onready var label := $ColorRect/Label
 @onready var btn_theme = load("res://Objects/UI/Battle/button_theme.tres")
 var buttons : Array
 
 @onready var done_button := $ColorRect/Done
 
 # 버튼 창 닫혔을 떄 
-signal choice_end(is_accept: bool, index)
+signal choice_end(index)
 
 var need_choice := 0
 var current_choice := 0
@@ -69,14 +70,16 @@ func reset_buttons():
 	for i in buttons:
 		i.queue_free()
 	buttons.clear()
+	label.visible = false
 
 #  버튼의 개수, 선택해야하는 개수를 받아와 패널 생성 
 func set_choice_panel(number: int, choice_count: int):
 	
+	# 만약 선택해야 하는 대상이 총 대상보다 많다면 전체 패널로 교체 
 	if number <= choice_count:
 		set_all_panel()
 		return
-	
+
 	set_panel(number)
 	
 	print("target : ", choice_count)
@@ -84,23 +87,38 @@ func set_choice_panel(number: int, choice_count: int):
 	need_choice = choice_count
 	current_choice = 0
 	
+# 대상 버튼 없이 텍스트만 설정하는 패널 
+func set_label_panel(text):
+	need_choice = 0
+	current_choice = 0
+	set_panel(0)
+	done_button.disabled = false
+
+	label.text = text
+	label.visible = true
+
+# 자기 자신에게 적용할 때 
 func set_self_panel():
-	set_choice_panel(0, 0)
+	set_label_panel("나에게 적용하기")
 	
+# 모두를 대상으로 적용할 때 
 func set_all_panel():
-	pass
+	set_label_panel("모두를 대상으로 하기")
 
 # 완료 버튼 눌렀을 때 
 func _on_done_pressed():
+	# 클릭한 버튼들의 인덱스를 모아서 반환 
 	var clicked_index = []
 	for i in range(len(buttons)):
 		if buttons[i].button_pressed:
 			clicked_index.append(i)
-	choice_end.emit(true, clicked_index)
+	choice_end.emit(clicked_index)
 	reset_buttons()
 	set_active(false)
 
 # 취소 버튼 눌렀을 떄 
 func _on_cancel_pressed():
+	# 버튼 리셋하고 null 반환 
+	reset_buttons()
 	set_active(false)
-	choice_end.emit(false, null)
+	choice_end.emit(null)
