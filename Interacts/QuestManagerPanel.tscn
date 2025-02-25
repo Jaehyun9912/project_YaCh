@@ -91,5 +91,5 @@ text = "나가기"
 visible = false
 layout_mode = 1
 
-[connection signal="pressed" from="Button" to="." method="go_main_scene"]
+[connection signal="pressed" from="Button" to="." method="_go_main_scene"]
 [connection signal="option_pressed" from="QuestDetail" to="." method="detail_interact"]

@@ -22,7 +22,7 @@
 	{
 		"id":"quest2",
 		"title" : "테스트 퀘스트 2",
-		"description" : "테스트테스트테스트테스트테스트",
+		"description" : "테스트테스트테스트테스트테스트aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
 		"clear_NPC": "CountryTower",
 		"process_condition":["Quest.clear"],
 		"rewards" : [
