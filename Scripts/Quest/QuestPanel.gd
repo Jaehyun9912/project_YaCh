@@ -1,34 +1,38 @@
-extends QuestManager
+extends Control
+
+var container:
+	get:
+		return $"QuestList/ScrollContainer/VBoxContainer"
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	#퀘스트 데이터 받아 오고 수주 가능 퀘스트 추가
-	import_quest()
-	
-	enqueue_quest()
-	var pos : Vector2
-	pos.x = 100
-	pos.y = 50
-	
-	for i in quest_queue:
-		set_button(i,pos)
-		pos.y+=50
-	pass # Replace with function body.
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
+# 퀘스트 디테일 패널 표시
+func show_quest_detail(quest):
+	var detail_panel = $"QuestDetail"
+	detail_panel.show()
+	detail_panel.set_quest(quest,1)
 
-func set_button(quest : Quest, pos : Vector2):
-	var btn : Button
-	btn = Button.new()
-	add_child(btn)
-	btn.text = quest.id
-	btn.add_to_group("Quest")
-	btn.set_position(pos)
-	btn.button_down.connect(receive_quest.bind(quest))
-	btn.button_down.connect(remove_child.bind(btn))
-	
-	
+
+# 퀘스트 리스트에 대한 버튼들 생성
+func set_quest_buttons(list : Array[Quest]):
+	# 생성되어있던 버튼 제거
+	for i in container.get_children():
+		i.queue_free()
+	# 새 버튼 생성
+	for i in list:
+		_set_quest_button(i)
+
+
+# 패널 닫기
+func close_panel():
+	ViewManager.erase_panel(self)
+
+
+# 퀘스트와 버튼 연결, 시그널 추가
+func _set_quest_button(quest : Quest):
+	var button = Button.new()
+	button.text = quest.title
+	button.pressed.connect(show_quest_detail.bind(quest))
+	container.add_child(button)
+

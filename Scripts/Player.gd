@@ -8,7 +8,6 @@ func _ready():
 	
 #region Data
 var data : Dictionary
-
 # data에서 알아서 값을 뽑아오거나 넣어줌 
 var max_hp:
 	get:
@@ -16,11 +15,13 @@ var max_hp:
 	set(value):
 		data["max_hp"] = value
 
+signal hp_changed
 var hp:
 	get:
 		return data["hp"]
 	set(value):
 		data["hp"] = value
+		hp_changed.emit(value)
 
 var speed:
 	get:
@@ -134,7 +135,7 @@ func add_new_item(id : String, count : int):
 # 아티팩트 획득 
 func _get_artifact(id : String):
 	var item = DataManager.get_artifact_data(id)
-	
+	print(id," : ",item)
 	# 파일 형식 체크 
 	if item.size() == 0:
 		printerr("Wrong Artifact ID! " + id)
@@ -156,45 +157,86 @@ func _get_artifact(id : String):
 
 
 
+#region Quest
 
-#수주 중인 퀘스트 리스트
+signal quest_updated
+
+# 수주 중인 퀘스트 리스트
 var quest_list : Array[Quest]
-#값 비교용
 
+
+
+
+# 퀘스트 수주(수주중 태그 추가)
 func receive_quest(quest : Quest):
 	quest_list.append(quest)
+	TagManager.add_tag_tree(PlayerData,"Quest.process."+quest.id)
 	print( quest.id," Receive, Current QuestCount :",quest_list.size())
-
-func print_quest_list():
-	var list = "Quest : "
-	for i in quest_list:
-		list += i.id+", "
-	print(list)
+	quest_updated.emit(quest_list)
 
 
-#스탯값 앞에 !확인 후 반환 값 부정
-func stat_check(value : String)-> bool:
-	var negative = false
-	if value.begins_with("!"):
-		negative = true
-		value = value.split("!",true,2)[1]
-	return negative != stat_compare(value)
-	
-#스탯값 부등호 비교
-func stat_compare(value : String) -> bool:
-	#퀘스트에 필요한 태그 확인(부등호로 태그 카운트 세기)
-	var comparer = [">" , "<", "="]#필요하면 이상 이하도 추가
+# 퀘스트 클리어(클리어 태그 추가)
+func clear_quest(quest: Quest):
+	PlayerData.quest_list.erase(quest)
+	TagManager.remove_tag_tree(PlayerData,"Quest.process."+quest.id)
+	TagManager.add_tag_tree(PlayerData,"Quest.clear."+quest.id)
+	quest_updated.emit(quest_list)
+
+
+# 스탯 비교
+func stat_compare(condition : String) -> bool:
+	var comparer = [">" , "<", "="]
 	for i in comparer:
-		var str = value.split(i,true,2)
+		var str = condition.split(i,true,2)
 		if str.size()==2:
 			print(data[str[0]]," ",i," ",str[1])
-			#태그가 있는지 없는지부터 확인
+			# 태그 보유 여부 확인
 			if !data.has(str[0]):
 				return false
 			if i == ">" && data[str[0]] > str[1].to_int():
 				return true
-			if i == "<" && data[str[0]] < str[1].to_int():
+			elif i == "<" && data[str[0]] < str[1].to_int():
 				return true
-			if i == "=" && data[str[0]] == str[1].to_int():
+			elif i == "=" && data[str[0]] == str[1].to_int():
 				return true
+			else:
+				return false
 	return false
+
+
+# 인벤토리 아이템 개수 비교
+func item_compare(condition : String) -> bool:
+	var comparer = [">" , "<", "="]
+	for i in comparer:
+		var str = condition.split(i,true,2)
+		if str.size()==2:
+			# 아이템이 인벤토리에 얼마나 있는지 확인
+			var item_count = get_item_count(str[0])
+			print(str[0],".count : ",item_count)
+			if i == ">" && item_count > str[1].to_int():
+				return true
+			elif i == "<" && item_count < str[1].to_int():
+				return true
+			elif i == "=" && item_count == str[1].to_int():
+				return true
+			else:
+				return false
+	var item_count = get_item_count(condition)
+	if item_count>0:
+		return true
+	return false
+
+
+# 아티펙트 보유 여부 확인
+func artifact_compare(condition : String) -> bool:
+	return artifact.has(condition)
+
+
+# 보유 중인 아이템 개수 가져오기
+func get_item_count(id : String) -> int:
+	for i in inventory:
+		if i["id"] == "item:"+id:
+			return i["count"]
+	return 0
+
+#endregion

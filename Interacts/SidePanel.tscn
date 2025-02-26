@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=3 uid="uid://dlnbcuobuglrn"]
+
+[ext_resource type="Script" path="res://Scripts/Panel/SidePanel.gd" id="1_iyq2d"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_adfma"]
+font_size = 10
+font_color = Color(0.211765, 0.211765, 0.211765, 1)
+
+[node name="SidePanel" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_iyq2d")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_top = 310.0
+offset_right = 180.0
+offset_bottom = 380.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 170.0
+offset_bottom = 60.0
+
+[node name="TextType" type="Label" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+text = "current gold : "
+label_settings = SubResource("LabelSettings_adfma")
+
+[node name="Detail" type="Label" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+text = "100000"
+label_settings = SubResource("LabelSettings_adfma")

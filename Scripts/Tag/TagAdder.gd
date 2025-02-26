@@ -1,43 +1,27 @@
 extends Node
 
-#태그 이름 : 태그 카운트
-@export var compare_tags : Array[String]
-#비교할 스탯값(없으면 스킵)(문자열 하나에 변수이름부등호int값 붙여서 작성)
-@export var compare_value : Array[String]
-#추가할 태그 이름(있으면 태그 카운트 1개 추가)
+
+@export var conditions : Array[String]
 @export var add_tags : Array[String]
 
 
-func tag_process():
-	print(TagManager.get_tags(PlayerData))
-	for i in compare_tags:
-		#태그를 가지고 있는지 확인
-		if !TagManager.tag_check(PlayerData,i):
-			print("Player don't Have ",i)
-			return false 
-	#스탯이 충족되는지 확인
-	for i in compare_value:
-		if !PlayerData.stat_check(i):
-			return false
-	for i in add_tags:
-		TagManager.add_tag_tree(PlayerData,i)
-	print(TagManager.get_tags(PlayerData))
-	return true
 
 
-	
+# 태그 확인 후 태그 붙이기
+func condition_process() -> bool:
+	if Quest.condition_check(conditions):
+		#모든 조건 충족
+		for i in add_tags:
+			TagManager.add_tag_tree(PlayerData,i)
+		print(TagManager.get_tags(PlayerData))
+		return true
+	return false
+
+
+# 물체와 상호작용
 func _on_location_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
 		print("TagAdderClicked")
-		tag_process()
+		condition_process()
 
 
-#디버그용 태그애더 데이터 저장
-func save_data(save: Dictionary, data_path: String) -> void:
-	var path = "res://Data/Quest/Tagger/" + data_path + ".json"
-	var save_file = FileAccess.open(path, FileAccess.WRITE)
-	
-	var json_string = JSON.stringify(save)
-	
-	save_file.store_line(json_string)
-	

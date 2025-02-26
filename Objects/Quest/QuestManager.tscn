@@ -4,4 +4,3 @@
 
 [node name="QuestManager" type="Node3D"]
 script = ExtResource("1_idi6u")
-NPC_name = "NPC1"
