@@ -5,10 +5,10 @@
 	"mana": 100,
 	
 	"skills": [
-		"none",
-		"none",
-		"none",
-		"none",
+		"base_attack",
+		"base_fire",
+		"base_water",
+		"base_dirt",
 	],
 	
 	"inventory": [

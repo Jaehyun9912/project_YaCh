@@ -1,8 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://6pfqnfdd6ia8"]
+[gd_scene load_steps=13 format=3 uid="uid://6pfqnfdd6ia8"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
 [ext_resource type="PackedScene" uid="uid://cfalpw5wnu5ff" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
 [ext_resource type="PackedScene" uid="uid://blyo26b6351jw" path="res://Objects/UI/Battle/attribute_bar.tscn" id="3_tulg3"]
+[ext_resource type="Script" path="res://Scripts/Battle/attack_manager.gd" id="4_3ewvu"]
+[ext_resource type="Script" path="res://Scripts/Skills/SkillManager.gd" id="5_5si2s"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -61,16 +63,16 @@ max_hp = 50
 is_player = true
 
 [node name="BattleCharacter1" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.96134, -0.108985, -20.625)
-speed = 120.0
-mana = 100
-max_hp = 40
-
-[node name="BattleCharacter2" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27814, 1.90735e-06, -21.3017)
 speed = 70.0
 mana = 100
 max_hp = 50
+
+[node name="BattleCharacter2" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.96134, -0.108985, -20.625)
+speed = 120.0
+mana = 100
+max_hp = 40
 
 [node name="Interact" type="CanvasLayer" parent="."]
 
@@ -94,3 +96,11 @@ offset_bottom = 301.0
 
 [node name="EnemyTimer" type="Timer" parent="."]
 wait_time = 0.5
+
+[node name="AttackManager" type="Node" parent="."]
+script = ExtResource("4_3ewvu")
+
+[node name="SkillManager" type="Node" parent="."]
+script = ExtResource("5_5si2s")
+
+[connection signal="use_skill" from="." to="AttackManager" method="_on_battle_use_skill"]

@@ -7,6 +7,9 @@ signal turn_character_changed(new_character : BattleCharacter)
 # 턴 행동을 완료했음을 알리는 신호
 signal turn_end
 
+# 스킬을 처리해줄 함수를 호출하는 신호 
+signal use_skill(index, target)
+
 # 행동력 포인트 (나중에 변수로 변경해도 무방)
 const BASE_POINT = 50
 const ADDITIONAL_POINT = 50
@@ -15,21 +18,32 @@ const ADDITIONAL_POINT = 50
 var min_point_use = 1
 # 턴 대기 타이머
 @onready var enemy_timer = $EnemyTimer as Timer
-# 스킬 매니저
 @onready var skill_manager = $SkillManager as SkillManager
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
 var player_character : BattleCharacter
+var ally_character : Array[BattleCharacter]
 var enemy_character : Array[BattleCharacter]
+
+var enemy_count: 
+	get: return len(enemy_character)
+var ally_count: 
+	get: return len(ally_character) + 1
 
 # 현재 턴인 캐릭터의 정보
 var now_character: BattleCharacter
+var turn_cost:
+	get:
+		return now_character.current_point
+	set(value):
+		now_character.current_point = value
 
 # 죽은 캐릭터 행동 이후 처리용 
 var dead_player: Array[BattleCharacter]
 
 var map_data : Dictionary
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -111,45 +125,29 @@ func _battle():
 			print("turn end")
 
 # 버튼 눌렀을때
-func on_battle_panel_skill_actived(index : BattlePanel.Buttons):
+func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
+	var cost := 0
+	print("target : ", target)
 	match index:
 		# 버튼에 해당하는 효과 발동 
 		BattlePanel.Buttons.CENTER:
 			print("center")
 			turn_end.emit()
 		BattlePanel.Buttons.SKILL1:
-			use_skill(0)
+			use_skill.emit(0, target)
 		BattlePanel.Buttons.SKILL2:
-			use_skill(1)
+			use_skill.emit(1, target)
 		BattlePanel.Buttons.SKILL3:
-			use_skill(2)
+			use_skill.emit(2, target)
 		BattlePanel.Buttons.SKILL4:
-			use_skill(3)
+			use_skill.emit(3, target)
 		BattlePanel.Buttons.RUN:
 			_battle_end(0)
-				
+	
 	if now_character.current_point < min_point_use:
 			turn_end.emit()
 			
 	_check_dead_char()
-
-# 스킬 인덱스에 해당하는 스킬 발동 
-func use_skill(index):
-	# 플레이어의 스킬을 가져와서 그에 해당하는 스킬 정보를 얻어옴 
-	var cur_skill = PlayerData.skills[index]
-	var cur_skill_info = DataManager.get_skill_data(cur_skill)
-	
-	# 스킬의 코스트 감소만큼 감소시키기 
-	now_character.current_point -= cur_skill_info["cost"]
-	# 스킬의 유형에 따라 효과 결정 
-	match cur_skill_info["type"]:
-		"attack":
-			# 일단 임시로 전체 공격 
-			for i in enemy_character:
-				i.hp -= cur_skill_info["attack"]
-		"magic":
-			# 일단 임시로 속성만 채우도록 
-			$Interact/AttributeBar.add_value(cur_skill_info["attribute"]["type"], cur_skill_info["attribute"]["amount"])
 
 # 죽은 캐릭터 처리하는 함수
 func _check_dead_char():
@@ -200,9 +198,9 @@ func _battle_end(type):
 	#PlayerData.data.hp = player_character.hp
 	
 	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
-	
 
 # 캐릭터가 사망할시 일단 배열에 넣어놓고 나중에 처리
 func _on_character_died(dead : BattleCharacter):
 	print(dead.name, "is dead")
 	dead_player.append(dead)
+

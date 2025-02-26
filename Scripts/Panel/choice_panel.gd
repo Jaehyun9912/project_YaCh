@@ -8,7 +8,7 @@ func _on_button_1_pressed():
 	skills[3] = "base_dirt"
 	PlayerData.skills = skills
 	PlayerData.save_player()
-	print("변경 후 저장됨 ")
+	print(skills)
 	
 #디버그용으로 잠시
 func _on_button_2_pressed():
