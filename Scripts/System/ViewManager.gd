@@ -12,6 +12,11 @@ var now_map_name: String
 var old_map: String
 var old_panel: String
 
+func _ready():
+	print(RenderingServer.get_video_adapter_name())  # 그래픽 카드 정보 출력
+	print(RenderingServer.get_video_adapter_vendor())  # GPU 제조사 출력
+	print(RenderingServer.get_rendering_device())
+
 func get_view():	
 	current_scene = get_tree().current_scene
 	if current_scene != null:

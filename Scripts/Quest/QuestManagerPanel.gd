@@ -51,9 +51,7 @@ func _update_accept_panel():
 		i.queue_free()
 	#리스트에 해당하는 퀘스트 버튼 생성
 	for i in quest_manager.quest_queue:
-		var button = _set_quest_button(i,parent)
-		#퀘스트 수주 모드로 디테일 패널 열기
-		button.pressed.connect($"QuestDetail".set_quest.bind(i,Mode.RECEIVE))
+		var button = _set_quest_button(parent,i,Mode.RECEIVE)
 
 
 # 오른쪽 패널 현재 수주중인 퀘스트 리스트 업데이트
@@ -63,27 +61,33 @@ func _update_panel():
 		i.queue_free()
 	#리스트에 해당하는 퀘스트 버튼 생성
 	for i in PlayerData.quest_list:
-		var button = _set_quest_button(i,parent)
+		
 		#클리어 가능하면 옵션 버튼 활성화 아니면 비활성화
 		if i.is_clearable(quest_manager.npc_name):
 			#클리어 가능한 퀘스트는 버튼 색 변경
 			var style = StyleBoxFlat.new()
 			style.bg_color = Color.CHOCOLATE
+			var button = _set_quest_button(parent,i,Mode.CLEAR)
 			button.add_theme_stylebox_override("normal", style)
 			
-			button.pressed.connect($"QuestDetail".set_quest.bind(i,Mode.CLEAR))
 		else:
-			button.pressed.connect($"QuestDetail".set_quest.bind(i,Mode.PROCESS))
+			var button = _set_quest_button(parent,i,Mode.PROCESS)
 
 
 # 단일 버튼 생성 후 퀘스트와 바인딩
-func _set_quest_button(quest : Quest,parent):
+func _set_quest_button(parent,quest : Quest, mode):
 	var button = Button.new()
 	button.text = quest.title
-	button.pressed.connect(func(): $"QuestDetail".show())
+	button.pressed.connect(_show_quest_detail.bind(quest,mode))
 	parent.add_child(button)
 	return button
 
+func _show_quest_detail(quest: Quest, mode):
+	var panel = ViewManager.push_panel("QuestDetailPanel")
+	panel.option_pressed.connect(detail_interact)
+	panel.any_button_pressed.connect(ViewManager.erase_panel.bind(panel))
+	panel.set_quest(quest,mode)
+	return panel
 
 # 디버그용 처음씬으로 돌아가기
 func _go_main_scene():

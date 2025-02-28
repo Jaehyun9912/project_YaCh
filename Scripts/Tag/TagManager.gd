@@ -5,8 +5,6 @@ extends Node
 var dict : Dictionary
 
 
-
-
 # 노드가 가지고 있는 태그 반환
 func get_tags(node : Node) -> PackedStringArray:
 	if dict.has(node):

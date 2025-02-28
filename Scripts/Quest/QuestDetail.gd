@@ -3,6 +3,8 @@ extends Control
 # 수주, 클리어 관련 버튼 이벤트
 signal option_pressed(quest:Quest, mode: Mode)
 
+signal any_button_pressed()
+
 # 디테일 패널 모드 설정
 enum Mode{
 	RECEIVE, 
@@ -40,3 +42,6 @@ func set_quest(get_quest : Quest, mode : Mode) -> void:
 # 버튼 선택 시 시그널 발생
 func option_btn_pressed() -> void:
 	option_pressed.emit(quest,curMode)
+
+func button_pressed() -> void:
+	any_button_pressed.emit()

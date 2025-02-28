@@ -9,8 +9,8 @@ var container:
 
 # 퀘스트 디테일 패널 표시
 func show_quest_detail(quest):
-	var detail_panel = $"QuestDetail"
-	detail_panel.show()
+	var detail_panel = ViewManager.push_panel("QuestDetailPanel")
+	detail_panel.any_button_pressed.connect(ViewManager.erase_panel.bind(detail_panel))
 	detail_panel.set_quest(quest,1)
 
 

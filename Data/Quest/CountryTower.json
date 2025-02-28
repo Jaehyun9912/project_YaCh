@@ -1,29 +1,24 @@
 { "CountryTower":[
 	{
 		"id":"quest1",
-		"title" : "테스트 퀘스트 1",
-		"description" : "alpha태그, 최대체력<=50, 포션 1개 제출",
+		"title" : "튜토리얼1",
+		"description" : "숲에 진입해보기",
 		"clear_NPC": "CountryTower",
 		"accept_condition":["!Quest.clear.quest1"],
-		"process_condition":["Quest.process.quest1.alpha","!stat:max_hp>50"],
-		"submit" : [
-			{
-				"id" : "bomb",
-				"count" : 1
-			}
-		],
+		"process_condition":["Quest.process.quest1.alpha"],
 		"rewards" : [
 			{
-				"id": "potion",
+				"id": "bomb",
 				"count": 5,
 			}
-		]
+		],
 	},
 	{
 		"id":"quest2",
-		"title" : "테스트 퀘스트 2",
-		"description" : "테스트테스트테스트테스트테스트aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		"title" : "튜토리얼 퀘스트",
+		"description" : "아무 퀘스트나 클리어하기",
 		"clear_NPC": "CountryTower",
+		"accept_condition":["!Quest.clear.quest2"],
 		"process_condition":["Quest.clear"],
 		"rewards" : [
 			{
@@ -34,16 +29,16 @@
 	},
 	{
 		"id":"quest3",
-		"title" : "테스트 퀘스트 3",
-		"description" : "테스트3테스트3테스트3테스트3테스트",
+		"title" : "위험물 회수",
+		"description" : "폭탄 5개 가져오기",
 		"clear_NPC": "CountryTower",
-		"process_condition":["Quest.clear.quest3"],
-		"rewards" : [
-			{
-				"id": "potion",
+		"accept_condition":["!Quest.clear.quest3"],
+		"submit" : [
+						{
+				"id": "bomb",
 				"count": 5,
 			}
-		]
+		],
 	},
 	{
 		"id":"quest4",
