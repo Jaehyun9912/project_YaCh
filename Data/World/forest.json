@@ -4,18 +4,25 @@
 		[
 			{
 				"name":"적 1",
+				"tag": "enemy1",
 				"attack": 1,
 				"hp": 30,
 				"speed": 120,
-				"mana": 100
+				"mana": 100,
+				"skill": [
+					"default_attack"
+				]
 			},
-			
 			{
 				"name":"적 2",
+				"tag": "enemy2",
 				"attack": 1,
 				"hp": 10,
 				"speed": 80,
-				"mana": 100
+				"mana": 100,
+				"skill": [
+					"default_attack"
+				]
 			},
 		],
 	"rewards":

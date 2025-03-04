@@ -15,16 +15,16 @@ script = ExtResource("1_iyq2d")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 0
-offset_top = 310.0
-offset_right = 180.0
-offset_bottom = 380.0
+offset_top = 315.0
+offset_right = 235.0
+offset_bottom = 392.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
 layout_mode = 0
 offset_left = 10.0
 offset_top = 10.0
-offset_right = 170.0
-offset_bottom = 60.0
+offset_right = 189.0
+offset_bottom = 68.0
 
 [node name="TextType" type="Label" parent="ColorRect/VBoxContainer"]
 layout_mode = 2

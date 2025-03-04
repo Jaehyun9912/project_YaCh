@@ -51,7 +51,7 @@ func notify_msg(msg, color):
 	
 	_notify_label.visible = false
 	
-func set_character(data: Dictionary):
+func set_character(data: Dictionary, tag_id: String):
 	#name = data.name
 	#attack = data.attack
 	#if (data.has("max_hp")):
@@ -63,4 +63,7 @@ func set_character(data: Dictionary):
 	mana = data.mana
 	_hp = data.hp	
 	_hp_label.text = hp_text_string % [hp, max_hp]
+	
+	# 태그 추가하기 
+	TagManager.add_tag_tree(self, "Battle." + tag_id)
 	#print(data)

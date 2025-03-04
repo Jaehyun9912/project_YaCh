@@ -1,12 +1,16 @@
 {
 	"base_attack": {
 		"type": "attack",
+		"name": "기본 공격",
+		"description": "적을 1명 10데미지로 공격한다.\n행동력 10을 소모한다.",
 		"target": 1,
 		"apply": 10,
 		"cost": 2,
 	},
 	"base_fire": {
 		"type": "attack",
+		"name": "기본 불 공격",
+		"description": "적을 1명 10데미지로 공격하며 불 원소 10을 쌓는다.\n행동력 10을 소모한다.",
 		"target": 1,
 		"apply": 10,
 		"cost": {"point": 4},
@@ -17,6 +21,8 @@
 	},
 	"base_water": {
 		"type": "attack",
+		"name": "기본 물 공격",
+		"description": "적을 1명 10데미지로 공격하며 물 원소 11을 쌓는다.\n행동력 10과 흙 원소 1을 소모한다.",
 		"target": 1,
 		"apply": 10,
 		"cost": {"point": 4, "element": {"dirt": 1}},
@@ -27,6 +33,8 @@
 	},
 	"base_dirt": {
 		"type": "attack",
+		"name": "기본 땅 공격",
+		"description": "적을 1명 10데미지로 공격하며 흙 원소 14를 쌓는다.\n행동력 10을 소모한다.\n불 원소 2가 존재해야한다.",
 		"target": 1,
 		"apply": 10,
 		"cost": 10,

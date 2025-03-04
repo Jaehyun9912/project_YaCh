@@ -51,16 +51,19 @@ func _ready():
 
 # 턴 변경되었음을 받는 함수
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
+	# 현재 선택된 캐릭터 받아오기
 	current_charcter = new_character
-	if new_character.is_player == true:
-		for i in get_tree().get_nodes_in_group("battle_buttons"):
-			i.disabled = false
-	else:
-		for i in get_tree().get_nodes_in_group("battle_buttons"):
-			i.disabled = true
-			
+	
+	# 포인트 설정하기 
 	current_charcter.current_point = current_charcter.point
 	action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
+	
+	# 만약 플레이어라면 스킬 버튼 활성화 
+	if new_character.is_player == true:
+		set_all_button(true)
+		_check_skill_is_possible()
+	else:
+		set_all_button(false)
 	
 # 무한 반복
 func _process(_delta):
@@ -83,8 +86,15 @@ func set_all_button(OnOff : bool) -> void:
 func _on_skill_buttons_down(num):
 	print("button pressed ", num)
 	
+	# 센터면 바로 종료 
 	if num == Buttons.CENTER:
 		skill_actived.emit(Buttons.CENTER, null)
+		return
+	
+	# 사이드 패널에 정보 띄우기 
+	var skill = manager.skill_manager.get_player_skill(num-1)
+	SidePanel.set_info_panel(skill.get("name", ""), skill.get("description", ""))
+			
 	
 	# 스킬 대상 정하기 
 	skill_target = manager.skill_manager.get_target(num-1)
@@ -113,6 +123,8 @@ func _on_skill_buttons_down(num):
 			
 	# 결과 받아오기 
 	var end = await choicePanel.choice_end
+	SidePanel.mode = SidePanel.Mode.HP
+	
 	# 취소 시 null 이 반환됨 
 	if end == null:
 		return

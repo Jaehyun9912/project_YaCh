@@ -16,8 +16,8 @@ const ADDITIONAL_POINT = 50
 
 # 가장 적은 포인트를 사용하는 행동 (자동 턴 넘기기 용)
 var min_point_use = 1
-# 턴 대기 타이머
-@onready var enemy_timer = $EnemyTimer as Timer
+# 매니저 
+@onready var enemy_manager = $EnemyManager as EnemyManager
 @onready var skill_manager = $SkillManager as SkillManager
 
 # 캐릭터들의 정보를 담은 리스트
@@ -44,8 +44,7 @@ var dead_player: Array[BattleCharacter]
 
 var map_data : Dictionary
 
-
-# Called when the node enters the scene tree for the first time.
+# 패널 쪽에서 설정 후 종료되면 전투 시작 
 func _ready():
 	await turn_end
 	
@@ -79,10 +78,11 @@ func _battle_set():
 	for i in turn_char:
 		if i.is_player == true:
 			player_character = i
-			player_character.set_character(PlayerData.data)
+			player_character.set_character(PlayerData.data, "Player.Character")
 		else:
 			enemy_character.append(i)
-			i.set_character(map_data["enemys"][idx])
+			var data = map_data["enemys"][idx]
+			i.set_character(data, "Enemy." + data["tag"])
 			idx += 1
 			
 		i.character_died.connect(_on_character_died)
@@ -108,18 +108,20 @@ func _battle():
 			# 플레이어 턴 
 			if i.is_player == true:
 				print("player turn")
-				
 				# turn_end 신호가 emit 할때까지 대기
-				await turn_end
+				#await turn_end
 			
 			# 적 턴 
 			else:
 				print("enemy turn")	
-				enemy_timer.start()
-				await enemy_timer.timeout
-				player_character.hp -= 1
+				#enemy_manager.enemy_turn()
+				#enemy_timer.start()
+				#await enemy_timer.timeout
+				#player_character.hp -= 1
 				# 적 AI
-			
+				
+			# 턴 행동 종료 대기 
+			await turn_end
 			_check_dead_char()
 						
 			print("turn end")
@@ -142,32 +144,22 @@ func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
 		BattlePanel.Buttons.SKILL4:
 			use_skill.emit(3, target)
 		BattlePanel.Buttons.RUN:
-			_battle_end(0)
+			_battle_end(END_TYPE.RUN)
 	
 	if now_character.current_point < min_point_use:
 			turn_end.emit()
 			
 	_check_dead_char()
-
-# 죽은 캐릭터 처리하는 함수
-func _check_dead_char():
-# 턴 종료 후 사망한 캐릭터 처리
-	while dead_player.size() > 0:
-		var dead = dead_player.pop_back()
-		
-		if dead == player_character:
-			print("player dead")
-			_battle_end(2)
-		else:
-			turn_char.erase(dead)
-			dead.queue_free()
-			enemy_character.erase(dead)
-		
-			if enemy_character.size() == 0:
-				_battle_end(1)
 	
-# 일단 임시로 정수형태로 해놓았으나 나중에 컨디션이나 태그를 받도록 수정할 예정
-func _battle_end(type):
+#region END
+enum END_TYPE {
+	RUN,
+	WIN,
+	LOSE
+}
+
+# 들어온 타입에 따라 전투 종료 
+func _battle_end(type: END_TYPE):
 	# 도망, 적 전부 처치 전투 종료 구현하기 
 	
 	# 모든 버튼 비활성화 
@@ -175,9 +167,9 @@ func _battle_end(type):
 	var msg = $Interact/EndMsg as Label
 	
 	match type:
-		0:
+		END_TYPE.RUN:
 			msg.text = "전투에서 도망쳤다!"
-		1:
+		END_TYPE.WIN:
 			msg.text = "전투에서 승리했다!"
 			
 			# 보상 부여
@@ -189,7 +181,7 @@ func _battle_end(type):
 						PlayerData.add_new_item(i["id"], 1)
 					else:
 						PlayerData.add_new_item(i["id"], i["count"])
-		2:
+		END_TYPE.LOSE:
 			msg.text = "전투에서 패배했다!"
 	
 	await get_tree().create_timer(2).timeout
@@ -199,8 +191,28 @@ func _battle_end(type):
 	
 	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
 
+#endregion
+
+#region 죽은 캐릭터
+# 죽은 캐릭터 처리하는 함수
+func _check_dead_char():
+# 턴 종료 후 사망한 캐릭터 처리
+	while dead_player.size() > 0:
+		var dead = dead_player.pop_back()
+		
+		if dead == player_character:
+			print("player dead")
+			_battle_end(END_TYPE.LOSE)
+		else:
+			turn_char.erase(dead)
+			dead.queue_free()
+			enemy_character.erase(dead)
+		
+			if enemy_character.size() == 0:
+				_battle_end(END_TYPE.WIN)
+
 # 캐릭터가 사망할시 일단 배열에 넣어놓고 나중에 처리
 func _on_character_died(dead : BattleCharacter):
 	print(dead.name, "is dead")
 	dead_player.append(dead)
-
+#endregion
