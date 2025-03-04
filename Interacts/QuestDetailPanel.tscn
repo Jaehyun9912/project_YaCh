@@ -94,6 +94,6 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 text = "닫기"
 
-[connection signal="pressed" from="Btns/VBoxContainer/OptionPanel/OptionBtn" to="." method="option_btn_pressed"]
 [connection signal="pressed" from="Btns/VBoxContainer/OptionPanel/OptionBtn" to="." method="button_pressed"]
+[connection signal="pressed" from="Btns/VBoxContainer/OptionPanel/OptionBtn" to="." method="option_btn_pressed"]
 [connection signal="pressed" from="Btns/VBoxContainer/MarginContainer/Button" to="." method="button_pressed"]

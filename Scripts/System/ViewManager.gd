@@ -13,9 +13,8 @@ var old_map: String
 var old_panel: String
 
 func _ready():
-	print(RenderingServer.get_video_adapter_name())  # 그래픽 카드 정보 출력
-	print(RenderingServer.get_video_adapter_vendor())  # GPU 제조사 출력
-	print(RenderingServer.get_rendering_device())
+	get_window().size_changed.connect(_on_size_changed)
+	_on_size_changed()
 
 func get_view():	
 	current_scene = get_tree().current_scene
@@ -56,6 +55,28 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 
 
 #region UI_Panel
+# 패널 가로 세로 정렬
+func _on_size_changed():
+	get_view()
+	var size = get_window().size
+	print(size)
+	if size.x < size.y:
+		print("세로")
+		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_PORTRAIT)
+	elif size.x > size.y:
+		print("가로")
+		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_LANDSCAPE)
+	var panel = current_panel.get_child(0)
+	if panel == null: 
+		return
+	var current_orientation = DisplayServer.screen_get_orientation()
+	if current_orientation == DisplayServer.SCREEN_LANDSCAPE:
+		panel.anchor_left = 0.5
+		panel.anchor_top = 0
+	elif current_orientation == DisplayServer.SCREEN_PORTRAIT:
+		panel.anchor_left = 0
+		panel.anchor_top = 0.5
+
 var panel_stack : Array
 # 패널 추가
 func push_panel(panel_name : String):
@@ -65,6 +86,7 @@ func push_panel(panel_name : String):
 	panel_stack.append(panel)
 	current_panel.add_child(panel as Node)
 	return panel
+
 
 
 # 패널 제거

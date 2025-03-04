@@ -4,7 +4,8 @@ extends Control
 # 패널 정보 모드
 enum Mode{
 	HP,
-	BUDGET
+	BUDGET,
+	DEBUG,
 }
 
 # 정보 종류 텍스트
@@ -29,8 +30,18 @@ var mode :
 
 func _ready():
 	mode = Mode.HP
-	pass
+	get_window().size_changed.connect(_on_size_changed)
+	_on_size_changed()
 
+func _on_size_changed():
+	var current_orientation = DisplayServer.screen_get_orientation()
+	if current_orientation == DisplayServer.SCREEN_LANDSCAPE:
+		self.anchor_right = 0.5
+		self.anchor_bottom = 1
+	elif current_orientation == DisplayServer.SCREEN_PORTRAIT:
+		self.anchor_right = 1
+		self.anchor_bottom = 0.5
+	mode = 2
 
 func _process(delta):
 	if is_visible:
@@ -43,6 +54,8 @@ func set_panel():
 		set_hp_panel()
 	elif mode == Mode.BUDGET:
 		set_budget_panel()
+	elif mode == Mode.DEBUG:
+		set_debug_panel()
 
 
 # 체력 값 업데이트
@@ -54,3 +67,8 @@ func set_hp_panel():
 func set_budget_panel():
 	type.text = "보유 골드"
 	text.text = "10000" + " 골드"
+
+# 디버그용 빌드 로그 띄우기
+func set_debug_panel():
+	type.text = "현재 모드"
+	text.text = str(DisplayServer.screen_get_orientation())
