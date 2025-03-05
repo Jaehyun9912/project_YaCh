@@ -52,6 +52,7 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	# 사라진 오브젝트의 태그 값 제거
 	TagManager.clean_dict()
 	get_node("/root/SidePanel").mode = side_mode
+	_on_size_changed()
 
 
 #region UI_Panel

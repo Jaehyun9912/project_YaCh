@@ -41,7 +41,6 @@ func _on_size_changed():
 	elif current_orientation == 1:
 		self.anchor_right = 1
 		self.anchor_bottom = 0.5
-	mode = 2
 
 func _process(delta):
 	if is_visible:
