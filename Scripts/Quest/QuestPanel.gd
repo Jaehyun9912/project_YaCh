@@ -5,7 +5,18 @@ var container:
 		return $"QuestList/ScrollContainer/VBoxContainer"
 
 
+func _ready():
+	get_window().size_changed.connect(_on_size_changed)
+	_on_size_changed()
 
+func _on_size_changed():
+	var screen_mode = ViewManager.screen_mode
+	if screen_mode == 0:
+		self.anchor_left = 0.5
+		self.anchor_top = 0
+	elif screen_mode == 1:
+		self.anchor_left = 0
+		self.anchor_top = 0.5
 
 # 퀘스트 디테일 패널 표시
 func show_quest_detail(quest):

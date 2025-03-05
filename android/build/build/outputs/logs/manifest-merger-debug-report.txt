@@ -26,9 +26,9 @@ MERGED from [androidx.lifecycle:lifecycle-livedata:2.0.0] C:\Users\user\.gradle\
 MERGED from [androidx.lifecycle:lifecycle-livedata-core:2.3.1] C:\Users\user\.gradle\caches\transforms-3\2b996d28c48d5c1eb8d894bdf0acc1d7\transformed\lifecycle-livedata-core-2.3.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.arch.core:core-runtime:2.1.0] C:\Users\user\.gradle\caches\transforms-3\64013006b098a13d4a16ea3f501af751\transformed\core-runtime-2.1.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.annotation:annotation-experimental:1.0.0] C:\Users\user\.gradle\caches\transforms-3\10f722f628eb19ba09dfc654025baab7\transformed\jetified-annotation-experimental-1.0.0\AndroidManifest.xml:17:1-24:12
-INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:2:1-31:12
-INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:2:1-31:12
-INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:2:1-31:12
+INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:2:1-29:12
+INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:2:1-29:12
+INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:2:1-29:12
 	package
 		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:4:5-29
 		INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml
@@ -100,7 +100,7 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.0] C:\Users\us
 		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:21:9-36
 		REJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:21:9-36
 	tools:replace
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:20:9-143
+		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:18:9-143
 	android:isGame
 		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:24:9-30
 		REJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:24:9-30
@@ -113,7 +113,7 @@ MERGED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidMan
 MERGED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:34:9-51:20
 REJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:46:13-50:29
 	tools:node
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:23:154-186
+		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:21:154-186
 	android:screenOrientation
 		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:41:13-50
 		REJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:41:13-50
@@ -142,7 +142,7 @@ REJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidM
 		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:37:13-55
 		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:37:13-55
 	tools:replace
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:23:58-153
+		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:21:58-153
 	android:name
 		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml:35:13-37
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.DEFAULT+category:name:android.intent.category.LAUNCHER
@@ -205,26 +205,6 @@ INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debu
 	android:minSdkVersion
 		INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\AndroidManifest.xml
 		INJECTED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml
-uses-feature#android.hardware.vulkan.level
-ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:11:5-132
-	android:version
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:11:110-129
-	tools:node
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:11:19-39
-	android:required
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:11:85-109
-	android:name
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:11:40-84
-uses-feature#android.hardware.vulkan.version
-ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:12:5-140
-	android:version
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:12:111-137
-	tools:node
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:12:19-39
-	android:required
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:12:87-110
-	android:name
-		ADDED from C:\Users\user\Documents\GitHub\project_YaCh\android\build\src\debug\AndroidManifest.xml:12:40-86
 meta-data#org.godotengine.library.version
 ADDED from [godot-lib.template_debug.aar] C:\Users\user\.gradle\caches\transforms-3\9a2d4eb6c6396b495fa445404429297b\transformed\jetified-godot-lib.template_debug\AndroidManifest.xml:14:9-16:44
 	android:value

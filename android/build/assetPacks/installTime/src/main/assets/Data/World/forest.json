@@ -1,0 +1,28 @@
+{
+	"attribute": 100,
+	"enemys":
+		[
+			{
+				"name":"적 1",
+				"attack": 1,
+				"hp": 30,
+				"speed": 120,
+				"mana": 100
+			},
+			
+			{
+				"name":"적 2",
+				"attack": 1,
+				"hp": 10,
+				"speed": 80,
+				"mana": 100
+			},
+		],
+	"rewards":
+		{
+			"item": [
+				{"id": "potion", "count": 1},
+				{"id": "artifact:pandora_cube"}
+			]
+		}
+}

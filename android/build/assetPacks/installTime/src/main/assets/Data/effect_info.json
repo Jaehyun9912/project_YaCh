@@ -1,0 +1,11 @@
+{
+	"poison": {
+		"target": "hp",
+		"oper": "remove",
+		"turn": "every",
+		"restore": false,
+		"value": 10,
+		"power": 10
+	}
+	
+}

@@ -1,0 +1,42 @@
+{
+	"base_attack": {
+		"type": "attack",
+		"target": 1,
+		"apply": 10,
+		"cost": 2,
+	},
+	"base_fire": {
+		"type": "attack",
+		"target": 1,
+		"apply": 10,
+		"cost": {"point": 4},
+		"element": {
+			"type": "fire",
+			"amount": 10
+		}
+	},
+	"base_water": {
+		"type": "attack",
+		"target": 1,
+		"apply": 10,
+		"cost": {"point": 4, "element": {"dirt": 1}},
+		"element": {
+			"type": "water",
+			"amount": 11
+		}
+	},
+	"base_dirt": {
+		"type": "attack",
+		"target": 1,
+		"apply": 10,
+		"cost": 10,
+		"requirement": {
+			"point": 12,
+			"element": {"fire": 2}
+		},
+		"element": {
+			"type": "dirt",
+			"amount": 14
+		}
+	}
+}
