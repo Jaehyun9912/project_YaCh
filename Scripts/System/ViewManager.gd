@@ -55,25 +55,25 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 
 
 #region UI_Panel
+# 현재 스크린 가로 세로 비율 확인
+var screen_mode:
+	get:
+		var size = get_window().size
+		if size.x > size.y:
+			return 0
+		else:
+			return 1
 # 패널 가로 세로 정렬
 func _on_size_changed():
 	get_view()
-	var size = get_window().size
-	print(size)
-	if size.x < size.y:
-		print("세로")
-		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_PORTRAIT)
-	elif size.x > size.y:
-		print("가로")
-		DisplayServer.screen_set_orientation(DisplayServer.SCREEN_LANDSCAPE)
 	var panel = current_panel.get_child(0)
 	if panel == null: 
 		return
-	var current_orientation = DisplayServer.screen_get_orientation()
-	if current_orientation == DisplayServer.SCREEN_LANDSCAPE:
+	
+	if screen_mode == 0:
 		panel.anchor_left = 0.5
 		panel.anchor_top = 0
-	elif current_orientation == DisplayServer.SCREEN_PORTRAIT:
+	elif screen_mode == 1:
 		panel.anchor_left = 0
 		panel.anchor_top = 0.5
 

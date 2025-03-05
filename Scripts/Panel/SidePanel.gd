@@ -34,11 +34,11 @@ func _ready():
 	_on_size_changed()
 
 func _on_size_changed():
-	var current_orientation = DisplayServer.screen_get_orientation()
-	if current_orientation == DisplayServer.SCREEN_LANDSCAPE:
+	var current_orientation = ViewManager.screen_mode
+	if current_orientation == 0:
 		self.anchor_right = 0.5
 		self.anchor_bottom = 1
-	elif current_orientation == DisplayServer.SCREEN_PORTRAIT:
+	elif current_orientation == 1:
 		self.anchor_right = 1
 		self.anchor_bottom = 0.5
 	mode = 2
