@@ -103,9 +103,10 @@ func _on_skill_buttons_down(num):
 		choicePanel.set_self_panel()
 	else:
 		var target_count = skill_target.get("count", 0)
+		var team = skill_target.get("team", false)
 		# 0이하 : 전부 대상 
 		if target_count < 1:
-			choicePanel.set_all_panel()
+			choicePanel.set_all_panel(team)
 		
 		# 타겟 유형에 따라 적/아군 개수 가져오기 
 		var cnt := 0
@@ -116,10 +117,10 @@ func _on_skill_buttons_down(num):
 		
 		# 한명만 남아서 선택 할 필요 없음
 		if cnt == 1:
-			choicePanel.set_all_panel()
+			choicePanel.set_all_panel(team)
 		# 아니면 선택 시작 
 		else:
-			choicePanel.set_choice_panel(cnt, target_count)
+			choicePanel.set_choice_panel(cnt, target_count, team)
 			
 	# 결과 받아오기 
 	var end = await choicePanel.choice_end
@@ -152,3 +153,9 @@ func _on_button_run_button_up():
 func _on_button_inventoy_button_up():
 	var inven = PlayerData.inventory
 	print(inven)
+
+func get_all_enemy():
+	return manager.enemy_character
+	
+func get_all_ally():
+	return manager.ally_character

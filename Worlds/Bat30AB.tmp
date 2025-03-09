@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://6pfqnfdd6ia8"]
+[gd_scene load_steps=14 format=3 uid="uid://6pfqnfdd6ia8"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
 [ext_resource type="PackedScene" uid="uid://cfalpw5wnu5ff" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://blyo26b6351jw" path="res://Objects/UI/Battle/attribute_bar.tscn" id="3_tulg3"]
 [ext_resource type="Script" path="res://Scripts/Battle/attack_manager.gd" id="4_3ewvu"]
 [ext_resource type="Script" path="res://Scripts/Skills/SkillManager.gd" id="5_5si2s"]
-[ext_resource type="PackedScene" uid="uid://5ctp6o6sslw4" path="res://Objects/UI/UpperPanel.tscn" id="5_71ugh"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -101,9 +100,6 @@ offset_left = 8.0
 offset_top = 8.0
 offset_right = 48.0
 offset_bottom = 301.0
-
-[node name="UpperPanel" parent="Interact" instance=ExtResource("5_71ugh")]
-visible = false
 
 [node name="AttackManager" type="Node" parent="."]
 script = ExtResource("4_3ewvu")

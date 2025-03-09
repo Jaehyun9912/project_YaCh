@@ -12,6 +12,9 @@ const  hp_text_string := "HP : %d / %d"
 @export var mana: int
 @export var max_hp: int
 var attack: int
+var skills
+
+var tag: String
 
 var _hp
 var hp:
@@ -36,9 +39,17 @@ var current_point: int
 # 플레이어인지 확인용 
 @export var is_player := false
 
+var init_outline_size
+var init_outline_color
+
+func _ready():
+	init_outline_size = _hp_label.outline_size
+	init_outline_color = _hp_label.outline_modulate
+
 # 죽었을 때 
 func _died():
 	character_died.emit(self)
+	TagManager.remove_tag_tree(self, tag)
 	
 # 캐릭터 위에 메세지 띄우기 
 func notify_msg(msg, color):
@@ -53,7 +64,7 @@ func notify_msg(msg, color):
 	
 func set_character(data: Dictionary, tag_id: String):
 	#name = data.name
-	#attack = data.attack
+	attack = data.get("attack", 0)
 	#if (data.has("max_hp")):
 		#max_hp = data.max_hp
 	#else:
@@ -64,6 +75,23 @@ func set_character(data: Dictionary, tag_id: String):
 	_hp = data.hp	
 	_hp_label.text = hp_text_string % [hp, max_hp]
 	
+	skills = data.skills
+	
 	# 태그 추가하기 
-	TagManager.add_tag_tree(self, "Battle." + tag_id)
+	tag = "Battle." + tag_id
+	TagManager.add_tag_tree(self, tag)
 	#print(data)
+	
+	
+func set_hp_outline(size: int, color: Color):
+	_hp_label.outline_size = size
+	_hp_label.outline_modulate = color
+	
+func set_hp_outline_default(): set_hp_outline(init_outline_size, init_outline_color)
+func set_hp_outline_red(): set_hp_outline(30, Color.RED)
+func set_hp_outline_green(): set_hp_outline(30, Color.GREEN)
+
+# 적이면 빨간색, 아군이면 초록색으로 설정 (아직은 IsPlayer로 구분 
+func set_hp_outline_target(): 
+	if is_player: set_hp_outline_green()
+	else: set_hp_outline_red()

@@ -1,5 +1,7 @@
-extends Node
-class_name SkillManager
+class_name SkillManager extends Node
+
+# 플레이어의 스킬을 관리함
+# 적의 스킬은 EnemyManager에서 관리함 
 
 @onready var manager := $".."
 @onready var attribute := $"../Interact/AttributeBar"
@@ -82,7 +84,7 @@ func remove_cost(player_skill_index: int):
 		for e in element:
 			attribute.remove_value(e, element[e])
 			
-# 스킬의 target 정볼르 얻어오는 함수
+# 스킬의 target 정보를 얻어오는 함수
 func get_target(player_skill_index: int):
 	var skill = get_player_skill(player_skill_index)
 	var type = skill.get("type", "")

@@ -1,10 +1,14 @@
 extends Control
 class_name CharacterChoicePanel
 
+@onready var battle = $".." as BattlePanel
+
 @onready var hbox := $ColorRect/HBoxContainer
 @onready var label := $ColorRect/Label
 @onready var btn_theme = load("res://Objects/UI/Battle/button_theme.tres")
 var buttons : Array
+
+var isAlly = false
 
 @onready var done_button := $ColorRect/Done
 
@@ -48,14 +52,26 @@ func set_panel(btn_count):
 # 대상 버튼을 눌렀을 때 
 func _on_button_pressed(toggled_on, i):
 	#print(toggled_on, " ", i)
+	# 만약 i가 인덱스를 벗어났다면 버튼의 문제이므로 여기서는 확인 X
+	var target = get_characters()[i]
+	
 	# 버튼을 켰을 때 
 	if toggled_on:
 		current_choice += 1
 		
-		if current_choice == need_choice:
+		target.set_hp_outline_target()
+
+		# 만약 눌러서 모든 대상을 선택했다면 
+		if current_choice == need_choice and need_choice > 1:
 			for btn in buttons:
 				if not btn.button_pressed:
 					btn.disabled = true
+					
+		elif current_choice > need_choice and need_choice == 1:
+			for j in len(buttons):
+				if j != i:
+					buttons[j].button_pressed = false
+		
 	# 버튼을 껐을 때 
 	else:
 		if current_choice == need_choice:
@@ -63,6 +79,7 @@ func _on_button_pressed(toggled_on, i):
 				btn.disabled = false
 		
 		current_choice -= 1
+		target.set_hp_outline_default()
 	done_button.disabled = not current_choice == need_choice
 	
 # 버튼 다 지우기 
@@ -71,13 +88,18 @@ func reset_buttons():
 		i.queue_free()
 	buttons.clear()
 	label.visible = false
+	
+	var target = get_characters()
+	for i in target:
+		i.set_hp_outline_default()
 
 #  버튼의 개수, 선택해야하는 개수를 받아와 패널 생성 
-func set_choice_panel(number: int, choice_count: int):
+func set_choice_panel(number: int, choice_count: int, IsAlly: bool):
+	isAlly = IsAlly
 	
 	# 만약 선택해야 하는 대상이 총 대상보다 많다면 전체 패널로 교체 
 	if number <= choice_count:
-		set_all_panel()
+		set_all_panel(IsAlly)
 		return
 
 	set_panel(number)
@@ -88,7 +110,8 @@ func set_choice_panel(number: int, choice_count: int):
 	current_choice = 0
 	
 # 대상 버튼 없이 텍스트만 설정하는 패널 
-func set_label_panel(text):
+func set_label_panel(text, IsAlly):
+	isAlly = IsAlly
 	need_choice = 0
 	current_choice = 0
 	set_panel(0)
@@ -99,11 +122,14 @@ func set_label_panel(text):
 
 # 자기 자신에게 적용할 때 
 func set_self_panel():
-	set_label_panel("나에게 적용하기")
+	set_label_panel("나에게 적용하기", true)
 	
 # 모두를 대상으로 적용할 때 
-func set_all_panel():
-	set_label_panel("모두를 대상으로 하기")
+func set_all_panel(IsAlly):
+	set_label_panel("모두를 대상으로 하기", IsAlly)
+	var target = get_characters()
+	for i in target:
+		i.set_hp_outline_target()
 
 # 완료 버튼 눌렀을 때 
 func _on_done_pressed():
@@ -122,3 +148,9 @@ func _on_cancel_pressed():
 	reset_buttons()
 	set_active(false)
 	choice_end.emit(null)
+	
+func get_characters():
+		if isAlly:
+			return battle.get_all_ally()
+		else:
+			return battle.get_all_enemy()

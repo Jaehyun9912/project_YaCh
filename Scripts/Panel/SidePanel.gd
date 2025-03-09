@@ -26,8 +26,6 @@ var mode :
 		set_panel()
 
 
-
-
 func _ready():
 	mode = Mode.HP
 	pass
