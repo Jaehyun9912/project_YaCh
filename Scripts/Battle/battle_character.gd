@@ -9,9 +9,9 @@ const  hp_text_string := "HP : %d / %d"
 @onready var _notify_timer := $NotifyLabel/Timer
 
 @export var speed: float
-@export var mana: int
-@export var max_hp: int
-var attack: int
+@export var mana: float
+@export var max_hp: float
+var attack: float
 var skills
 
 var tag: String
@@ -58,10 +58,12 @@ func notify_msg(msg, color):
 	_notify_label.visible = true
 	_notify_timer.start()
 	
+	# 잠시후 종료 
 	await _notify_timer.timeout
 	
 	_notify_label.visible = false
 	
+# 캐릭터 정보 설정 
 func set_character(data: Dictionary, tag_id: String):
 	#name = data.name
 	attack = data.get("attack", 0)
@@ -82,11 +84,12 @@ func set_character(data: Dictionary, tag_id: String):
 	TagManager.add_tag_tree(self, tag)
 	#print(data)
 	
-	
+# 캐릭터의 체력 텍스트 외곽선 설정 
 func set_hp_outline(size: int, color: Color):
 	_hp_label.outline_size = size
 	_hp_label.outline_modulate = color
-	
+
+# 미리 설정된 프리셋 
 func set_hp_outline_default(): set_hp_outline(init_outline_size, init_outline_color)
 func set_hp_outline_red(): set_hp_outline(30, Color.RED)
 func set_hp_outline_green(): set_hp_outline(30, Color.GREEN)

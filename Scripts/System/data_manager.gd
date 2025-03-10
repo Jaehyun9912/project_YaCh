@@ -59,8 +59,20 @@ func save_data(save: Dictionary, data_path: String) -> void:
 	
 	save_file.store_line(json_string)
 		
+# 네임스페이스 관계 없이 아이템 정보 가져오기 
+func get_item_artifact_data(id: String):
+	var sp = id.split(":")
+	if sp.size() == 1 or sp[0] == "item":
+		return get_item_data(id)
+	else:
+		return get_artifact_data(id)
+		
 # 들어온 ID에 해당하는 아이템의 정보가 담긴 딕셔너리 반환 
 func get_item_data(id : String) -> Dictionary:
+	var sp = id.split(":")
+	if sp.size() > 1 and sp[0] == "item":
+		id = sp[1]
+		
 	if items.has(id):
 		return items[id]
 	else:
@@ -69,6 +81,10 @@ func get_item_data(id : String) -> Dictionary:
 		
 # 들어온 ID에 해당하는 아티팩트의 정보가 담긴 딕셔너리 반환 
 func get_artifact_data(id : String) -> Dictionary:
+	var sp = id.split(":")
+	if sp.size() > 1 and sp[0] == "artifact":
+		id = sp[1]
+	
 	if artifacts.has(id):
 		return artifacts[id]
 	else:

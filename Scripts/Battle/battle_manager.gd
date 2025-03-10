@@ -108,17 +108,9 @@ func _battle():
 			# 플레이어 턴 
 			if i.is_player == true:
 				print("player turn")
-				# turn_end 신호가 emit 할때까지 대기
-				#await turn_end
-			
 			# 적 턴 
 			else:
 				print("enemy turn")	
-				#enemy_manager.enemy_turn()
-				#enemy_timer.start()
-				#await enemy_timer.timeout
-				#player_character.hp -= 1
-				# 적 AI
 				
 			# 턴 행동 종료 대기 
 			await turn_end
@@ -164,23 +156,32 @@ func _battle_end(type: END_TYPE):
 	
 	# 모든 버튼 비활성화 
 	ViewManager.current_panel.get_node("BattlePanel").set_all_button(false)
-	var msg = $Interact/EndMsg as Label
+	var msg = $Interact/ResultPanel as ResultPanel
 	
 	match type:
 		END_TYPE.RUN:
-			msg.text = "전투에서 도망쳤다!"
+			msg.set_panel("전투에서 도망쳤다!")
+			#msg.text = "전투에서 도망쳤다!"
 		END_TYPE.WIN:
-			msg.text = "전투에서 승리했다!"
+			#msg.text = "전투에서 승리했다!"
 			
+			var reward = ""
 			# 보상 부여
 			if map_data.has("rewards") and map_data["rewards"].has("item"):
 				for i in map_data["rewards"]["item"]:
 					if (i.has("id") == false):
 						printerr("No Item ID in rewards!")
-					elif (i.has("count") == false):
-						PlayerData.add_new_item(i["id"], 1)
+						continue
+						
+					var item = DataManager.get_item_artifact_data(i.id)
+					if (i.has("count") == false):
+						reward += item.name + "\n"
+						PlayerData.add_new_item(i.id, 1)
 					else:
-						PlayerData.add_new_item(i["id"], i["count"])
+						reward += item.name + " " + str(i.count) + "개\n"
+						PlayerData.add_new_item(i.id, i.count)
+						
+			msg.set_panel("전투에서 승리했다!", "보상", reward)
 		END_TYPE.LOSE:
 			msg.text = "전투에서 패배했다!"
 	

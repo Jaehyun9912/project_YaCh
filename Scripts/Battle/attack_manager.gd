@@ -38,6 +38,7 @@ func _on_battle_use_skill(index, target_info):
 			$"../Interact/AttributeBar".add_value(element["type"], element["amount"])
 	
 
+# 공격 함수 
 func do_attack():
 	var apply = cur_skill.get("apply", 0)
 	if not apply is float:
