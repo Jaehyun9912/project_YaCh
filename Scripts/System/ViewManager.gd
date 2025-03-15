@@ -67,6 +67,8 @@ var screen_mode:
 # 패널 가로 세로 정렬
 func _on_size_changed():
 	get_view()
+	if current_panel == null:
+		return
 	var panel = current_panel.get_child(0)
 	if panel == null: 
 		return

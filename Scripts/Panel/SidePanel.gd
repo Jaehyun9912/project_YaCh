@@ -42,7 +42,7 @@ func _on_size_changed():
 		self.anchor_right = 1
 		self.anchor_bottom = 0.5
 
-func _process(delta):
+func _process(_delta):
 	if is_visible:
 		set_panel()
 
@@ -50,24 +50,24 @@ func _process(delta):
 # 모드에 맞는 값 업데이트
 func set_panel():
 	if mode == Mode.HP:
-		set_hp_panel()
+		_set_hp_panel()
 	elif mode == Mode.BUDGET:
-		set_budget_panel()
+		_set_budget_panel()
 	elif mode == Mode.DEBUG:
-		set_debug_panel()
+		_set_debug_panel()
 
 
 # 체력 값 업데이트
-func set_hp_panel():
+func _set_hp_panel():
 	type.text = "현재 체력"
 	text.text = str(PlayerData.hp) + " / " + str(PlayerData.max_hp)
 
 # 보유 골드 현황 업데이트
-func set_budget_panel():
+func _set_budget_panel():
 	type.text = "보유 골드"
 	text.text = "10000" + " 골드"
 
 # 디버그용 빌드 로그 띄우기
-func set_debug_panel():
+func _set_debug_panel():
 	type.text = "현재 모드"
 	text.text = str(DisplayServer.screen_get_orientation())

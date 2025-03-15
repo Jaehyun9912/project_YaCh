@@ -1,9 +1,7 @@
 extends Control
 
 # 퀘스트 매니저
-var quest_manager :
-	set(manager):
-		quest_manager = manager as QuestManager
+var quest_manager
 
 # 디테일 패널 모드 enum 과 같음
 enum Mode{
@@ -51,7 +49,7 @@ func _update_accept_panel():
 		i.queue_free()
 	#리스트에 해당하는 퀘스트 버튼 생성
 	for i in quest_manager.quest_queue:
-		var button = _set_quest_button(parent,i,Mode.RECEIVE)
+		_set_quest_button(parent,i,Mode.RECEIVE)
 
 
 # 오른쪽 패널 현재 수주중인 퀘스트 리스트 업데이트
@@ -71,7 +69,7 @@ func _update_panel():
 			button.add_theme_stylebox_override("normal", style)
 			
 		else:
-			var button = _set_quest_button(parent,i,Mode.PROCESS)
+			_set_quest_button(parent,i,Mode.PROCESS)
 
 
 # 단일 버튼 생성 후 퀘스트와 바인딩
