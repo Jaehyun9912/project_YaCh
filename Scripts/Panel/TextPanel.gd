@@ -2,11 +2,7 @@ extends Control
 
 var file_name : String
 var data
-var talk_data:
-	get:
-		if data !=null:
-			return data["Talk"] as Array
-		return null
+var talk_data
 
 var name_text:
 	get:
@@ -18,7 +14,7 @@ var words_text:
 
 func _ready():
 	load_data("TestTalk")
-	load_text()
+	load_text_block("Start")
 	pass # Replace with function body.
 
 # 대사 진행도
@@ -42,9 +38,30 @@ func load_text() -> void:
 	var choice = null
 	if text_data.has("Choice"):
 		choice = text_data["Choice"]
+		var panel = $Btns as BtnPanel
+		panel.clear_buttons()
+		panel.show()
+		for i in choice.keys():
+			var btn = panel.create_button(i)
+			btn.pressed.connect(func(): panel.hide())
+			btn.pressed.connect(load_text_block.bind(choice[i]))
 	name_text.text = speaker
 	words_text.text = words
 	text_num+=1
 	
+	if text_data.has("Next"):
+		var next_block = text_data["Next"]
+		if !data.has(next_block):
+			return
+		talk_data = data[next_block]
+		text_num = 0
 	
+func load_text_block(block_name :String)->void:
+	if data == null:
+		return
+	if !data.has(block_name):
+		return
+	talk_data = data[block_name]
+	text_num = 0
+	load_text()
 
