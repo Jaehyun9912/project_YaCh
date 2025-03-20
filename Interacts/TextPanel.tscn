@@ -61,13 +61,14 @@ layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.048
 anchor_bottom = 0.052
-offset_left = 329.0
-offset_top = -42.0
-offset_right = 329.72
-offset_bottom = -15.014
+offset_left = 251.0
+offset_top = 97.0
+offset_right = 288.72
+offset_bottom = 140.528
 text = "V"
 
 [node name="Btns" type="ColorRect" parent="."]
+visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_top = 0.5
