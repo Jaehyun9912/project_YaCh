@@ -18,7 +18,6 @@ func _ready():
 	var npc_name# = get_meta("npc_name")
 	if not npc_name:
 		npc_name = ViewManager.now_map_name
-	print(npc_name)
 	quest_manager = QuestManager.new(npc_name)
 	#왼쪽 패널 업데이트
 	_update_accept_panel()
@@ -59,9 +58,8 @@ func _update_panel():
 		i.queue_free()
 	#리스트에 해당하는 퀘스트 버튼 생성
 	for i in PlayerData.quest_list:
-		
 		#클리어 가능하면 옵션 버튼 활성화 아니면 비활성화
-		if i.is_clearable(quest_manager.npc_name):
+		if i.is_clearable(quest_manager.manager_name):
 			#클리어 가능한 퀘스트는 버튼 색 변경
 			var style = StyleBoxFlat.new()
 			style.bg_color = Color.CHOCOLATE

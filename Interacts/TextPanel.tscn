@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://du6k1qkk3ebwn"]
 
 [ext_resource type="Script" path="res://Scripts/Panel/TextPanel.gd" id="1_le0u8"]
-[ext_resource type="Script" path="res://Scripts/Panel/BtnPanel.gd" id="2_cy0wr"]
+[ext_resource type="PackedScene" uid="uid://cy6q4334jlx5b" path="res://Interacts/BtnPanel.tscn" id="2_4qgrq"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_cbfpe"]
 font_size = 15
@@ -67,34 +67,8 @@ offset_right = 288.72
 offset_bottom = 140.528
 text = "V"
 
-[node name="Btns" type="ColorRect" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.803922, 0.803922, 0.803922, 1)
-script = ExtResource("2_cy0wr")
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Btns"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 20.0
-offset_top = 50.0
-offset_right = -20.0
-offset_bottom = -60.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Btns/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 10
+[node name="Btns" parent="." instance=ExtResource("2_4qgrq")]
+layout_mode = 0
+anchors_preset = 0
 
 [connection signal="pressed" from="ColorRect/Button" to="." method="load_text"]

@@ -9,6 +9,9 @@ const CLEAR_TREE = "Quest.clear."
 
 # 해당 이름 기준으로 json파일 로드
 var _npc_name : String
+var manager_name:
+	get:
+		return _npc_name
 
 # NPC가 제공하는 퀘스트 리스트
 var quest_list : Array[Quest]

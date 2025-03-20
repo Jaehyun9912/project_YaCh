@@ -4,7 +4,6 @@ extends Control
 signal text_updated
 signal text_ended
 
-var file_name : String
 var data
 var talk_data
 
@@ -40,6 +39,7 @@ func load_text() -> void:
 	
 	var speaker = text_data["Name"]
 	var words = text_data["Text"]
+	text_updated.emit(speaker,words)
 	
 	# 선택지가 있을 때
 	if text_data.has("Choice"):
@@ -55,9 +55,6 @@ func load_text() -> void:
 		
 	name_text.text = speaker
 	words_text.text = words
-	text_updated.emit(speaker,words)
-	
-	
 	# 다음 순서가 존재할 때
 	if text_data.has("Next"):
 		var next_block = text_data["Next"]
