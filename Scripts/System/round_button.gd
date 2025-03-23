@@ -24,20 +24,30 @@ var disabled = false :
 # 활성화 시 disable이 변경되지 않음
 var lock_disable = false
 
-# 마우스로 버튼을 눌렀을 때 발동하는 시그널 
+var is_mouse_inside = false;
+
+# 버튼을 눌렀을 때 발동하는 시그널 
 signal button_down(number: int)
+
+# 버튼을 뗐을 때 발동하는 시그널
+signal button_up()
+
+# 버튼을 뗏을 때 마우스 위치가 버튼 위에 있다면 발동하는 시그널
+signal button_clicked()
 
 func _on_button_mouse_entered():
 	
 	if disabled == true:
 		return
 	
+	is_mouse_inside = true;
 	self_modulate = hover_color
 
 func _on_button_mouse_exited():
 	if disabled == true:
 		return
 	
+	is_mouse_inside = false;
 	self_modulate = default_color
 
 func _on_button_button_up():
@@ -46,6 +56,10 @@ func _on_button_button_up():
 		return
 		
 	self_modulate = default_color
+	button_up.emit()
+	
+	if is_mouse_inside:
+		button_clicked.emit()
 
 func _on_button_button_down():
 	
