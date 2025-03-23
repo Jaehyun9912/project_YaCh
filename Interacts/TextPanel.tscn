@@ -68,7 +68,6 @@ offset_bottom = 140.528
 text = "V"
 
 [node name="Btns" parent="." instance=ExtResource("2_4qgrq")]
-layout_mode = 0
-anchors_preset = 0
+layout_mode = 1
 
 [connection signal="pressed" from="ColorRect/Button" to="." method="load_text"]
