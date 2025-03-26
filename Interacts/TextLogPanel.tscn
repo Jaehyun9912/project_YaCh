@@ -28,7 +28,7 @@ anchor_bottom = 1.0
 offset_left = 30.0
 offset_top = 30.0
 offset_right = -30.0
-offset_bottom = -26.0
+offset_bottom = -66.0
 grow_horizontal = 2
 grow_vertical = 2
 follow_focus = true
@@ -40,3 +40,19 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 alignment = 2
+
+[node name="Button" type="Button" parent="ColorRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.8
+anchor_top = 0.8
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 10.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "V"
+
+[connection signal="pressed" from="ColorRect/Button" to="." method="_load_text"]

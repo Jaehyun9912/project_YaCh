@@ -20,7 +20,7 @@ func get_data(data_path: String) -> Dictionary:
 	# 만약 반환에 실패할 경우 빈 딕셔너리를 반환함.
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
-	print(json.data)
+	#print(json.data)
 	if error == OK:
 		return json.data
 	else:

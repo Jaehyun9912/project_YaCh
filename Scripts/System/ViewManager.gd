@@ -12,9 +12,16 @@ var now_map_name: String
 var old_map: String
 var old_panel: String
 
+	
 func _ready():
 	get_window().size_changed.connect(_on_size_changed)
 	_on_size_changed()
+	get_view()
+	var panels = current_panel.get_children()
+	for i in panels:
+		print(i.name)
+		if !panel_stack.has(i):
+			panel_stack.append(i)
 
 func get_view():	
 	current_scene = get_tree().current_scene
@@ -24,7 +31,7 @@ func get_view():
 	pass
 
 
-func load_world(world_name: String, panel_name: String = "3Button", map_name: String = "", side_mode : int = 0) -> void :
+func load_world(world_name: String, panel_name: String = "3Button", map_name: String = "") -> void :
 	# get current scene
 	get_view()
 	
@@ -42,16 +49,17 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	now_map_name = map_name
 	# remove current Panels
 	for child in current_panel.get_children():
-		current_panel.remove_child(child)
-		child.queue_free()
+		erase_panel(child)
+		#current_panel.remove_child(child)
+		#child.queue_free()
 	# load new Panel
-	var new_panel = load(PANEL_PATH + panel_name + ".tscn")
-	print(PANEL_PATH + panel_name)
-	current_panel.add_child(new_panel.instantiate())
+	push_panel(panel_name)
+	#var new_panel = load(PANEL_PATH + panel_name + ".tscn")
+	#print(PANEL_PATH + panel_name)
+	#current_panel.add_child(new_panel.instantiate())
 	
 	# 사라진 오브젝트의 태그 값 제거
 	TagManager.clean_dict()
-	get_node("/root/SidePanel").mode = side_mode
 	_on_size_changed()
 
 
@@ -80,13 +88,19 @@ func _on_size_changed():
 		panel.anchor_left = 0
 		panel.anchor_top = 0.5
 
+
 var panel_stack : Array
 # 패널 추가
 func push_panel(panel_name : String):
 	get_view()
+	if panel_stack.size()>0:
+		var last_panel = panel_stack.back()
+		last_panel.hide()
 	# 패널 생성, 전시 후 해당 패널 반환
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
-	panel_stack.append(panel)
+	if !panel_stack.has(panel):
+		panel_stack.append(panel)
+	print(panel_name," added, current panel count : ",panel_stack.size())
 	current_panel.add_child(panel as Node)
 	return panel
 
@@ -98,6 +112,10 @@ func erase_panel(panel):
 		panel_stack.erase(panel)
 		current_panel.remove_child(panel)
 		panel.queue_free()
+	print("panel erased, current panel count : ",panel_stack.size())
 	#print("UI count : ",panel_stack.size())
+	if panel_stack.size()>0:
+		var last_panel = panel_stack.back()
+		last_panel.show()
 
 #endregion
