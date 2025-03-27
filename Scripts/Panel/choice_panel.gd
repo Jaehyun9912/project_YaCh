@@ -1,5 +1,9 @@
 extends Control
 
+
+func _ready():
+	SidePanel.set_budget_panel()
+
 func _on_button_1_pressed():
 	var skills = PlayerData.skills
 	skills[0] = "base_attack"

@@ -32,25 +32,26 @@ func _on_size_changed():
 
 
 
-
+var panel:
+	get:
+		return $"ColorRect" as Control
 
 # 체력 값 업데이트
 func set_hp_panel():
-	anchor_right = 0.4
+	panel.anchor_right = 0.4
 	set_text("현재 체력",str(PlayerData.hp) + " / " + str(PlayerData.max_hp))
 
 # 보유 골드 현황 업데이트
 func set_budget_panel():
-	anchor_right = 0.4
+	panel.anchor_right = 0.4
 	set_text("보유 골드","10000" + " 골드")
 
 # 디버그용 빌드 로그 띄우기
 func set_debug_panel():
-	anchor_right = 0.4
+	panel.anchor_right = 0.4
 	set_text("현재 모드", str(DisplayServer.screen_get_orientation()))
 
 func set_text_panel():
-	var panel = $"ColorRect" as Control
 	panel.anchor_right = 1
 	set_text()
 
