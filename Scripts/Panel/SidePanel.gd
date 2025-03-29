@@ -51,10 +51,12 @@ func set_debug_panel():
 	panel.anchor_right = 0.4
 	set_text("현재 모드", str(DisplayServer.screen_get_orientation()))
 
+# 대화용 패널 크기 확장
 func set_text_panel():
 	panel.anchor_right = 1
 	set_text()
 
+# 패널 텍스트 설정
 func set_text(title = "", discription = ""):
 	type.text = title
 	text.text = discription

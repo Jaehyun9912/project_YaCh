@@ -1,24 +1,21 @@
 extends Control
 
+# 텍스트 로그 넣는 컨테이너
 var container:
 	get:
 		return $ColorRect/ScrollContainer/VBoxContainer
+
+# json데이터
 var data
+
+# 대화 블록
 var talk_data
-
-var name_text:
-	get:
-		return $ColorRect/NPC_name
-var words_text:
-	get:
-		return $ColorRect/Text
-# Called when the node enters the scene tree for the first time.
-
-
+# 블록 내 다음 인덱스
 var text_num
 
+
+
 func _ready():
-	#var talk_panel = ViewManager.push_panel("TextPanel") as TextPanel
 	var talk_panel = SidePanel.set_text_panel()
 	_load_data(ViewManager.now_map_name)
 	_load_text_block("Start")
@@ -26,14 +23,13 @@ func _ready():
 	# 스크롤 바 아래로 고정하기
 	var scroll = container.get_parent() as ScrollContainer
 	container.resized.connect(func(): scroll.scroll_vertical = scroll.get_v_scroll_bar().max_value)
-	pass # Replace with function body.
 
-
+# 데이터 불러오기
 func _load_data(file_name : String) -> void:
 	data = DataManager.get_data("Talk/" + file_name)
 	text_num = 0
 
-
+# 블록 내 인덱스 텍스트 설정하기
 func _load_text() -> void:
 	if talk_data.size() <= text_num:
 		print("EOT")
@@ -55,7 +51,7 @@ func _load_text() -> void:
 			var btn = panel.create_button(i)
 			btn.pressed.connect(func(): ViewManager.erase_panel(panel))
 			btn.pressed.connect(_load_text_block.bind(choice[i]))
-		
+	
 	SidePanel.set_text(speaker,dialogue)
 	_record_text(speaker,dialogue)
 	# 다음 순서가 존재할 때
@@ -69,7 +65,7 @@ func _load_text() -> void:
 		text_num+=1
 
 
-
+# 대화블록 설정하기
 func _load_text_block(block_name :String)->void:
 	if data == null:
 		return
@@ -79,7 +75,7 @@ func _load_text_block(block_name :String)->void:
 	text_num = 0
 	_load_text()
 
-
+# 로그 패널에 대화 추가하기
 func _record_text(speaker,dialogue) -> void:
 	var text = speaker + " : " + dialogue
 	var text_box = RichTextLabel.new()
