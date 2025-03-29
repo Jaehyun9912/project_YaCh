@@ -1,9 +1,12 @@
-[gd_scene load_steps=3 format=3 uid="uid://qjplq7pr8npp"]
+[gd_scene load_steps=5 format=3 uid="uid://qjplq7pr8npp"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/character_choice_panel.gd" id="1_q30dr"]
+[ext_resource type="Script" path="res://Plugins/TextureCircle.gd" id="2_atmv7"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_jq5p0"]
 font_size = 30
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_tsvd6"]
 
 [node name="CharacterChoicePanel" type="Control"]
 layout_mode = 3
@@ -91,6 +94,18 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "나에게 적용하기"
 label_settings = SubResource("LabelSettings_jq5p0")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TextureCircle" type="Node2D" parent="."]
+texture_repeat = 2
+position = Vector2(64, 55)
+script = ExtResource("2_atmv7")
+texture_fill = SubResource("CanvasTexture_tsvd6")
+radius = 32.0
 
 [connection signal="pressed" from="ColorRect/Cancel" to="." method="_on_cancel_pressed"]
 [connection signal="pressed" from="ColorRect/Done" to="." method="_on_done_pressed"]

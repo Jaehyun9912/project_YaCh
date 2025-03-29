@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://c3h3jildcn5gm"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_panel.gd" id="1_njjyf"]
-[ext_resource type="Script" path="res://Scripts/Skills/SkillManager.gd" id="2_1psmx"]
+[ext_resource type="Script" path="res://Scripts/Battle/SkillButtonManager.gd" id="2_fich2"]
 [ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/Battle/RoundButton/round_button.tscn" id="3_4k28p"]
 [ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/Battle/button_theme.tres" id="4_bijw2"]
 [ext_resource type="PackedScene" uid="uid://qjplq7pr8npp" path="res://Objects/UI/Battle/character_choice_panel.tscn" id="5_squtx"]
@@ -34,16 +34,16 @@ offset_bottom = 347.0
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.15
 theme_override_styles/panel = SubResource("StyleBoxEmpty_7x350")
-script = ExtResource("2_1psmx")
+script = ExtResource("2_fich2")
 
 [node name="SkillButton" parent="ColorRect/Skills" groups=["battle_buttons"] instance=ExtResource("3_4k28p")]
 layout_mode = 1
 anchors_preset = 9
 anchor_bottom = 1.0
-offset_left = 13.0
-offset_top = 151.4
-offset_right = 73.0
-offset_bottom = -95.6
+offset_left = 14.0
+offset_top = 135.0
+offset_right = 94.0
+offset_bottom = -132.0
 grow_vertical = 2
 button_number = 1
 
@@ -53,10 +53,10 @@ anchors_preset = -1
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 25.0
-offset_top = -71.6
-offset_right = -235.0
-offset_bottom = -11.6
+offset_left = 82.0
+offset_top = -105.6
+offset_right = -198.0
+offset_bottom = -25.6
 grow_horizontal = 0
 grow_vertical = 0
 button_number = 2
@@ -67,10 +67,10 @@ anchors_preset = -1
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 248.0
-offset_top = -70.6
-offset_right = -12.0
-offset_bottom = -10.6
+offset_left = 213.0
+offset_top = -107.6
+offset_right = -67.0
+offset_bottom = -27.6
 grow_vertical = 0
 button_number = 3
 
@@ -80,10 +80,10 @@ anchors_preset = 11
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -68.0
-offset_top = 157.4
-offset_right = -8.0
-offset_bottom = -89.6
+offset_left = -90.0
+offset_top = 135.0
+offset_right = -10.0
+offset_bottom = -132.0
 grow_horizontal = 0
 grow_vertical = 2
 button_number = 4
@@ -93,10 +93,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 126.0
-offset_top = 141.4
-offset_right = -134.0
-offset_bottom = -105.6
+offset_left = 130.0
+offset_top = 87.755
+offset_right = -130.0
+offset_bottom = -159.245
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.054, 1)

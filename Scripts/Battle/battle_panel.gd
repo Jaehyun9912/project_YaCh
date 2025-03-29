@@ -133,9 +133,6 @@ func _on_skill_buttons_down(num):
 	skill_actived.emit(num, end)
 	_check_skill_is_possible()
 	
-func _callback_choice(clicked_index):
-	pass
-	
 # 해당 버튼들은 특별한 기능을 가질 수 도 있기에 별도의 함수로 구현함
 # 대화 버튼
 func _on_button_talk_button_up():

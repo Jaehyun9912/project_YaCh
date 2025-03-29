@@ -43,7 +43,7 @@ transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -
 shadow_enabled = true
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.940999, 0.338409, 0, -0.338409, 0.940999, 0, 4.04893, 0)
+transform = Transform3D(1, 0, 0, 0, 0.561217, 0.827668, 0, -0.827668, 0.561217, 1.29022, 10.6779, -3.2421)
 fov = 90.0
 
 [node name="Ground" type="MeshInstance3D" parent="."]
@@ -56,7 +56,7 @@ mesh = SubResource("PlaneMesh_k8c6t")
 shape = SubResource("ConvexPolygonShape3D_c1tgd")
 
 [node name="PlayerCharacter" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.24773, -1.89395, -9.06887)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.659687, -1.89395, -12.1705)
 speed = 100.0
 is_player = true
 
@@ -67,11 +67,11 @@ script = ExtResource("3_2wx2l")
 wait_time = 0.5
 
 [node name="BattleCharacter1" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.27814, 1.90735e-06, -21.3017)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.942222, 1.90735e-06, -23.4821)
 speed = 70.0
 
 [node name="BattleCharacter2" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.96134, -0.108985, -20.625)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.56736, -0.108985, -22.8054)
 speed = 120.0
 
 [node name="Interact" type="CanvasLayer" parent="."]
