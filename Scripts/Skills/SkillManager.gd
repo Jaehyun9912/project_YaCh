@@ -1,10 +1,7 @@
-class_name SkillManager extends Node
+extends Node
 
 # 플레이어의 스킬을 관리함
 # 적의 스킬은 EnemyManager에서 관리함 
-
-@onready var manager := $".."
-@onready var attribute := $"../Interact/AttributeBar"
 
 var skills
 var player_skill
@@ -27,8 +24,8 @@ func get_skill(id : String):
 		printerr("잘못된 스킬 ID! : " + id)
 		return null
 
-# 플레이어의 스킬이 사용 가능한지 확인하기 (원소는 알아서 가져옴)  
-func check_requirement(player_skill_index: int, current_point: int):
+# 플레이어의 스킬이 사용 가능한지 확인하기
+func check_requirement(player_skill_index: int, current_point: int, attribute_bar):
 	var skill = get_player_skill(player_skill_index)
 	
 	# cost 값이 숫자이면 Dictionary로 변환
@@ -62,7 +59,7 @@ func check_requirement(player_skill_index: int, current_point: int):
 		
 		# 요구 속성치를 가져옴
 		for type in required_element:
-			var player_amount = attribute.get_element(type)
+			var player_amount = attribute_bar.get_element(type)
 			var amount = required_element[type]
 			
 			# 만약 현재 필드 속성치보다 요구치가 높으면 실패 
@@ -70,21 +67,6 @@ func check_requirement(player_skill_index: int, current_point: int):
 				return false
 	
 	return true  # 모든 조건 충족
-	
-# 코스트 제거하기 
-func remove_cost(player_skill_index: int):
-	var skill = get_player_skill(player_skill_index)
-	var cost = skill.get("cost", {})
-	
-	if not cost is Dictionary:
-		manager.turn_cost -= cost
-		return
-		
-	manager.turn_cost -= cost.get("point", 0)
-	if "element" in cost:
-		var element = cost.get("element", {})
-		for e in element:
-			attribute.remove_value(e, element[e])
 			
 # 스킬의 target 정보를 얻어오는 함수
 func get_target(player_skill_index: int):

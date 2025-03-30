@@ -22,6 +22,8 @@ ViewManager="*res://Scripts/System/ViewManager.gd"
 DataManager="*res://Scripts/System/data_manager.gd"
 TagManager="*res://Scripts/Tag/TagManager.gd"
 SidePanel="*res://Interacts/SidePanel.tscn"
+SkillManager="*res://Scripts/Skills/SkillManager.gd"
+AttributeInfomation="*res://Scripts/Skills/attribute_infomation.gd"
 
 [display]
 

@@ -2,7 +2,6 @@ extends Node
 class_name AttackManager
 
 @onready var battle = $".." as BattleManager
-@onready var skill_manager = $"../SkillManager" as SkillManager
 
 var cur_skill : Dictionary
 
@@ -18,8 +17,8 @@ func _on_battle_use_skill(index, target_info):
 	# target_info는 이미 스킬 정보를 통해 가져온 정보이므로 굳이 검사X  
 	target = target_info
 	
-	cur_skill = skill_manager.get_player_skill(index)
-	skill_manager.remove_cost(index)
+	cur_skill = SkillManager.get_player_skill(index)
+	battle.remove_cost(cur_skill)
 	
 	# 스킬의 유형에 따라 효과 결정 
 	match cur_skill.get("type", ""):
@@ -35,7 +34,7 @@ func _on_battle_use_skill(index, target_info):
 	
 	var element = cur_skill.get("element", {})
 	if element.has("type"):
-			$"../Interact/AttributeBar".add_value(element["type"], element["amount"])
+			battle.attrubute_bar.add_value(element["type"], element["amount"])
 	
 
 # 공격 함수 

@@ -3,18 +3,20 @@ class_name BattlePanel
 
 @onready var action_point = $ActionPoint as Label
 @onready var buttons = get_tree().get_nodes_in_group("skill_buttons")
-@onready var choicePanel = $CharacterChoicePanel as CharacterChoicePanel
+@onready var skill_button = $SkillButtonManager as SkillButtonManager
+
+var choicePanel
 
 var manager: BattleManager
 
 var action_text := "행동력 %d/%d"
 
 enum Buttons {
-	CENTER = 0,
 	SKILL1,
 	SKILL2,
 	SKILL3,
 	SKILL4,
+	CENTER,
 	INVENTORY,
 	TALK,
 	QUEST,
@@ -31,6 +33,7 @@ var skill_target
 # 시작시
 func _ready():
 	manager = ViewManager.world_instance.get_node("BattleScene") as BattleManager
+	skill_button.battle_panel = self
 	
 	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
@@ -39,7 +42,7 @@ func _ready():
 	for i in len(buttons):
 		var btn = buttons[i]
 		btn.disabled = true
-		var skill = manager.skill_manager.get_player_skill(i)
+		var skill = SkillManager.get_player_skill(i)
 		if skill == null:
 			btn.disabled = true
 			btn.lock_disable = true
@@ -57,10 +60,14 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 	
 	# 만약 플레이어라면 스킬 버튼 활성화 
 	if new_character.is_player == true:
-		set_all_button(true)
+		skill_button.set_all_buttons(true)
 		_check_skill_is_possible()
 	else:
-		set_all_button(false)
+		skill_button.set_all_buttons(false)
+		
+	# 디버그용
+	print("디버그용 스킬 버튼 활성화 작동")
+	skill_button.set_all_buttons(true)
 	
 # 무한 반복
 func _process(_delta):
@@ -71,13 +78,8 @@ func _process(_delta):
 # 현재 행동력보다 많은 행동력 소모하는 버튼 비활성화
 func _check_skill_is_possible():
 	for i in len(buttons):
-		if i < 4:
-			buttons[i].disabled = not manager.skill_manager.check_requirement(i, current_charcter.current_point)
-			
-# 모든 버튼 설정하기 (true : 활성화, false : 비활성화)
-func set_all_button(OnOff : bool) -> void:
-	for i in get_tree().get_nodes_in_group("battle_buttons"):
-		i.disabled = !OnOff
+		if i < Buttons.CENTER:
+			buttons[i].disabled = not SkillManager.check_requirement(i, current_charcter.current_point, manager.attrubute_bar)
 
 # 스킬 버튼 눌렸을때 발동. 
 func _on_skill_buttons_down(num):
@@ -89,7 +91,7 @@ func _on_skill_buttons_down(num):
 		return
 	
 	# 사이드 패널에 정보 띄우기 
-	var skill = manager.skill_manager.get_player_skill(num-1)
+	var skill = SkillManager.get_player_skill(num-1)
 	SidePanel.set_info_panel(skill.get("name", ""), skill.get("description", ""))
 			
 	

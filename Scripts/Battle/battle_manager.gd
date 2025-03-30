@@ -18,7 +18,7 @@ const ADDITIONAL_POINT = 50
 var min_point_use = 1
 # 매니저 
 @onready var enemy_manager = $EnemyManager as EnemyManager
-@onready var skill_manager = $SkillManager as SkillManager
+@onready var attrubute_bar = $Interact/AttributeBar
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
@@ -71,7 +71,7 @@ func _battle_set():
 			return
 	
 	# 속성 정보 세팅 
-	$Interact/AttributeBar.init(map_data["attribute"])
+	attrubute_bar.init(map_data["attribute"])
 	
 	var idx = 0
 	# 행동력 총합 및 캐릭터 정보 설정하기.
@@ -117,6 +117,20 @@ func _battle():
 			_check_dead_char()
 						
 			print("turn end")
+
+# 코스트 제거하기 
+func remove_cost(skill):
+	var cost = skill.get("cost", {})
+	
+	if not cost is Dictionary:
+		turn_cost -= cost
+		return
+		
+	turn_cost -= cost.get("point", 0)
+	if "element" in cost:
+		var element = cost.get("element", {})
+		for e in element:
+			attrubute_bar.remove_value(e, element[e])
 
 # 버튼 눌렀을때
 func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):

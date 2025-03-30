@@ -15,3 +15,8 @@ func get_attribute_color(name : String):
 		return attribute[name]
 	else:
 		return null
+		
+# 스킬 정보를 넣으면 자동으로 속성 색을 반환하는 함수 
+func get_attribute_color_by_skill(skill):
+	var ele = skill.get("element", {})
+	return get_attribute_color(ele.get("type", "none"))
