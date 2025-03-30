@@ -169,7 +169,7 @@ func _battle_end(type: END_TYPE):
 	# 도망, 적 전부 처치 전투 종료 구현하기 
 	
 	# 모든 버튼 비활성화 
-	ViewManager.current_panel.get_node("BattlePanel").set_all_button(false)
+	ViewManager.current_panel.get_node("BattlePanel").end()
 	var msg = $Interact/ResultPanel as ResultPanel
 	
 	match type:

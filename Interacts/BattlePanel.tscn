@@ -248,6 +248,8 @@ offset_right = -1.0
 offset_bottom = 1.39999
 grow_horizontal = 0
 
+[connection signal="skill_activated" from="SkillButtonManager" to="." method="_on_skill_button_manager_skill_activated"]
+[connection signal="target_changed" from="SkillButtonManager" to="." method="_on_skill_button_manager_target_changed"]
 [connection signal="button_up" from="SkillButtonManager/Menu/GridContainer/BagButtonContainer/Button1" to="." method="_on_button_inventoy_button_up"]
 [connection signal="button_up" from="SkillButtonManager/Menu/GridContainer/TalkButtonContainer/Button1" to="." method="_on_button_talk_button_up"]
 [connection signal="button_up" from="SkillButtonManager/Menu/GridContainer/QuestButtonContainer/Button1" to="." method="_on_button_quest_button_up"]

@@ -50,7 +50,7 @@ func get_nearest_button(pos: Vector2):
 	var max_dist = 100000000
 	
 	for i in range(len(button_list)):
-		var dist = pos.distance_to(button_list[i].position)
+		var dist = pos.distance_to(get_button_center(i))
 		if dist < max_dist:
 			max_button = i
 			max_dist = dist
@@ -63,3 +63,10 @@ func remove_all_button():
 
 func get_button_center(index):
 	return button_list[index].position + button_size / 2
+	
+func make_button_special(index, color = Color.RED):
+	for i in range(len(button_list)):
+		if i == index:
+			button_list[i].modulate = color
+		else:
+			button_list[i].modulate = button_color

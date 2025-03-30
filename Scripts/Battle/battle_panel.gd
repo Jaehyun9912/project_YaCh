@@ -24,7 +24,7 @@ enum Buttons {
 }
 
 # 버튼 신호를 외부와 연결해주는 신호
-signal skill_actived(index: Buttons, target)
+signal skill_actived(index, target)
 
 # 현재 턴 캐릭터의 정보
 var current_charcter: BattleCharacter
@@ -81,56 +81,61 @@ func _check_skill_is_possible():
 		if i < Buttons.CENTER:
 			buttons[i].disabled = not SkillManager.check_requirement(i, current_charcter.current_point, manager.attrubute_bar)
 
-# 스킬 버튼 눌렸을때 발동. 
-func _on_skill_buttons_down(num):
-	print("button pressed ", num)
-	
-	# 센터면 바로 종료 
-	if num == Buttons.CENTER:
-		skill_actived.emit(Buttons.CENTER, null)
-		return
-	
-	# 사이드 패널에 정보 띄우기 
-	var skill = SkillManager.get_player_skill(num-1)
-	SidePanel.set_info_panel(skill.get("name", ""), skill.get("description", ""))
-			
-	
-	# 스킬 대상 정하기 
-	skill_target = manager.skill_manager.get_target(num-1)
-	
-	if skill_target is String and skill_target == "self":
-		choicePanel.set_self_panel()
-	else:
-		var target_count = skill_target.get("count", 0)
-		var team = skill_target.get("team", false)
-		# 0이하 : 전부 대상 
-		if target_count < 1:
-			choicePanel.set_all_panel(team)
-		
-		# 타겟 유형에 따라 적/아군 개수 가져오기 
-		var cnt := 0
-		if skill_target["team"]:
-			cnt = manager.ally_count
-		else:
-			cnt = manager.enemy_count
-		
-		# 한명만 남아서 선택 할 필요 없음
-		if cnt == 1:
-			choicePanel.set_all_panel(team)
-		# 아니면 선택 시작 
-		else:
-			choicePanel.set_choice_panel(cnt, target_count, team)
-			
-	# 결과 받아오기 
-	var end = await choicePanel.choice_end
-	SidePanel.mode = SidePanel.Mode.HP
-	
-	# 취소 시 null 이 반환됨 
-	if end == null:
-		return
 
-	skill_actived.emit(num, end)
+func _on_skill_button_manager_skill_activated(skill, target):
+	skill_actived.emit(skill, target)
 	_check_skill_is_possible()
+
+# 스킬 버튼 눌렸을때 발동. 
+#func _on_skill_buttons_down(num):
+	#print("button pressed ", num)
+	#
+	## 센터면 바로 종료 
+	#if num == Buttons.CENTER:
+		#skill_actived.emit(Buttons.CENTER, null)
+		#return
+	#
+	## 사이드 패널에 정보 띄우기 
+	#var skill = SkillManager.get_player_skill(num-1)
+	#SidePanel.set_info_panel(skill.get("name", ""), skill.get("description", ""))
+			#
+	#
+	## 스킬 대상 정하기 
+	#skill_target = manager.skill_manager.get_target(num-1)
+	#
+	#if skill_target is String and skill_target == "self":
+		#choicePanel.set_self_panel()
+	#else:
+		#var target_count = skill_target.get("count", 0)
+		#var team = skill_target.get("team", false)
+		## 0이하 : 전부 대상 
+		#if target_count < 1:
+			#choicePanel.set_all_panel(team)
+		#
+		## 타겟 유형에 따라 적/아군 개수 가져오기 
+		#var cnt := 0
+		#if skill_target["team"]:
+			#cnt = manager.ally_count
+		#else:
+			#cnt = manager.enemy_count
+		#
+		## 한명만 남아서 선택 할 필요 없음
+		#if cnt == 1:
+			#choicePanel.set_all_panel(team)
+		## 아니면 선택 시작 
+		#else:
+			#choicePanel.set_choice_panel(cnt, target_count, team)
+			#
+	## 결과 받아오기 
+	#var end = await choicePanel.choice_end
+	#SidePanel.mode = SidePanel.Mode.HP
+	#
+	## 취소 시 null 이 반환됨 
+	#if end == null:
+		#return
+#
+	#skill_actived.emit(num, end)
+	#_check_skill_is_possible()
 	
 # 해당 버튼들은 특별한 기능을 가질 수 도 있기에 별도의 함수로 구현함
 # 대화 버튼
@@ -155,3 +160,21 @@ func get_all_enemy():
 	
 func get_all_ally():
 	return manager.ally_character
+	
+func end():
+	skill_button.set_all_buttons(false)
+
+
+func _on_skill_button_manager_target_changed(target, isally):
+	var chars
+	if isally:
+		chars = get_all_ally()
+	else:
+		chars = get_all_enemy()
+	
+	for i in range(len(chars)):
+		if i == target:
+			chars[i].set_hp_outline_red()
+		else:
+			chars[i].set_hp_outline_default()
+	
