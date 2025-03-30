@@ -2,9 +2,6 @@ extends TextureRect
 # BaseButton을 상속받아야하는데 모르고 TextureRect를 상속받은 상태에서 구현했습니다.
 class_name RoundButton
 
-# 버튼 시그널 별 함수가 아닌 하나의 함수에서 관리하기 위한 넘버
-@export var button_number: int
-
 @export var default_color := Color(1, 1, 1)
 @export var hover_color := Color(0.5, 0.5, 0.5)
 @export var click_color := Color(0.3, 0.3, 0.3)
@@ -27,7 +24,7 @@ var lock_disable = false
 var is_mouse_inside = false;
 
 # 버튼을 눌렀을 때 발동하는 시그널 
-signal button_down(number: int)
+signal button_down()
 
 # 버튼을 뗐을 때 발동하는 시그널
 signal button_up()
@@ -67,4 +64,4 @@ func _on_button_button_down():
 		return
 	
 	self_modulate = click_color
-	button_down.emit(button_number)
+	button_down.emit()

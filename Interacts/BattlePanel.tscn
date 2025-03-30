@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://c3h3jildcn5gm"]
+[gd_scene load_steps=8 format=3 uid="uid://c3h3jildcn5gm"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_panel.gd" id="1_njjyf"]
 [ext_resource type="Script" path="res://Scripts/Battle/SkillButtonManager.gd" id="2_fich2"]
 [ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/Battle/RoundButton/round_button.tscn" id="3_4k28p"]
+[ext_resource type="Texture2D" uid="uid://h3udoxqqu1wd" path="res://Objects/UI/Battle/RoundButton/round_button.png" id="4_2pqqb"]
 [ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/Battle/button_theme.tres" id="4_bijw2"]
 [ext_resource type="PackedScene" uid="uid://qjplq7pr8npp" path="res://Objects/UI/Battle/character_choice_panel.tscn" id="5_squtx"]
 
@@ -28,67 +29,72 @@ pivot_offset = Vector2(180, 193)
 color = Color(0.607843, 0.607843, 0.607843, 1)
 
 [node name="Skills" type="Panel" parent="ColorRect"]
-layout_mode = 2
-offset_right = 360.0
-offset_bottom = 347.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.15
 theme_override_styles/panel = SubResource("StyleBoxEmpty_7x350")
 script = ExtResource("2_fich2")
 
-[node name="SkillButton" parent="ColorRect/Skills" groups=["battle_buttons"] instance=ExtResource("3_4k28p")]
+[node name="SkillButton" parent="ColorRect/Skills" groups=["skill_buttons"] instance=ExtResource("3_4k28p")]
 layout_mode = 1
-anchors_preset = 9
-anchor_bottom = 1.0
-offset_left = 14.0
-offset_top = 135.0
-offset_right = 94.0
-offset_bottom = -132.0
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 16.0
+offset_top = -36.3
+offset_right = 96.0
+offset_bottom = 43.7
 grow_vertical = 2
-button_number = 1
+pivot_offset = Vector2(40, 40)
 
-[node name="SkillButton2" parent="ColorRect/Skills" groups=["battle_buttons"] instance=ExtResource("3_4k28p")]
+[node name="SkillButton2" parent="ColorRect/Skills" groups=["skill_buttons"] instance=ExtResource("3_4k28p")]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 2
 anchor_top = 1.0
-anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 82.0
-offset_top = -105.6
-offset_right = -198.0
-offset_bottom = -25.6
-grow_horizontal = 0
+offset_left = 77.0
+offset_top = -106.0
+offset_right = 157.0
+offset_bottom = -26.0
 grow_vertical = 0
-button_number = 2
+pivot_offset = Vector2(40, 40)
 
-[node name="SkillButton3" parent="ColorRect/Skills" groups=["battle_buttons"] instance=ExtResource("3_4k28p")]
+[node name="SkillButton3" parent="ColorRect/Skills" groups=["skill_buttons"] instance=ExtResource("3_4k28p")]
 layout_mode = 1
-anchors_preset = -1
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 213.0
-offset_top = -107.6
-offset_right = -67.0
-offset_bottom = -27.6
-grow_vertical = 0
-button_number = 3
-
-[node name="SkillButton4" parent="ColorRect/Skills" groups=["battle_buttons"] instance=ExtResource("3_4k28p")]
-layout_mode = 1
-anchors_preset = 11
+anchors_preset = 3
 anchor_left = 1.0
+anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -90.0
-offset_top = 135.0
-offset_right = -10.0
-offset_bottom = -132.0
+offset_left = -148.0
+offset_top = -105.0
+offset_right = -68.0
+offset_bottom = -25.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(40, 40)
+
+[node name="SkillButton4" parent="ColorRect/Skills" groups=["skill_buttons"] instance=ExtResource("3_4k28p")]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -89.0
+offset_top = -36.3
+offset_right = -9.0
+offset_bottom = 43.7
 grow_horizontal = 0
 grow_vertical = 2
-button_number = 4
+pivot_offset = Vector2(40, 40)
 
-[node name="CenterButton" parent="ColorRect/Skills" groups=["battle_buttons"] instance=ExtResource("3_4k28p")]
+[node name="CenterButton" parent="ColorRect/Skills" groups=["skill_buttons"] instance=ExtResource("3_4k28p")]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -100,6 +106,25 @@ offset_bottom = -159.245
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.054, 1)
+
+[node name="ButtonCancelArea" type="TextureRect" parent="ColorRect/Skills"]
+visible = false
+self_modulate = Color(0.380392, 0.380392, 0.380392, 1)
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 80.0
+pivot_offset = Vector2(40, 40)
+texture = ExtResource("4_2pqqb")
+expand_mode = 1
+
+[node name="ButtonImage" type="TextureRect" parent="ColorRect/Skills"]
+visible = false
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 80.0
+pivot_offset = Vector2(40, 40)
+texture = ExtResource("4_2pqqb")
+expand_mode = 1
 
 [node name="Menu" type="ColorRect" parent="ColorRect"]
 visible = false
@@ -129,7 +154,7 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Button1" type="Button" parent="ColorRect/Menu/GridContainer/BagButtonContainer" groups=["battle_buttons"]]
+[node name="Button1" type="Button" parent="ColorRect/Menu/GridContainer/BagButtonContainer" groups=["other_buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
@@ -146,7 +171,7 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Button1" type="Button" parent="ColorRect/Menu/GridContainer/TalkButtonContainer" groups=["battle_buttons"]]
+[node name="Button1" type="Button" parent="ColorRect/Menu/GridContainer/TalkButtonContainer" groups=["other_buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
@@ -163,7 +188,7 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Button1" type="Button" parent="ColorRect/Menu/GridContainer/QuestButtonContainer" groups=["battle_buttons"]]
+[node name="Button1" type="Button" parent="ColorRect/Menu/GridContainer/QuestButtonContainer" groups=["other_buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
@@ -180,7 +205,7 @@ theme_override_constants/margin_top = 20
 theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
-[node name="Button1" type="Button" parent="ColorRect/Menu/GridContainer/RunButtonContatiner" groups=["battle_buttons"]]
+[node name="Button1" type="Button" parent="ColorRect/Menu/GridContainer/RunButtonContatiner" groups=["other_buttons"]]
 layout_mode = 2
 size_flags_vertical = 3
 focus_mode = 0
@@ -208,6 +233,8 @@ offset_right = -1.0
 offset_bottom = 1.39999
 grow_horizontal = 0
 
+[connection signal="mouse_entered" from="ColorRect/Skills/ButtonCancelArea" to="ColorRect/Skills" method="_on_button_cancel_area_mouse_entered"]
+[connection signal="mouse_exited" from="ColorRect/Skills/ButtonCancelArea" to="ColorRect/Skills" method="_on_button_cancel_area_mouse_exited"]
 [connection signal="button_up" from="ColorRect/Menu/GridContainer/BagButtonContainer/Button1" to="." method="_on_button_inventoy_button_up"]
 [connection signal="button_up" from="ColorRect/Menu/GridContainer/TalkButtonContainer/Button1" to="." method="_on_button_talk_button_up"]
 [connection signal="button_up" from="ColorRect/Menu/GridContainer/QuestButtonContainer/Button1" to="." method="_on_button_quest_button_up"]

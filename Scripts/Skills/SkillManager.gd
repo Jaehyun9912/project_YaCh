@@ -15,7 +15,9 @@ func _ready():
 	
 # 플레이어의 스킬 얻어오기 
 func get_player_skill(index: int):
-	return get_skill(player_skill[index])
+	if 0 <= index and index < len(player_skill):
+		return get_skill(player_skill[index])
+	return null
 
 # 들어온 ID에 해당하는 스킬의 정보가 담긴 딕셔너리 반환 
 func get_skill(id : String):

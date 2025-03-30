@@ -2,7 +2,7 @@ extends Control
 class_name BattlePanel
 
 @onready var action_point = $ActionPoint as Label
-@onready var buttons = get_tree().get_nodes_in_group("battle_buttons")
+@onready var buttons = get_tree().get_nodes_in_group("skill_buttons")
 @onready var choicePanel = $CharacterChoicePanel as CharacterChoicePanel
 
 var manager: BattleManager
@@ -36,16 +36,13 @@ func _ready():
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
 	
 	# 버튼에 함수 설정, 플레이어 스킬 맞지 않으면 버튼 비활성화 
-	for i in buttons:
-		i.disabled = true
-		if i is RoundButton:
-			i.button_down.connect(_on_skill_buttons_down)
-			if i.button_number != Buttons.CENTER:
-				var skill = manager.skill_manager.get_player_skill(i.button_number-1)
-				if skill == null:
-					i.disabled = true
-					i.lock_disable = true
-					continue
+	for i in len(buttons):
+		var btn = buttons[i]
+		btn.disabled = true
+		var skill = manager.skill_manager.get_player_skill(i)
+		if skill == null:
+			btn.disabled = true
+			btn.lock_disable = true
 		
 	manager.turn_end.emit()
 
@@ -73,9 +70,9 @@ func _process(_delta):
 
 # 현재 행동력보다 많은 행동력 소모하는 버튼 비활성화
 func _check_skill_is_possible():
-	for i in buttons:
-		if i is RoundButton and i.button_number != Buttons.CENTER:
-			i.disabled = not manager.skill_manager.check_requirement(i.button_number-1, current_charcter.current_point)
+	for i in len(buttons):
+		if i < 4:
+			buttons[i].disabled = not manager.skill_manager.check_requirement(i, current_charcter.current_point)
 			
 # 모든 버튼 설정하기 (true : 활성화, false : 비활성화)
 func set_all_button(OnOff : bool) -> void:
