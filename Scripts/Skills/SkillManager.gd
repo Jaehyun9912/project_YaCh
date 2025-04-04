@@ -72,19 +72,25 @@ func check_requirement(player_skill_index: int, current_point: int, attribute_ba
 func get_target(player_skill_index: int):
 	var skill = get_player_skill(player_skill_index)
 	var type = skill.get("type", "")
-	var target = skill.get("target", {})
+	var target = skill.get("target", null)
+	
+	if target == null:
+		printerr("Target is not exist")
+		return null
 	
 	match type:
 		"attack":
-			if target is float:
-				return {"team": false, "count": target}
-			printerr("Wrong target format in attack : ", target)
+			match target:
+				"one", "all", "self": return target
+				_:
+					printerr("target이 잘못 설정되었습니다. 기본값 one을 반환합니다.")
+					return "one"
 		"effect":
 			if target == "self":
 				return target
 			elif target is Dictionary:
-				if not "count" in target: target["count"] = 0
 				if not "team" in target: target["team"] = false
+				if not "is_all" in target: target["is_all"] = false
 				return target
 		"summon":
 			printerr("Summon Target is WIP")

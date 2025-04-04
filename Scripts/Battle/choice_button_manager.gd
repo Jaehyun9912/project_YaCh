@@ -5,6 +5,7 @@ class_name ChoiceButtonManager
 @export var button_color = Color.DIM_GRAY
 @export var button_size := Vector2(80, 80)
 @export var radius = 3
+@export var button_select_color = Color.RED
 
 var button_list := []
 
@@ -64,9 +65,13 @@ func remove_all_button():
 func get_button_center(index):
 	return button_list[index].position + button_size / 2
 	
-func make_button_special(index, color = Color.RED):
+func make_button_special(index):
 	for i in range(len(button_list)):
 		if i == index:
-			button_list[i].modulate = color
+			button_list[i].modulate = button_select_color
 		else:
 			button_list[i].modulate = button_color
+
+func make_button_special_all():
+	for i in button_list:
+		i.modulate = button_select_color

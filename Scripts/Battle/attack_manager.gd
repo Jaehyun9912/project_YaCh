@@ -44,14 +44,14 @@ func do_attack():
 		print("Attack's apply is not number!")
 		return
 	
-	# 설정된 적 공격 
-	if len(target) > 0:
+	# self 전용 구현 
+	if target == "self":
+		battle.player_character.hp -= apply
+	else:
+		# 설정된 적 공격 
 		for i in target:
 			battle.enemy_character[i].hp -= apply
-	# count = 0이면 모든 적 대상 (취소는 아예 호출되지 않으므로 )
-	else:
-		for i in battle.enemy_character:
-			i.hp -= apply
+		
 	
 func do_effect():
 	pass
