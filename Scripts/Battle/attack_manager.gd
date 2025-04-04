@@ -45,7 +45,7 @@ func do_attack():
 		return
 	
 	# self 전용 구현 
-	if target == "self":
+	if target is String and target == "self":
 		battle.player_character.hp -= apply
 	else:
 		# 설정된 적 공격 

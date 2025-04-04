@@ -86,7 +86,7 @@ func get_target(player_skill_index: int):
 					printerr("target이 잘못 설정되었습니다. 기본값 one을 반환합니다.")
 					return "one"
 		"effect":
-			if target == "self":
+			if target is String and target == "self":
 				return target
 			elif target is Dictionary:
 				if not "team" in target: target["team"] = false
