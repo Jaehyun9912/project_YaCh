@@ -50,13 +50,9 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	# remove current Panels
 	for child in current_panel.get_children():
 		erase_panel(child)
-		#current_panel.remove_child(child)
-		#child.queue_free()
 	# load new Panel
-	push_panel(panel_name)
-	#var new_panel = load(PANEL_PATH + panel_name + ".tscn")
-	#print(PANEL_PATH + panel_name)
-	#current_panel.add_child(new_panel.instantiate())
+	push_panel(panel_name,SCREEN.BOTTOM)
+
 	
 	# 사라진 오브젝트의 태그 값 제거
 	TagManager.clean_dict()
@@ -90,8 +86,14 @@ func _on_size_changed():
 
 
 var panel_stack : Array
+
+enum SCREEN{
+	TOP,
+	BOTTOM,
+	FULL
+}
 # 패널 추가
-func push_panel(panel_name : String):
+func push_panel(panel_name : String,screen_location : SCREEN):
 	get_view()
 	if panel_stack.size()>0:
 		var last_panel = panel_stack.back()
@@ -102,9 +104,28 @@ func push_panel(panel_name : String):
 		panel_stack.append(panel)
 	print(panel_name," added, current panel count : ",panel_stack.size())
 	current_panel.add_child(panel as Node)
+	
+	_set_screen_size(panel,screen_location)
+	
 	return panel
 
-
+func _set_screen_size(panel,screen_location:SCREEN):
+	# 스크린 위치 지정
+	if screen_location == SCREEN.BOTTOM:
+		panel.anchor_left = 0
+		panel.anchor_top = 0.5
+		panel.anchor_right = 1
+		panel.anchor_bottom = 1
+	elif screen_location == SCREEN.TOP:
+		panel.anchor_left = 0
+		panel.anchor_top = 0
+		panel.anchor_right = 1
+		panel.anchor_bottom = 0.5
+	elif screen_location == SCREEN.FULL:
+		panel.anchor_left = 0
+		panel.anchor_top = 0
+		panel.anchor_right = 1
+		panel.anchor_bottom = 1
 
 # 패널 제거
 func erase_panel(panel):
@@ -119,3 +140,6 @@ func erase_panel(panel):
 		last_panel.show()
 
 #endregion
+
+
+

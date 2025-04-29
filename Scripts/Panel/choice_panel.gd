@@ -18,7 +18,7 @@ func _on_button_1_pressed():
 func _on_button_2_pressed():
 	#PlayerData.reset_player()
 	#print("리셋됨")
-	var panel = ViewManager.push_panel("QuestPanel")
+	var panel = ViewManager.push_panel("QuestPanel",ViewManager.SCREEN.BOTTOM)
 	panel.set_quest_buttons(PlayerData.quest_list)
 	print("수주중인 퀘스트 보기")
 	

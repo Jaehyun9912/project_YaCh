@@ -20,9 +20,7 @@ func _ready():
 	_load_data(ViewManager.now_map_name)
 	_load_text_block("Start")
 	
-	# 스크롤 바 아래로 고정하기
-	var scroll = container.get_parent() as ScrollContainer
-	container.resized.connect(func(): scroll.scroll_vertical = scroll.get_v_scroll_bar().max_value)
+	
 
 # 데이터 불러오기
 func _load_data(file_name : String) -> void:
@@ -45,7 +43,7 @@ func _load_text() -> void:
 	if text_data.has("Choice"):
 		var choice = text_data["Choice"]
 		var panel# = $Btns as BtnPanel
-		panel = ViewManager.push_panel("BtnPanel")
+		panel = ViewManager.push_panel("BtnPanel",ViewManager.SCREEN.BOTTOM)
 		
 		for i in choice.keys():
 			var btn = panel.create_button(i)
@@ -82,7 +80,14 @@ func _record_text(speaker,dialogue) -> void:
 	text_box.fit_content = true
 	text_box.text = text
 	container.add_child(text_box)
-
+	
+	# 한 프레임 대기
+	await get_tree().process_frame;
+	
+	# 스크롤 바 아래로 고정하기
+	var scroll = container.get_parent() as ScrollContainer
+	scroll.get_v_scroll_bar().value = scroll.get_v_scroll_bar().max_value
+	
 
 # 디버그용
 func _go_main_scene():

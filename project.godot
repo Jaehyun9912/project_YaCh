@@ -27,7 +27,6 @@ SidePanel="*res://Interacts/SidePanel.tscn"
 
 window/size/viewport_width=360
 window/size/viewport_height=772
-window/size/resizable=false
 window/stretch/mode="viewport"
 window/stretch/aspect="keep_height"
 window/handheld/orientation=1

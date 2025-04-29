@@ -79,7 +79,7 @@ func _set_quest_button(parent,quest : Quest, mode):
 	return button
 
 func _show_quest_detail(quest: Quest, mode):
-	var panel = ViewManager.push_panel("QuestDetailPanel")
+	var panel = ViewManager.push_panel("QuestDetailPanel",ViewManager.SCREEN.FULL)
 	panel.option_pressed.connect(detail_interact)
 	panel.any_button_pressed.connect(ViewManager.erase_panel.bind(panel))
 	panel.set_quest(quest,mode)
