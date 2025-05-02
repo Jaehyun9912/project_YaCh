@@ -22,6 +22,8 @@ func _ready():
 		print(i.name)
 		if !panel_stack.has(i):
 			panel_stack.append(i)
+			
+	
 
 func get_view():	
 	current_scene = get_tree().current_scene
@@ -52,11 +54,11 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 		erase_panel(child)
 	# load new Panel
 	push_panel(panel_name,SCREEN.BOTTOM)
-
-	
 	# 사라진 오브젝트의 태그 값 제거
 	TagManager.clean_dict()
 	_on_size_changed()
+	
+	show_cutscene("res://icon.svg",SCREEN.FULL)
 
 
 #region UI_Panel
@@ -109,8 +111,21 @@ func push_panel(panel_name : String,screen_location : SCREEN):
 	
 	return panel
 
-func _set_screen_size(panel,screen_location:SCREEN):
-	# 스크린 위치 지정
+
+# 패널 제거
+func erase_panel(panel):
+	if panel_stack.has(panel):
+		panel_stack.erase(panel)
+		current_panel.remove_child(panel)
+		panel.queue_free()
+	print("panel erased, current panel count : ",panel_stack.size())
+	#print("UI count : ",panel_stack.size())
+	if panel_stack.size()>0:
+		var last_panel = panel_stack.back()
+		last_panel.show()
+
+# 스크린 위치 지정 
+func _set_screen_size(panel:Control,screen_location:SCREEN) -> void:
 	if screen_location == SCREEN.BOTTOM:
 		panel.anchor_left = 0
 		panel.anchor_top = 0.5
@@ -127,19 +142,31 @@ func _set_screen_size(panel,screen_location:SCREEN):
 		panel.anchor_right = 1
 		panel.anchor_bottom = 1
 
-# 패널 제거
-func erase_panel(panel):
-	if panel_stack.has(panel):
-		panel_stack.erase(panel)
-		current_panel.remove_child(panel)
-		panel.queue_free()
-	print("panel erased, current panel count : ",panel_stack.size())
-	#print("UI count : ",panel_stack.size())
-	if panel_stack.size()>0:
-		var last_panel = panel_stack.back()
-		last_panel.show()
 
 #endregion
 
+# 컷신 보여주기
+func show_cutscene(path,screen : SCREEN):
+	var panel = push_panel("CutScenePanel",screen)
+	if screen == SCREEN.FULL:
+		_set_screen_size(SidePanel,screen)
+	panel.tree_exited.connect(_set_screen_size.bind(SidePanel,SCREEN.TOP))
+	
+	var texture = load_texture_from_file(path)
+	panel.set_image(texture)
+	
 
-
+func load_texture_from_file(path: String) -> Texture2D:
+	var file = FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		print("파일 열기 실패: ", path)
+		return null
+	
+	var image = Image.new()
+	var error = image.load_png_from_buffer(file.get_buffer(file.get_length()))
+	if error != OK:
+		print("이미지 로드 실패")
+		return null
+	
+	var texture = ImageTexture.create_from_image(image)
+	return texture
