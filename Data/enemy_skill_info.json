@@ -3,6 +3,7 @@
 			"name": "기본 공격",
 			"description": "데미지를 %d 준다.",
 			"damage": 0,
-			"apply_type": "add"	
+			"apply_type": "add",
+			"cost": 10
 		}
 }

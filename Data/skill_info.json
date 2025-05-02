@@ -4,8 +4,8 @@
 		"name": "기본 공격",
 		"description": "적을 1명 10데미지로 공격한다.\n행동력 10을 소모한다.",
 		"target": "one",
-		"apply": 10,
-		"cost": 2,
+		"apply": 1,
+		"cost": 10,
 	},
 	"base_fire": {
 		"type": "attack",

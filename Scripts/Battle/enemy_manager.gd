@@ -33,6 +33,9 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	# 정보 패널 띄우기
 	upper.set_panel_with_time(next_skill.name, next_skill.description % damage, 2)
 	
+	var cost = get_cost(next_skill)
+	char.current_point -= cost.get("point", 0)
+	
 	# 대기했다가 공격 후 종료 
 	await timer.timeout
 	battle.player_character.hp -= damage
@@ -61,3 +64,12 @@ func get_damage_by_skill(skill, char_damage):
 		_:
 			printerr("Wrong Apply Type! ", apply)
 			return 0
+	
+# 스킬을 읽고 코스트 딕셔너리를 반환 		
+func get_cost(skill):
+	var cost = skill.get("cost", 0)
+	if not cost is Dictionary:
+		var result = {"point": cost}
+		return result
+	else:
+		return cost

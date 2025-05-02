@@ -9,10 +9,11 @@ signal turn_end
 
 # 스킬을 처리해줄 함수를 호출하는 신호 
 signal use_skill(index, target)
+# 전투 사이클 시작을 알리는 신호
+signal turn_cycle_start
 
-# 행동력 포인트 (나중에 변수로 변경해도 무방)
-const BASE_POINT = 50
-const ADDITIONAL_POINT = 50
+# 행동력 포인트
+var total_point = 100
 
 # 가장 적은 포인트를 사용하는 행동 (자동 턴 넘기기 용)
 var min_point_use = 1
@@ -26,6 +27,7 @@ var player_character : BattleCharacter
 var ally_character : Array[BattleCharacter]
 var enemy_character : Array[BattleCharacter]
 
+# 각 그룹의 수 
 var enemy_count: 
 	get: return len(enemy_character)
 var ally_count: 
@@ -53,8 +55,6 @@ func _ready():
 # 전투 전 설정
 # 맵 정보 불러오기, 캐릭터 정보 할당하기, 행동력 구해주고 턴 순서에 맞추어 정렬하기
 func _battle_set():
-	var total := 0
-	
 	# 맵 정보 불러오기
 	var map_name = "World/" + ViewManager.now_map_name
 	map_data = DataManager.get_data(map_name)
@@ -86,13 +86,15 @@ func _battle_set():
 			idx += 1
 			
 		i.character_died.connect(_on_character_died)
-		total += i.speed
-		
-	# 캐릭터별 행동력 설정하고 턴 순서 설정하기 
+
+# 속도에 따른 행동력 계산 후 정렬에 반영 
+func update_turn_point():
+	var total_speed = 0
 	for i in turn_char:
-		i.point = BASE_POINT + i.speed / total * ADDITIONAL_POINT
-		#print(i.speed, " ", total)
-		print(i.name, " ", i.speed / total * ADDITIONAL_POINT) 
+		total_speed += i.speed
+		
+	for i in turn_char:
+		i.point = i.speed / total_speed * total_point
 	
 	turn_char.sort_custom(func(a, b): return a.speed > b.speed)
 
@@ -101,6 +103,9 @@ func _battle():
 	_battle_set()
 	
 	while true:
+		# 한 루프가 돌면 행동력 업데이트 
+		update_turn_point()
+		turn_cycle_start.emit()
 		for i in turn_char:
 			now_character = i
 			turn_character_changed.emit(i)
@@ -117,6 +122,8 @@ func _battle():
 			_check_dead_char()
 						
 			print("turn end")
+		# 한 루프 끝나면 턴포인트 증가 
+		total_point *= 1.2
 
 # 코스트 제거하기 
 func remove_cost(skill):
@@ -134,12 +141,11 @@ func remove_cost(skill):
 
 # 버튼 눌렀을때
 func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
-	var cost := 0
-	print("target : ", target)
+	#var cost := 0
+	#print("target : ", target)
 	match index:
 		# 버튼에 해당하는 효과 발동 
 		BattlePanel.Buttons.CENTER:
-			print("center")
 			turn_end.emit()
 		BattlePanel.Buttons.SKILL1:
 			use_skill.emit(0, target)
@@ -153,7 +159,7 @@ func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
 			_battle_end(END_TYPE.RUN)
 	
 	if now_character.current_point < min_point_use:
-			turn_end.emit()
+		turn_end.emit()
 			
 	_check_dead_char()
 	

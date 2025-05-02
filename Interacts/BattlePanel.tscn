@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://c3h3jildcn5gm"]
+[gd_scene load_steps=4 format=3 uid="uid://c3h3jildcn5gm"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_panel.gd" id="1_njjyf"]
 [ext_resource type="PackedScene" uid="uid://c7rab4ugt7w6t" path="res://Objects/UI/Battle/skill_button_manager.tscn" id="2_jcmlh"]
+[ext_resource type="PackedScene" uid="uid://c2gk0n3dyk110" path="res://Objects/UI/Battle/TurnPointBar/TurnPointBar.tscn" id="3_jg1ea"]
 
 [node name="BattlePanel" type="Control"]
 layout_mode = 3
@@ -16,15 +17,23 @@ script = ExtResource("1_njjyf")
 [node name="SkillButtonManager" parent="." instance=ExtResource("2_jcmlh")]
 layout_mode = 1
 
+[node name="TurnPointBar" parent="." instance=ExtResource("3_jg1ea")]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -172.0
+offset_bottom = -146.0
+
 [node name="ActionPoint" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
 offset_left = -115.0
-offset_top = -21.6
+offset_top = 1.00001
 offset_right = -1.0
-offset_bottom = 1.39999
+offset_bottom = 24.0
 grow_horizontal = 0
 
 [connection signal="skill_activated" from="SkillButtonManager" to="." method="_on_skill_button_manager_skill_activated"]

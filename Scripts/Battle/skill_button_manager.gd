@@ -81,7 +81,8 @@ func set_all_buttons(OnOff):
 	
 # 스킬 버튼 눌렀을 때 
 func on_skillbutton_down(btn, index):
-	## 일단 센터 버튼이면 스킵 
+	current_button = index
+	# 일단 센터 버튼이면 스킵 
 	if index == battle_panel.Buttons.CENTER:
 		return
 	var skill = SkillManager.get_player_skill(index)
@@ -89,7 +90,7 @@ func on_skillbutton_down(btn, index):
 	# 가림 패널 활성화 후 마우스에 버튼 이미지 부착 
 	$Cover.visible = true
 	button_img.visible = true
-	current_button = index
+
 	button_img.global_position = get_viewport().get_mouse_position() - button_img.pivot_offset
 	
 	# 버튼 누른 위치에 취소 크기를 설정하는 원 생성 
@@ -154,7 +155,8 @@ func on_skillbutton_down(btn, index):
 func on_skillbutton_up():
 	target_changed.emit(-1, is_ally)
 	# 스킬 발동 
-	if is_on_cancel_area == false:
+	# 센터 버튼도 넘기긴 해야해서 센터버튼부터는 다 넘겨버림 
+	if is_on_cancel_area == false or current_button > 3:
 		var target
 		match current_choice_mode:
 			ChoiceMode.ONE:

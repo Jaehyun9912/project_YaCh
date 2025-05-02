@@ -4,6 +4,7 @@ class_name BattlePanel
 @onready var action_point = $ActionPoint as Label
 @onready var buttons = get_tree().get_nodes_in_group("skill_buttons")
 @onready var skill_button = $SkillButtonManager as SkillButtonManager
+@onready var turn_point_bar = $TurnPointBar as TurnPointBar
 
 var choicePanel
 
@@ -30,16 +31,20 @@ signal skill_actived(index, target)
 var current_charcter: BattleCharacter
 var skill_target
 
+# 현재 캐릭터의 행동력 저장 
+var current_point
+
 # 시작시
 func _ready():
 	manager = ViewManager.world_instance.get_node("BattleScene") as BattleManager
 	skill_button.battle_panel = self
 	
 	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
+	manager.turn_cycle_start.connect(_on_turn_cycle_start)
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
 	
 	# 버튼에 함수 설정, 플레이어 스킬 맞지 않으면 버튼 비활성화 
-	for i in len(buttons):
+	for i in len(buttons) - 1:
 		var btn = buttons[i]
 		btn.disabled = true
 		var skill = SkillManager.get_player_skill(i)
@@ -47,7 +52,9 @@ func _ready():
 			btn.disabled = true
 			btn.lock_disable = true
 		
+	turn_point_bar.set_information(manager.turn_char)
 	manager.turn_end.emit()
+
 
 # 턴 변경되었음을 받는 함수
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
@@ -66,20 +73,27 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 		skill_button.set_all_buttons(false)
 		
 	# 디버그용
-	print("디버그용 스킬 버튼 활성화 작동")
-	skill_button.set_all_buttons(true)
+	#print("디버그용 스킬 버튼 활성화 작동")
+	#skill_button.set_all_buttons(true)
 	
 # 무한 반복
 func _process(_delta):
 	# 행동력 표시 반영
 	if current_charcter != null:
+		if (current_charcter.current_point == current_point): return
+		
 		action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
+		turn_point_bar.update_point(current_charcter)
+		current_point = current_charcter.current_point
+	
 
 # 현재 행동력보다 많은 행동력 소모하는 버튼 비활성화
 func _check_skill_is_possible():
 	for i in len(buttons):
 		if i < Buttons.CENTER:
 			buttons[i].disabled = not SkillManager.check_requirement(i, current_charcter.current_point, manager.attrubute_bar)
+		else:
+			return
 
 
 func _on_skill_button_manager_skill_activated(skill, target):
@@ -164,7 +178,7 @@ func get_all_ally():
 func end():
 	skill_button.set_all_buttons(false)
 
-
+# 대상 선택 때 대상이 변경될 경우 
 func _on_skill_button_manager_target_changed(target, isally):
 	var chars
 	if isally:
@@ -178,3 +192,6 @@ func _on_skill_button_manager_target_changed(target, isally):
 		else:
 			chars[i].set_hp_outline_default()
 	
+# 턴 사이클 한바퀴 시작
+func _on_turn_cycle_start():
+	turn_point_bar.set_point(manager.turn_char, manager.total_point)

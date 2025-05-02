@@ -54,7 +54,7 @@ mesh = SubResource("PlaneMesh_k8c6t")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_c1tgd")
 
-[node name="PlayerCharacter" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
+[node name="Player" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.659687, -1.89395, -12.1705)
 speed = 100.0
 is_player = true
@@ -65,11 +65,11 @@ script = ExtResource("3_2wx2l")
 [node name="EnemyTimer" type="Timer" parent="EnemyManager"]
 wait_time = 0.5
 
-[node name="BattleCharacter1" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
+[node name="Enemy1" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.942222, 1.90735e-06, -23.4821)
 speed = 70.0
 
-[node name="BattleCharacter2" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
+[node name="Enemy2" parent="." groups=["battle_characters"] instance=ExtResource("3_2h6hx")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.56736, -0.108985, -22.8054)
 speed = 120.0
 

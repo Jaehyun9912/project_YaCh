@@ -33,7 +33,7 @@ var hp:
 			notify_msg(diff, Color.RED)
 			
 # 행동력 
-@export var point: int
+var point: int
 var current_point: int
 
 # 플레이어인지 확인용 
