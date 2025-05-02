@@ -23,7 +23,6 @@ func _ready():
 		if !panel_stack.has(i):
 			panel_stack.append(i)
 			
-	
 
 func get_view():	
 	current_scene = get_tree().current_scene
@@ -58,7 +57,6 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	TagManager.clean_dict()
 	_on_size_changed()
 	
-	show_cutscene("res://icon.svg",SCREEN.FULL)
 
 
 #region UI_Panel
@@ -145,7 +143,7 @@ func _set_screen_size(panel:Control,screen_location:SCREEN) -> void:
 
 #endregion
 
-# 컷신 보여주기
+# 컷신 보여주기(이미지 경로는 나중에 폴더 만들고 경로 조정할 예정)
 func show_cutscene(path,screen : SCREEN):
 	var panel = push_panel("CutScenePanel",screen)
 	if screen == SCREEN.FULL:
@@ -156,6 +154,7 @@ func show_cutscene(path,screen : SCREEN):
 	panel.set_image(texture)
 	
 
+# 경로에 위치한 png 이미지를 texture2D로 변환해 반환
 func load_texture_from_file(path: String) -> Texture2D:
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file == null:
