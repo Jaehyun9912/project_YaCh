@@ -5,7 +5,6 @@ var _cut_scene:
 		return $"TextureRect" as TextureRect
 
 func set_image(texture : Texture2D):
-	
 	_cut_scene.texture = texture
 
 # Called when the node enters the scene tree for the first time.

@@ -1,5 +1,10 @@
 extends Control
 
+
+
+var panel:
+	get:
+		return $"ColorRect" as Control
 # 정보 종류 텍스트
 var type:
 	get:
@@ -31,9 +36,7 @@ func _on_size_changed():
 
 
 
-var panel:
-	get:
-		return $"ColorRect" as Control
+
 
 # 체력 값 업데이트
 func set_hp_panel():

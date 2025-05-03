@@ -7,6 +7,8 @@ var current_scene: Node = null
 var world_instance: Node3D = null
 var current_panel: CanvasLayer = null
 
+var side_panel : Control = null
+
 var now_map_name: String
 
 var old_map: String
@@ -23,12 +25,16 @@ func _ready():
 		if !panel_stack.has(i):
 			panel_stack.append(i)
 			
+			
+	
 
 func get_view():	
 	current_scene = get_tree().current_scene
 	if current_scene != null:
 		world_instance = current_scene.get_node("World")
 		current_panel = current_scene.get_node("Interact")
+		side_panel = current_scene.get_node("SidePanelLayer/SidePanel")
+		print(side_panel.name)
 	pass
 
 
@@ -56,6 +62,8 @@ func load_world(world_name: String, panel_name: String = "3Button", map_name: St
 	# 사라진 오브젝트의 태그 값 제거
 	TagManager.clean_dict()
 	_on_size_changed()
+	
+	
 	
 
 
@@ -95,9 +103,10 @@ enum SCREEN{
 # 패널 추가
 func push_panel(panel_name : String,screen_location : SCREEN):
 	get_view()
-	if panel_stack.size()>0:
-		var last_panel = panel_stack.back()
-		last_panel.hide()
+	# past panel hide
+	#if panel_stack.size()>0:
+	#	var last_panel = panel_stack.back()
+	#	last_panel.hide()
 	# 패널 생성, 전시 후 해당 패널 반환
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
 	if !panel_stack.has(panel):
@@ -147,14 +156,15 @@ func _set_screen_size(panel:Control,screen_location:SCREEN) -> void:
 func show_cutscene(path,screen : SCREEN):
 	var panel = push_panel("CutScenePanel",screen)
 	if screen == SCREEN.FULL:
-		_set_screen_size(SidePanel,screen)
-	panel.tree_exited.connect(_set_screen_size.bind(SidePanel,SCREEN.TOP))
+		_set_screen_size(side_panel,screen)
+	panel.tree_exited.connect(_set_screen_size.bind(side_panel,SCREEN.TOP))
 	
 	var texture = load_texture_from_file(path)
 	panel.set_image(texture)
-	
+	#_set_screen_size(SidePanel,SCREEN.FULL)
 
 # 경로에 위치한 png 이미지를 texture2D로 변환해 반환
+# 함수 위치 변경 가능
 func load_texture_from_file(path: String) -> Texture2D:
 	var file = FileAccess.open(path, FileAccess.READ)
 	if file == null:

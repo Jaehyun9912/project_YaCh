@@ -16,7 +16,7 @@ var text_num
 
 
 func _ready():
-	var talk_panel = SidePanel.set_text_panel()
+	var talk_panel = ViewManager.side_panel.set_text_panel()
 	_load_data(ViewManager.now_map_name)
 	_load_text_block("Start")
 	
@@ -26,6 +26,7 @@ func _ready():
 func _load_data(file_name : String) -> void:
 	data = DataManager.get_data("Talk/" + file_name)
 	text_num = 0
+	
 
 # 블록 내 인덱스 텍스트 설정하기
 func _load_text() -> void:
@@ -50,7 +51,7 @@ func _load_text() -> void:
 			btn.pressed.connect(func(): ViewManager.erase_panel(panel))
 			btn.pressed.connect(_load_text_block.bind(choice[i]))
 	
-	SidePanel.set_text(speaker,dialogue)
+	ViewManager.side_panel.set_text(speaker,dialogue)
 	_record_text(speaker,dialogue)
 	# 다음 순서가 존재할 때
 	if text_data.has("Next"):

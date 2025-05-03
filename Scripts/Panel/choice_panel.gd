@@ -2,7 +2,7 @@ extends Control
 
 
 func _ready():
-	SidePanel.set_budget_panel()
+	ViewManager.side_panel.set_budget_panel()
 
 func _on_button_1_pressed():
 	var skills = PlayerData.skills
