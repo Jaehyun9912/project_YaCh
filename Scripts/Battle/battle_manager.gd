@@ -14,6 +14,8 @@ signal turn_cycle_start
 
 # 행동력 포인트
 var total_point = 100
+var init_total_point
+var total_point_add
 
 # 가장 적은 포인트를 사용하는 행동 (자동 턴 넘기기 용)
 var min_point_use = 1
@@ -63,7 +65,7 @@ func _battle_set():
 	if map_data.size() == 0:
 		printerr("No MapData!")
 		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
-	const CHECK = ["enemys", "attribute"]
+	const CHECK = ["enemys"]
 	for i in CHECK:
 		if map_data.has(i) == false:
 			printerr("No " + i)
@@ -71,7 +73,8 @@ func _battle_set():
 			return
 	
 	# 속성 정보 세팅 
-	attrubute_bar.init(map_data["attribute"])
+	attrubute_bar.init(map_data.get("attribute", 100))
+	total_point = map_data.get("point", 100)
 	
 	var idx = 0
 	# 행동력 총합 및 캐릭터 정보 설정하기.
@@ -86,6 +89,8 @@ func _battle_set():
 			idx += 1
 			
 		i.character_died.connect(_on_character_died)
+	total_point_add = total_point * 0.2
+	init_total_point = total_point
 
 # 속도에 따른 행동력 계산 후 정렬에 반영 
 func update_turn_point():
@@ -123,7 +128,8 @@ func _battle():
 						
 			print("turn end")
 		# 한 루프 끝나면 턴포인트 증가 
-		total_point *= 1.2
+		if total_point < init_total_point * 2:
+			total_point += total_point_add
 
 # 코스트 제거하기 
 func remove_cost(skill):

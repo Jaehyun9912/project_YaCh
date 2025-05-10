@@ -19,11 +19,10 @@ layout_mode = 1
 
 [node name="TurnPointBar" parent="." instance=ExtResource("3_jg1ea")]
 layout_mode = 1
-anchors_preset = 14
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_top = -172.0
-offset_bottom = -146.0
+anchors_preset = -1
+anchor_top = 0.0544041
+anchor_bottom = 0.121762
+metadata/_edit_use_anchors_ = true
 
 [node name="ActionPoint" type="Label" parent="."]
 layout_mode = 1
