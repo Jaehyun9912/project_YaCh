@@ -5,9 +5,10 @@ extends Node2D
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	var data = DataManager.get_data("Map/TestMap")["Points"]
-	var obj = Locations.instantiate()
-	add_child(obj)
-	obj.set_location(data[0])
+	for i in data:
+		var obj = Locations.instantiate()
+		add_child(obj)
+		obj.set_location(i)
 	#print(," : ", position)
 	pass # Replace with function body.
 

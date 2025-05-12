@@ -19,6 +19,7 @@ visible = false
 layer = 0
 
 [node name="ChoicePanel" parent="Interact" instance=ExtResource("3_5ejod")]
+visible = false
 
 [node name="SidePanelLayer" type="CanvasLayer" parent="."]
 

@@ -14,11 +14,7 @@ func set_location(data):
 	position.y = data["yPos"]
 
 # 해당 월드로 이동
-func move_to_location():
-	#ViewManager.load_world(location,"기본 패널")
-	pass
-
-func debug(viewport: Node, event: InputEvent, shape_idx: int):
+func enter_world(viewport: Node, event: InputEvent, shape_idx: int):
 	if event is InputEventMouseButton and event.is_pressed():
 		ViewManager.load_world(location)
 		print("AreaClicked : ",location)
