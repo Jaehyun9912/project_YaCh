@@ -38,7 +38,7 @@ func get_view():
 	pass
 
 
-func load_world(world_name: String, panel_name: String = "3Button", map_name: String = "") -> void :
+func load_world(world_name: String, panel_name: String = "ChoicePanel", map_name: String = "") -> void :
 	# get current scene
 	get_view()
 	
