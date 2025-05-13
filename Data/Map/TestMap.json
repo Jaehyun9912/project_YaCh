@@ -1,9 +1,12 @@
 {
 	"Points":[
 		{
-			"Location" : "TestCountry",
+			"Location" : "World",
 			"xPos" : 149,
-			"yPos" : 122
+			"yPos" : 122,
+			"Right" : "TestCountry"
+			
+			
 		},
 		{
 			"Location" : "TestCountry",
