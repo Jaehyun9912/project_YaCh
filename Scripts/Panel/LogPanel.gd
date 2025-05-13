@@ -16,7 +16,7 @@ var text_num
 
 
 func _ready():
-	var talk_panel = ViewManager.side_panel.set_text_panel()
+	ViewManager.side_panel.set_text_panel()
 	_load_data(ViewManager.now_map_name)
 	_load_text_block("Start")
 	

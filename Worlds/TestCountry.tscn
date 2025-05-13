@@ -69,8 +69,8 @@ add_tags = Array[String](["Quest.process.quest1.alpha"])
 [node name="Talk" type="Area3D" parent="."]
 transform = Transform3D(0.901077, 0, 0.433659, 0, 1, 0, -0.433659, 0, 0.901077, 21.5609, 5.09986, -35.1547)
 script = ExtResource("4_yjwxt")
-metadata/address = "CountryTower"
-metadata/type = "TextLogPanel"
+metadata/address = "Map"
+metadata/type = "MapPanel"
 metadata/name = "TestTalk"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Talk"]

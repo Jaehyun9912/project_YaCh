@@ -1,19 +1,14 @@
-[gd_scene load_steps=5 format=3 uid="uid://do7bbpvoabqdh"]
+[gd_scene load_steps=4 format=3 uid="uid://do7bbpvoabqdh"]
 
 [ext_resource type="PackedScene" uid="uid://bpgurardg7lfa" path="res://Worlds/TestCountry.tscn" id="2_mrgdm"]
 [ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://Interacts/ChoicePanel.tscn" id="3_5ejod"]
 [ext_resource type="PackedScene" uid="uid://dde3ek8splias" path="res://Interacts/SidePanel.tscn" id="3_ux45a"]
-[ext_resource type="PackedScene" uid="uid://2qnlhnafs2lx" path="res://Worlds/TestMap.tscn" id="4_4okse"]
 
 [node name="Node" type="Node"]
 
 [node name="World" type="Node3D" parent="."]
 
-[node name="TestMap" parent="World" instance=ExtResource("4_4okse")]
-position = Vector2(0, -21)
-
 [node name="TestCountry" parent="World" instance=ExtResource("2_mrgdm")]
-visible = false
 
 [node name="Interact" type="CanvasLayer" parent="."]
 layer = 0
