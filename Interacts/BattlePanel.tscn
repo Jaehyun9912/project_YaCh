@@ -16,6 +16,8 @@ script = ExtResource("1_njjyf")
 
 [node name="SkillButtonManager" parent="." instance=ExtResource("2_jcmlh")]
 layout_mode = 1
+anchors_preset = 15
+anchor_bottom = 1.0
 
 [node name="TurnPointBar" parent="." instance=ExtResource("3_jg1ea")]
 layout_mode = 1

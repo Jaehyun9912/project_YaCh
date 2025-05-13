@@ -9,9 +9,9 @@
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]
 
 [node name="SkillButtonManager" type="ColorRect"]
-anchors_preset = 15
+anchors_preset = -1
 anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_bottom = 0.5
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(180, 193)
@@ -32,70 +32,76 @@ theme_override_styles/panel = SubResource("StyleBoxEmpty_7x350")
 
 [node name="SkillButton" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
 layout_mode = 1
-anchors_preset = 4
-anchor_top = 0.5
-anchor_bottom = 0.5
-offset_left = 16.0
-offset_top = -36.3
-offset_right = 96.0
-offset_bottom = 43.7
+anchors_preset = -1
+anchor_left = 0.0444444
+anchor_top = 0.405959
+anchor_right = 0.266667
+anchor_bottom = 0.613212
+offset_left = 0.0
+offset_right = -7.62939e-06
+offset_bottom = 1.52588e-05
 grow_vertical = 2
 pivot_offset = Vector2(40, 40)
+metadata/_edit_use_anchors_ = true
 
 [node name="SkillButton2" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
 layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 77.0
-offset_top = -106.0
-offset_right = 157.0
-offset_bottom = -26.0
+anchors_preset = -1
+anchor_left = 0.213889
+anchor_top = 0.725389
+anchor_right = 0.436111
+anchor_bottom = 0.932642
+offset_left = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_vertical = 0
 pivot_offset = Vector2(40, 40)
+metadata/_edit_use_anchors_ = true
 
 [node name="SkillButton3" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
 layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -148.0
-offset_top = -105.0
-offset_right = -68.0
-offset_bottom = -25.0
+anchors_preset = -1
+anchor_left = 0.588889
+anchor_top = 0.727979
+anchor_right = 0.811111
+anchor_bottom = 0.935233
+offset_left = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 grow_horizontal = 0
 grow_vertical = 0
 pivot_offset = Vector2(40, 40)
+metadata/_edit_use_anchors_ = true
 
 [node name="SkillButton4" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
 layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -89.0
-offset_top = -36.3
-offset_right = -9.0
-offset_bottom = 43.7
+anchors_preset = -1
+anchor_left = 0.752778
+anchor_top = 0.405959
+anchor_right = 0.975
+anchor_bottom = 0.613212
+offset_left = 0.0
+offset_right = 0.0
+offset_bottom = 1.52588e-05
 grow_horizontal = 0
 grow_vertical = 2
 pivot_offset = Vector2(40, 40)
+metadata/_edit_use_anchors_ = true
 
 [node name="CenterButton" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
 layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 130.0
-offset_top = 110.0
-offset_right = -130.0
-offset_bottom = -176.0
+anchors_preset = -1
+anchor_left = 0.361111
+anchor_top = 0.284974
+anchor_right = 0.653889
+anchor_bottom = 0.544041
+offset_left = 0.0
+offset_right = -5.39999
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.054, 1)
+metadata/_edit_use_anchors_ = true
 
 [node name="Menu" type="ColorRect" parent="."]
 visible = false

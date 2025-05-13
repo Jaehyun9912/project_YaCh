@@ -1,7 +1,7 @@
 class_name UpperPanel extends Control
 
-@onready var title := $ColorRect/VBoxContainer/TextType
-@onready var info := $ColorRect/VBoxContainer/Detail
+@onready var title := $VBoxContainer/TextType
+@onready var info := $VBoxContainer/Detail
 
 @onready var timer := $Timer
 

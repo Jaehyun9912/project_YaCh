@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Scripts/Battle/enemy_manager.gd" id="3_2wx2l"]
 [ext_resource type="PackedScene" uid="uid://blyo26b6351jw" path="res://Objects/UI/Battle/attribute_bar.tscn" id="3_tulg3"]
 [ext_resource type="Script" path="res://Scripts/Battle/attack_manager.gd" id="4_3ewvu"]
-[ext_resource type="PackedScene" uid="uid://5ctp6o6sslw4" path="res://Objects/UI/UpperPanel.tscn" id="5_71ugh"]
+[ext_resource type="PackedScene" uid="uid://cnlummas0oasb" path="res://Objects/UI/UpperPanel.tscn" id="5_71ugh"]
 [ext_resource type="PackedScene" uid="uid://qauqg0r2xpur" path="res://Objects/UI/Battle/result_panel.tscn" id="5_270jx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
@@ -76,17 +76,19 @@ speed = 120.0
 [node name="Interact" type="CanvasLayer" parent="."]
 
 [node name="AttributeBar" parent="Interact" instance=ExtResource("3_tulg3")]
-anchor_left = 0.872222
-anchor_top = 0.0984456
+anchor_left = 0.983
+anchor_top = 0.098
 anchor_right = 0.983333
 anchor_bottom = 0.477979
+offset_left = -39.8801
+offset_top = 0.344002
 offset_right = 0.0
 offset_bottom = 0.0
 grow_horizontal = 0
 grow_vertical = 2
+size_flags_horizontal = 8
 
 [node name="UpperPanel" parent="Interact" instance=ExtResource("5_71ugh")]
-visible = false
 
 [node name="ResultPanel" parent="Interact" instance=ExtResource("5_270jx")]
 offset_left = -1.0
