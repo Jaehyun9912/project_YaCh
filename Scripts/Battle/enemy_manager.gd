@@ -11,7 +11,7 @@ var player:
 	get: return battle.player_character
 	
 func _ready():
-	skill_info = DataManager.get_data("enemy_skill_info")
+	skill_info = DataManager.get_data("Skill/enemy_skill_info")
 
 # 적의 행동 수행 
 func _on_battle_scene_turn_character_changed(char: BattleCharacter):

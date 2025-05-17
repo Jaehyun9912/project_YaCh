@@ -7,7 +7,7 @@ var skills
 var player_skill
 
 func _ready():
-	skills = DataManager.get_data("skill_info")
+	skills = DataManager.get_data("Skill/skill_info")
 	player_skill = PlayerData.skills
 	
 # 플레이어의 스킬 얻어오기 

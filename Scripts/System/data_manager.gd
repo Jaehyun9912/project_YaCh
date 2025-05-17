@@ -3,8 +3,8 @@ extends Node
 const DEFAULT_PATH = "res://Data/"
 const USER_PATH = "user://"
 
-@onready var items = get_data("item")
-@onready var artifacts = get_data("artifact")
+@onready var items = get_data("Item/item")
+@onready var artifacts = get_data("Item/artifact")
 
 # 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
 func get_data(data_path: String) -> Dictionary:
