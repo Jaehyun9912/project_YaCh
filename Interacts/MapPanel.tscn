@@ -107,6 +107,7 @@ offset_bottom = 352.0
 text = "가방"
 
 [node name="Button2" type="Button" parent="ColorRect"]
+layout_mode = 0
 offset_left = 42.0
 offset_top = 562.0
 offset_right = 199.0

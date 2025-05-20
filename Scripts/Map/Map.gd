@@ -45,3 +45,4 @@ func move_cursor(direction : int)->void:
 		next_location = find_location(current_location.left)
 	if next_location != null:
 		current_location = next_location
+	print("Location : ", current_location.location)
