@@ -15,9 +15,8 @@ enum Mode{
 
 # 퀘스트 매니저 생성 후 패널 표시
 func _ready():
-	var npc_name# = get_meta("npc_name")
-	if not npc_name:
-		npc_name = ViewManager.now_map_name
+	var npc_name = ViewManager.cur_meta_data["NPC"]
+	
 	quest_manager = QuestManager.new(npc_name)
 	#왼쪽 패널 업데이트
 	_update_accept_panel()
@@ -87,4 +86,4 @@ func _show_quest_detail(quest: Quest, mode):
 
 # 디버그용 처음씬으로 돌아가기
 func _go_main_scene():
-	ViewManager.load_world("TestCountry","ChoicePanel","TestCountry")
+	ViewManager.load_world("TestCountry","ChoicePanel")

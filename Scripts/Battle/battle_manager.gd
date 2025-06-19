@@ -57,7 +57,7 @@ func _battle_set():
 	var total := 0
 	
 	# 맵 정보 불러오기
-	var map_name = "World/" + ViewManager.now_map_name
+	var map_name = "World/" + ViewManager.cur_meta_data["World"]
 	map_data = DataManager.get_data(map_name)
 	
 	# 필수 정보 확인하기 

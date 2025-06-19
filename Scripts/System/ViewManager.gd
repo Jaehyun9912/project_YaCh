@@ -9,7 +9,7 @@ var current_panel: CanvasLayer = null
 
 var side_panel : Control = null
 
-var now_map_name: String
+var cur_meta_data: Dictionary
 
 var old_map: String
 var old_panel: String
@@ -38,7 +38,7 @@ func get_view():
 	pass
 
 
-func load_world(world_name: String, panel_name: String = "ChoicePanel", map_name: String = "") -> void :
+func load_world(world_name: String, panel_name: String, meta_data: Dictionary = Dictionary()) -> void :
 	# get current scene
 	get_view()
 	
@@ -48,12 +48,12 @@ func load_world(world_name: String, panel_name: String = "ChoicePanel", map_name
 	
 	# remove current world instance
 	world_instance.get_child(0).queue_free()
-		
+	
 	# load new world
 	var new_world = load(WORLD_PATH + world_name + ".tscn")
 	print(WORLD_PATH + world_name)
 	world_instance.add_child(new_world.instantiate())
-	now_map_name = map_name
+	cur_meta_data = meta_data
 	# remove current Panels
 	for child in current_panel.get_children():
 		erase_panel(child)

@@ -1,16 +1,17 @@
 extends Area3D
 
-var address : String
-var type : String
-var map_name
+@export var address : String
+@export var type : String
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	address = get_meta("address")
-	type = get_meta("type")
-	map_name = get_meta("name")
-	if (not map_name):
-		map_name = name
+	if address == "":
+		address = get_meta("Address")
+	if type == "":
+		type = get_meta("type")
+		
+	
+	
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -23,6 +24,7 @@ func _on_location_clicked(_camera, _event, _pos, _n, _shape_idx):
 		var meta_data = Dictionary()
 		for i in get_meta_list():
 			meta_data[i] = get_meta(i)
-		print(meta_data)
-		ViewManager.load_world(address, type, map_name)
+		
+		print(name + " : " + str(meta_data))
+		ViewManager.load_world(address, type, meta_data)
 		

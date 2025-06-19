@@ -39,7 +39,7 @@ func set_location(data):
 	position.y = data["yPos"]
 
 func enter_world():
-	ViewManager.load_world(location)
+	ViewManager.load_world(location, "ChoicePanel")
 	print("AreaClicked : ",location)
 
 # 해당 월드로 이동
