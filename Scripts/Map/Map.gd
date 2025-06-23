@@ -12,7 +12,8 @@ var current_location : MapLocation
 var locations : Array[MapLocation]
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	var data = DataManager.get_data("Map/TestMap")["Points"]
+	var map_name = ViewManager.cur_meta_data["map"]
+	var data = DataManager.get_data("Map/"+map_name)["Points"]
 	for i in data:
 		var obj = location_resource.instantiate()
 		var temp = obj as MapLocation

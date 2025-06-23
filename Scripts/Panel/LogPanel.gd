@@ -17,7 +17,7 @@ var text_num
 
 func _ready():
 	ViewManager.side_panel.set_text_panel()
-	_load_data(ViewManager.now_map_name)
+	_load_data(ViewManager.cur_meta_data["Talk"])
 	_load_text_block("Start")
 	
 	
@@ -32,6 +32,8 @@ func _load_data(file_name : String) -> void:
 func _load_text() -> void:
 	if talk_data.size() <= text_num:
 		print("EOT")
+		
+		# 이거 오류 수정 필요할수도?
 		_go_main_scene()
 		return
 	
@@ -92,4 +94,4 @@ func _record_text(speaker,dialogue) -> void:
 
 # 디버그용
 func _go_main_scene():
-	ViewManager.load_world("TestCountry","ChoicePanel","TestCountry")
+	ViewManager.load_world("TestCountry","ChoicePanel")

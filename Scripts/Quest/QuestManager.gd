@@ -104,18 +104,29 @@ func _import_quest() -> void:
 	quest_list.clear()
 	var data = DataManager.get_data("Quest/"+_npc_name)
 	#print(data)
-	for datum in data[_npc_name]:
-		var quest = Quest.new(datum)
-		quest_list.append(quest)
-		# 플레이어에 태그(process,clear)있는지 확인 후 맞게 조정
-		var tag = TagManager.find_tag(PlayerData,quest.id) as String
-		var count = TagManager.get_tag_count(PlayerData,tag)
-		if tag == "":
-			TagManager.add_tag_tree(self,UNACCEPT_TREE+quest.id)
-		elif tag.begins_with("Quest.process"):
-			TagManager.add_tag_tree(self,PROCESS_TREE+quest.id)
-		elif tag.begins_with("Quest.clear"):
-			TagManager.add_tag_tree(self,CLEAR_TREE+quest.id,count)
-			TagManager.add_tag_tree(self,UNACCEPT_TREE+quest.id)
-
-
+	
+	# 지역 상관없이 수주가능한 퀘스트 생성
+	for datum in data["All"]:
+		_create_quest_instance(datum)
+	
+	# 특수 지역에서만 받을 수 있는 퀘스트 생성
+	var location_quest = ViewManager.cur_meta_data["address"]
+	if data.has(location_quest):
+		for datum in data[location_quest]:
+			_create_quest_instance(datum)
+	
+	
+# 퀘스트 인스턴스 생성하기
+func _create_quest_instance(datum : Dictionary):
+	var quest = Quest.new(datum)
+	quest_list.append(quest)
+	# 플레이어에 태그(process,clear)있는지 확인 후 맞게 조정
+	var tag = TagManager.find_tag(PlayerData,quest.id) as String
+	var count = TagManager.get_tag_count(PlayerData,tag)
+	if tag == "":
+		TagManager.add_tag_tree(self,UNACCEPT_TREE+quest.id)
+	elif tag.begins_with("Quest.process"):
+		TagManager.add_tag_tree(self,PROCESS_TREE+quest.id)
+	elif tag.begins_with("Quest.clear"):
+		TagManager.add_tag_tree(self,CLEAR_TREE+quest.id,count)
+		TagManager.add_tag_tree(self,UNACCEPT_TREE+quest.id)

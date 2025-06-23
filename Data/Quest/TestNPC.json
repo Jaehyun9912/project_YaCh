@@ -1,4 +1,4 @@
-{ "TestNPC":[
+{ "All":[
 	{
 		"id":"quest1",
 		"title" : "튜토리얼1",
@@ -31,7 +31,7 @@
 		"id":"quest3",
 		"title" : "위험물 회수",
 		"description" : "폭탄 5개 가져오기",
-		"clear_NPC": "CountryTower",
+		"clear_NPC": "TestNPC",
 		"accept_condition":["!Quest.clear.quest3"],
 		"submit" : [
 						{
@@ -40,6 +40,8 @@
 			}
 		],
 	},
+],
+	"CountryTower":[
 	{
 		"id":"quest4",
 		"title" : "테스트 퀘스트 4",

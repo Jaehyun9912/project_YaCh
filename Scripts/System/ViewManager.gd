@@ -49,11 +49,15 @@ func load_world(world_name: String, panel_name: String, meta_data: Dictionary = 
 	# remove current world instance
 	world_instance.get_child(0).queue_free()
 	
+	cur_meta_data = meta_data
+	cur_meta_data["address"] = world_name
+	cur_meta_data["type"] = panel_name
+	
 	# load new world
 	var new_world = load(WORLD_PATH + world_name + ".tscn")
 	print(WORLD_PATH + world_name)
 	world_instance.add_child(new_world.instantiate())
-	cur_meta_data = meta_data
+	
 	# remove current Panels
 	for child in current_panel.get_children():
 		erase_panel(child)
