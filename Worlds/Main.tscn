@@ -1,0 +1,62 @@
+[gd_scene load_steps=4 format=3 uid="uid://wgqkwug48a02"]
+
+[ext_resource type="Script" path="res://Scripts/World/Location.gd" id="1_2l7om"]
+[ext_resource type="Script" path="res://Scripts/MainScreen.gd" id="1_rkyov"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8ntbe"]
+font_size = 60
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[node name="Main" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_rkyov")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.25098, 0.501961, 0.752941, 1)
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -128.5
+offset_top = 100.0
+offset_right = 128.5
+offset_bottom = 269.0
+grow_horizontal = 2
+text = "New
+Universe"
+label_settings = SubResource("LabelSettings_8ntbe")
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = 600.0
+offset_right = -80.0
+offset_bottom = -72.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "게임 시작"
+script = ExtResource("1_2l7om")
+address = "TestCountry"
+type = "ChoicePanel"
+
+[connection signal="pressed" from="Button" to="." method="show_side_panel"]
+[connection signal="pressed" from="Button" to="Button" method="_on_button_clicked"]

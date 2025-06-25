@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ujhj8734sgr6"]
 
-[ext_resource type="Script" path="res://Scripts/Map/map_panel.gd" id="1_bm1x8"]
+[ext_resource type="Script" path="res://Scripts/Map/MapPanel.gd" id="1_bm1x8"]
 
 [node name="MapPanel" type="Control"]
 layout_mode = 3

@@ -38,7 +38,7 @@ func get_view():
 	pass
 
 
-func load_world(world_name: String, panel_name: String, meta_data: Dictionary = Dictionary()) -> void :
+func load_world(world_name: String, panel_name: String = "", meta_data: Dictionary = Dictionary()) -> void :
 	# get current scene
 	get_view()
 	
@@ -62,7 +62,8 @@ func load_world(world_name: String, panel_name: String, meta_data: Dictionary = 
 	for child in current_panel.get_children():
 		erase_panel(child)
 	# load new Panel
-	push_panel(panel_name,SCREEN.BOTTOM)
+	if panel_name != "":
+		push_panel(panel_name,SCREEN.BOTTOM)
 	# 사라진 오브젝트의 태그 값 제거
 	TagManager.clean_dict()
 	_on_size_changed()
