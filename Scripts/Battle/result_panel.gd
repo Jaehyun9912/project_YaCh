@@ -1,17 +1,24 @@
 class_name ResultPanel extends Control
 
+signal check_button_pressed
+
 func _ready():
 	visible = false
 
 # 패널 텍스트 설정 
 func set_panel(title_text, subtitle_text = "", info_text = ""):
 	visible = true
-	$ColorRect/Title.text = title_text
-	$ColorRect/Subtitle.text = subtitle_text
-	$ColorRect/Info.text = info_text
-	
 	if subtitle_text == "" and info_text == "":
-		$ColorRect.size.y = 54
+		set_text($ColorRect/SingleTitle, title_text)
 	else:
-		$ColorRect.size.y = 204
+		set_text($ColorRect/Title, title_text)
+		set_text($ColorRect/SubTitle, subtitle_text)
+		set_text($ColorRect/Info, info_text)
+	
 
+func set_text(panel, txt):
+	panel.text = txt
+	panel.visible = true
+
+func _on_button_pressed():
+	check_button_pressed.emit()

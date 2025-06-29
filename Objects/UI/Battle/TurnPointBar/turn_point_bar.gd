@@ -30,8 +30,10 @@ func set_information(chars: Array):
 func set_point(chars: Array, total_value):
 	$Label.text = "Total Point : " + str(total_value)
 	for i in chars:
-		turn_bar_dict[i.name].size_flags_stretch_ratio = float(i.point) / total_value
-		turn_bar_dict[i.name].set_point(i.point)
+		var ch = turn_bar_dict.get(i.name, null)
+		if ch != null:
+			ch.size_flags_stretch_ratio = float(i.point) / total_value
+			ch.set_point(i.point)
 	end_set_point.emit()
 		
 # 바뀐 행동력을 반영함 
@@ -40,6 +42,7 @@ func update_point(char: BattleCharacter):
 
 # 캐릭터가 죽었을 때 행동력 바를 정리함 
 func remove_bar(char):
+	#print("remove ", char, " bar")
 	var char_name = char.name
 	var removed_bar = turn_bar_dict[char_name]
 	removed_bar.set_ratio(0)

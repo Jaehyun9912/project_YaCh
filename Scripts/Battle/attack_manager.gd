@@ -52,7 +52,6 @@ func do_attack():
 		for i in target:
 			battle.enemy_character[i].hp -= apply
 		
-	
 func do_effect():
 	pass
 	

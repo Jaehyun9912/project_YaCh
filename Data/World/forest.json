@@ -16,7 +16,7 @@
 			{
 				"name":"적 2",
 				"tag": "enemy2",
-				"attack": 2,
+				"attack": 50,
 				"hp": 10,
 				"speed": 80,
 				"mana": 100,

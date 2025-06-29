@@ -53,6 +53,7 @@ func add_value(name : String, amount : float):
 			
 	update_value()	
 
+# 속성 지우기
 func remove_value(name : String, amount : float):
 	add_value(name, -amount)
 

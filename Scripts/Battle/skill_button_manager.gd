@@ -26,7 +26,10 @@ var button_cnt := 0
 
 @export var cancel_button_size = Vector2(4, 4)
 
+# 스킬 눌렀을 떄
 signal skill_activated(button_index, target)
+
+# 대상이 변경되었을 때
 signal target_changed(target, isally)
 
 func _ready():
@@ -183,7 +186,7 @@ func on_skillbutton_up():
 	current_button = -1
 	is_on_cancel_area = false;
 
-
+# 마우스가 취소 지역에 들어갔을 때 
 func _on_button_cancel_area_mouse_entered():
 	is_on_cancel_area = true
 	line.visible = false
@@ -192,6 +195,7 @@ func _on_button_cancel_area_mouse_entered():
 	choice_btn_man.make_button_special(-1)
 	target_changed.emit(target_index, is_ally)
 
+# 마우스가 취소 지역에서 나갔을 때 
 func _on_button_cancel_area_mouse_exited():
 	is_on_cancel_area = false
 	line.visible = true

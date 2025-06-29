@@ -48,8 +48,13 @@ var dead_player: Array[BattleCharacter]
 
 var map_data : Dictionary
 
+@export var Check = ["enemys"]
+
 # 패널 쪽에서 설정 후 종료되면 전투 시작 
 func _ready():
+	$Interact/ResultPanel.check_button_pressed.connect(
+		func(): ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
+	)
 	await turn_end
 	
 	_battle()
@@ -65,8 +70,8 @@ func _battle_set():
 	if map_data.size() == 0:
 		printerr("No MapData!")
 		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
-	const CHECK = ["enemys"]
-	for i in CHECK:
+	
+	for i in Check:
 		if map_data.has(i) == false:
 			printerr("No " + i)
 			ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
@@ -81,14 +86,17 @@ func _battle_set():
 	for i in turn_char:
 		if i.is_player == true:
 			player_character = i
+			# 플레이어 정보 및 태그 설정
 			player_character.set_character(PlayerData.data, "Player.Character")
 		else:
 			enemy_character.append(i)
+			# 적 정보 및 태그 설정
 			var data = map_data["enemys"][idx]
 			i.set_character(data, "Enemy." + data["tag"])
 			idx += 1
 			
 		i.character_died.connect(_on_character_died)
+		
 	total_point_add = total_point * 0.2
 	init_total_point = total_point
 
@@ -124,7 +132,8 @@ func _battle():
 				
 			# 턴 행동 종료 대기 
 			await turn_end
-			_check_dead_char()
+			if _check_dead_char():
+				return
 						
 			print("turn end")
 		# 한 루프 끝나면 턴포인트 증가 
@@ -193,30 +202,35 @@ func _battle_end(type: END_TYPE):
 			
 			var reward = ""
 			# 보상 부여
-			if map_data.has("rewards") and map_data["rewards"].has("item"):
-				for i in map_data["rewards"]["item"]:
-					if (i.has("id") == false):
+			if map_data.has("rewards"):
+				var rewards_data = map_data.rewards
+				# 아이템 가져오기
+				var items_to_reward = rewards_data.get("item", [])
+
+				# 보상 아이템 설정하기
+				for i in items_to_reward:
+					
+					# ID 체크 
+					var item_id = i.get("id")
+					if item_id == null:
 						printerr("No Item ID in rewards!")
 						continue
-						
-					var item = DataManager.get_item_artifact_data(i.id)
-					if (i.has("count") == false):
-						reward += item.name + "\n"
-						PlayerData.add_new_item(i.id, 1)
-					else:
-						reward += item.name + " " + str(i.count) + "개\n"
-						PlayerData.add_new_item(i.id, i.count)
-						
+
+					var item = DataManager.get_item_artifact_data(item_id)
+					# 개수 기본값 1
+					var count = i.get("count", 1)
+
+					# 보상 텍스트에 아이템 이름 추가하기
+					reward += item.name
+					if count > 1:
+						reward += " " + str(count) + "개"
+					reward += "\n"
+					# 추가하기
+					PlayerData.add_new_item(item_id, count)
+
 			msg.set_panel("전투에서 승리했다!", "보상", reward)
 		END_TYPE.LOSE:
-			msg.text = "전투에서 패배했다!"
-	
-	await get_tree().create_timer(2).timeout
-	
-	# 체력 반영 임시로 비활성화
-	#PlayerData.data.hp = player_character.hp
-	
-	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
+			msg.set_panel("전투에서 패배했다...")
 
 #endregion
 
@@ -230,6 +244,7 @@ func _check_dead_char():
 		if dead == player_character:
 			print("player dead")
 			_battle_end(END_TYPE.LOSE)
+			return true
 		else:
 			turn_char.erase(dead)
 			dead.queue_free()
@@ -237,6 +252,8 @@ func _check_dead_char():
 		
 			if enemy_character.size() == 0:
 				_battle_end(END_TYPE.WIN)
+				return true
+	return false
 
 # 캐릭터가 사망할시 일단 배열에 넣어놓고 나중에 처리
 func _on_character_died(dead : BattleCharacter):

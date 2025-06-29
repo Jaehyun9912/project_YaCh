@@ -91,8 +91,6 @@ size_flags_horizontal = 8
 [node name="UpperPanel" parent="Interact" instance=ExtResource("5_71ugh")]
 
 [node name="ResultPanel" parent="Interact" instance=ExtResource("5_270jx")]
-offset_left = -1.0
-offset_right = -1.0
 
 [node name="AttackManager" type="Node" parent="."]
 script = ExtResource("4_3ewvu")

@@ -57,6 +57,7 @@ func get_nearest_button(pos: Vector2):
 			max_dist = dist
 	return max_button
 	
+# 모든 버튼 씬에서 지우기 
 func remove_all_button():
 	for i in button_list:
 		i.queue_free()
@@ -65,6 +66,7 @@ func remove_all_button():
 func get_button_center(index):
 	return button_list[index].position + button_size / 2
 	
+# 버튼 선택한 효과 
 func make_button_special(index):
 	for i in range(len(button_list)):
 		if i == index:
@@ -72,6 +74,7 @@ func make_button_special(index):
 		else:
 			button_list[i].modulate = button_color
 
+# 모든 버튼을 특별한 색으로 변경 
 func make_button_special_all():
 	for i in button_list:
 		i.modulate = button_select_color
