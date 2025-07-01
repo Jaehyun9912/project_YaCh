@@ -48,7 +48,6 @@ func load_data(data_path: String) -> Dictionary:
 		printerr(json.get_error_message())
 		return Dictionary()
 	
-	return Dictionary() 
 	
 # 프로젝트의 user 경로에 json 파일을 저장하는 함수
 func save_data(save: Dictionary, data_path: String) -> void:

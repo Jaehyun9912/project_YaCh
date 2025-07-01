@@ -22,9 +22,6 @@ func _ready():
 		locations.append(temp)
 	#print(," : ", position)
 	current_location = locations[0]
-	
-
-func _process(delta):
 	_cursor.position = current_location.position
 	
 
@@ -47,3 +44,4 @@ func move_cursor(direction : int)->void:
 	if next_location != null:
 		current_location = next_location
 	print("Location : ", current_location.location)
+	_cursor.position = current_location.position

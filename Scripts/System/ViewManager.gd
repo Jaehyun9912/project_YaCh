@@ -87,7 +87,7 @@ func _on_size_changed():
 	if current_panel == null:
 		return
 	var panel = current_panel.get_child(0)
-	if panel == null: 
+	if panel == null:
 		return
 	
 	if screen_mode == 0:
