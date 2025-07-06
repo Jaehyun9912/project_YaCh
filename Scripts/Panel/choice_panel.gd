@@ -2,7 +2,8 @@ extends Control
 
 
 func _ready():
-	ViewManager.side_panel.set_budget_panel()
+	#ViewManager.side_panel.set_budget_panel()
+	pass
 
 func _on_button_1_pressed():
 	var skills = PlayerData.skills
@@ -14,6 +15,7 @@ func _on_button_1_pressed():
 	PlayerData.save_player()
 	print(skills)
 	
+
 #디버그용으로 잠시
 func _on_button_2_pressed():
 	#PlayerData.reset_player()
@@ -27,4 +29,4 @@ func _on_button_2_pressed():
 func _on_button_3_pressed():
 	PlayerData.add_new_item("bomb", 1)
 	PlayerData.add_new_item("item:bomb", 2)
-	PlayerData.add_new_item("artifact:pandora_cube", 1)
+	
