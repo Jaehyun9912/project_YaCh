@@ -3,7 +3,7 @@ class_name EnemyManager extends Node
 @onready var battle = $".." as BattleManager
 @onready var timer = $EnemyTimer as Timer
 
-@onready var upper = $"../Interact/UpperPanel" as UpperPanel
+#@onready var upper = $"../Interact/UpperPanel" as UpperPanel
 
 var skill_info : Dictionary
 
@@ -31,7 +31,8 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	var damage = get_damage_by_skill(next_skill, char.attack)
 	
 	# 정보 패널 띄우기
-	upper.set_panel_with_time(next_skill.name, next_skill.description % damage, 2)
+	#upper.set_panel_with_time(next_skill.name, next_skill.description % damage, 2)
+	SidePanel.set_info_panel_with_time(next_skill.name, next_skill.description % damage, 2)
 	
 	var cost = get_cost(next_skill)
 	char.current_point -= cost.get("point", 0)

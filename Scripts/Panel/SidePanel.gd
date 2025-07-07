@@ -61,3 +61,18 @@ func set_info_panel(type_str: String, text_str: String):
 	mode = Mode.INFO
 	type.text = type_str
 	text.text = text_str
+
+# 일정 시간동안만 표시
+func set_info_panel_with_time(Title: String, Info: String, wait: float, end_mode := Mode.HP):
+	visible = true
+	set_info_panel(Title, Info)
+	
+	var timer = $Timer as Timer
+	timer.start(wait)
+	await timer.timeout
+	
+	match end_mode:
+		Mode.HP: set_hp_panel()
+		Mode.BUDGET: set_budget_panel()
+	
+	

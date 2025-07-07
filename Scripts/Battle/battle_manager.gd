@@ -227,7 +227,8 @@ func _battle_end(type: END_TYPE):
 					reward += "\n"
 					# 추가하기
 					PlayerData.add_new_item(item_id, count)
-
+					
+			
 			msg.set_panel("전투에서 승리했다!", "보상", reward)
 		END_TYPE.LOSE:
 			msg.set_panel("전투에서 패배했다...")
@@ -259,4 +260,5 @@ func _check_dead_char():
 func _on_character_died(dead : BattleCharacter):
 	print(dead.name, "is dead")
 	dead_player.append(dead)
+
 #endregion

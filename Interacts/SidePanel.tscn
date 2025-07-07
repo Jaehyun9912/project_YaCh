@@ -41,3 +41,5 @@ label_settings = SubResource("LabelSettings_adfma")
 layout_mode = 2
 text = "100000"
 label_settings = SubResource("LabelSettings_adfma")
+
+[node name="Timer" type="Timer" parent="."]

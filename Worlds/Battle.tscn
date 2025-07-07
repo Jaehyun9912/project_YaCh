@@ -89,6 +89,7 @@ grow_vertical = 2
 size_flags_horizontal = 8
 
 [node name="UpperPanel" parent="Interact" instance=ExtResource("5_71ugh")]
+visible = false
 
 [node name="ResultPanel" parent="Interact" instance=ExtResource("5_270jx")]
 
