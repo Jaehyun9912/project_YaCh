@@ -18,6 +18,7 @@ script = ExtResource("1_njjyf")
 layout_mode = 1
 anchors_preset = 15
 anchor_bottom = 1.0
+color = Color(0.607843, 0.607843, 0.607843, 1)
 
 [node name="TurnPointBar" parent="." instance=ExtResource("3_jg1ea")]
 layout_mode = 1
