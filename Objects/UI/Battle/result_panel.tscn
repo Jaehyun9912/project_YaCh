@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://qauqg0r2xpur"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/result_panel.gd" id="1_evtpr"]
+[ext_resource type="Script" path="res://Scripts/Battle/UI/result_panel.gd" id="1_evtpr"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_oj05c"]
 font_size = 30

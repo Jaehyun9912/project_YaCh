@@ -11,6 +11,8 @@ signal turn_end
 signal use_skill(index, target)
 # 전투 사이클 시작을 알리는 신호
 signal turn_cycle_start
+# 로그 기록하는 신호
+signal add_log(info: String)
 
 # 행동력 포인트
 var total_point = 100
