@@ -11,6 +11,8 @@ signal turn_end
 signal use_skill(index, target)
 # 전투 사이클 시작을 알리는 신호
 signal turn_cycle_start
+# 로그 기록하는 신호
+signal add_log(info: String)
 
 # 행동력 포인트
 var total_point = 100
@@ -227,12 +229,10 @@ func _battle_end(type: END_TYPE):
 					reward += "\n"
 					# 추가하기
 					PlayerData.add_new_item(item_id, count)
-					
 			
 			msg.set_panel("전투에서 승리했다!", "보상", reward)
 		END_TYPE.LOSE:
 			msg.set_panel("전투에서 패배했다...")
-
 #endregion
 
 #region 죽은 캐릭터

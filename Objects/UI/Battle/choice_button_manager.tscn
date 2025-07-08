@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://dxudhlmb10ph1"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/choice_button_manager.gd" id="1_q30dr"]
+[ext_resource type="Script" path="res://Scripts/Battle/UI/choice_button_manager.gd" id="1_q30dr"]
 
 [node name="ChoiceButtonManager" type="Control"]
 layout_mode = 3

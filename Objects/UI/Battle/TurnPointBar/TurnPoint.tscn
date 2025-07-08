@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://5d45yohbdht0"]
 
-[ext_resource type="Script" path="res://Objects/UI/Battle/TurnPointBar/turn_point.gd" id="1_pcay4"]
+[ext_resource type="Script" path="res://Scripts/Battle/UI/TurnPointBar/turn_point.gd" id="1_pcay4"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_0m4oj"]
 font_size = 7

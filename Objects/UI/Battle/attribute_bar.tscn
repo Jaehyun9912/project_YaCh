@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://blyo26b6351jw"]
 
-[ext_resource type="Script" path="res://Scripts/Battle/attribute_bar.gd" id="1_p66x6"]
+[ext_resource type="Script" path="res://Scripts/Battle/UI/attribute_bar.gd" id="1_p66x6"]
 
 [node name="AttributeBar" type="Control"]
 layout_mode = 3

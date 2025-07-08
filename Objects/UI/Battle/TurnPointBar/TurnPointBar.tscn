@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c2gk0n3dyk110"]
 
-[ext_resource type="Script" path="res://Objects/UI/Battle/TurnPointBar/turn_point_bar.gd" id="1_gybc1"]
+[ext_resource type="Script" path="res://Scripts/Battle/UI/TurnPointBar/turn_point_bar.gd" id="1_gybc1"]
 
 [node name="TurnPointBar" type="Control"]
 layout_mode = 3

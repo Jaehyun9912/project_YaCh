@@ -92,6 +92,36 @@ size_flags_horizontal = 8
 visible = false
 
 [node name="ResultPanel" parent="Interact" instance=ExtResource("5_270jx")]
+visible = false
+
+[node name="TopButton" type="ColorRect" parent="Interact"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+
+[node name="TopButtonContainer" type="HBoxContainer" parent="Interact/TopButton"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+
+[node name="Button" type="Button" parent="Interact/TopButton/TopButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button2" type="Button" parent="Interact/TopButton/TopButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button3" type="Button" parent="Interact/TopButton/TopButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Button4" type="Button" parent="Interact/TopButton/TopButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="AttackManager" type="Node" parent="."]
 script = ExtResource("4_3ewvu")
