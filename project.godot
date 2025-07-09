@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="YaCh"
-run/main_scene="res://MainView.tscn"
+run/main_scene="res://Main.tscn"
 config/features=PackedStringArray("4.2", "Mobile")
 config/icon="res://icon.svg"
 
@@ -21,12 +21,14 @@ PlayerData="*res://Scripts/Player.gd"
 ViewManager="*res://Scripts/System/ViewManager.gd"
 DataManager="*res://Scripts/System/data_manager.gd"
 TagManager="*res://Scripts/Tag/TagManager.gd"
-SidePanel="*res://Interacts/SidePanel.tscn"
 
 [display]
 
 window/size/viewport_width=360
 window/size/viewport_height=772
+window/stretch/mode="viewport"
+window/stretch/aspect="keep_height"
+window/handheld/orientation=1
 
 [dotnet]
 
@@ -39,5 +41,7 @@ import/fbx/enabled=false
 [rendering]
 
 renderer/rendering_method="mobile"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
 lights_and_shadows/directional_shadow/soft_shadow_filter_quality=3
 anti_aliasing/quality/msaa_3d=1

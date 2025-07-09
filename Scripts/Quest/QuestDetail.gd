@@ -3,6 +3,8 @@ extends Control
 # 수주, 클리어 관련 버튼 이벤트
 signal option_pressed(quest:Quest, mode: Mode)
 
+signal any_button_pressed()
+
 # 디테일 패널 모드 설정
 enum Mode{
 	RECEIVE, 
@@ -16,8 +18,25 @@ var curMode : Mode
 # 현재 표시중인 퀘스트
 var quest : Quest
 
+func _ready():
+	get_window().size_changed.connect(_on_size_changed)
+	_on_size_changed()
 
-
+func _on_size_changed():
+	var mode = ViewManager.screen_mode
+	print(mode)
+	var description = get_node("QuestDescription") as Control
+	var buttons = get_node("Btns") as Control
+	if mode == 0:
+		description.anchor_right = 0.5
+		description.anchor_bottom = 1
+		buttons.anchor_left = 0.5
+		buttons.anchor_top = 0
+	elif mode == 1:
+		description.anchor_right = 1
+		description.anchor_bottom = 0.5
+		buttons.anchor_left = 0
+		buttons.anchor_top = 0.5
 
 # 해당 퀘스트에 대한 디테일 패널 표시 
 func set_quest(get_quest : Quest, mode : Mode) -> void:
@@ -40,3 +59,6 @@ func set_quest(get_quest : Quest, mode : Mode) -> void:
 # 버튼 선택 시 시그널 발생
 func option_btn_pressed() -> void:
 	option_pressed.emit(quest,curMode)
+
+func button_pressed() -> void:
+	any_button_pressed.emit()

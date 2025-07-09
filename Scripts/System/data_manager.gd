@@ -20,7 +20,7 @@ func get_data(data_path: String) -> Dictionary:
 	# 만약 반환에 실패할 경우 빈 딕셔너리를 반환함.
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
-	print(json.data)
+	#print(json.data)
 	if error == OK:
 		return json.data
 	else:
@@ -48,7 +48,6 @@ func load_data(data_path: String) -> Dictionary:
 		printerr(json.get_error_message())
 		return Dictionary()
 	
-	return Dictionary() 
 	
 # 프로젝트의 user 경로에 json 파일을 저장하는 함수
 func save_data(save: Dictionary, data_path: String) -> void:

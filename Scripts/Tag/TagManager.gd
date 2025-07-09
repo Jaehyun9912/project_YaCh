@@ -5,8 +5,6 @@ extends Node
 var dict : Dictionary
 
 
-
-
 # 노드가 가지고 있는 태그 반환
 func get_tags(node : Node) -> PackedStringArray:
 	if dict.has(node):
@@ -44,10 +42,10 @@ func remove_tag_tree(node : Node, tag : String) -> bool:
 		return false
 	var tags = dict[node] as Dictionary
 	# 해당 태그로 시작하는 하위태그 제거
-	for str in tags.keys():
+	for node_tag in tags.keys():
 		var upper_tag = tag + "."
-		if str.begins_with(upper_tag):
-			_remove_tag(node,str)
+		if node_tag.begins_with(upper_tag):
+			_remove_tag(node,node_tag)
 	# 삭제한 태그의 상위 태그에 카운트 값 감소
 	decrease_tag_tree(node,_get_upper_tag(tag),count)
 	return true
