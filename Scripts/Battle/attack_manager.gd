@@ -50,7 +50,9 @@ func do_attack():
 	else:
 		# 설정된 적 공격 
 		for i in target:
-			battle.enemy_character[i].hp -= apply
+			var enemy = battle.enemy_character[i]
+			enemy.hp -= apply
+			battle.add_attack_log(battle.now_character.name, enemy.name, apply)
 		
 func do_effect():
 	pass

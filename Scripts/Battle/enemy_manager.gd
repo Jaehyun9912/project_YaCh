@@ -15,6 +15,7 @@ func _ready():
 
 # 적의 행동 수행 
 func _on_battle_scene_turn_character_changed(char: BattleCharacter):
+	if char == null: return
 	if char.is_player == true: return
 
 	# 잠시 대기 
@@ -33,6 +34,7 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	# 정보 패널 띄우기
 	#upper.set_panel_with_time(next_skill.name, next_skill.description % damage, 2)
 	SidePanel.set_info_panel_with_time(next_skill.name, next_skill.description % damage, 2)
+	battle.add_attack_log(char.name, "Player", damage)
 	
 	var cost = get_cost(next_skill)
 	char.current_point -= cost.get("point", 0)
@@ -44,6 +46,7 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	#var skill = 
 	
 	battle.turn_end.emit()
+	
 	
 # 적 데이터를 읽고 다음에 수행할 스킬을 반환함 
 func get_next_skill(skills):

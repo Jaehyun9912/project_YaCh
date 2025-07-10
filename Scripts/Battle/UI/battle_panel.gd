@@ -2,10 +2,10 @@ extends Control
 class_name BattlePanel
 
 @onready var action_point = $ActionPoint as Label
-@onready var buttons = get_tree().get_nodes_in_group("skill_buttons")
 @onready var skill_button = $SkillButtonManager as SkillButtonManager
 @onready var turn_point_bar = $TurnPointBar as TurnPointBar
 
+var buttons
 var choicePanel
 
 var manager: BattleManager
@@ -22,6 +22,10 @@ enum Buttons {
 	TALK,
 	QUEST,
 	RUN,
+}
+
+enum Order {
+	OPEN_LOG_PANEL,
 }
 
 # 버튼 신호를 외부와 연결해주는 신호
@@ -43,7 +47,10 @@ func _ready():
 	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
 	manager.turn_cycle_start.connect(_on_turn_cycle_start)
 	manager.add_log.connect($BattleLog.add_log)
+	manager.send_msg_to_panel.connect(_on_recive_msg_from_battle_manager)
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
+	
+	buttons = skill_button.buttons
 	
 	# 버튼에 함수 설정, 플레이어 스킬 맞지 않으면 버튼 비활성화 
 	for i in len(buttons) - 1:
@@ -62,6 +69,10 @@ func _ready():
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 	# 현재 선택된 캐릭터 받아오기
 	current_charcter = new_character
+	
+	if new_character == null:
+		skill_button.set_all_buttons(false)
+		return
 	
 	# 포인트 설정하기 
 	current_charcter.current_point = current_charcter.point
@@ -87,35 +98,43 @@ func _process(_delta):
 
 # 현재 행동력보다 많은 행동력 소모하는 버튼 비활성화
 func _check_skill_is_possible():
+	if current_charcter == null or not current_charcter.is_player:
+		return
+	
 	for i in len(buttons):
 		if i < Buttons.CENTER:
 			buttons[i].disabled = not SkillManager.check_requirement(i, current_charcter.current_point, manager.attrubute_bar)
 		else:
 			return
 
-
+# 스킬 발동을 받아서 전달
 func _on_skill_button_manager_skill_activated(skill, target):
 	skill_actived.emit(skill, target)
 	_check_skill_is_possible()
+	
+func _on_recive_msg_from_battle_manager(msg: Order):
+	match msg:
+		Order.OPEN_LOG_PANEL:
+			$BattleLog.enable_panel()
 
 #region 특수 버튼
 # 해당 버튼들은 특별한 기능을 가질 수 도 있기에 별도의 함수로 구현함
 # 대화 버튼
-func _on_button_talk_button_up():
-	skill_actived.emit(Buttons.TALK, null)
-
-# 퀘스트 버튼 
-func _on_button_quest_button_up():
-	skill_actived.emit(Buttons.QUEST, null)
-
-# 도망가기 버튼
-func _on_button_run_button_up():
-	skill_actived.emit(Buttons.RUN, null)
-
-# 인벤토리 버튼 
-func _on_button_inventoy_button_up():
-	var inven = PlayerData.inventory
-	print(inven)
+#func _on_button_talk_button_up():
+	#skill_actived.emit(Buttons.TALK, null)
+#
+## 퀘스트 버튼 
+#func _on_button_quest_button_up():
+	#skill_actived.emit(Buttons.QUEST, null)
+#
+## 도망가기 버튼
+#func _on_button_run_button_up():
+	#skill_actived.emit(Buttons.RUN, null)
+#
+## 인벤토리 버튼 
+#func _on_button_inventoy_button_up():
+	#var inven = PlayerData.inventory
+	#print(inven)
 #endregion
 
 #region getter

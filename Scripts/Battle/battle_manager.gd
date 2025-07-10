@@ -1,6 +1,7 @@
 extends Node3D
 class_name BattleManager
 
+#region signal
 # 턴 변경을 알리는 신호
 signal turn_character_changed(new_character : BattleCharacter)
 
@@ -13,11 +14,18 @@ signal use_skill(index, target)
 signal turn_cycle_start
 # 로그 기록하는 신호
 signal add_log(info: String)
+# BattlePanel로 메세지 전달하는 신호
+signal send_msg_to_panel(msg: BattlePanel.Order)
+#endregion
+
+#region Var
 
 # 행동력 포인트
 var total_point = 100
 var init_total_point
 var total_point_add
+
+var turn_count := 0
 
 # 가장 적은 포인트를 사용하는 행동 (자동 턴 넘기기 용)
 var min_point_use = 1
@@ -51,16 +59,24 @@ var dead_player: Array[BattleCharacter]
 var map_data : Dictionary
 
 @export var Check = ["enemys"]
+#endregion
 
+#region other funcs
 # 패널 쪽에서 설정 후 종료되면 전투 시작 
 func _ready():
-	$Interact/ResultPanel.check_button_pressed.connect(
-		func(): ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
-	)
+	$Interact/ResultPanel.check_button_pressed.connect(_on_end_button_pressed)
 	await turn_end
 	
 	_battle()
+
+func add_attack_log(attacker: String, target: String, damage):
+	var info = "%s -> %s : 데미지 %s 부여" % [attacker, target, damage]
+	add_log.emit(info)
+func add_turn_end_log():
+	add_log.emit("%s : 턴 종료" % now_character.name)
+#endregion
 	
+#region Main Battle
 # 전투 전 설정
 # 맵 정보 불러오기, 캐릭터 정보 할당하기, 행동력 구해주고 턴 순서에 맞추어 정렬하기
 func _battle_set():
@@ -119,8 +135,10 @@ func _battle():
 	
 	while true:
 		# 한 루프가 돌면 행동력 업데이트 
+		turn_count += 1
 		update_turn_point()
 		turn_cycle_start.emit()
+		add_log.emit("%s 턴 시작" % turn_count)
 		for i in turn_char:
 			now_character = i
 			turn_character_changed.emit(i)
@@ -134,6 +152,8 @@ func _battle():
 				
 			# 턴 행동 종료 대기 
 			await turn_end
+			add_turn_end_log()
+			turn_character_changed.emit(null)
 			if _check_dead_char():
 				return
 						
@@ -142,6 +162,9 @@ func _battle():
 		if total_point < init_total_point * 2:
 			total_point += total_point_add
 
+#endregion
+
+#region Skill func
 # 코스트 제거하기 
 func remove_cost(skill):
 	var cost = skill.get("cost", {})
@@ -179,6 +202,7 @@ func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
 		turn_end.emit()
 			
 	_check_dead_char()
+#endregion
 	
 #region END
 enum END_TYPE {
@@ -233,6 +257,9 @@ func _battle_end(type: END_TYPE):
 			msg.set_panel("전투에서 승리했다!", "보상", reward)
 		END_TYPE.LOSE:
 			msg.set_panel("전투에서 패배했다...")
+
+func _on_end_button_pressed():
+	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
 #endregion
 
 #region 죽은 캐릭터
@@ -241,6 +268,7 @@ func _check_dead_char():
 # 턴 종료 후 사망한 캐릭터 처리
 	while dead_player.size() > 0:
 		var dead = dead_player.pop_back()
+		add_log.emit("%s 사망" % dead.name)
 		
 		if dead == player_character:
 			print("player dead")

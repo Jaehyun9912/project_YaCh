@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://6pfqnfdd6ia8"]
+[gd_scene load_steps=15 format=3 uid="uid://6pfqnfdd6ia8"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
 [ext_resource type="PackedScene" uid="uid://cfalpw5wnu5ff" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Scripts/Battle/attack_manager.gd" id="4_3ewvu"]
 [ext_resource type="PackedScene" uid="uid://cnlummas0oasb" path="res://Objects/UI/UpperPanel.tscn" id="5_71ugh"]
 [ext_resource type="PackedScene" uid="uid://qauqg0r2xpur" path="res://Objects/UI/Battle/result_panel.tscn" id="5_270jx"]
+[ext_resource type="Script" path="res://Scripts/Battle/UI/top_button.gd" id="7_1uodo"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -99,6 +100,7 @@ anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 50.0
 grow_horizontal = 2
+script = ExtResource("7_1uodo")
 
 [node name="TopButtonContainer" type="HBoxContainer" parent="Interact/TopButton"]
 layout_mode = 1
@@ -107,24 +109,33 @@ anchor_right = 1.0
 offset_bottom = 50.0
 grow_horizontal = 2
 
-[node name="Button" type="Button" parent="Interact/TopButton/TopButtonContainer"]
+[node name="BagButton" type="Button" parent="Interact/TopButton/TopButtonContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "가방
+"
 
-[node name="Button2" type="Button" parent="Interact/TopButton/TopButtonContainer"]
+[node name="QuestButton" type="Button" parent="Interact/TopButton/TopButtonContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "퀘스트"
 
-[node name="Button3" type="Button" parent="Interact/TopButton/TopButtonContainer"]
+[node name="LogButton" type="Button" parent="Interact/TopButton/TopButtonContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "기록"
 
-[node name="Button4" type="Button" parent="Interact/TopButton/TopButtonContainer"]
+[node name="RunButton" type="Button" parent="Interact/TopButton/TopButtonContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+text = "도망"
 
 [node name="AttackManager" type="Node" parent="."]
 script = ExtResource("4_3ewvu")
 
 [connection signal="turn_character_changed" from="." to="EnemyManager" method="_on_battle_scene_turn_character_changed"]
 [connection signal="use_skill" from="." to="AttackManager" method="_on_battle_use_skill"]
+[connection signal="pressed" from="Interact/TopButton/TopButtonContainer/BagButton" to="Interact/TopButton" method="_on_bag_button_pressed"]
+[connection signal="pressed" from="Interact/TopButton/TopButtonContainer/QuestButton" to="Interact/TopButton" method="_on_quest_button_pressed"]
+[connection signal="pressed" from="Interact/TopButton/TopButtonContainer/LogButton" to="Interact/TopButton" method="_on_log_button_pressed"]
+[connection signal="pressed" from="Interact/TopButton/TopButtonContainer/RunButton" to="Interact/TopButton" method="_on_run_button_pressed"]

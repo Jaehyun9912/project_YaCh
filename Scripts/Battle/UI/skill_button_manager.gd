@@ -10,7 +10,7 @@ class_name SkillButtonManager extends Control
 @onready var choice_btn_man = $ChoiceButtonManager as ChoiceButtonManager
 # 버튼 사이 라인
 @onready var line = $Line2D as Line2D
-# 상위 오브젝
+# 상위 오브젝트
 var battle_panel: BattlePanel
 
 # 현재 버튼 상태 
@@ -23,6 +23,7 @@ var is_ally: bool
 enum ChoiceMode {NONE, ONE, ALL, SELF}
 var current_choice_mode: ChoiceMode
 var button_cnt := 0
+var before_mouse_pos
 
 @export var cancel_button_size = Vector2(4, 4)
 
@@ -46,8 +47,11 @@ func _input(event):
 	# 누르고 있으면 마우스 위치에 버튼 이미지 놓기 (터치도 같은 방식인지 확인 필요함)
 	if current_button == -1 or not event is InputEventMouseMotion : return
 	
-	var local_event = make_input_local(event)
-	var mouse = local_event.position
+	var mouse = make_input_local(event).position
+	
+	mouse.x = clamp(mouse.x, 0, size.x)
+	mouse.y = clamp(mouse.y, 0, size.y)
+	
 	button_img.position = mouse - button_img.pivot_offset
 	
 	# 취소 범위 밖에 있으면 버튼 선택하게 만들기 
@@ -75,10 +79,10 @@ func _input(event):
 				line.set_point_position(0, mouse)
 				var player_button_pos = cancel_area.position + cancel_button_size / 2
 				line.set_point_position(1, player_button_pos)
-		
+	before_mouse_pos = mouse
 	
 # 스킬 버튼 OnOff 설정 
-func set_all_buttons(OnOff):
+func set_all_buttons(OnOff: bool):
 	for i in buttons:
 		i.disabled = !OnOff
 	
