@@ -10,7 +10,6 @@ func create_button(text : String) -> Button:
 	var button = Button.new()
 	button.text = text
 	button.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	#print(button.size_flags_vertical)
 	btn_container.add_child(button)
 	return button
 

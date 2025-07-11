@@ -10,7 +10,8 @@ var _cursor:
 
 var current_location : MapLocation
 var locations : Array[MapLocation]
-# Called when the node enters the scene tree for the first time.
+
+
 func _ready():
 	var map_name = PlayerData.cur_location
 	print(PlayerData.cur_location, map_name)
@@ -21,7 +22,6 @@ func _ready():
 		add_child(obj)
 		obj.set_location(i)
 		locations.append(temp)
-	#print(," : ", position)
 	current_location = locations[0]
 	_cursor.position = current_location.position
 	

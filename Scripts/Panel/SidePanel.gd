@@ -21,7 +21,6 @@ var _x_length : float
 func _ready():
 	get_window().size_changed.connect(_on_size_changed)
 	_on_size_changed()
-	#print("Pos : ",panel.position,"/Size : ",panel.size)
 	
 
 func _on_size_changed():
