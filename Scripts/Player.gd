@@ -55,6 +55,17 @@ var artifact:
 		data["artifacts"] = value
 		
 # data 저장 
+
+var cur_location:
+	get:
+		if data.has("location"):
+			return data["location"]
+		else:
+			data["location"] = "TestMap"
+			return data["location"]
+	set(value):
+		data["location"] = value
+
 func save_player(): 
 	DataManager.save_data(data, "player")
 

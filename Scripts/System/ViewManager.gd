@@ -3,6 +3,8 @@ extends Node
 const WORLD_PATH = "res://Worlds/"
 const PANEL_PATH = "res://Interacts/"
 
+#signal ratio_changed(value)
+
 var current_scene: Node = null
 var world_instance: Node3D = null
 var current_panel: CanvasLayer = null
@@ -14,18 +16,12 @@ var cur_meta_data: Dictionary
 var old_map: String
 var old_panel: String
 
-"""
-# 필요 없는 함수
-func _ready():
-	#get_window().size_changed.connect(_on_size_changed)
-	#_on_size_changed()
-	get_view()
-	var panels = current_panel.get_children()
-	for i in panels:
-		print(i.name)
-		if !panel_stack.has(i):
-			panel_stack.append(i)
-"""
+var panel_ratio:
+	set(value):
+		panel_ratio = value
+		#ratio_changed.emit(value)
+		update_panels_size()
+		
 
 
 
@@ -136,14 +132,14 @@ func erase_panel(panel):
 func _set_screen_size(panel:Control,screen_location:SCREEN) -> void:
 	if screen_location == SCREEN.BOTTOM:
 		panel.anchor_left = 0
-		panel.anchor_top = 0.5
+		panel.anchor_top = panel_ratio
 		panel.anchor_right = 1
 		panel.anchor_bottom = 1
 	elif screen_location == SCREEN.TOP:
 		panel.anchor_left = 0
 		panel.anchor_top = 0
 		panel.anchor_right = 1
-		panel.anchor_bottom = 0.5
+		panel.anchor_bottom = panel_ratio
 	elif screen_location == SCREEN.FULL:
 		panel.anchor_left = 0
 		panel.anchor_top = 0
@@ -151,6 +147,11 @@ func _set_screen_size(panel:Control,screen_location:SCREEN) -> void:
 		panel.anchor_bottom = 1
 
 
+func update_panels_size():
+	get_view()
+	var _panel = current_panel.get_child(0)
+	_set_screen_size(_panel,SCREEN.BOTTOM)
+		
 #endregion
 
 # 컷신 보여주기(이미지 경로는 나중에 폴더 만들고 경로 조정할 예정)

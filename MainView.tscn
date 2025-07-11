@@ -1,35 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://do7bbpvoabqdh"]
+[gd_scene load_steps=5 format=3 uid="uid://do7bbpvoabqdh"]
 
-[ext_resource type="PackedScene" uid="uid://bpgurardg7lfa" path="res://Worlds/TestCountry.tscn" id="1_mif2s"]
-[ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://Interacts/ChoicePanel.tscn" id="3_5ejod"]
-[ext_resource type="PackedScene" uid="uid://dde3ek8splias" path="res://Interacts/SidePanel.tscn" id="3_ux45a"]
+[ext_resource type="PackedScene" uid="uid://2qnlhnafs2lx" path="res://Worlds/Map.tscn" id="1_e4bd6"]
+[ext_resource type="PackedScene" uid="uid://ujhj8734sgr6" path="res://Interacts/MapPanel.tscn" id="3_nmvnj"]
+[ext_resource type="PackedScene" uid="uid://dde3ek8splias" path="res://Interacts/UI/SidePanel.tscn" id="3_ux45a"]
+[ext_resource type="PackedScene" uid="uid://bymetbjca5yjf" path="res://Interacts/UI/Option.tscn" id="4_c1stb"]
 
 [node name="Node" type="Node"]
 
 [node name="World" type="Node3D" parent="."]
 
-[node name="TestCountry" parent="World" instance=ExtResource("1_mif2s")]
+[node name="Map" parent="World" instance=ExtResource("1_e4bd6")]
 
 [node name="Interact" type="CanvasLayer" parent="."]
 layer = 0
 
-[node name="ChoicePanel" parent="Interact" instance=ExtResource("3_5ejod")]
+[node name="MapPanel" parent="Interact" instance=ExtResource("3_nmvnj")]
 
 [node name="SidePanelLayer" type="CanvasLayer" parent="."]
 
 [node name="SidePanel" parent="SidePanelLayer" instance=ExtResource("3_ux45a")]
 
-[node name="MenuButton" type="MenuButton" parent="SidePanelLayer"]
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -59.0
-offset_top = 10.0
-offset_right = -10.0
-offset_bottom = 55.0
-grow_horizontal = 0
-text = "옵션"
-item_count = 1
-popup/item_0/text = "1"
-popup/item_0/checkable = 1
-popup/item_0/id = 0
+[node name="Option" parent="SidePanelLayer" instance=ExtResource("4_c1stb")]
