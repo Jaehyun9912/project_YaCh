@@ -35,7 +35,6 @@ offset_bottom = 3.05176e-05
 grow_horizontal = 2
 color = Color(0.298039, 0.298039, 0.298039, 1)
 metadata/_edit_use_anchors_ = true
-metadata/_edit_group_ = true
 
 [node name="Title" type="Label" parent="ColorRect"]
 visible = false

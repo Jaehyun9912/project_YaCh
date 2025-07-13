@@ -34,7 +34,7 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	# 정보 패널 띄우기
 	#upper.set_panel_with_time(next_skill.name, next_skill.description % damage, 2)
 	SidePanel.set_info_panel_with_time(next_skill.name, next_skill.description % damage, 2)
-	battle.add_attack_log(char.name, "Player", damage)
+	battle.add_attack_log(char.name, "Player", damage, battle.player_character.hp)
 	
 	var cost = get_cost(next_skill)
 	char.current_point -= cost.get("point", 0)

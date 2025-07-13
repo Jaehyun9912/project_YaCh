@@ -14,6 +14,9 @@ func set_panel(title_text, subtitle_text = "", info_text = ""):
 		set_text($ColorRect/Title, title_text)
 		set_text($ColorRect/SubTitle, subtitle_text)
 		set_text($ColorRect/Info, info_text)
+		
+func close_panel():
+	visible = false
 	
 
 func set_text(panel, txt):

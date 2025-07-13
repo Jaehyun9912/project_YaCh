@@ -32,6 +32,7 @@ var min_point_use = 1
 # 매니저 
 @onready var enemy_manager = $EnemyManager as EnemyManager
 @onready var attrubute_bar = $Interact/AttributeBar
+@onready var waitTimer = $WaitTimer as Timer
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
@@ -56,7 +57,11 @@ var turn_cost:
 # 죽은 캐릭터 행동 이후 처리용 
 var dead_player: Array[BattleCharacter]
 
+# 맵의 JSON 데이터
 var map_data : Dictionary
+
+# 전투 종료 여부
+var is_battle_end := false
 
 @export var Check = ["enemys"]
 #endregion
@@ -64,13 +69,17 @@ var map_data : Dictionary
 #region other funcs
 # 패널 쪽에서 설정 후 종료되면 전투 시작 
 func _ready():
-	$Interact/ResultPanel.check_button_pressed.connect(_on_end_button_pressed)
+
+	var panel = $Interact/ResultPanel as ResultPanel
+	panel.set_panel("전투 개시!")
 	await turn_end
-	
+	await panel.check_button_pressed
+
+	_battle_set()
 	_battle()
 
-func add_attack_log(attacker: String, target: String, damage):
-	var info = "%s -> %s : 데미지 %s 부여" % [attacker, target, damage]
+func add_attack_log(attacker, target, damage, before_hp):
+	var info = "%s -> %s : 데미지 %s 부여\n%s 체력: %s -> %s" % [attacker, target, damage, target, before_hp, before_hp - damage]
 	add_log.emit(info)
 func add_turn_end_log():
 	add_log.emit("%s : 턴 종료" % now_character.name)
@@ -131,14 +140,16 @@ func update_turn_point():
 
 # 전투를 관리하는 함수 (await 이용) 
 func _battle():
-	_battle_set()
-	
 	while true:
 		# 한 루프가 돌면 행동력 업데이트 
 		turn_count += 1
 		update_turn_point()
 		turn_cycle_start.emit()
 		add_log.emit("%s 턴 시작" % turn_count)
+		
+		# 매니저 쪽에서 turn end 발동 대기
+		await turn_end
+		
 		for i in turn_char:
 			now_character = i
 			turn_character_changed.emit(i)
@@ -155,6 +166,8 @@ func _battle():
 			add_turn_end_log()
 			turn_character_changed.emit(null)
 			if _check_dead_char():
+				return
+			if is_battle_end:
 				return
 						
 			print("turn end")
@@ -214,6 +227,7 @@ enum END_TYPE {
 # 들어온 타입에 따라 전투 종료 
 func _battle_end(type: END_TYPE):
 	# 도망, 적 전부 처치 전투 종료 구현하기 
+	is_battle_end = true
 	
 	# 모든 버튼 비활성화 
 	ViewManager.current_panel.get_node("BattlePanel").end()
@@ -259,7 +273,10 @@ func _battle_end(type: END_TYPE):
 			msg.set_panel("전투에서 패배했다...")
 
 func _on_end_button_pressed():
-	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
+	if is_battle_end:
+		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
+	else:
+		$Interact/ResultPanel.close_panel()
 #endregion
 
 #region 죽은 캐릭터

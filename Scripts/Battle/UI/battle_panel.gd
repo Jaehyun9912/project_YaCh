@@ -58,10 +58,8 @@ func _ready():
 		btn.disabled = true
 		var skill = SkillManager.get_player_skill(i)
 		if skill == null:
-			btn.disabled = true
 			btn.lock_disable = true
 		
-	turn_point_bar.set_information(manager.turn_char)
 	manager.turn_end.emit()
 
 
@@ -140,7 +138,6 @@ func _on_recive_msg_from_battle_manager(msg: Order):
 #region getter
 func get_all_enemy() -> Array[BattleCharacter]:
 	return manager.enemy_character
-	
 func get_all_ally() -> Array[BattleCharacter]:
 	return manager.ally_character
 #endreigon
@@ -155,15 +152,23 @@ func _on_skill_button_manager_target_changed(target, isally):
 		chars = get_all_ally()
 	else:
 		chars = get_all_enemy()
-	
+
 	for i in range(len(chars)):
 		if i == target:
 			chars[i].set_hp_outline_red()
 		else:
 			chars[i].set_hp_outline_default()
-	
+
 # 턴 사이클 한바퀴 시작
 func _on_turn_cycle_start():
-	turn_point_bar.set_point(manager.turn_char, manager.total_point)
+	if manager.turn_count == 1:
+		turn_point_bar.set_information(manager.turn_char)
+		turn_point_bar.first_appear_anim()
+	else:
+		turn_point_bar.set_point(manager.turn_char, manager.total_point)
+	
+	await turn_point_bar.end_set_point
+	manager.turn_end.emit()
+
 
 

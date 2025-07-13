@@ -1,0 +1,43 @@
+[gd_scene load_steps=2 format=3 uid="uid://iuv285lx8exl"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/UI/top_button.gd" id="1_g52kp"]
+
+[node name="TopButton" type="ColorRect"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+script = ExtResource("1_g52kp")
+
+[node name="TopButtonContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 50.0
+grow_horizontal = 2
+
+[node name="BagButton" type="Button" parent="TopButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "가방
+"
+
+[node name="QuestButton" type="Button" parent="TopButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "퀘스트"
+
+[node name="LogButton" type="Button" parent="TopButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "기록"
+
+[node name="RunButton" type="Button" parent="TopButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "도망"
+
+[connection signal="pressed" from="TopButtonContainer/BagButton" to="." method="_on_bag_button_pressed"]
+[connection signal="pressed" from="TopButtonContainer/QuestButton" to="." method="_on_quest_button_pressed"]
+[connection signal="pressed" from="TopButtonContainer/LogButton" to="." method="_on_log_button_pressed"]
+[connection signal="pressed" from="TopButtonContainer/RunButton" to="." method="_on_run_button_pressed"]
