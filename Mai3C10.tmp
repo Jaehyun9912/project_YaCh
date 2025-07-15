@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://do7bbpvoabqdh"]
+
+[ext_resource type="PackedScene" uid="uid://bpgurardg7lfa" path="res://Worlds/TestCountry.tscn" id="2_mrgdm"]
+[ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://Interacts/ChoicePanel.tscn" id="3_5ejod"]
+
+[node name="Node" type="Node"]
+
+[node name="World" type="Node3D" parent="."]
+
+[node name="TestCountry" parent="World" instance=ExtResource("2_mrgdm")]
+
+[node name="Interact" type="CanvasLayer" parent="."]
+layer = 0
+
+[node name="ChoicePanel" parent="Interact" instance=ExtResource("3_5ejod")]

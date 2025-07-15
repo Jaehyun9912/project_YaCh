@@ -20,6 +20,7 @@ cache/0/16/0/underline_position = 1.60938
 cache/0/16/0/underline_thickness = 0.796875
 cache/0/16/0/scale = 1.0
 cache/0/16/0/textures/0/offsets = PackedInt32Array(12, 0, 244, 4, 256, 4, 0, 13, 251, 17, 5, 16, 256, 33, 0, 18, 254, 51, 2, 19, 256, 70, 0, 20, 255, 90, 1, 16, 252, 106, 4, 17, 255, 123, 1, 16, 133, 139, 123, 16)
+
 cache/0/16/0/textures/0/image = SubResource("Image_qqee6")
 cache/0/16/0/glyphs/3/advance = Vector2(4.15625, 16.0938)
 cache/0/16/0/glyphs/3/offset = Vector2(-1, -1)

@@ -1,0 +1,35 @@
+{
+	"Points":[
+		{
+			"Location" : "World",
+			"xPos" : 200,
+			"yPos" : 122,
+			"Down" : "TestCountry2",
+			"Left" : "World1",
+		},
+		{
+			"Location" : "TestCountry",
+			"xPos" : 100,
+			"yPos" : 122,
+			"Right" : "World1",
+			"Down" : "TestCountry2",
+		},
+		{
+			"Location" : "World1",
+			"xPos" : 150,
+			"yPos" : 122,
+			"Right" : "World",
+			"Down" : "TestCountry2",
+			"Left" : "TestCountry"
+		},
+		{
+			"Location" : "TestCountry2",
+			"xPos" : 100,
+			"yPos" : 200,
+			"Up" : "TestCountry",
+			"Right" : "World"
+			
+		}
+	]
+	
+}

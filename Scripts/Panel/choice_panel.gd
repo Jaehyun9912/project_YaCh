@@ -1,5 +1,10 @@
 extends Control
 
+
+func _ready():
+	#ViewManager.side_panel.set_budget_panel()
+	pass
+
 func _on_button_1_pressed():
 	var skills = PlayerData.skills
 	skills[0] = "base_attack"
@@ -10,11 +15,12 @@ func _on_button_1_pressed():
 	PlayerData.save_player()
 	print(skills)
 	
+
 #디버그용으로 잠시
 func _on_button_2_pressed():
 	#PlayerData.reset_player()
 	#print("리셋됨")
-	var panel = ViewManager.push_panel("QuestPanel")
+	var panel = ViewManager.push_panel("QuestPanel",ViewManager.SCREEN.BOTTOM)
 	panel.set_quest_buttons(PlayerData.quest_list)
 	print("수주중인 퀘스트 보기")
 	
@@ -23,4 +29,4 @@ func _on_button_2_pressed():
 func _on_button_3_pressed():
 	PlayerData.add_new_item("bomb", 1)
 	PlayerData.add_new_item("item:bomb", 2)
-	PlayerData.add_new_item("artifact:pandora_cube", 1)
+	

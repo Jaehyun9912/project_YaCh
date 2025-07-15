@@ -187,17 +187,17 @@ func clear_quest(quest: Quest):
 func stat_compare(condition : String) -> bool:
 	var comparer = [">" , "<", "="]
 	for i in comparer:
-		var str = condition.split(i,true,2)
-		if str.size()==2:
-			print(data[str[0]]," ",i," ",str[1])
+		var partial_tag = condition.split(i,true,2)
+		if partial_tag.size()==2:
+			print(data[partial_tag[0]]," ",i," ",partial_tag[1])
 			# 태그 보유 여부 확인
-			if !data.has(str[0]):
+			if !data.has(partial_tag[0]):
 				return false
-			if i == ">" && data[str[0]] > str[1].to_int():
+			if i == ">" && data[partial_tag[0]] > partial_tag[1].to_int():
 				return true
-			elif i == "<" && data[str[0]] < str[1].to_int():
+			elif i == "<" && data[partial_tag[0]] < partial_tag[1].to_int():
 				return true
-			elif i == "=" && data[str[0]] == str[1].to_int():
+			elif i == "=" && data[partial_tag[0]] == partial_tag[1].to_int():
 				return true
 			else:
 				return false
@@ -207,21 +207,22 @@ func stat_compare(condition : String) -> bool:
 # 인벤토리 아이템 개수 비교
 func item_compare(condition : String) -> bool:
 	var comparer = [">" , "<", "="]
+	var item_count = 0
 	for i in comparer:
-		var str = condition.split(i,true,2)
-		if str.size()==2:
+		var partial_tag = condition.split(i,true,2)
+		if partial_tag.size()==2:
 			# 아이템이 인벤토리에 얼마나 있는지 확인
-			var item_count = get_item_count(str[0])
-			print(str[0],".count : ",item_count)
-			if i == ">" && item_count > str[1].to_int():
+			item_count = get_item_count(partial_tag[0])
+			print(partial_tag[0],".count : ",item_count)
+			if i == ">" && item_count > partial_tag[1].to_int():
 				return true
-			elif i == "<" && item_count < str[1].to_int():
+			elif i == "<" && item_count < partial_tag[1].to_int():
 				return true
-			elif i == "=" && item_count == str[1].to_int():
+			elif i == "=" && item_count == partial_tag[1].to_int():
 				return true
 			else:
 				return false
-	var item_count = get_item_count(condition)
+	item_count = get_item_count(condition)
 	if item_count>0:
 		return true
 	return false

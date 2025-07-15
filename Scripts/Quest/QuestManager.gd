@@ -8,7 +8,10 @@ const PROCESS_TREE = "Quest.process."
 const CLEAR_TREE = "Quest.clear."
 
 # 해당 이름 기준으로 json파일 로드
-var npc_name : String
+var _npc_name : String
+var manager_name:
+	get:
+		return _npc_name
 
 # NPC가 제공하는 퀘스트 리스트
 var quest_list : Array[Quest]
@@ -20,8 +23,8 @@ var quest_queue : Array[Quest]
 
 
 # 퀘스트 매니저 생성자
-func _init(name : String):
-	npc_name = name
+func _init(npc_name : String):
+	_npc_name = npc_name
 	_import_quest()
 	enqueue_quest()
 
@@ -68,9 +71,9 @@ func receive_quest(quest : Quest) -> bool:
 # 퀘스트 클리어
 func clear_quest(quest: Quest) -> bool:
 	# 클리어 가능 여부 확인
-	if !quest.is_clearable(npc_name):
-		return false		
+	if !quest.is_clearable(_npc_name):
 		printerr("퀘스트 클리어 불가!")
+		return false		
 	# 수주중 태그 삭제 후 클리어 태그 부여
 	TagManager.remove_tag_tree(self,PROCESS_TREE+quest.id)
 	TagManager.add_tag_tree(self,CLEAR_TREE+quest.id)
@@ -96,23 +99,34 @@ func submit_item(quest : Quest):
 		PlayerData.add_new_item(i.id,-i.count)
 
 
-# json에서 npc_name의 퀘스트 로드
+# json에서 _npc_name의 퀘스트 로드
 func _import_quest() -> void:
 	quest_list.clear()
-	var data = DataManager.get_data("Quest/"+npc_name)
+	var data = DataManager.get_data("Quest/"+_npc_name)
 	#print(data)
-	for datum in data[npc_name]:
-		var quest = Quest.new(datum)
-		quest_list.append(quest)
-		# 플레이어에 태그(process,clear)있는지 확인 후 맞게 조정
-		var tag = TagManager.find_tag(PlayerData,quest.id) as String
-		var count = TagManager.get_tag_count(PlayerData,tag)
-		if tag == "":
-			TagManager.add_tag_tree(self,UNACCEPT_TREE+quest.id)
-		elif tag.begins_with("Quest.process"):
-			TagManager.add_tag_tree(self,PROCESS_TREE+quest.id)
-		elif tag.begins_with("Quest.clear"):
-			TagManager.add_tag_tree(self,CLEAR_TREE+quest.id,count)
-			TagManager.add_tag_tree(self,UNACCEPT_TREE+quest.id)
-
-
+	
+	# 지역 상관없이 수주가능한 퀘스트 생성
+	for datum in data["All"]:
+		_create_quest_instance(datum)
+	
+	# 특수 지역에서만 받을 수 있는 퀘스트 생성
+	var location_quest = ViewManager.cur_meta_data["address"]
+	if data.has(location_quest):
+		for datum in data[location_quest]:
+			_create_quest_instance(datum)
+	
+	
+# 퀘스트 인스턴스 생성하기
+func _create_quest_instance(datum : Dictionary):
+	var quest = Quest.new(datum)
+	quest_list.append(quest)
+	# 플레이어에 태그(process,clear)있는지 확인 후 맞게 조정
+	var tag = TagManager.find_tag(PlayerData,quest.id) as String
+	var count = TagManager.get_tag_count(PlayerData,tag)
+	if tag == "":
+		TagManager.add_tag_tree(self,UNACCEPT_TREE+quest.id)
+	elif tag.begins_with("Quest.process"):
+		TagManager.add_tag_tree(self,PROCESS_TREE+quest.id)
+	elif tag.begins_with("Quest.clear"):
+		TagManager.add_tag_tree(self,CLEAR_TREE+quest.id,count)
+		TagManager.add_tag_tree(self,UNACCEPT_TREE+quest.id)

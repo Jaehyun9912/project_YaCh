@@ -9,44 +9,65 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_8k6ql")
 
 [node name="QuestDescription" type="ColorRect" parent="."]
-layout_mode = 0
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.5
 offset_left = 30.0
 offset_top = 30.0
-offset_right = 330.0
-offset_bottom = 330.0
+offset_right = -30.0
+offset_bottom = -56.0
 color = Color(0.611765, 0.611765, 0.611765, 1)
 
 [node name="Label" type="Label" parent="QuestDescription"]
-layout_mode = 0
-offset_left = 30.0
-offset_top = 30.0
-offset_right = 137.0
-offset_bottom = 53.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -255.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "제목 : 퀘스트 1"
 
 [node name="RichTextLabel" type="RichTextLabel" parent="QuestDescription"]
-layout_mode = 0
-offset_left = 23.0
-offset_top = 90.0
-offset_right = 252.0
-offset_bottom = 262.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 50.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "밥먹기
 자기
 운동하기"
 
 [node name="Btns" type="ColorRect" parent="."]
-layout_mode = 0
-offset_top = 410.0
-offset_right = 359.0
-offset_bottom = 772.0
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Btns"]
-layout_mode = 0
-offset_right = 360.0
-offset_bottom = 360.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="OptionPanel" type="MarginContainer" parent="Btns/VBoxContainer"]
 visible = false
@@ -73,6 +94,6 @@ theme_override_constants/margin_bottom = 10
 layout_mode = 2
 text = "닫기"
 
-[connection signal="pressed" from="Btns/VBoxContainer/OptionPanel/OptionBtn" to="." method="hide"]
 [connection signal="pressed" from="Btns/VBoxContainer/OptionPanel/OptionBtn" to="." method="option_btn_pressed"]
-[connection signal="pressed" from="Btns/VBoxContainer/MarginContainer/Button" to="." method="hide"]
+[connection signal="pressed" from="Btns/VBoxContainer/OptionPanel/OptionBtn" to="." method="button_pressed"]
+[connection signal="pressed" from="Btns/VBoxContainer/MarginContainer/Button" to="." method="button_pressed"]

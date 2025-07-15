@@ -90,7 +90,7 @@ func add_turn_end_log():
 # 맵 정보 불러오기, 캐릭터 정보 할당하기, 행동력 구해주고 턴 순서에 맞추어 정렬하기
 func _battle_set():
 	# 맵 정보 불러오기
-	var map_name = "World/" + ViewManager.now_map_name
+	var map_name = "World/" + ViewManager.cur_meta_data["World"]
 	map_data = DataManager.get_data(map_name)
 	
 	# 필수 정보 확인하기 
