@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bpgurardg7lfa" path="res://Worlds/TestCountry.tscn" id="1_mif2s"]
 [ext_resource type="PackedScene" uid="uid://rabd1cpa64l1" path="res://Interacts/ChoicePanel.tscn" id="3_5ejod"]
-[ext_resource type="PackedScene" uid="uid://dde3ek8splias" path="res://Interacts/SidePanel.tscn" id="3_ux45a"]
+[ext_resource type="PackedScene" uid="uid://bg4hkcksoc7en" path="res://Interacts/SidePanel.tscn" id="3_ux45a"]
 
 [node name="Node" type="Node"]
 

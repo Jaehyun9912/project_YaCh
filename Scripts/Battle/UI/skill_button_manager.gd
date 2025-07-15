@@ -108,7 +108,7 @@ func on_skillbutton_down(btn, index):
 	tween.tween_property(cancel_area, "scale", cancel_button_size, 0.1)
 	
 	# 사이드 패널에 정보 띄우기 
-	SidePanel.set_info_panel(skill.get("name", ""), skill.get("description", ""))
+	ViewManager.side_panel.set_info_panel(skill.get("name", ""), skill.get("description", ""))
 	
 	# 스킬 정보에 따라 선택 버튼 생성
 	var skill_target = SkillManager.get_target(index)
@@ -185,7 +185,7 @@ func on_skillbutton_up():
 	cancel_area.scale = Vector2(1, 1)
 	choice_btn_man.remove_all_button()
 	
-	SidePanel.set_hp_panel()
+	ViewManager.side_panel.set_hp_panel()
 		
 	current_button = -1
 	is_on_cancel_area = false;

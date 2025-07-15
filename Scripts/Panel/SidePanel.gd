@@ -1,7 +1,5 @@
 extends Control
 
-
-
 # 패널 정보 모드
 enum Mode{
 	HP,
