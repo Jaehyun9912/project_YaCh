@@ -10,9 +10,6 @@ func get_element(id):
 	else:
 		return 0
 
-# (임시) 속성의 색을 정해주는 사전 
-@export var attribute_color : Dictionary
-
 var max_value : float
 var total_value : float
 	
@@ -56,6 +53,7 @@ func add_value(name : String, amount : float):
 			
 	update_value()	
 
+# 속성 지우기
 func remove_value(name : String, amount : float):
 	add_value(name, -amount)
 
@@ -72,7 +70,7 @@ func add_new_bar(name : String, amount : float):
 	# ColorRect를 생성해서 설정.
 	$VBoxContainer.add_child(newBar)
 	#newBar.color = attribute_color[name]
-	var new_color = $AttributeInfomation.get_attribute_color(name)
+	var new_color = AttributeInfomation.get_attribute_color(name)
 	if new_color == null:
 		printerr("속성 이름 잘못됨!")
 		return

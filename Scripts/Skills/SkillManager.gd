@@ -1,19 +1,20 @@
 extends Node
-class_name SkillManager
 
-@onready var manager := $".."
-@onready var attribute := $"../Interact/AttributeBar"
+# 플레이어의 스킬을 관리함
+# 적의 스킬은 EnemyManager에서 관리함 
 
 var skills
 var player_skill
 
 func _ready():
-	skills = DataManager.get_data("skill_info")
+	skills = DataManager.get_data("Skill/skill_info")
 	player_skill = PlayerData.skills
 	
 # 플레이어의 스킬 얻어오기 
 func get_player_skill(index: int):
-	return get_skill(player_skill[index])
+	if 0 <= index and index < len(player_skill):
+		return get_skill(player_skill[index])
+	return null
 
 # 들어온 ID에 해당하는 스킬의 정보가 담긴 딕셔너리 반환 
 func get_skill(id : String):
@@ -23,8 +24,8 @@ func get_skill(id : String):
 		printerr("잘못된 스킬 ID! : " + id)
 		return null
 
-# 플레이어의 스킬이 사용 가능한지 확인하기 (원소는 알아서 가져옴)  
-func check_requirement(player_skill_index: int, current_point: int):
+# 플레이어의 스킬이 사용 가능한지 확인하기
+func check_requirement(player_skill_index: int, current_point: int, attribute_bar):
 	var skill = get_player_skill(player_skill_index)
 	
 	# cost 값이 숫자이면 Dictionary로 변환
@@ -58,7 +59,7 @@ func check_requirement(player_skill_index: int, current_point: int):
 		
 		# 요구 속성치를 가져옴
 		for type in required_element:
-			var player_amount = attribute.get_element(type)
+			var player_amount = attribute_bar.get_element(type)
 			var amount = required_element[type]
 			
 			# 만약 현재 필드 속성치보다 요구치가 높으면 실패 
@@ -66,39 +67,30 @@ func check_requirement(player_skill_index: int, current_point: int):
 				return false
 	
 	return true  # 모든 조건 충족
-	
-# 코스트 제거하기 
-func remove_cost(player_skill_index: int):
-	var skill = get_player_skill(player_skill_index)
-	var cost = skill.get("cost", {})
-	
-	if not cost is Dictionary:
-		manager.turn_cost -= cost
-		return
-		
-	manager.turn_cost -= cost.get("point", 0)
-	if "element" in cost:
-		var element = cost.get("element", {})
-		for e in element:
-			attribute.remove_value(e, element[e])
 			
-# 스킬의 target 정볼르 얻어오는 함수
+# 스킬의 target 정보를 얻어오는 함수
 func get_target(player_skill_index: int):
 	var skill = get_player_skill(player_skill_index)
 	var type = skill.get("type", "")
-	var target = skill.get("target", {})
+	var target = skill.get("target", null)
+	
+	if target == null:
+		printerr("Target is not exist")
+		return null
 	
 	match type:
 		"attack":
-			if target is float:
-				return {"team": false, "count": target}
-			printerr("Wrong target format in attack : ", target)
+			match target:
+				"one", "all", "self": return target
+				_:
+					printerr("target이 잘못 설정되었습니다. 기본값 one을 반환합니다.")
+					return "one"
 		"effect":
-			if target == "self":
+			if target is String and target == "self":
 				return target
 			elif target is Dictionary:
-				if not "count" in target: target["count"] = 0
 				if not "team" in target: target["team"] = false
+				if not "is_all" in target: target["is_all"] = false
 				return target
 		"summon":
 			printerr("Summon Target is WIP")

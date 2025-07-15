@@ -1,6 +1,7 @@
 extends Node3D
 class_name BattleManager
 
+#region signal
 # 턴 변경을 알리는 신호
 signal turn_character_changed(new_character : BattleCharacter)
 
@@ -9,16 +10,29 @@ signal turn_end
 
 # 스킬을 처리해줄 함수를 호출하는 신호 
 signal use_skill(index, target)
+# 전투 사이클 시작을 알리는 신호
+signal turn_cycle_start
+# 로그 기록하는 신호
+signal add_log(info: String)
+# BattlePanel로 메세지 전달하는 신호
+signal send_msg_to_panel(msg: BattlePanel.Order)
+#endregion
 
-# 행동력 포인트 (나중에 변수로 변경해도 무방)
-const BASE_POINT = 50
-const ADDITIONAL_POINT = 50
+#region Var
+
+# 행동력 포인트
+var total_point = 100
+var init_total_point
+var total_point_add
+
+var turn_count := 0
 
 # 가장 적은 포인트를 사용하는 행동 (자동 턴 넘기기 용)
 var min_point_use = 1
-# 턴 대기 타이머
-@onready var enemy_timer = $EnemyTimer as Timer
-@onready var skill_manager = $SkillManager as SkillManager
+# 매니저 
+@onready var enemy_manager = $EnemyManager as EnemyManager
+@onready var attrubute_bar = $Interact/AttributeBar
+@onready var waitTimer = $WaitTimer as Timer
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
@@ -26,6 +40,7 @@ var player_character : BattleCharacter
 var ally_character : Array[BattleCharacter]
 var enemy_character : Array[BattleCharacter]
 
+# 각 그룹의 수 
 var enemy_count: 
 	get: return len(enemy_character)
 var ally_count: 
@@ -42,20 +57,38 @@ var turn_cost:
 # 죽은 캐릭터 행동 이후 처리용 
 var dead_player: Array[BattleCharacter]
 
+# 맵의 JSON 데이터
 var map_data : Dictionary
 
+# 전투 종료 여부
+var is_battle_end := false
 
-# Called when the node enters the scene tree for the first time.
+@export var Check = ["enemys"]
+#endregion
+
+#region other funcs
+# 패널 쪽에서 설정 후 종료되면 전투 시작 
 func _ready():
+
+	var panel = $Interact/ResultPanel as ResultPanel
+	panel.set_panel("전투 개시!")
 	await turn_end
-	
+	await panel.check_button_pressed
+
+	_battle_set()
 	_battle()
+
+func add_attack_log(attacker, target, damage, before_hp):
+	var info = "%s -> %s : 데미지 %s 부여\n%s 체력: %s -> %s" % [attacker, target, damage, target, before_hp, before_hp - damage]
+	add_log.emit(info)
+func add_turn_end_log():
+	add_log.emit("%s : 턴 종료" % now_character.name)
+#endregion
 	
+#region Main Battle
 # 전투 전 설정
 # 맵 정보 불러오기, 캐릭터 정보 할당하기, 행동력 구해주고 턴 순서에 맞추어 정렬하기
 func _battle_set():
-	var total := 0
-	
 	# 맵 정보 불러오기
 	var map_name = "World/" + ViewManager.cur_meta_data["World"]
 	map_data = DataManager.get_data(map_name)
@@ -64,43 +97,59 @@ func _battle_set():
 	if map_data.size() == 0:
 		printerr("No MapData!")
 		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
-	const CHECK = ["enemys", "attribute"]
-	for i in CHECK:
+	
+	for i in Check:
 		if map_data.has(i) == false:
 			printerr("No " + i)
 			ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
 			return
 	
 	# 속성 정보 세팅 
-	$Interact/AttributeBar.init(map_data["attribute"])
+	attrubute_bar.init(map_data.get("attribute", 100))
+	total_point = map_data.get("point", 100)
 	
 	var idx = 0
 	# 행동력 총합 및 캐릭터 정보 설정하기.
 	for i in turn_char:
 		if i.is_player == true:
 			player_character = i
-			player_character.set_character(PlayerData.data)
+			# 플레이어 정보 및 태그 설정
+			player_character.set_character(PlayerData.data, "Player.Character")
 		else:
 			enemy_character.append(i)
-			i.set_character(map_data["enemys"][idx])
+			# 적 정보 및 태그 설정
+			var data = map_data["enemys"][idx]
+			i.set_character(data, "Enemy." + data["tag"])
 			idx += 1
 			
 		i.character_died.connect(_on_character_died)
-		total += i.speed
 		
-	# 캐릭터별 행동력 설정하고 턴 순서 설정하기 
+	total_point_add = total_point * 0.2
+	init_total_point = total_point
+
+# 속도에 따른 행동력 계산 후 정렬에 반영 
+func update_turn_point():
+	var total_speed = 0
 	for i in turn_char:
-		i.point = BASE_POINT + i.speed / total * ADDITIONAL_POINT
-		#print(i.speed, " ", total)
-		print(i.name, " ", i.speed / total * ADDITIONAL_POINT) 
+		total_speed += i.speed
+		
+	for i in turn_char:
+		i.point = i.speed / total_speed * total_point
 	
 	turn_char.sort_custom(func(a, b): return a.speed > b.speed)
 
 # 전투를 관리하는 함수 (await 이용) 
 func _battle():
-	_battle_set()
-	
 	while true:
+		# 한 루프가 돌면 행동력 업데이트 
+		turn_count += 1
+		update_turn_point()
+		turn_cycle_start.emit()
+		add_log.emit("%s 턴 시작" % turn_count)
+		
+		# 매니저 쪽에서 turn end 발동 대기
+		await turn_end
+		
 		for i in turn_char:
 			now_character = i
 			turn_character_changed.emit(i)
@@ -108,30 +157,48 @@ func _battle():
 			# 플레이어 턴 
 			if i.is_player == true:
 				print("player turn")
-				
-				# turn_end 신호가 emit 할때까지 대기
-				await turn_end
-			
 			# 적 턴 
 			else:
 				print("enemy turn")	
-				enemy_timer.start()
-				await enemy_timer.timeout
-				player_character.hp -= 1
-				# 적 AI
-			
-			_check_dead_char()
+				
+			# 턴 행동 종료 대기 
+			await turn_end
+			add_turn_end_log()
+			turn_character_changed.emit(null)
+			if _check_dead_char():
+				return
+			if is_battle_end:
+				return
 						
 			print("turn end")
+		# 한 루프 끝나면 턴포인트 증가 
+		if total_point < init_total_point * 2:
+			total_point += total_point_add
+
+#endregion
+
+#region Skill func
+# 코스트 제거하기 
+func remove_cost(skill):
+	var cost = skill.get("cost", {})
+	
+	if not cost is Dictionary:
+		turn_cost -= cost
+		return
+		
+	turn_cost -= cost.get("point", 0)
+	if "element" in cost:
+		var element = cost.get("element", {})
+		for e in element:
+			attrubute_bar.remove_value(e, element[e])
 
 # 버튼 눌렀을때
 func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
-	var cost := 0
-	print("target : ", target)
+	#var cost := 0
+	#print("target : ", target)
 	match index:
 		# 버튼에 해당하는 효과 발동 
 		BattlePanel.Buttons.CENTER:
-			print("center")
 			turn_end.emit()
 		BattlePanel.Buttons.SKILL1:
 			use_skill.emit(0, target)
@@ -142,65 +209,101 @@ func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
 		BattlePanel.Buttons.SKILL4:
 			use_skill.emit(3, target)
 		BattlePanel.Buttons.RUN:
-			_battle_end(0)
+			_battle_end(END_TYPE.RUN)
 	
 	if now_character.current_point < min_point_use:
-			turn_end.emit()
+		turn_end.emit()
 			
 	_check_dead_char()
+#endregion
+	
+#region END
+enum END_TYPE {
+	RUN,
+	WIN,
+	LOSE
+}
 
+# 들어온 타입에 따라 전투 종료 
+func _battle_end(type: END_TYPE):
+	# 도망, 적 전부 처치 전투 종료 구현하기 
+	is_battle_end = true
+	
+	# 모든 버튼 비활성화 
+	ViewManager.current_panel.get_node("BattlePanel").end()
+	var msg = $Interact/ResultPanel as ResultPanel
+	
+	match type:
+		END_TYPE.RUN:
+			msg.set_panel("전투에서 도망쳤다!")
+			#msg.text = "전투에서 도망쳤다!"
+		END_TYPE.WIN:
+			#msg.text = "전투에서 승리했다!"
+			
+			var reward = ""
+			# 보상 부여
+			if map_data.has("rewards"):
+				var rewards_data = map_data.rewards
+				# 아이템 가져오기
+				var items_to_reward = rewards_data.get("item", [])
+
+				# 보상 아이템 설정하기
+				for i in items_to_reward:
+					
+					# ID 체크 
+					var item_id = i.get("id")
+					if item_id == null:
+						printerr("No Item ID in rewards!")
+						continue
+
+					var item = DataManager.get_item_artifact_data(item_id)
+					# 개수 기본값 1
+					var count = i.get("count", 1)
+
+					# 보상 텍스트에 아이템 이름 추가하기
+					reward += item.name
+					if count > 1:
+						reward += " " + str(count) + "개"
+					reward += "\n"
+					# 추가하기
+					PlayerData.add_new_item(item_id, count)
+			
+			msg.set_panel("전투에서 승리했다!", "보상", reward)
+		END_TYPE.LOSE:
+			msg.set_panel("전투에서 패배했다...")
+
+func _on_end_button_pressed():
+	if is_battle_end:
+		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
+	else:
+		$Interact/ResultPanel.close_panel()
+#endregion
+
+#region 죽은 캐릭터
 # 죽은 캐릭터 처리하는 함수
 func _check_dead_char():
 # 턴 종료 후 사망한 캐릭터 처리
 	while dead_player.size() > 0:
 		var dead = dead_player.pop_back()
+		add_log.emit("%s 사망" % dead.name)
 		
 		if dead == player_character:
 			print("player dead")
-			_battle_end(2)
+			_battle_end(END_TYPE.LOSE)
+			return true
 		else:
 			turn_char.erase(dead)
 			dead.queue_free()
 			enemy_character.erase(dead)
 		
 			if enemy_character.size() == 0:
-				_battle_end(1)
-	
-# 일단 임시로 정수형태로 해놓았으나 나중에 컨디션이나 태그를 받도록 수정할 예정
-func _battle_end(type):
-	# 도망, 적 전부 처치 전투 종료 구현하기 
-	
-	# 모든 버튼 비활성화 
-	ViewManager.current_panel.get_node("BattlePanel").set_all_button(false)
-	var msg = $Interact/EndMsg as Label
-	
-	match type:
-		0:
-			msg.text = "전투에서 도망쳤다!"
-		1:
-			msg.text = "전투에서 승리했다!"
-			
-			# 보상 부여
-			if map_data.has("rewards") and map_data["rewards"].has("item"):
-				for i in map_data["rewards"]["item"]:
-					if (i.has("id") == false):
-						printerr("No Item ID in rewards!")
-					elif (i.has("count") == false):
-						PlayerData.add_new_item(i["id"], 1)
-					else:
-						PlayerData.add_new_item(i["id"], i["count"])
-		2:
-			msg.text = "전투에서 패배했다!"
-	
-	await get_tree().create_timer(2).timeout
-	
-	# 체력 반영 임시로 비활성화
-	#PlayerData.data.hp = player_character.hp
-	
-	ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
+				_battle_end(END_TYPE.WIN)
+				return true
+	return false
 
 # 캐릭터가 사망할시 일단 배열에 넣어놓고 나중에 처리
 func _on_character_died(dead : BattleCharacter):
 	print(dead.name, "is dead")
 	dead_player.append(dead)
 
+#endregion

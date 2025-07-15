@@ -1,6 +1,7 @@
 {
 	"pandora_cube": {
 		"type": "pandora_cube",
+		"name": "판도라 큐브",
 		"location": "forest"
 	},
 }
