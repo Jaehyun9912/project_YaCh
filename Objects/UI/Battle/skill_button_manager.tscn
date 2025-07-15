@@ -1,9 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://c7rab4ugt7w6t"]
+[gd_scene load_steps=7 format=3 uid="uid://p6i634j8rs6u"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/UI/skill_button_manager.gd" id="1_6ahvc"]
 [ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/Battle/RoundButton/round_button.tscn" id="2_ddtok"]
 [ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/Battle/button_theme.tres" id="3_ie52g"]
-[ext_resource type="PackedScene" uid="uid://dxudhlmb10ph1" path="res://Objects/UI/Battle/choice_button_manager.tscn" id="4_8kkgl"]
+[ext_resource type="PackedScene" path="res://Objects/UI/Battle/choice_button_manager.tscn" id="4_8kkgl"]
 [ext_resource type="Texture2D" uid="uid://h3udoxqqu1wd" path="res://Objects/UI/Battle/RoundButton/round_button.png" id="5_cj4fw"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]

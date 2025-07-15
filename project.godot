@@ -25,7 +25,6 @@ SidePanel="*res://Interacts/SidePanel.tscn"
 SkillManager="*res://Scripts/Skills/SkillManager.gd"
 AttributeInfomation="*res://Scripts/Skills/attribute_infomation.gd"
 
-
 [display]
 
 window/size/viewport_width=360

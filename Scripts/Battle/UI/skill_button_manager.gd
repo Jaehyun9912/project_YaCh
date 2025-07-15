@@ -185,7 +185,7 @@ func on_skillbutton_up():
 	cancel_area.scale = Vector2(1, 1)
 	choice_btn_man.remove_all_button()
 	
-	SidePanel.mode = SidePanel.Mode.HP	
+	SidePanel.set_hp_panel()
 		
 	current_button = -1
 	is_on_cancel_area = false;

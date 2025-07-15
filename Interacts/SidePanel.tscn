@@ -1,14 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dde3ek8splias"]
+[gd_scene load_steps=3 format=3 uid="uid://bg4hkcksoc7en"]
 
 [ext_resource type="Script" path="res://Scripts/Panel/SidePanel.gd" id="1_iyq2d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_adfma"]
 font_size = 12
-font_color = Color(0, 0, 0, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_y0owo"]
-line_spacing = 1.0
-font_size = 10
 font_color = Color(0, 0, 0, 1)
 
 [node name="SidePanel" type="Control"]
@@ -23,43 +18,30 @@ script = ExtResource("1_iyq2d")
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = -1
-anchor_top = 0.410622
+anchor_top = 0.411917
 anchor_right = 0.652778
-anchor_bottom = 0.510363
+anchor_bottom = 0.551813
 grow_vertical = 2
 metadata/_edit_use_anchors_ = true
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
 layout_mode = 0
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 189.0
-offset_bottom = 68.0
+anchor_left = 0.0212766
+anchor_top = 0.0925926
+anchor_right = 0.978723
+anchor_bottom = 0.907407
+metadata/_edit_use_anchors_ = true
 
-
-[node name="TextType" type="Label" parent="ColorRect"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 0.2
-offset_left = 5.0
-offset_top = 5.0
-offset_right = -5.0
-offset_bottom = -5.0
+[node name="TextType" type="Label" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 text = "current gold : "
 label_settings = SubResource("LabelSettings_adfma")
 clip_text = true
 
-[node name="Detail" type="Label" parent="ColorRect"]
-layout_mode = 1
-anchors_preset = -1
-anchor_top = 0.2
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 5.0
-offset_top = 5.0
-offset_right = -5.0
-offset_bottom = -5.0
+[node name="Detail" type="Label" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
 text = "100000"
 label_settings = SubResource("LabelSettings_adfma")
 autowrap_mode = 2

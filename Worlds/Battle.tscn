@@ -5,9 +5,9 @@
 [ext_resource type="Script" path="res://Scripts/Battle/enemy_manager.gd" id="3_2wx2l"]
 [ext_resource type="PackedScene" uid="uid://blyo26b6351jw" path="res://Objects/UI/Battle/attribute_bar.tscn" id="3_tulg3"]
 [ext_resource type="Script" path="res://Scripts/Battle/attack_manager.gd" id="4_3ewvu"]
-[ext_resource type="PackedScene" uid="uid://cnlummas0oasb" path="res://Objects/UI/UpperPanel.tscn" id="5_71ugh"]
-[ext_resource type="PackedScene" uid="uid://qauqg0r2xpur" path="res://Objects/UI/Battle/result_panel.tscn" id="5_270jx"]
-[ext_resource type="PackedScene" uid="uid://iuv285lx8exl" path="res://Objects/UI/Battle/top_button.tscn" id="7_6x03x"]
+[ext_resource type="PackedScene" path="res://Objects/UI/UpperPanel.tscn" id="5_71ugh"]
+[ext_resource type="PackedScene" uid="uid://c3py4i51ebgp4" path="res://Objects/UI/Battle/result_panel.tscn" id="5_270jx"]
+[ext_resource type="PackedScene" uid="uid://b67wqdu1eeq0g" path="res://Objects/UI/Battle/top_button.tscn" id="7_6x03x"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)

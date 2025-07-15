@@ -1,4 +1,4 @@
-[gd_scene load_steps=2 format=3 uid="uid://b5jiggbaisb17"]
+[gd_scene load_steps=2 format=3 uid="uid://cdibvtid86gfx"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/UI/battle_log.gd" id="1_mraql"]
 
