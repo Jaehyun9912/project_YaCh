@@ -21,7 +21,10 @@ var panel_ratio:
 		panel_ratio = value
 		#ratio_changed.emit(value)
 		update_panels_size()
-		
+	get:
+		if panel_ratio == null:
+			panel_ratio = 0.5
+		return panel_ratio
 
 
 
@@ -132,14 +135,14 @@ func erase_panel(panel):
 func _set_screen_size(panel:Control,screen_location:SCREEN) -> void:
 	if screen_location == SCREEN.BOTTOM:
 		panel.anchor_left = 0
-		panel.anchor_top = panel_ratio
+		panel.anchor_top = 1-panel_ratio
 		panel.anchor_right = 1
 		panel.anchor_bottom = 1
 	elif screen_location == SCREEN.TOP:
 		panel.anchor_left = 0
 		panel.anchor_top = 0
 		panel.anchor_right = 1
-		panel.anchor_bottom = panel_ratio
+		panel.anchor_bottom = 1-panel_ratio
 	elif screen_location == SCREEN.FULL:
 		panel.anchor_left = 0
 		panel.anchor_top = 0
