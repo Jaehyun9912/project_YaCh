@@ -14,10 +14,12 @@ func set_panel(title_text, subtitle_text = "", info_text = ""):
 		set_text($ColorRect/Title, title_text)
 		set_text($ColorRect/SubTitle, subtitle_text)
 		set_text($ColorRect/Info, info_text)
+	$ColorRect/Button.visible = true
 		
 func close_panel():
 	visible = false
-	
+	for i in $ColorRect.get_children():
+		i.visible = false
 
 func set_text(panel, txt):
 	panel.text = txt

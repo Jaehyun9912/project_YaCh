@@ -7,12 +7,16 @@ var current_scene: Node = null
 var world_instance: Node3D = null
 var current_panel: CanvasLayer = null
 
-var side_panel : Control = null
+var side_panel : SidePanel = null
 
 var cur_meta_data: Dictionary
 
 var old_map: String
 var old_panel: String
+
+var current_scene_name:
+	get:
+		return current_scene.name
 
 """
 # 필요 없는 함수
