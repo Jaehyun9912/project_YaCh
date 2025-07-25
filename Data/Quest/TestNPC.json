@@ -3,7 +3,7 @@
 		"id":"quest1",
 		"title" : "튜토리얼1",
 		"description" : "숲에 진입해보기",
-		"clear_NPC": "CountryTower",
+		"clear_NPC": "TestNPC",
 		"accept_condition":["!Quest.clear.quest1"],
 		"process_condition":["Quest.process.quest1.alpha"],
 		"rewards" : [
@@ -17,7 +17,7 @@
 		"id":"quest2",
 		"title" : "튜토리얼 퀘스트",
 		"description" : "아무 퀘스트나 클리어하기",
-		"clear_NPC": "CountryTower",
+		"clear_NPC": "TestNPC",
 		"accept_condition":["!Quest.clear.quest2"],
 		"process_condition":["Quest.clear"],
 		"rewards" : [
@@ -46,14 +46,14 @@
 		"id":"quest4",
 		"title" : "테스트 퀘스트 4",
 		"description" : "테스트4",
-		"clear_NPC": "CountryTower",
+		"clear_NPC": "TestNPC",
 		"accept_condition":["!Quest.clear.quest4"]
 	},
 	{
 		"id":"quest5",
 		"title" : "테스트 퀘스트 5",
 		"description" : "테스트4",
-		"clear_NPC": "CountryTower",
+		"clear_NPC": "TestNPC",
 		"accept_condition":["!Quest.clear.quest4"]
 	},
 	{
