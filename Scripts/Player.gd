@@ -152,7 +152,7 @@ func _get_artifact(id : String):
 		printerr("Wrong Artifact ID! " + id)
 	elif item.has("location") == false:
 		printerr("No Location " + id)
-	elif ViewManager.now_map_name != item["location"]:
+	elif ViewManager.cur_meta_data["World"] != item["location"]:
 		printerr("need same location " + ViewManager.now_map_name + " != " + item["location"])
 		return
 	elif item.has("type") == false:

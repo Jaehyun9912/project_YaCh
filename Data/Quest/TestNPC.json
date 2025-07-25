@@ -30,15 +30,10 @@
 	{
 		"id":"quest3",
 		"title" : "위험물 회수",
-		"description" : "폭탄 5개 가져오기",
+		"description" : "판도라 큐브 가져오기",
 		"clear_NPC": "TestNPC",
 		"accept_condition":["!Quest.clear.quest3"],
-		"submit" : [
-						{
-				"id": "bomb",
-				"count": 5,
-			}
-		],
+		"process_condition":["artifact:pandora_cube"]
 	},
 ],
 	"CountryTower":[

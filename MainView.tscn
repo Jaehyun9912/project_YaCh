@@ -2,9 +2,8 @@
 
 [ext_resource type="PackedScene" uid="uid://2qnlhnafs2lx" path="res://Worlds/Map.tscn" id="1_e4bd6"]
 [ext_resource type="PackedScene" uid="uid://ujhj8734sgr6" path="res://Interacts/MapPanel.tscn" id="3_nmvnj"]
-[ext_resource type="PackedScene" uid="uid://dde3ek8splias" path="res://Interacts/UI/SidePanel.tscn" id="3_ux45a"]
+[ext_resource type="PackedScene" uid="uid://bg4hkcksoc7en" path="res://Interacts/UI/SidePanel.tscn" id="3_ux45a"]
 [ext_resource type="PackedScene" uid="uid://bymetbjca5yjf" path="res://Interacts/UI/Option.tscn" id="4_c1stb"]
-
 
 [node name="Node" type="Node"]
 
