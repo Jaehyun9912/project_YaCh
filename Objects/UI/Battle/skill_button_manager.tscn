@@ -1,0 +1,235 @@
+[gd_scene load_steps=7 format=3 uid="uid://p6i634j8rs6u"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/UI/skill_button_manager.gd" id="1_6ahvc"]
+[ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/Battle/RoundButton/round_button.tscn" id="2_ddtok"]
+[ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/Battle/button_theme.tres" id="3_ie52g"]
+[ext_resource type="PackedScene" uid="uid://dxudhlmb10ph1" path="res://Objects/UI/Battle/choice_button_manager.tscn" id="4_8kkgl"]
+[ext_resource type="Texture2D" uid="uid://h3udoxqqu1wd" path="res://Objects/UI/Battle/RoundButton/round_button.png" id="5_cj4fw"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]
+
+[node name="SkillButtonManager" type="ColorRect"]
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(180, 193)
+color = Color(0.607843, 0.607843, 0.607843, 1)
+script = ExtResource("1_6ahvc")
+cancel_button_size = Vector2(3.5, 3.5)
+
+[node name="SkillButtons" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.15
+theme_override_styles/panel = SubResource("StyleBoxEmpty_7x350")
+
+[node name="SkillButton" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.0444444
+anchor_top = 0.405959
+anchor_right = 0.266667
+anchor_bottom = 0.613212
+offset_left = 0.0
+offset_right = -7.62939e-06
+offset_bottom = 1.52588e-05
+grow_vertical = 2
+pivot_offset = Vector2(40, 40)
+metadata/_edit_use_anchors_ = true
+
+[node name="SkillButton2" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.213889
+anchor_top = 0.725389
+anchor_right = 0.436111
+anchor_bottom = 0.932642
+offset_left = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_vertical = 0
+pivot_offset = Vector2(40, 40)
+metadata/_edit_use_anchors_ = true
+
+[node name="SkillButton3" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.588889
+anchor_top = 0.727979
+anchor_right = 0.811111
+anchor_bottom = 0.935233
+offset_left = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+grow_vertical = 0
+pivot_offset = Vector2(40, 40)
+metadata/_edit_use_anchors_ = true
+
+[node name="SkillButton4" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.752778
+anchor_top = 0.405959
+anchor_right = 0.975
+anchor_bottom = 0.613212
+offset_left = 0.0
+offset_right = 0.0
+offset_bottom = 1.52588e-05
+grow_horizontal = 0
+grow_vertical = 2
+pivot_offset = Vector2(40, 40)
+metadata/_edit_use_anchors_ = true
+
+[node name="CenterButton" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.361111
+anchor_top = 0.284974
+anchor_right = 0.653889
+anchor_bottom = 0.544041
+offset_left = 0.0
+offset_right = -5.39999
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.054, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Menu" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(180, 193)
+color = Color(0.607843, 0.607843, 0.607843, 1)
+
+[node name="GridContainer" type="GridContainer" parent="Menu"]
+layout_mode = 2
+offset_top = 187.0
+offset_right = 360.0
+offset_bottom = 347.0
+size_flags_vertical = 3
+columns = 2
+
+[node name="BagButtonContainer" type="MarginContainer" parent="Menu/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Button1" type="Button" parent="Menu/GridContainer/BagButtonContainer" groups=["other_buttons"]]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+theme = ExtResource("3_ie52g")
+keep_pressed_outside = true
+text = "가방"
+
+[node name="TalkButtonContainer" type="MarginContainer" parent="Menu/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Button1" type="Button" parent="Menu/GridContainer/TalkButtonContainer" groups=["other_buttons"]]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+theme = ExtResource("3_ie52g")
+keep_pressed_outside = true
+text = "대화"
+
+[node name="QuestButtonContainer" type="MarginContainer" parent="Menu/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Button1" type="Button" parent="Menu/GridContainer/QuestButtonContainer" groups=["other_buttons"]]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+theme = ExtResource("3_ie52g")
+keep_pressed_outside = true
+text = "퀘스트"
+
+[node name="RunButtonContatiner" type="MarginContainer" parent="Menu/GridContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Button1" type="Button" parent="Menu/GridContainer/RunButtonContatiner" groups=["other_buttons"]]
+layout_mode = 2
+size_flags_vertical = 3
+focus_mode = 0
+theme = ExtResource("3_ie52g")
+keep_pressed_outside = true
+text = "도망
+"
+
+[node name="Cover" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.803922, 0.803922, 0.803922, 1)
+
+[node name="ChoiceButtonManager" parent="." instance=ExtResource("4_8kkgl")]
+layout_mode = 1
+radius = 230
+
+[node name="ButtonCancelArea" type="TextureRect" parent="."]
+visible = false
+self_modulate = Color(0.380392, 0.380392, 0.380392, 1)
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 80.0
+pivot_offset = Vector2(40, 40)
+texture = ExtResource("5_cj4fw")
+expand_mode = 1
+
+[node name="ButtonImage" type="TextureRect" parent="."]
+visible = false
+modulate = Color(0.807843, 0.807843, 0.807843, 1)
+layout_mode = 0
+offset_right = 80.0
+offset_bottom = 80.0
+pivot_offset = Vector2(40, 40)
+mouse_filter = 2
+texture = ExtResource("5_cj4fw")
+expand_mode = 1
+
+[node name="Line2D" type="Line2D" parent="."]
+visible = false
+points = PackedVector2Array(0, 0, 0, 0)
+default_color = Color(0.862745, 0, 0, 1)
+
+[connection signal="mouse_entered" from="ButtonCancelArea" to="." method="_on_button_cancel_area_mouse_entered"]
+[connection signal="mouse_exited" from="ButtonCancelArea" to="." method="_on_button_cancel_area_mouse_exited"]

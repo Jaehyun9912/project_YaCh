@@ -1,9 +1,9 @@
 [gd_scene load_steps=5 format=3 uid="uid://c3h3jildcn5gm"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/UI/battle_panel.gd" id="1_njjyf"]
-[ext_resource type="PackedScene" uid="uid://p6i634j8rs6u" path="res://Objects/UI/Battle/skill_button_manager.tscn" id="2_jcmlh"]
+[ext_resource type="PackedScene" uid="uid://c7rab4ugt7w6t" path="res://Objects/UI/Battle/skill_button_manager.tscn" id="2_jcmlh"]
 [ext_resource type="PackedScene" uid="uid://c2gk0n3dyk110" path="res://Objects/UI/Battle/TurnPointBar/TurnPointBar.tscn" id="3_jg1ea"]
-[ext_resource type="PackedScene" uid="uid://cdibvtid86gfx" path="res://Objects/UI/Battle/battle_log.tscn" id="4_2oula"]
+[ext_resource type="PackedScene" uid="uid://b5jiggbaisb17" path="res://Objects/UI/Battle/battle_log.tscn" id="4_2oula"]
 
 [node name="BattlePanel" type="Control"]
 layout_mode = 3

@@ -1,0 +1,35 @@
+[gd_scene load_steps=3 format=3 uid="uid://cnlummas0oasb"]
+
+[ext_resource type="Script" path="res://Scripts/Panel/UpperPanel.gd" id="1_ck60v"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_5wxee"]
+font_size = 10
+font_color = Color(0.211765, 0.211765, 0.211765, 1)
+
+[node name="UpperPanel" type="ColorRect"]
+anchors_preset = -1
+anchor_left = 0.344444
+anchor_top = 0.00906736
+anchor_right = 0.997222
+anchor_bottom = 0.108808
+script = ExtResource("1_ck60v")
+metadata/_edit_use_anchors_ = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 189.0
+offset_bottom = 68.0
+
+[node name="TextType" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "current gold : "
+label_settings = SubResource("LabelSettings_5wxee")
+
+[node name="Detail" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "100000"
+label_settings = SubResource("LabelSettings_5wxee")
+
+[node name="Timer" type="Timer" parent="."]

@@ -2,7 +2,6 @@ extends Node
 class_name AttackManager
 
 @onready var battle = $".." as BattleManager
-@onready var skill_manager = $"../SkillManager" as SkillManager
 
 var cur_skill : Dictionary
 
@@ -18,8 +17,8 @@ func _on_battle_use_skill(index, target_info):
 	# target_info는 이미 스킬 정보를 통해 가져온 정보이므로 굳이 검사X  
 	target = target_info
 	
-	cur_skill = skill_manager.get_player_skill(index)
-	skill_manager.remove_cost(index)
+	cur_skill = SkillManager.get_player_skill(index)
+	battle.remove_cost(cur_skill)
 	
 	# 스킬의 유형에 따라 효과 결정 
 	match cur_skill.get("type", ""):
@@ -35,24 +34,26 @@ func _on_battle_use_skill(index, target_info):
 	
 	var element = cur_skill.get("element", {})
 	if element.has("type"):
-			$"../Interact/AttributeBar".add_value(element["type"], element["amount"])
+			battle.attrubute_bar.add_value(element["type"], element["amount"])
 	
 
+# 공격 함수 
 func do_attack():
 	var apply = cur_skill.get("apply", 0)
 	if not apply is float:
 		print("Attack's apply is not number!")
 		return
 	
-	# 설정된 적 공격 
-	if len(target) > 0:
-		for i in target:
-			battle.enemy_character[i].hp -= apply
-	# count = 0이면 모든 적 대상 (취소는 아예 호출되지 않으므로 )
+	# self 전용 구현 
+	if target is String and target == "self":
+		battle.player_character.hp -= apply
 	else:
-		for i in battle.enemy_character:
-			i.hp -= apply
-	
+		# 설정된 적 공격 
+		for i in target:
+			var enemy = battle.enemy_character[i]
+			battle.add_attack_log(battle.now_character.name, enemy.name, apply, enemy.hp)
+			enemy.hp -= apply
+		
 func do_effect():
 	pass
 	

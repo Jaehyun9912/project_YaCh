@@ -3,8 +3,8 @@ extends Node
 const DEFAULT_PATH = "res://Data/"
 const USER_PATH = "user://"
 
-@onready var items = get_data("item")
-@onready var artifacts = get_data("artifact")
+@onready var items = get_data("Item/item")
+@onready var artifacts = get_data("Item/artifact")
 
 # 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
 func get_data(data_path: String) -> Dictionary:
@@ -58,8 +58,20 @@ func save_data(save: Dictionary, data_path: String) -> void:
 	
 	save_file.store_line(json_string)
 		
+# 네임스페이스 관계 없이 아이템 정보 가져오기 
+func get_item_artifact_data(id: String):
+	var sp = id.split(":")
+	if sp.size() == 1 or sp[0] == "item":
+		return get_item_data(id)
+	else:
+		return get_artifact_data(id)
+		
 # 들어온 ID에 해당하는 아이템의 정보가 담긴 딕셔너리 반환 
 func get_item_data(id : String) -> Dictionary:
+	var sp = id.split(":")
+	if sp.size() > 1 and sp[0] == "item":
+		id = sp[1]
+		
 	if items.has(id):
 		return items[id]
 	else:
@@ -68,6 +80,10 @@ func get_item_data(id : String) -> Dictionary:
 		
 # 들어온 ID에 해당하는 아티팩트의 정보가 담긴 딕셔너리 반환 
 func get_artifact_data(id : String) -> Dictionary:
+	var sp = id.split(":")
+	if sp.size() > 1 and sp[0] == "artifact":
+		id = sp[1]
+	
 	if artifacts.has(id):
 		return artifacts[id]
 	else:

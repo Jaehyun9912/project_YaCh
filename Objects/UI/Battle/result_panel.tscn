@@ -1,0 +1,108 @@
+[gd_scene load_steps=5 format=3 uid="uid://c3py4i51ebgp4"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/UI/result_panel.gd" id="1_evtpr"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_oj05c"]
+font_size = 30
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_gf8u4"]
+font_size = 25
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_4j0le"]
+outline_size = 3
+outline_color = Color(0, 0, 0, 1)
+
+[node name="ResultPanel" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_evtpr")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.05
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_bottom = 3.05176e-05
+grow_horizontal = 2
+color = Color(0.298039, 0.298039, 0.298039, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="Title" type="Label" parent="ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.0187517
+anchor_right = 1.0
+anchor_bottom = 0.166086
+grow_horizontal = 2
+text = "전투에 승리했습니다."
+label_settings = SubResource("LabelSettings_oj05c")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="SingleTitle" type="Label" parent="ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.00555556
+anchor_top = 0.225676
+anchor_right = 1.00556
+anchor_bottom = 0.373011
+grow_horizontal = 2
+text = "전투에 승리했습니다."
+label_settings = SubResource("LabelSettings_oj05c")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="SubTitle" type="Label" parent="ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.171444
+anchor_right = 1.0
+anchor_bottom = 0.265202
+grow_horizontal = 2
+grow_vertical = 2
+text = "보상
+"
+label_settings = SubResource("LabelSettings_gf8u4")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Info" type="Label" parent="ColorRect"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.278596
+anchor_right = 1.0
+anchor_bottom = 0.667024
+grow_horizontal = 2
+grow_vertical = 0
+text = "120 Gold
+폭탄 1개"
+label_settings = SubResource("LabelSettings_4j0le")
+horizontal_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="Button" parent="ColorRect"]
+layout_mode = 0
+anchor_left = 0.222222
+anchor_top = 0.709885
+anchor_right = 0.777778
+anchor_bottom = 0.897402
+text = "확인"
+metadata/_edit_use_anchors_ = true
+
+[connection signal="pressed" from="ColorRect/Button" to="." method="_on_button_pressed"]

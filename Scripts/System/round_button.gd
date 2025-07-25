@@ -2,9 +2,7 @@ extends TextureRect
 # BaseButton을 상속받아야하는데 모르고 TextureRect를 상속받은 상태에서 구현했습니다.
 class_name RoundButton
 
-# 버튼 시그널 별 함수가 아닌 하나의 함수에서 관리하기 위한 넘버
-@export var button_number: int
-
+@export var default_color := Color(1, 1, 1)
 @export var hover_color := Color(0.5, 0.5, 0.5)
 @export var click_color := Color(0.3, 0.3, 0.3)
 @export var disable_color := Color(0.9, 0.9, 0.9)
@@ -23,28 +21,42 @@ var disabled = false :
 # 활성화 시 disable이 변경되지 않음
 var lock_disable = false
 
-# 마우스로 버튼을 눌렀을 때 발동하는 시그널 
-signal button_down(number: int)
+var is_mouse_inside = false;
+
+# 버튼을 눌렀을 때 발동하는 시그널 
+signal button_down()
+
+# 버튼을 뗐을 때 발동하는 시그널
+signal button_up()
+
+# 버튼을 뗏을 때 마우스 위치가 버튼 위에 있다면 발동하는 시그널
+signal button_clicked()
 
 func _on_button_mouse_entered():
 	
 	if disabled == true:
 		return
 	
+	is_mouse_inside = true;
 	self_modulate = hover_color
 
 func _on_button_mouse_exited():
 	if disabled == true:
 		return
 	
-	self_modulate = Color(1, 1, 1)
+	is_mouse_inside = false;
+	self_modulate = default_color
 
 func _on_button_button_up():
 	
 	if disabled == true:
 		return
 		
-	self_modulate = hover_color
+	self_modulate = default_color
+	button_up.emit()
+	
+	if is_mouse_inside:
+		button_clicked.emit()
 
 func _on_button_button_down():
 	
@@ -52,4 +64,4 @@ func _on_button_button_down():
 		return
 	
 	self_modulate = click_color
-	button_down.emit(button_number)
+	button_down.emit()

@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://dde3ek8splias" path="res://Interacts/UI/SidePanel.tscn" id="3_ux45a"]
 [ext_resource type="PackedScene" uid="uid://bymetbjca5yjf" path="res://Interacts/UI/Option.tscn" id="4_c1stb"]
 
+
 [node name="Node" type="Node"]
 
 [node name="World" type="Node3D" parent="."]
