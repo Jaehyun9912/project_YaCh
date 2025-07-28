@@ -53,9 +53,9 @@ func set_info_panel(type_str: String, text_str: String):
 
 # 일정 시간동안만 표시
 func set_info_panel_with_time(Type: String, Text: String, wait_time: float, end_mode := Mode.HP):
-	visible = true
-	set_info_panel(Type, Text)
+	#visible = true
 	
+	set_info_panel(Type, Text)
 	var timer = $Timer as Timer
 	timer.start(wait_time)
 	await timer.timeout
@@ -64,6 +64,7 @@ func set_info_panel_with_time(Type: String, Text: String, wait_time: float, end_
 		match end_mode:
 			Mode.HP: set_hp_panel()
 			Mode.BUDGET: set_budget_panel()
+			
 
 # 디버그용 빌드 로그 띄우기
 func set_debug_panel():

@@ -1,83 +1,108 @@
-{ "All":[
-	{
-		"id":"quest1",
-		"title" : "튜토리얼1",
-		"description" : "숲에 진입해보기",
-		"clear_NPC": "TestNPC",
-		"accept_condition":["!Quest.clear.quest1"],
-		"process_condition":["Quest.process.quest1.alpha"],
-		"rewards" : [
-			{
-				"id": "bomb",
-				"count": 5,
-			}
-		],
-	},
-	{
-		"id":"quest2",
-		"title" : "튜토리얼 퀘스트",
-		"description" : "아무 퀘스트나 클리어하기",
-		"clear_NPC": "TestNPC",
-		"accept_condition":["!Quest.clear.quest2"],
-		"process_condition":["Quest.clear"],
-		"rewards" : [
-			{
-				"id": "potion",
-				"count": 5,
-			}
-		]
-	},
-	{
-		"id":"quest3",
-		"title" : "위험물 회수",
-		"description" : "판도라 큐브 가져오기",
-		"clear_NPC": "TestNPC",
-		"accept_condition":["!Quest.clear.quest3"],
-		"process_condition":["artifact:pandora_cube"]
-	},
-],
-	"CountryTower":[
-	{
-		"id":"quest4",
-		"title" : "테스트 퀘스트 4",
-		"description" : "테스트4",
-		"clear_NPC": "TestNPC",
-		"accept_condition":["!Quest.clear.quest4"]
-	},
-	{
-		"id":"quest5",
-		"title" : "테스트 퀘스트 5",
-		"description" : "테스트4",
-		"clear_NPC": "TestNPC",
-		"accept_condition":["!Quest.clear.quest4"]
-	},
-	{
-		"id":"quest6",
-		"title" : "테스트 퀘스트 6",
-		"description" : "테스트4",
-		"clear_NPC": "CountryTower",
-		"accept_condition":["!Quest.clear.quest4"]
-	},
-	{
-		"id":"quest7",
-		"title" : "테스트 퀘스트 7",
-		"description" : "테스트4",
-		"clear_NPC": "CountryTower",
-		"accept_condition":["!Quest.clear.quest4"]
-	},
-	{
-		"id":"quest8",
-		"title" : "테스트 퀘스트 8",
-		"description" : "테스트4",
-		"clear_NPC": "CountryTower",
-		"accept_condition":["!Quest.clear.quest4"]
-	},
-	{
-		"id":"quest9",
-		"title" : "테스트 퀘스트 9",
-		"description" : "테스트4",
-		"clear_NPC": "CountryTower",
-		"accept_condition":["!Quest.clear.quest4"]
-	},
-]
+{
+	"All": [
+		{
+			"id": "quest1",
+			"title": "튜토리얼1",
+			"description": "숲에 진입해보기",
+			"clear_NPC": "TestNPC",
+			"accept_condition": [
+				"!Quest.clear.quest1"
+			],
+			"process_condition": [
+				"Quest.process.quest1.alpha"
+			],
+			"rewards": [
+				{
+					"id": "bomb",
+					"count": 5
+				}
+			]
+		},
+		{
+			"id": "quest2",
+			"title": "튜토리얼 퀘스트",
+			"description": "아무 퀘스트나 클리어하기",
+			"clear_NPC": "TestNPC",
+			"accept_condition": [
+				"!Quest.clear.quest2"
+			],
+			"process_condition": [
+				"Quest.clear"
+			],
+			"rewards": [
+				{
+					"id": "potion",
+					"count": 5
+				}
+			]
+		},
+		{
+			"id": "quest3",
+			"title": "위험물 회수",
+			"description": "판도라 큐브 가져오기",
+			"clear_NPC": "TestNPC",
+			"accept_condition": [
+				"!Quest.clear.quest3"
+			],
+			"process_condition": [
+				"artifact:pandora_cube"
+			]
+		}
+	],
+	"CountryTower": [
+		{
+			"id": "quest4",
+			"title": "테스트 퀘스트 4",
+			"description": "테스트4",
+			"clear_NPC": "TestNPC",
+			"accept_condition": [
+				"!Quest.clear.quest4"
+			]
+		},
+		{
+			"id": "quest5",
+			"title": "테스트 퀘스트 5",
+			"description": "테스트4",
+			"clear_NPC": "TestNPC",
+			"accept_condition": [
+				"!Quest.clear.quest4"
+			]
+		},
+		{
+			"id": "quest6",
+			"title": "테스트 퀘스트 6",
+			"description": "테스트4",
+			"clear_NPC": "CountryTower",
+			"accept_condition": [
+				"!Quest.clear.quest4"
+			]
+		},
+		{
+			"id": "quest7",
+			"title": "테스트 퀘스트 7",
+			"description": "테스트4",
+			"clear_NPC": "CountryTower",
+			"accept_condition": [
+				"!Quest.clear.quest4"
+			]
+		},
+		{
+			"id": "quest8",
+			"title": "테스트 퀘스트 8",
+			"description": "테스트4",
+			"clear_NPC": "CountryTower",
+			"accept_condition": [
+				"!Quest.clear.quest4"
+			]
+		},
+		{
+			"id": "quest9",
+			"title": "테스트 퀘스트 9",
+			"description": "테스트4",
+			"clear_NPC": "CountryTower",
+			"accept_condition": [
+				"!Quest.clear.quest4"
+			]
+		}
+	]
 }

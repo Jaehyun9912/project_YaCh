@@ -21,3 +21,5 @@ layer = 0
 [node name="SidePanel" parent="SidePanelLayer" instance=ExtResource("3_ux45a")]
 
 [node name="Option" parent="SidePanelLayer" instance=ExtResource("4_c1stb")]
+
+[connection signal="hidden" from="SidePanelLayer/SidePanel" to="SidePanelLayer/SidePanel" method="Debug"]
