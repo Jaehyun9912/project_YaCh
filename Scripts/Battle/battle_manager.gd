@@ -71,9 +71,15 @@ var is_battle_end := false
 func _ready():
 
 	var panel = $Interact/ResultPanel as ResultPanel
+	var timer = Timer.new() as Timer
+	add_child(timer)
 	panel.set_panel("전투 개시!")
-	await turn_end
+	
+	timer.timeout.connect(panel._on_button_pressed)
+	timer.start(1)
 	await panel.check_button_pressed
+	
+	timer.queue_free()
 
 	_battle_set()
 	_battle()
