@@ -55,6 +55,17 @@ var artifact:
 		data["artifacts"] = value
 		
 # data 저장 
+
+var cur_location:
+	get:
+		if data.has("location"):
+			return data["location"]
+		else:
+			data["location"] = "TestMap"
+			return data["location"]
+	set(value):
+		data["location"] = value
+
 func save_player(): 
 	DataManager.save_data(data, "player")
 
@@ -141,7 +152,7 @@ func _get_artifact(id : String):
 		printerr("Wrong Artifact ID! " + id)
 	elif item.has("location") == false:
 		printerr("No Location " + id)
-	elif ViewManager.now_map_name != item["location"]:
+	elif ViewManager.cur_meta_data["World"] != item["location"]:
 		printerr("need same location " + ViewManager.now_map_name + " != " + item["location"])
 		return
 	elif item.has("type") == false:
