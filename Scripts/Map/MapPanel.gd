@@ -3,11 +3,10 @@ extends Node
 var map : Map
 
 
-# Called when the node enters the scene tree for the first time.
 func _ready():
+	ViewManager.get_view()
 	map = ViewManager.world_instance.get_node("Map") as Map
 	
-	pass # Replace with function body.
 
 # 커서 이동
 func _move_cursor(direction : int):

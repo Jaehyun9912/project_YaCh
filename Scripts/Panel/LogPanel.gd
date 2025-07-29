@@ -45,8 +45,7 @@ func _load_text() -> void:
 	# 선택지가 있을 때
 	if text_data.has("Choice"):
 		var choice = text_data["Choice"]
-		var panel# = $Btns as BtnPanel
-		panel = ViewManager.push_panel("BtnPanel",ViewManager.SCREEN.BOTTOM)
+		var panel = ViewManager.push_panel("BtnPanel",ViewManager.SCREEN.BOTTOM)
 		
 		for i in choice.keys():
 			var btn = panel.create_button(i)
