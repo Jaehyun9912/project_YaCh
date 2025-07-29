@@ -1,4 +1,4 @@
-extends Control
+class_name SidePanel extends Control
 
 # 패널 정보 모드
 enum Mode{
@@ -31,6 +31,9 @@ func _on_size_changed():
 		self.anchor_right = 1
 		self.anchor_bottom = 0.5
 	panel.size.x = size.x*_x_length
+	
+func set_hide_panel():
+	_set_length(0)
 
 # 체력 값 업데이트
 func set_hp_panel():

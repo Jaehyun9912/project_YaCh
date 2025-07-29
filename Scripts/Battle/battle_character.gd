@@ -32,6 +32,9 @@ var hp:
 		else:
 			notify_msg(diff, Color.RED)
 			
+		if is_player:
+			PlayerData.hp = _hp;
+			
 # 행동력 
 var point: int
 var current_point: int

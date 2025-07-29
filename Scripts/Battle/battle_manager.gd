@@ -71,9 +71,15 @@ var is_battle_end := false
 func _ready():
 
 	var panel = $Interact/ResultPanel as ResultPanel
+	var timer = Timer.new() as Timer
+	add_child(timer)
 	panel.set_panel("전투 개시!")
-	await turn_end
+	
+	timer.timeout.connect(panel._on_button_pressed)
+	timer.start(1)
 	await panel.check_button_pressed
+	
+	timer.queue_free()
 
 	_battle_set()
 	_battle()
@@ -164,6 +170,7 @@ func _battle():
 			# 턴 행동 종료 대기 
 			await turn_end
 			add_turn_end_log()
+			ViewManager.side_panel.set_hp_panel()
 			turn_character_changed.emit(null)
 			if _check_dead_char():
 				return
@@ -275,6 +282,7 @@ func _battle_end(type: END_TYPE):
 func _on_end_button_pressed():
 	if is_battle_end:
 		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
+		ViewManager.side_panel.set_hide_panel()
 	else:
 		$Interact/ResultPanel.close_panel()
 #endregion

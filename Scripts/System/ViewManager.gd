@@ -9,7 +9,7 @@ var current_scene: Node = null
 var world_instance: Node3D = null
 var current_panel: CanvasLayer = null
 
-var side_panel : Control = null
+var side_panel : SidePanel = null
 
 var cur_meta_data: Dictionary
 

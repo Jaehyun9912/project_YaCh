@@ -60,7 +60,7 @@ func _ready():
 		if skill == null:
 			btn.lock_disable = true
 		
-	manager.turn_end.emit()
+	#manager.turn_end.emit()
 
 
 # 턴 변경되었음을 받는 함수
