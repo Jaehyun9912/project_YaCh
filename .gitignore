@@ -19,3 +19,8 @@
 
 # External Cached file
 .*/
+
+
+/*.apk
+/*.aab
+/*.idsig
