@@ -90,8 +90,13 @@ func set_all_buttons(OnOff: bool):
 func on_skillbutton_down(btn, index):
 	current_button = index
 	# 일단 센터 버튼이면 스킵 
-	if index == battle_panel.Buttons.CENTER:
+	if index == battle_panel.ButtonType.CENTER:
 		return
+		
+	# 순서 조정해서 전부 덮어씌우게 하기
+	var parent = get_parent()
+	parent.move_child(self, parent.get_child_count() - 1)
+		
 	var skill = SkillManager.get_player_skill(index)
 	
 	# 가림 패널 활성화 후 마우스에 버튼 이미지 부착 
@@ -189,6 +194,10 @@ func on_skillbutton_up():
 		
 	current_button = -1
 	is_on_cancel_area = false;
+	
+	# 순서 원래 위치로 조정
+	var parent = get_parent()
+	parent.move_child(self, 0)
 
 # 마우스가 취소 지역에 들어갔을 때 
 func _on_button_cancel_area_mouse_entered():

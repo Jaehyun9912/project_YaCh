@@ -14,8 +14,6 @@ signal use_skill(index, target)
 signal turn_cycle_start
 # 로그 기록하는 신호
 signal add_log(info: String)
-# BattlePanel로 메세지 전달하는 신호
-signal send_msg_to_panel(msg: BattlePanel.Order)
 #endregion
 
 #region Var
@@ -128,6 +126,7 @@ func _battle_set():
 			i.set_character(data, "Enemy." + data["tag"])
 			idx += 1
 			
+			
 		i.character_died.connect(_on_character_died)
 		
 	total_point_add = total_point * 0.2
@@ -153,7 +152,7 @@ func _battle():
 		turn_cycle_start.emit()
 		add_log.emit("%s 턴 시작" % turn_count)
 		
-		# 매니저 쪽에서 turn end 발동 대기
+		# Panel 쪽에서 turn end 발동 대기
 		await turn_end
 		
 		for i in turn_char:
@@ -200,22 +199,22 @@ func remove_cost(skill):
 			attrubute_bar.remove_value(e, element[e])
 
 # 버튼 눌렀을때
-func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
+func on_battle_panel_skill_actived(index : BattlePanel.ButtonType, target):
 	#var cost := 0
 	#print("target : ", target)
 	match index:
 		# 버튼에 해당하는 효과 발동 
-		BattlePanel.Buttons.CENTER:
+		BattlePanel.ButtonType.CENTER:
 			turn_end.emit()
-		BattlePanel.Buttons.SKILL1:
+		BattlePanel.ButtonType.SKILL1:
 			use_skill.emit(0, target)
-		BattlePanel.Buttons.SKILL2:
+		BattlePanel.ButtonType.SKILL2:
 			use_skill.emit(1, target)
-		BattlePanel.Buttons.SKILL3:
+		BattlePanel.ButtonType.SKILL3:
 			use_skill.emit(2, target)
-		BattlePanel.Buttons.SKILL4:
+		BattlePanel.ButtonType.SKILL4:
 			use_skill.emit(3, target)
-		BattlePanel.Buttons.RUN:
+		BattlePanel.ButtonType.RUN:
 			_battle_end(END_TYPE.RUN)
 	
 	if now_character.current_point < min_point_use:

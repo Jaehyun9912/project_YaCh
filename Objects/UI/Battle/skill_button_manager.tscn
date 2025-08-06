@@ -1,8 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://p6i634j8rs6u"]
+[gd_scene load_steps=6 format=3 uid="uid://p6i634j8rs6u"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/UI/skill_button_manager.gd" id="1_6ahvc"]
 [ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/Battle/RoundButton/round_button.tscn" id="2_ddtok"]
-[ext_resource type="Theme" uid="uid://ox7rhurq21n8" path="res://Objects/UI/Battle/button_theme.tres" id="3_ie52g"]
 [ext_resource type="PackedScene" uid="uid://dxudhlmb10ph1" path="res://Objects/UI/Battle/choice_button_manager.tscn" id="4_8kkgl"]
 [ext_resource type="Texture2D" uid="uid://h3udoxqqu1wd" path="res://Objects/UI/Battle/RoundButton/round_button.png" id="5_cj4fw"]
 
@@ -102,94 +101,6 @@ grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.054, 1)
 metadata/_edit_use_anchors_ = true
-
-[node name="Menu" type="ColorRect" parent="."]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-pivot_offset = Vector2(180, 193)
-color = Color(0.607843, 0.607843, 0.607843, 1)
-
-[node name="GridContainer" type="GridContainer" parent="Menu"]
-layout_mode = 2
-offset_top = 187.0
-offset_right = 360.0
-offset_bottom = 347.0
-size_flags_vertical = 3
-columns = 2
-
-[node name="BagButtonContainer" type="MarginContainer" parent="Menu/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="Button1" type="Button" parent="Menu/GridContainer/BagButtonContainer" groups=["other_buttons"]]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-theme = ExtResource("3_ie52g")
-keep_pressed_outside = true
-text = "가방"
-
-[node name="TalkButtonContainer" type="MarginContainer" parent="Menu/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="Button1" type="Button" parent="Menu/GridContainer/TalkButtonContainer" groups=["other_buttons"]]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-theme = ExtResource("3_ie52g")
-keep_pressed_outside = true
-text = "대화"
-
-[node name="QuestButtonContainer" type="MarginContainer" parent="Menu/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="Button1" type="Button" parent="Menu/GridContainer/QuestButtonContainer" groups=["other_buttons"]]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-theme = ExtResource("3_ie52g")
-keep_pressed_outside = true
-text = "퀘스트"
-
-[node name="RunButtonContatiner" type="MarginContainer" parent="Menu/GridContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/margin_left = 20
-theme_override_constants/margin_top = 20
-theme_override_constants/margin_right = 20
-theme_override_constants/margin_bottom = 20
-
-[node name="Button1" type="Button" parent="Menu/GridContainer/RunButtonContatiner" groups=["other_buttons"]]
-layout_mode = 2
-size_flags_vertical = 3
-focus_mode = 0
-theme = ExtResource("3_ie52g")
-keep_pressed_outside = true
-text = "도망
-"
 
 [node name="Cover" type="ColorRect" parent="."]
 visible = false

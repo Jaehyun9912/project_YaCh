@@ -4,32 +4,29 @@ class_name BattlePanel
 @onready var action_point = $ActionPoint as Label
 @onready var skill_button = $SkillButtonManager as SkillButtonManager
 @onready var turn_point_bar = $TurnPointBar as TurnPointBar
+@onready var top_button = $TopButton
 
-var buttons
+var skill_buttons
 var choicePanel
 
 var manager: BattleManager
 
 var action_text := "행동력 %d/%d"
 
-enum Buttons {
+enum ButtonType {
 	SKILL1,
 	SKILL2,
 	SKILL3,
 	SKILL4,
 	CENTER,
 	INVENTORY,
-	TALK,
+	LOG,
 	QUEST,
 	RUN,
 }
 
-enum Order {
-	OPEN_LOG_PANEL,
-}
-
 # 버튼 신호를 외부와 연결해주는 신호
-signal skill_actived(index, target)
+signal skill_actived(index : BattlePanel.ButtonType, target)
 
 # 현재 턴 캐릭터의 정보
 var current_charcter: BattleCharacter
@@ -47,14 +44,13 @@ func _ready():
 	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
 	manager.turn_cycle_start.connect(_on_turn_cycle_start)
 	manager.add_log.connect($BattleLog.add_log)
-	manager.send_msg_to_panel.connect(_on_recive_msg_from_battle_manager)
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
 	
-	buttons = skill_button.buttons
+	skill_buttons = skill_button.buttons
 	
 	# 버튼에 함수 설정, 플레이어 스킬 맞지 않으면 버튼 비활성화 
-	for i in len(buttons) - 1:
-		var btn = buttons[i]
+	for i in len(skill_buttons) - 1:
+		var btn = skill_buttons[i]
 		btn.disabled = true
 		var skill = SkillManager.get_player_skill(i)
 		if skill == null:
@@ -65,6 +61,8 @@ func _ready():
 
 # 턴 변경되었음을 받는 함수
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
+	top_button.on_battle_scene_turn_character_changed(new_character)
+	
 	# 현재 선택된 캐릭터 받아오기
 	current_charcter = new_character
 	
@@ -99,41 +97,16 @@ func _check_skill_is_possible():
 	if current_charcter == null or not current_charcter.is_player:
 		return
 	
-	for i in len(buttons):
-		if i < Buttons.CENTER:
-			buttons[i].disabled = not SkillManager.check_requirement(i, current_charcter.current_point, manager.attrubute_bar)
+	for i in len(skill_buttons):
+		if i < ButtonType.CENTER:
+			skill_buttons[i].disabled = not SkillManager.check_requirement(i, current_charcter.current_point, manager.attrubute_bar)
 		else:
 			return
 
 # 스킬 발동을 받아서 전달
-func _on_skill_button_manager_skill_activated(skill, target):
+func _on_skill_button_manager_skill_activated(skill : BattlePanel.ButtonType, target):
 	skill_actived.emit(skill, target)
 	_check_skill_is_possible()
-	
-func _on_recive_msg_from_battle_manager(msg: Order):
-	match msg:
-		Order.OPEN_LOG_PANEL:
-			$BattleLog.enable_panel()
-
-#region 특수 버튼
-# 해당 버튼들은 특별한 기능을 가질 수 도 있기에 별도의 함수로 구현함
-# 대화 버튼
-#func _on_button_talk_button_up():
-	#skill_actived.emit(Buttons.TALK, null)
-#
-## 퀘스트 버튼 
-#func _on_button_quest_button_up():
-	#skill_actived.emit(Buttons.QUEST, null)
-#
-## 도망가기 버튼
-#func _on_button_run_button_up():
-	#skill_actived.emit(Buttons.RUN, null)
-#
-## 인벤토리 버튼 
-#func _on_button_inventoy_button_up():
-	#var inven = PlayerData.inventory
-	#print(inven)
-#endregion
 
 #region getter
 func get_all_enemy() -> Array[BattleCharacter]:
@@ -161,6 +134,7 @@ func _on_skill_button_manager_target_changed(target, isally):
 
 # 턴 사이클 한바퀴 시작
 func _on_turn_cycle_start():
+	skill_button.set_all_buttons(false)
 	if manager.turn_count == 1:
 		turn_point_bar.set_information(manager.turn_char)
 		turn_point_bar.first_appear_anim()
@@ -170,5 +144,7 @@ func _on_turn_cycle_start():
 	await turn_point_bar.end_set_point
 	manager.turn_end.emit()
 
-
-
+func _on_top_button_button_pressed(btn : BattlePanel.ButtonType):
+	match btn:
+		ButtonType.LOG:
+			$BattleLog.enable_panel()
