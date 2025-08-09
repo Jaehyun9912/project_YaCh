@@ -44,6 +44,7 @@ func _ready():
 	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
 	manager.turn_cycle_start.connect(_on_turn_cycle_start)
 	manager.add_log.connect($BattleLog.add_log)
+	manager.attack_status_changed.connect(_on_attack_status_changed)
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
 	
 	skill_buttons = skill_button.buttons
@@ -55,9 +56,7 @@ func _ready():
 		var skill = SkillManager.get_player_skill(i)
 		if skill == null:
 			btn.lock_disable = true
-		
 	#manager.turn_end.emit()
-
 
 # 턴 변경되었음을 받는 함수
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
@@ -90,7 +89,6 @@ func _process(_delta):
 		action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
 		turn_point_bar.update_point(current_charcter)
 		current_point = current_charcter.current_point
-	
 
 # 현재 행동력보다 많은 행동력 소모하는 버튼 비활성화
 func _check_skill_is_possible():
@@ -144,7 +142,16 @@ func _on_turn_cycle_start():
 	await turn_point_bar.end_set_point
 	manager.turn_end.emit()
 
+# 패널 상단의 버튼 4개 처리
 func _on_top_button_button_pressed(btn : BattlePanel.ButtonType):
 	match btn:
 		ButtonType.LOG:
 			$BattleLog.enable_panel()
+			
+# 적의 공격 상태 처리 
+func _on_attack_status_changed(status: EnemyManager.AttackStatus):
+	match status:
+		EnemyManager.AttackStatus.Ready:
+			skill_button.set_counter_button(true)
+		EnemyManager.AttackStatus.End:
+			skill_button.set_counter_button(false)

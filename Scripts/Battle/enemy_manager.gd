@@ -3,6 +3,17 @@ class_name EnemyManager extends Node
 @onready var battle = $".." as BattleManager
 @onready var timer = $EnemyTimer as Timer
 
+enum AttackStatus 
+{
+	Ready,
+	End
+}
+var status = AttackStatus.End:
+	get: return status
+	set(value):
+		status = value
+		battle.attack_status_changed.emit(status)
+
 #@onready var upper = $"../Interact/UpperPanel" as UpperPanel
 
 var skill_info : Dictionary
@@ -21,9 +32,11 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	# 잠시 대기 
 	timer.start(0.5)
 	await timer.timeout
+	status = AttackStatus.Ready
 	
 	# 플레이어 타겟팅 
 	battle.player_character.set_hp_outline_red()
+	
 	timer.start(1.5)
 	
 	# 사용할 스킬과 그 스킬의 데미지 계산 
@@ -41,12 +54,14 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	
 	# 대기했다가 공격 후 종료 
 	await timer.timeout
-	battle.player_character.hp -= damage
+	
+	# Ready가 바뀌면 실패한 것
+	if status == AttackStatus.Ready:
+		status = AttackStatus.End
+		battle.player_character.hp -= damage
+		battle.turn_end.emit()
+	
 	battle.player_character.set_hp_outline_default()
-	#var skill = 
-	
-	battle.turn_end.emit()
-	
 	
 # 적 데이터를 읽고 다음에 수행할 스킬을 반환함 
 func get_next_skill(skills):

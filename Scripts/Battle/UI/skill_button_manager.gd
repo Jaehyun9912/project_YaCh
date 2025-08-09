@@ -2,6 +2,9 @@ class_name SkillButtonManager extends Control
 
 # 스킬 버튼들
 @onready var buttons = get_tree().get_nodes_in_group("skill_buttons")
+# 가운데 버튼 (반격용) 
+@onready var center_button = $SkillButtons/CenterButton as RoundButton
+
 # 버튼 이미지
 @onready var button_img = $ButtonImage
 # 버튼 취소 범위 원
@@ -178,7 +181,7 @@ func on_skillbutton_up():
 			ChoiceMode.SELF:
 				target = "self"
 		skill_activated.emit(current_button, target)
-		
+
 	# 초기화 
 	$Cover.visible = false
 	button_img.visible = false
@@ -212,3 +215,12 @@ func _on_button_cancel_area_mouse_entered():
 func _on_button_cancel_area_mouse_exited():
 	is_on_cancel_area = false
 	line.visible = true
+
+# 반격 버튼 설정
+func set_counter_button(onoff):
+	if onoff:
+		center_button.disabled = false
+		center_button.set_text("반격하기")
+	else:
+		center_button.disabled = true
+		center_button.reset_text()

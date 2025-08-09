@@ -14,6 +14,8 @@ signal use_skill(index, target)
 signal turn_cycle_start
 # 로그 기록하는 신호
 signal add_log(info: String)
+# 공격 상태를 보내주는 신호 (반격 체크 용)
+signal attack_status_changed(status: EnemyManager.AttackStatus)
 #endregion
 
 #region Var
@@ -156,8 +158,7 @@ func _battle():
 		await turn_end
 		
 		for i in turn_char:
-			now_character = i
-			turn_character_changed.emit(i)
+			change_current_char(i)
 			
 			# 플레이어 턴 
 			if i.is_player == true:
@@ -180,6 +181,10 @@ func _battle():
 		# 한 루프 끝나면 턴포인트 증가 
 		if total_point < init_total_point * 2:
 			total_point += total_point_add
+
+func change_current_char(char):
+	now_character = char
+	turn_character_changed.emit(char)
 
 #endregion
 
@@ -205,7 +210,13 @@ func on_battle_panel_skill_actived(index : BattlePanel.ButtonType, target):
 	match index:
 		# 버튼에 해당하는 효과 발동 
 		BattlePanel.ButtonType.CENTER:
-			turn_end.emit()
+			match enemy_manager.status:
+				EnemyManager.AttackStatus.Ready:
+					print("반격!")
+					enemy_manager.status = EnemyManager.AttackStatus.End
+					change_current_char(player_character)
+				_:
+					turn_end.emit()
 		BattlePanel.ButtonType.SKILL1:
 			use_skill.emit(0, target)
 		BattlePanel.ButtonType.SKILL2:
