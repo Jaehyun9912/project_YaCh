@@ -15,9 +15,8 @@ func _on_button_1_pressed():
 
 #디버그용으로 잠시
 func _on_button_2_pressed():
-	var panel = ViewManager.push_panel("QuestPanel",ViewManager.SCREEN.BOTTOM)
-	panel.set_quest_buttons(PlayerData.quest_list)
-	print("수주중인 퀘스트 보기")
+	var panel = ViewManager.push_panel("InventoryInfoPanel",ViewManager.SCREEN.FULL)
+	
 	
 	
 

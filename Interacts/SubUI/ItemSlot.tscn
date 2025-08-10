@@ -39,3 +39,5 @@ grow_vertical = 2
 text = "x 1"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[connection signal="gui_input" from="." to="." method="on_clicked"]

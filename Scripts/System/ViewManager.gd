@@ -110,17 +110,14 @@ enum SCREEN{
 # 패널 추가
 func push_panel(panel_name : String,screen_location : SCREEN):
 	get_view()
-	# past panel hide
-	#if panel_stack.size()>0:
-	#	var last_panel = panel_stack.back()
-	#	last_panel.hide()
 	# 패널 생성, 전시 후 해당 패널 반환
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
 	#print(panel_name," added, current panel count : ",panel_stack.size())
 	current_panel.add_child(panel as Node)
 	
 	_set_screen_size(panel,screen_location)
-	
+	if panel.has_signal("on_exit"):
+		panel.on_exit.connect(erase_panel.bind(panel))
 	return panel
 
 

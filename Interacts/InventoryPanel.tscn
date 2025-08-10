@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://bv3gisa28gdru"]
+[gd_scene load_steps=5 format=3 uid="uid://bv3gisa28gdru"]
 
 [ext_resource type="Texture2D" uid="uid://1u8ct4uc8xd8" path="res://icon.svg" id="1_38nj3"]
 [ext_resource type="Script" path="res://Scripts/Panel/InventoryPanel.gd" id="1_pt6c8"]
 [ext_resource type="PackedScene" uid="uid://bywby213cjyfx" path="res://Interacts/SubUI/ItemSlot.tscn" id="2_gjluc"]
+[ext_resource type="PackedScene" uid="uid://idlnoetrttir" path="res://Interacts/SubUI/ItemOptionBox.tscn" id="4_uohd5"]
 
 [node name="InventoryPanel" type="Control"]
 layout_mode = 3
@@ -13,6 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_pt6c8")
 slot_prefab = ExtResource("2_gjluc")
+option_prefab = ExtResource("4_uohd5")
 
 [node name="Inventory" type="ColorRect" parent="."]
 layout_mode = 1
@@ -86,6 +88,7 @@ size_flags_stretch_ratio = 0.0
 
 [node name="ItemSlot" parent="Inventory/ScrollContainer/VBoxContainer" instance=ExtResource("2_gjluc")]
 layout_mode = 2
+color = Color(0.854902, 0.709804, 0.227451, 1)
 
 [node name="ColorRect2" type="ColorRect" parent="."]
 layout_mode = 1
@@ -110,20 +113,10 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="ColorRect2/ScrollContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 60)
+[node name="DiscardBox" parent="ColorRect2/ScrollContainer/VBoxContainer" instance=ExtResource("4_uohd5")]
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
 
-[node name="Button" type="Button" parent="ColorRect2/ScrollContainer/VBoxContainer/MarginContainer"]
-layout_mode = 2
-text = "폐기"
-
-[node name="Button" type="Button" parent="ColorRect2"]
+[node name="Exit" type="Button" parent="ColorRect2"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -138,4 +131,4 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "닫기"
 
-[connection signal="gui_input" from="Inventory/ScrollContainer/VBoxContainer/ItemSlot" to="Inventory/ScrollContainer/VBoxContainer/ItemSlot" method="on_clicked"]
+[connection signal="pressed" from="ColorRect2/Exit" to="." method="exit"]
