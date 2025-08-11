@@ -113,9 +113,6 @@ grow_vertical = 2
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="DiscardBox" parent="ColorRect2/ScrollContainer/VBoxContainer" instance=ExtResource("4_uohd5")]
-layout_mode = 2
-
 [node name="Exit" type="Button" parent="ColorRect2"]
 layout_mode = 1
 anchors_preset = 7

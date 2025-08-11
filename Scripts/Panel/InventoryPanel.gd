@@ -7,25 +7,30 @@ signal on_select_changed(slot : InventorySlot)
 @export var option_prefab : Resource
 
 var slotContainer: VBoxContainer
+var actionContainer : VBoxContainer
 
 var selected_slot : InventorySlot
 
 var data
+
+# 각 아이템에서 사용 가능한 기능(해당 배열에 있는 기능만 사용 가능)
+var action_list = ["use", "discard", "read"]
+# 인벤토리 카테고리
+var category = ["inventory","quest","artifact"]
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	slotContainer = $"Inventory/ScrollContainer/VBoxContainer" as VBoxContainer
+	actionContainer = $"ColorRect2/ScrollContainer/VBoxContainer" as VBoxContainer
 	data = PlayerData.inventory
 	set_slot()
-	
-	var discardBtn = $"ColorRect2/ScrollContainer/VBoxContainer/DiscardBox/Button" as Button
-	discardBtn.pressed.connect(discard_slot)
 
 # 각 슬롯에 맞는 아이템 데이터 세팅
 func set_slot():
 	for i in slotContainer.get_child_count():
 		slotContainer.get_child(i).queue_free()
 	for i in data:
-		var itemData = BagContent.new(i)
+		var itemData = CountableItem.new(i)
 		var slot = slot_prefab.instantiate() as InventorySlot
 		slot.set_slot(itemData)
 		slotContainer.add_child(slot)
@@ -34,10 +39,19 @@ func set_slot():
 
 # 슬롯 클릭 시 그 아이템에 맞는 UI 세팅
 func set_slot_info(slot : InventorySlot):
+	for i in actionContainer.get_child_count():
+		actionContainer.get_child(i).queue_free()
 	if selected_slot != null:
 		selected_slot.set_highlight(false)
 	selected_slot = slot
 	selected_slot.set_highlight(true)
+	for i in action_list:
+		if slot.data.has_method(i):
+			var action = option_prefab.instantiate() as ActionBox
+			actionContainer.add_child(action)
+			action.set_action(slot.data.call.bind(i),i)
+			action.Onclicked.connect(slot.update_slot)
+				
 	on_select_changed.emit(selected_slot.data.data)
 
 func discard_slot():
@@ -46,7 +60,6 @@ func discard_slot():
 	var isEmpty = selected_slot.data.discard()
 	if isEmpty:
 		selected_slot.queue_free()
-		
 	else:
 		selected_slot.update_slot()
 		

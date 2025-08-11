@@ -1,9 +1,6 @@
+extends BagContent
 class_name Quest
-extends Node
 
-
-# 퀘스트 데이터
-var data
 
 # 퀘스트 id
 var id:
@@ -97,10 +94,6 @@ static func condition_check(conditions : PackedStringArray)-> bool:
 			return false
 	return true
 
-
-# 퀘스트 생성자
-func _init(quest_data : Dictionary) ->void:
-	data = quest_data
 
 
 # 퀘스트 데이터(딕셔너리) 반환

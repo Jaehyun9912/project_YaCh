@@ -114,7 +114,6 @@ func push_panel(panel_name : String,screen_location : SCREEN):
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
 	#print(panel_name," added, current panel count : ",panel_stack.size())
 	current_panel.add_child(panel as Node)
-	
 	_set_screen_size(panel,screen_location)
 	if panel.has_signal("on_exit"):
 		panel.on_exit.connect(erase_panel.bind(panel))
