@@ -15,13 +15,20 @@ var data
 
 # 각 아이템에서 사용 가능한 기능(해당 배열에 있는 기능만 사용 가능)
 var action_list = ["use", "discard", "read"]
+
 # 인벤토리 카테고리
 var category = ["inventory","quest","artifact"]
-
+var cur_category : int
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	slotContainer = $"Inventory/ScrollContainer/VBoxContainer" as VBoxContainer
 	actionContainer = $"ColorRect2/ScrollContainer/VBoxContainer" as VBoxContainer
+	
+	cur_category = 0
+	$"Inventory/Category/Left".pressed.connect(change_category.bind(-1))
+	$"Inventory/Category/Right".pressed.connect(change_category.bind(1))
+	
+	
 	data = PlayerData.inventory
 	set_slot()
 
@@ -66,3 +73,10 @@ func discard_slot():
 
 func exit():
 	on_exit.emit()
+
+func change_category(direction : int):
+	cur_category+=direction
+	if cur_category >= category.size() || cur_category<0:
+		cur_category%=category.size()
+	$"Inventory/Category/Label".text = category[cur_category]
+	# 현재 카테고리에 맞는 인벤토리 슬롯 표시
