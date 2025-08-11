@@ -70,7 +70,7 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 		return
 	
 	# 포인트 설정하기 
-	current_charcter.current_point = current_charcter.point
+	# current_charcter.current_point = current_charcter.point
 	action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
 	
 	# 만약 플레이어라면 스킬 버튼 활성화 

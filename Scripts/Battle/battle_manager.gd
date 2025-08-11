@@ -25,6 +25,9 @@ var total_point = 100
 var init_total_point
 var total_point_add
 
+var total_speed = 0
+var counter_addition = 10
+
 var turn_count := 0
 
 # 가장 적은 포인트를 사용하는 행동 (자동 턴 넘기기 용)
@@ -128,7 +131,6 @@ func _battle_set():
 			i.set_character(data, "Enemy." + data["tag"])
 			idx += 1
 			
-			
 		i.character_died.connect(_on_character_died)
 		
 	total_point_add = total_point * 0.2
@@ -136,12 +138,13 @@ func _battle_set():
 
 # 속도에 따른 행동력 계산 후 정렬에 반영 
 func update_turn_point():
-	var total_speed = 0
+	total_speed = 0
 	for i in turn_char:
 		total_speed += i.speed
 		
 	for i in turn_char:
 		i.point = i.speed / total_speed * total_point
+		i.current_point = i.point
 	
 	turn_char.sort_custom(func(a, b): return a.speed > b.speed)
 
@@ -212,9 +215,7 @@ func on_battle_panel_skill_actived(index : BattlePanel.ButtonType, target):
 		BattlePanel.ButtonType.CENTER:
 			match enemy_manager.status:
 				EnemyManager.AttackStatus.Ready:
-					print("반격!")
-					enemy_manager.status = EnemyManager.AttackStatus.End
-					change_current_char(player_character)
+					apply_counter(now_character, player_character)
 				_:
 					turn_end.emit()
 		BattlePanel.ButtonType.SKILL1:
@@ -232,6 +233,19 @@ func on_battle_panel_skill_actived(index : BattlePanel.ButtonType, target):
 		turn_end.emit()
 			
 	_check_dead_char()
+	
+# 카운터 발동 함수
+func apply_counter(target, counter):
+	# 남은 턴 * (내 속도 / 모든 속도 합) + 보정치 > 필드전체행동력비례 최솟값
+	var add_score = max(target.current_point * (counter.speed / total_speed) + counter_addition, total_point * 0.1)
+	
+	enemy_manager.status = EnemyManager.AttackStatus.End
+	change_current_char(counter)
+	
+	print("반격! 가져온 행동력: ", add_score)
+	counter.current_point += add_score
+	print(counter.current_point)
+	
 #endregion
 	
 #region END
