@@ -18,6 +18,7 @@ var action_list = ["use", "discard", "read"]
 
 # 인벤토리 카테고리
 var category = ["inventory","quest","artifact"]
+
 var cur_category : int
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -28,14 +29,20 @@ func _ready():
 	$"Inventory/Category/Left".pressed.connect(change_category.bind(-1))
 	$"Inventory/Category/Right".pressed.connect(change_category.bind(1))
 	
+	change_category(0)
 	
-	data = PlayerData.inventory
-	set_slot()
+	
 
-# 각 슬롯에 맞는 아이템 데이터 세팅
-func set_slot():
+#region 인벤토리 세팅
+func clear_slot():
 	for i in slotContainer.get_child_count():
 		slotContainer.get_child(i).queue_free()
+
+# 인벤토리 아이템 데이터 세팅
+func set_item_slot():
+	$"Inventory/Category/Label".text = "배틀 아이템"
+	clear_slot()
+	data = PlayerData.inventory
 	for i in data:
 		var itemData = CountableItem.new(i)
 		var slot = slot_prefab.instantiate() as InventorySlot
@@ -44,13 +51,32 @@ func set_slot():
 		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
 		slot.set_highlight(false)
 
+# 퀘스트 데이터 세팅
+func set_quest_slot():
+	$"Inventory/Category/Label".text = "퀘스트"
+	clear_slot()
+	data = PlayerData.quest_list
+	for i in data:
+		var slot = slot_prefab.instantiate() as InventorySlot
+		slot.set_slot(i)
+		slotContainer.add_child(slot)
+		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
+		slot.set_highlight(false)
+#endregion
+
 # 슬롯 클릭 시 그 아이템에 맞는 UI 세팅
 func set_slot_info(slot : InventorySlot):
 	for i in actionContainer.get_child_count():
 		actionContainer.get_child(i).queue_free()
 	if selected_slot != null:
 		selected_slot.set_highlight(false)
-	selected_slot = slot
+	if selected_slot != slot && slot != null:
+		selected_slot = slot
+		on_select_changed.emit(selected_slot)
+	else:
+		selected_slot = null
+		on_select_changed.emit(null)
+		return
 	selected_slot.set_highlight(true)
 	for i in action_list:
 		if slot.data.has_method(i):
@@ -58,8 +84,6 @@ func set_slot_info(slot : InventorySlot):
 			actionContainer.add_child(action)
 			action.set_action(slot.data.call.bind(i),i)
 			action.Onclicked.connect(slot.update_slot)
-				
-	on_select_changed.emit(selected_slot.data.data)
 
 func discard_slot():
 	if selected_slot == null:
@@ -78,5 +102,11 @@ func change_category(direction : int):
 	cur_category+=direction
 	if cur_category >= category.size() || cur_category<0:
 		cur_category%=category.size()
-	$"Inventory/Category/Label".text = category[cur_category]
+	set_slot_info(null)
 	# 현재 카테고리에 맞는 인벤토리 슬롯 표시
+	if category[cur_category] == "inventory":
+		set_item_slot()
+	elif category[cur_category] == "quest":
+		set_quest_slot()
+	
+	

@@ -28,10 +28,11 @@ func set_slot(_data : BagContent):
 		
 
 func update_slot():
-	var info = DataManager.get_item_data(data.data["id"])
-	nameText.text = info.name
+	nameText.text = data.get_title()
 	if data.data.has("count"):
 		countText.text = "x" + str(data.data["count"])
+	else:
+		countText.hide()
 
 # 슬롯 선택 시 사용가능한 옵션 리스트를 가져오는 함수
 func get_slot_data() -> Array:

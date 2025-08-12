@@ -127,3 +127,8 @@ func is_clearable(npc_name : String) -> bool:
 	else:
 		return false
 
+func get_title():
+	return title
+
+func get_description():
+	return description
