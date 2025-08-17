@@ -3,16 +3,16 @@ class_name EnemyManager extends Node
 @onready var battle = $".." as BattleManager
 @onready var timer = $EnemyTimer as Timer
 
-enum AttackStatus 
-{
-	Ready,
-	End
-}
-var status = AttackStatus.End:
-	get: return status
-	set(value):
-		status = value
-		battle.attack_status_changed.emit(status)
+#enum AttackStatus 
+#{
+	#Ready,
+	#End
+#}
+#var status = AttackStatus.End
+	#get: return status
+	#set(value):
+		#status = value
+		#battle.attack_status_changed.emit(status)
 
 #@onready var upper = $"../Interact/UpperPanel" as UpperPanel
 
@@ -20,6 +20,7 @@ var skill_info : Dictionary
 
 var player: 
 	get: return battle.player_character
+var damage
 	
 func _ready():
 	skill_info = DataManager.get_data("Skill/enemy_skill_info")
@@ -32,36 +33,39 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	# 잠시 대기 
 	timer.start(0.5)
 	await timer.timeout
-	status = AttackStatus.Ready
 	
 	# 플레이어 타겟팅 
-	battle.player_character.set_hp_outline_red()
+	player.set_hp_outline_red()
 	
-	timer.start(1.5)
+	#timer.start(1.5)
 	
 	# 사용할 스킬과 그 스킬의 데미지 계산 
 	var next_skill = get_next_skill(char.skills)
 	print(next_skill)
-	var damage = get_damage_by_skill(next_skill, char.attack)
+	damage = get_damage_by_skill(next_skill, char.attack)
 	
 	# 정보 패널 띄우기
 	#upper.set_panel_with_time(next_skill.name, next_skill.description % damage, 2)
 	ViewManager.side_panel.set_info_panel_with_time(next_skill.name, next_skill.description % damage, 2)
-	battle.add_attack_log(char.name, "Player", damage, battle.player_character.hp)
+	battle.add_attack_log(char.name, "Player", damage, player.hp)
 	
 	var cost = get_cost(next_skill)
 	char.current_point -= cost.get("point", 0)
 	
 	# 대기했다가 공격 후 종료 
-	await timer.timeout
+	battle.battle_panel.set_casting_panel("적 캐스팅 중", 3, true, _on_end_casting)
+	#await timer.timeout
+
 	
-	# Ready가 바뀌면 실패한 것
-	if status == AttackStatus.Ready:
-		status = AttackStatus.End
-		battle.player_character.hp -= damage
+func _on_end_casting(is_succes):
+	if is_succes:
+		player.hp -= damage
+		
+		# 일단 한번 공격하면 턴 종료하도록
 		battle.turn_end.emit()
-	
-	battle.player_character.set_hp_outline_default()
+	else:
+		battle.apply_counter(battle.now_character, player)
+	player.set_hp_outline_default()
 	
 # 적 데이터를 읽고 다음에 수행할 스킬을 반환함 
 func get_next_skill(skills):

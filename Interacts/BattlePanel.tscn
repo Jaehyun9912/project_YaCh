@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://c3h3jildcn5gm"]
+[gd_scene load_steps=7 format=3 uid="uid://c3h3jildcn5gm"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/UI/battle_panel.gd" id="1_njjyf"]
 [ext_resource type="PackedScene" uid="uid://p6i634j8rs6u" path="res://Objects/UI/Battle/skill_button_manager.tscn" id="2_jcmlh"]
 [ext_resource type="PackedScene" uid="uid://c2gk0n3dyk110" path="res://Objects/UI/Battle/TurnPointBar/TurnPointBar.tscn" id="3_jg1ea"]
 [ext_resource type="PackedScene" uid="uid://cdibvtid86gfx" path="res://Objects/UI/Battle/battle_log.tscn" id="4_2oula"]
 [ext_resource type="PackedScene" uid="uid://b67wqdu1eeq0g" path="res://Objects/UI/Battle/top_button.tscn" id="5_eo78p"]
+[ext_resource type="PackedScene" uid="uid://ba7rocg7oxxgq" path="res://Objects/UI/Battle/casting_panel.tscn" id="5_m4pqx"]
 
 [node name="BattlePanel" type="Control"]
 layout_mode = 3
@@ -28,7 +29,7 @@ anchor_top = 0.202073
 anchor_bottom = 0.26943
 metadata/_edit_use_anchors_ = true
 
-[node name="ActionPoint" type="Label" parent="."]
+[node name="ActionPoint" type="Label" parent="TurnPointBar"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.680556
@@ -36,6 +37,8 @@ anchor_top = 0.139896
 anchor_right = 0.997222
 anchor_bottom = 0.199482
 offset_left = -1.52588e-05
+offset_top = -27.6376
+offset_bottom = -6.18683
 grow_horizontal = 0
 metadata/_edit_use_anchors_ = true
 
@@ -43,6 +46,12 @@ metadata/_edit_use_anchors_ = true
 layout_mode = 1
 offset_top = 2.0
 offset_bottom = 52.0
+
+[node name="CastingPanel" parent="." instance=ExtResource("5_m4pqx")]
+visible = false
+layout_mode = 1
+anchor_top = 0.0
+anchor_bottom = 0.997409
 
 [node name="BattleLog" parent="." instance=ExtResource("4_2oula")]
 visible = false

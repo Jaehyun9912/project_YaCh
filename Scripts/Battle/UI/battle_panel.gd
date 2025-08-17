@@ -1,7 +1,7 @@
 extends Control
 class_name BattlePanel
 
-@onready var action_point = $ActionPoint as Label
+@onready var action_point = $TurnPointBar/ActionPoint as Label
 @onready var skill_button = $SkillButtonManager as SkillButtonManager
 @onready var turn_point_bar = $TurnPointBar as TurnPointBar
 @onready var top_button = $TopButton
@@ -44,7 +44,7 @@ func _ready():
 	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
 	manager.turn_cycle_start.connect(_on_turn_cycle_start)
 	manager.add_log.connect($BattleLog.add_log)
-	manager.attack_status_changed.connect(_on_attack_status_changed)
+	manager.battle_panel = self
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
 	
 	skill_buttons = skill_button.buttons
@@ -148,10 +148,13 @@ func _on_top_button_button_pressed(btn : BattlePanel.ButtonType):
 		ButtonType.LOG:
 			$BattleLog.enable_panel()
 			
+func set_casting_panel(text, time, is_button_visible, callback):
+	$CastingPanel.set_casting_panel(text, time, is_button_visible, callback)
+
 # 적의 공격 상태 처리 
-func _on_attack_status_changed(status: EnemyManager.AttackStatus):
-	match status:
-		EnemyManager.AttackStatus.Ready:
-			skill_button.set_counter_button(true)
-		EnemyManager.AttackStatus.End:
-			skill_button.set_counter_button(false)
+#func _on_attack_status_changed(status: EnemyManager.AttackStatus):
+	#match status:
+		#EnemyManager.AttackStatus.Ready:
+			#skill_button.set_counter_button(true)
+		#EnemyManager.AttackStatus.End:
+			#skill_button.set_counter_button(false)

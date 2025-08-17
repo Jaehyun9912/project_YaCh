@@ -15,24 +15,29 @@ signal turn_cycle_start
 # 로그 기록하는 신호
 signal add_log(info: String)
 # 공격 상태를 보내주는 신호 (반격 체크 용)
-signal attack_status_changed(status: EnemyManager.AttackStatus)
+#signal attack_status_changed(status: EnemyManager.AttackStatus)
 #endregion
 
 #region Var
-
 # 행동력 포인트
 var total_point = 100
+# 최초의 행동력 포인트
 var init_total_point
+# 매 턴 추가되는 행동력
 var total_point_add
 
+# 행동력 총합
 var total_speed = 0
+# 반격 시 기본으로 추가되는 행동력
 var counter_addition = 10
 
+# 지나간 턴 수
 var turn_count := 0
 
 # 가장 적은 포인트를 사용하는 행동 (자동 턴 넘기기 용)
 var min_point_use = 1
 # 매니저 
+var battle_panel : BattlePanel
 @onready var enemy_manager = $EnemyManager as EnemyManager
 @onready var attrubute_bar = $Interact/AttributeBar
 @onready var waitTimer = $WaitTimer as Timer
@@ -66,6 +71,7 @@ var map_data : Dictionary
 # 전투 종료 여부
 var is_battle_end := false
 
+# 맵 데이터 체크하는 변수들
 @export var Check = ["enemys"]
 #endregion
 
@@ -144,7 +150,6 @@ func update_turn_point():
 		
 	for i in turn_char:
 		i.point = i.speed / total_speed * total_point
-		i.current_point = i.point
 	
 	turn_char.sort_custom(func(a, b): return a.speed > b.speed)
 
@@ -161,7 +166,7 @@ func _battle():
 		await turn_end
 		
 		for i in turn_char:
-			change_current_char(i)
+			change_now_char(i, i.point)
 			
 			# 플레이어 턴 
 			if i.is_player == true:
@@ -185,8 +190,10 @@ func _battle():
 		if total_point < init_total_point * 2:
 			total_point += total_point_add
 
-func change_current_char(char):
+# 턴 진행하는 캐릭터 변경
+func change_now_char(char : BattleCharacter, point):
 	now_character = char
+	turn_cost = point
 	turn_character_changed.emit(char)
 
 #endregion
@@ -213,11 +220,11 @@ func on_battle_panel_skill_actived(index : BattlePanel.ButtonType, target):
 	match index:
 		# 버튼에 해당하는 효과 발동 
 		BattlePanel.ButtonType.CENTER:
-			match enemy_manager.status:
-				EnemyManager.AttackStatus.Ready:
-					apply_counter(now_character, player_character)
-				_:
-					turn_end.emit()
+			#match enemy_manager.status:
+				#EnemyManager.AttackStatus.Ready:
+					#apply_counter(now_character, player_character)
+				#_:
+			turn_end.emit()
 		BattlePanel.ButtonType.SKILL1:
 			use_skill.emit(0, target)
 		BattlePanel.ButtonType.SKILL2:
@@ -239,11 +246,10 @@ func apply_counter(target, counter):
 	# 남은 턴 * (내 속도 / 모든 속도 합) + 보정치 > 필드전체행동력비례 최솟값
 	var add_score = max(target.current_point * (counter.speed / total_speed) + counter_addition, total_point * 0.1)
 	
-	enemy_manager.status = EnemyManager.AttackStatus.End
-	change_current_char(counter)
+	#enemy_manager.status = EnemyManager.AttackStatus.End
+	change_now_char(counter, add_score)
 	
 	print("반격! 가져온 행동력: ", add_score)
-	counter.current_point += add_score
 	print(counter.current_point)
 	
 #endregion
