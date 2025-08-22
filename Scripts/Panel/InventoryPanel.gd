@@ -17,7 +17,8 @@ var data
 var action_list = ["use", "discard", "read"]
 
 # 인벤토리 카테고리
-var category = ["inventory","quest","artifact"]
+var category = ["battle","consume","artifact","quest"]
+var category_name =["배틀 아이템","소모 아이템","아티펙트","퀘스트"]
 
 var cur_category : int
 # Called when the node enters the scene tree for the first time.
@@ -39,14 +40,17 @@ func clear_slot():
 		slotContainer.get_child(i).queue_free()
 
 # 인벤토리 아이템 데이터 세팅
-func set_item_slot():
-	$"Inventory/Category/Label".text = "배틀 아이템"
+func set_item_slot(num : int):
+	$"Inventory/Category/Label".text = category_name[num]
 	clear_slot()
 	data = PlayerData.inventory
 	for i in data:
-		var itemData = CountableItem.new(i)
+		var item_data = DataManager.get_item_data(i["id"])
+		if item_data.get("category") != category[num]:
+			continue
+		var item = CountableItem.new(i)
 		var slot = slot_prefab.instantiate() as InventorySlot
-		slot.set_slot(itemData)
+		slot.set_slot(item)
 		slotContainer.add_child(slot)
 		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
 		slot.set_highlight(false)
@@ -83,7 +87,7 @@ func set_slot_info(slot : InventorySlot):
 			var action = option_prefab.instantiate() as ActionBox
 			actionContainer.add_child(action)
 			action.set_action(slot.data.call.bind(i),i)
-			action.Onclicked.connect(slot.update_slot)
+			action.on_clicked.connect(slot.update_slot)
 
 func discard_slot():
 	if selected_slot == null:
@@ -104,9 +108,8 @@ func change_category(direction : int):
 		cur_category%=category.size()
 	set_slot_info(null)
 	# 현재 카테고리에 맞는 인벤토리 슬롯 표시
-	if category[cur_category] == "inventory":
-		set_item_slot()
-	elif category[cur_category] == "quest":
+	if category[cur_category] == "quest":
 		set_quest_slot()
-	
+	else:
+		set_item_slot(cur_category)
 	

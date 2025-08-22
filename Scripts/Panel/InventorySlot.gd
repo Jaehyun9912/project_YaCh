@@ -31,14 +31,11 @@ func update_slot():
 	nameText.text = data.get_title()
 	if data.data.has("count"):
 		countText.text = "x" + str(data.data["count"])
+		if data.data["count"] == 0:
+			self.queue_free()
 	else:
 		countText.hide()
 
-# 슬롯 선택 시 사용가능한 옵션 리스트를 가져오는 함수
-func get_slot_data() -> Array:
-	var options = []
-	
-	return options
 
 func set_highlight(highlight : bool):
 	if highlight:

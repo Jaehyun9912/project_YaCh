@@ -1,5 +1,7 @@
 class_name BagContent
 
+signal on_value_changed
+
 var data : Dictionary
 
 func _init(_data : Dictionary) -> void:

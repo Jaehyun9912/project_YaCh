@@ -14,13 +14,12 @@ func use() -> bool:
 	return false
 
 # 버리기
-func discard() -> bool:
+func discard():
 	if data.has("count"):
 		data["count"] -=1
 		print(data)
-		if data["count"] ==0:
-			return true
-	return false
+		on_value_changed.emit(data["count"])
+	
 	
 
 func get_title():
@@ -28,3 +27,4 @@ func get_title():
 
 func get_description():
 	return item_data["description"]
+
