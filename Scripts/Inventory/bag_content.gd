@@ -2,9 +2,9 @@ class_name BagContent
 
 signal on_value_changed
 
-var data : Dictionary
+var data
 
-func _init(_data : Dictionary) -> void:
+func _init(_data) -> void:
 	data =_data
 
 func get_title()-> String:

@@ -51,6 +51,7 @@ func set_item_slot(num : int):
 		var item = CountableItem.new(i)
 		var slot = slot_prefab.instantiate() as InventorySlot
 		slot.set_slot(item)
+		slot.tree_exited.connect(set_slot_info.bind(null))
 		slotContainer.add_child(slot)
 		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
 		slot.set_highlight(false)
@@ -63,6 +64,18 @@ func set_quest_slot():
 	for i in data:
 		var slot = slot_prefab.instantiate() as InventorySlot
 		slot.set_slot(i)
+		slotContainer.add_child(slot)
+		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
+		slot.set_highlight(false)
+
+func set_artifact_slot():
+	$"Inventory/Category/Label".text = "아티펙트"
+	clear_slot()
+	data = PlayerData.artifact
+	for i in data:
+		var item = Artifact.new(i)
+		var slot = slot_prefab.instantiate() as InventorySlot
+		slot.set_slot(item)
 		slotContainer.add_child(slot)
 		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
 		slot.set_highlight(false)
@@ -97,7 +110,9 @@ func discard_slot():
 		selected_slot.queue_free()
 	else:
 		selected_slot.update_slot()
-		
+
+var detail_quest : Quest
+var panel
 
 func exit():
 	on_exit.emit()
@@ -110,6 +125,8 @@ func change_category(direction : int):
 	# 현재 카테고리에 맞는 인벤토리 슬롯 표시
 	if category[cur_category] == "quest":
 		set_quest_slot()
+	elif category[cur_category] == "artifact":
+		set_artifact_slot()
 	else:
 		set_item_slot(cur_category)
 	

@@ -1,6 +1,7 @@
 extends BagContent
 class_name Quest
 
+signal on_read
 
 # 퀘스트 id
 var id:
@@ -94,16 +95,22 @@ static func condition_check(conditions : PackedStringArray)-> bool:
 			return false
 	return true
 
-
+func get_quest_condition() -> Array:
+	var condition = process_condition as Array[String]
+	for i in submit:
+		var item_tag = "!item:"+i["id"]+"<" + str(i["count"])
+		condition.append(item_tag)
+	return condition
 
 # 퀘스트 데이터(딕셔너리) 반환
 func get_quest_data() -> Dictionary:
+	var condition = get_quest_condition()
 	var dict = {
 		"title" : title,
 		"description" : description,
 		"id" : id,
 		"accept_condition" : accept_condition,
-		"process_condition" : process_condition,
+		"process_condition" : condition,
 		"clear_NPC" : clear_NPC,
 		"rewards" : rewards
 	}
@@ -118,10 +125,7 @@ func is_clearable(npc_name : String) -> bool:
 	if !TagManager.has_tag(PlayerData,"Quest.process."+id):
 		return false
 	# 클리어 조건 확인
-	var condition = process_condition as Array[String]
-	for i in submit:
-		var item_tag = "!item:"+i["id"]+"<" + str(i["count"])
-		condition.append(item_tag)
+	var condition = get_quest_condition()
 	if Quest.condition_check(condition):
 		return true
 	else:
@@ -132,3 +136,6 @@ func get_title():
 
 func get_description():
 	return description
+
+func read():
+	on_read.emit(self)

@@ -29,7 +29,7 @@ func set_slot(_data : BagContent):
 
 func update_slot():
 	nameText.text = data.get_title()
-	if data.data.has("count"):
+	if data is CountableItem:
 		countText.text = "x" + str(data.data["count"])
 		if data.data["count"] == 0:
 			self.queue_free()
