@@ -62,35 +62,38 @@ var rewards:
 		return PackedStringArray()
 
 
-
+static func check_condition(condition : String) -> bool:
+	# 반전 확인
+	var negative = false
+	if condition.begins_with("!"):
+		condition = condition.right(-1)
+		negative = true
+	# 조건 분야 확인(태그, 아이템, 스탯)
+	var arr = condition.split(":",true,1)
+	var check : bool
+	if arr.size()==1:
+		check = TagManager.tag_compare(PlayerData,arr[0])
+	elif arr[0] == "tag":
+		check = TagManager.tag_compare(PlayerData,arr[1])
+	elif arr[0] == "stat":
+		check = PlayerData.stat_compare(arr[1])
+	elif arr[0] == "item":
+		check = PlayerData.item_compare(arr[1])
+	elif arr[0] == "artifact":
+		check = PlayerData.artifact_compare(arr[1])
+	# 조건 문자열이 이상할 경우
+	else:
+		printerr("Condition Error")
+		return false
+	if negative == check:
+		return false
+	return true
 
 # 조건 순회. 하나라도 미충족 시 false 반환
 static func condition_check(conditions : PackedStringArray)-> bool:
 	for i in conditions:
-		# 반전 확인
-		var negative = false
-		var condition = i
-		if condition.begins_with("!"):
-			condition = condition.right(-1)
-			negative = true
-		# 조건 분야 확인(태그, 아이템, 스탯)
-		var arr = condition.split(":",true,1)
-		var check : bool
-		if arr.size()==1:
-			check = TagManager.tag_compare(PlayerData,arr[0])
-		elif arr[0] == "tag":
-			check = TagManager.tag_compare(PlayerData,arr[1])
-		elif arr[0] == "stat":
-			check = PlayerData.stat_compare(arr[1])
-		elif arr[0] == "item":
-			check = PlayerData.item_compare(arr[1])
-		elif arr[0] == "artifact":
-			check = PlayerData.artifact_compare(arr[1])
-		# 조건 문자열이 이상할 경우
-		else:
-			printerr("Condition Error")
-			return false
-		if negative == check:
+		var check = check_condition(i)
+		if !check:
 			return false
 	return true
 

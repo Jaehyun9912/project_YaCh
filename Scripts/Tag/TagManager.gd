@@ -20,7 +20,6 @@ func get_tag_count(node : Node, tag : String)-> int:
 	# 없으면 0 반환
 	return 0
 
-
 # 태그 트리 추가(.으로 구분해서 상위부터 하위태그까지 전부 추가)
 func add_tag_tree(node : Node, tag : String, count =1):
 	# 해당 태그를 각 태그 부분으로 분류
@@ -94,6 +93,9 @@ func tag_compare(node : Node,tag : String) -> bool:
 	if TagManager.has_tag(node,tag):
 		return true
 	return false
+
+
+	
 
 
 # 씬 로드 될때 할당 해제된 노드 제거
