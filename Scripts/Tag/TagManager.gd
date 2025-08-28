@@ -1,5 +1,6 @@
 extends Node
 
+signal on_tag_changed(node : Node, tag : String, count : int)
 
 # 노드 오브젝트(key) : 딕셔너리(문자열 : 카운트)
 var dict : Dictionary
@@ -131,6 +132,7 @@ func _decrease_tag(node : Node, tag : String, count = 1) -> int:
 	if !tags.has(tag):
 		return 0
 	tags[tag] -= count
+	on_tag_changed.emit(node,tag,tags[tag])
 	if tags[tag] <= 0:
 		_remove_tag(node,tag)
 		return 0
@@ -156,13 +158,16 @@ func _add_tag(node : Node, tag : String, count = 1) -> void:
 		# 태그를 가지고 있을 경우 count 추가
 		if tags.has(tag):
 			tags[tag] += count
+			on_tag_changed.emit(node,tag,tags[tag])
 			return
 		# 태그 추가
 		tags[tag] = count
+		on_tag_changed.emit(node,tag,count)
 	else:
 		# 없으면 태그 딕셔너리 추가
 		var arr = { tag : count }
 		dict[node] = arr
+		on_tag_changed.emit(node,tag,count)
 
 
 

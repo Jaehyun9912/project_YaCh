@@ -16,7 +16,7 @@ func use() -> bool:
 # 버리기
 func discard():
 	if data.has("count"):
-		data["count"] -=1
+		PlayerData.add_new_item(data["id"],-1)
 		print(data)
 		on_value_changed.emit(data["count"])
 	

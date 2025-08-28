@@ -1,6 +1,8 @@
 extends Node
 class_name Player
 
+signal on_inventory_changed
+
 const max_inventory_slots = 9
 
 func _ready():
@@ -125,6 +127,10 @@ func add_new_item(id : String, count : int):
 	for i in inventory:
 		if i["id"] == id:
 			i.count += count
+			on_inventory_changed.emit(id,i.count)
+			if i.count == 0:
+				inventory.erase(i)
+				print(inventory)
 			flag = true
 			break
 	# 없을 때는 새로 추가 
@@ -140,6 +146,7 @@ func add_new_item(id : String, count : int):
 			return
 		var new_item = {"id": id, "count": count, "slot": first_slot}
 		inventory.push_back(new_item)
+		on_inventory_changed.emit(id,count)
 	print(id)
 	print(inventory)
 
@@ -183,7 +190,7 @@ func receive_quest(quest : Quest):
 	quest_list.append(quest)
 	TagManager.add_tag_tree(PlayerData,"Quest.process."+quest.id)
 	print( quest.id," Receive, Current QuestCount :",quest_list.size())
-	quest_updated.emit(quest_list)
+	quest_updated.emit(quest,true)
 
 
 # 퀘스트 클리어(클리어 태그 추가)
@@ -191,7 +198,7 @@ func clear_quest(quest: Quest):
 	PlayerData.quest_list.erase(quest)
 	TagManager.remove_tag_tree(PlayerData,"Quest.process."+quest.id)
 	TagManager.add_tag_tree(PlayerData,"Quest.clear."+quest.id)
-	quest_updated.emit(quest_list)
+	quest_updated.emit(quest,false)
 
 
 # 스탯 비교
