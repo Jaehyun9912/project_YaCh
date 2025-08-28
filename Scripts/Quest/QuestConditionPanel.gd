@@ -14,7 +14,7 @@ var condition_box:
 		return $"ColorRect/VBoxContainer"
 
 
-func set_quest_detail(_quest : Quest):
+func set_panel(_quest):
 	quest = _quest
 	title.text = quest.title
 	description.text = quest.description

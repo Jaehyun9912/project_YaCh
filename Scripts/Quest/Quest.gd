@@ -1,7 +1,6 @@
 extends BagContent
 class_name Quest
 
-signal on_read
 
 # 퀘스트 id
 var id:
@@ -138,4 +137,4 @@ func get_description():
 	return description
 
 func read():
-	on_read.emit(self)
+	pass

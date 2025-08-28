@@ -21,17 +21,24 @@ var category = ["battle","consume","artifact","quest"]
 var category_name =["배틀 아이템","소모 아이템","아티펙트","퀘스트"]
 
 var cur_category : int
+var read_panel : Control
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	slotContainer = $"Inventory/ScrollContainer/VBoxContainer" as VBoxContainer
 	actionContainer = $"ColorRect2/ScrollContainer/VBoxContainer" as VBoxContainer
+	
 	
 	cur_category = 0
 	$"Inventory/Category/Left".pressed.connect(change_category.bind(-1))
 	$"Inventory/Category/Right".pressed.connect(change_category.bind(1))
 	
 	change_category(0)
-	
+	read_panel = ViewManager.push_panel("QuestConditionPanel",ViewManager.SCREEN.TOP)
+	read_panel.hide()
+	on_exit.connect(ViewManager.erase_panel.bind(read_panel))
+	on_select_changed.connect(func(slot):
+		read_panel.hide()
+		)
 	
 
 #region 인벤토리 세팅
@@ -99,8 +106,12 @@ func set_slot_info(slot : InventorySlot):
 		if slot.data.has_method(i):
 			var action = option_prefab.instantiate() as ActionBox
 			actionContainer.add_child(action)
-			action.set_action(slot.data.call.bind(i),i)
-			action.on_clicked.connect(slot.update_slot)
+			if i == "read":
+				action.set_action(read_slot.bind(slot),i)
+				pass
+			else:
+				action.set_action(slot.data.call.bind(i),i)
+				action.on_clicked.connect(slot.update_slot)
 
 func discard_slot():
 	if selected_slot == null:
@@ -111,8 +122,14 @@ func discard_slot():
 	else:
 		selected_slot.update_slot()
 
-var detail_quest : Quest
-var panel
+
+func read_slot(slot):
+	if read_panel.visible:
+		read_panel.hide()
+	else:
+		read_panel.show()
+		read_panel.set_panel(slot.data)
+	
 
 func exit():
 	on_exit.emit()

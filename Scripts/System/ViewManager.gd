@@ -112,7 +112,6 @@ func push_panel(panel_name : String,screen_location : SCREEN):
 	get_view()
 	# 패널 생성, 전시 후 해당 패널 반환
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
-	#print(panel_name," added, current panel count : ",panel_stack.size())
 	current_panel.add_child(panel as Node)
 	_set_screen_size(panel,screen_location)
 	if panel.has_signal("on_exit"):
@@ -124,7 +123,6 @@ func push_panel(panel_name : String,screen_location : SCREEN):
 func erase_panel(panel):
 	if current_panel.get_children().has(panel):
 		current_panel.remove_child(panel)
-	#print("panel erased, current panel count : ",panel_stack.size())
 	
 
 # 스크린 위치 지정 
