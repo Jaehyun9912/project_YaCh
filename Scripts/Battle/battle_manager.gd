@@ -248,6 +248,7 @@ func apply_counter(target, counter):
 	
 	#enemy_manager.status = EnemyManager.AttackStatus.End
 	change_now_char(counter, add_score)
+	battle_panel.turn_point_bar.set_outline(counter, true)
 	
 	print("반격! 가져온 행동력: ", add_score)
 	print(counter.current_point)

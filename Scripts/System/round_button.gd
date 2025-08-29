@@ -13,7 +13,8 @@ class_name RoundButton
 @onready var init_text = button_text
 
 func _ready():
-	label.text = button_text
+	#label.text = button_text
+	pass
 	
 #func _init():
 	#label.text = button_text

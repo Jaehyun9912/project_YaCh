@@ -32,18 +32,24 @@ func _on_battle_use_skill(index, target_info):
 		"field":
 			do_field()
 	
-	var element = cur_skill.get("element", {})
-	if element.has("type"):
-			battle.attrubute_bar.add_value(element["type"], element["amount"])
+	#var element = cur_skill.get("element", {})
+	#if element.has("type"):
+			#battle.attrubute_bar.add_value(element["type"], element["amount"])
+	var effect = cur_skill.get("effect", {})
+	for type in effect:
+		if type == SkillManager.ACTION_POINT_ID:
+			battle.now_character.point += effect[type]
+		else:
+			battle.attrubute_bar.add_value(type, effect[type])
 	
 
 # 공격 함수 
 func do_attack():
-	var apply = cur_skill.get("apply", 0)
-	if not apply is float:
-		print("Attack's apply is not number!")
-		return
-	
+	var apply = SkillManager.get_value(cur_skill)
+	#var apply = cur_skill.get("apply", 0)
+	#if not apply is float:
+		#print("Attack's apply is not number!")
+		#return
 	# self 전용 구현 
 	if target is String and target == "self":
 		battle.player_character.hp -= apply

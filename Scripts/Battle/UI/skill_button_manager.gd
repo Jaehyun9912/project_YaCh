@@ -215,12 +215,3 @@ func _on_button_cancel_area_mouse_entered():
 func _on_button_cancel_area_mouse_exited():
 	is_on_cancel_area = false
 	line.visible = true
-
-# 반격 버튼 설정
-func set_counter_button(onoff):
-	if onoff:
-		center_button.disabled = false
-		center_button.set_text("반격하기")
-	else:
-		center_button.disabled = true
-		center_button.reset_text()

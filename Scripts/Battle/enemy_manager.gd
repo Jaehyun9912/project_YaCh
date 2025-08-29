@@ -23,7 +23,8 @@ var player:
 var damage
 	
 func _ready():
-	skill_info = DataManager.get_data("Skill/enemy_skill_info")
+	skill_info = DataManager.get_data_folder("Skill/Enemy")
+	#print(skill_info)
 
 # 적의 행동 수행 
 func _on_battle_scene_turn_character_changed(char: BattleCharacter):
@@ -31,7 +32,7 @@ func _on_battle_scene_turn_character_changed(char: BattleCharacter):
 	if char.is_player == true: return
 
 	# 잠시 대기 
-	timer.start(0.5)
+	timer.start(1)
 	await timer.timeout
 	
 	# 플레이어 타겟팅 

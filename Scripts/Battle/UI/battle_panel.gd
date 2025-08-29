@@ -73,6 +73,8 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 	# current_charcter.current_point = current_charcter.point
 	action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
 	
+	turn_point_bar.set_outline(current_charcter, false)
+	
 	# 만약 플레이어라면 스킬 버튼 활성화 
 	if new_character.is_player == true:
 		skill_button.set_all_buttons(true)
@@ -150,11 +152,3 @@ func _on_top_button_button_pressed(btn : BattlePanel.ButtonType):
 			
 func set_casting_panel(text, time, is_button_visible, callback):
 	$CastingPanel.set_casting_panel(text, time, is_button_visible, callback)
-
-# 적의 공격 상태 처리 
-#func _on_attack_status_changed(status: EnemyManager.AttackStatus):
-	#match status:
-		#EnemyManager.AttackStatus.Ready:
-			#skill_button.set_counter_button(true)
-		#EnemyManager.AttackStatus.End:
-			#skill_button.set_counter_button(false)

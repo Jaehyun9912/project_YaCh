@@ -4,6 +4,7 @@ extends Control
 # 속성의 수치와 해당하는 사각형 반환 
 var type : Dictionary
 
+# id에 해당하는 속성값을 가져옴 (없으면 0)
 func get_element(id):
 	if id in type.keys():
 		return type[id][0]

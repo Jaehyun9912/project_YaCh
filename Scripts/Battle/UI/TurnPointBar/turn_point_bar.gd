@@ -42,6 +42,10 @@ func set_point(chars: Array, total_value):
 func update_point(char: BattleCharacter):
 	turn_bar_dict[char.name].set_point(char.current_point)
 
+func set_outline(char: BattleCharacter, is_counter: bool):
+	for i in turn_bar_dict.keys():
+		turn_bar_dict[i].set_outline(i == char.name, is_counter)
+
 # 캐릭터가 죽었을 때 행동력 바를 정리함 
 func remove_bar(char):
 	var char_name = char.name
@@ -55,6 +59,7 @@ func remove_bar(char):
 	
 	removed_bar.queue_free()
 	
+# 최초 등장 애니메이션
 func first_appear_anim():
 	var tween = create_tween()
 	var bar = $ProgressBar
