@@ -1,6 +1,7 @@
 extends Node
 class_name Player
 
+# 아이템 변화 시 (id,count), 아티펙트 변화 시 (id)
 signal on_inventory_changed
 
 const max_inventory_slots = 9
@@ -135,6 +136,8 @@ func add_new_item(id : String, count : int):
 			break
 	# 없을 때는 새로 추가 
 	if flag == false:
+		if count <= 0:
+			return
 		var first_slot = null
 		for i in range(max_inventory_slots):
 			if inventory_slot_status[i] == false:
@@ -170,6 +173,7 @@ func _get_artifact(id : String):
 		# 아이템 부여 
 		artifact[id] = true
 		print(artifact)
+		on_inventory_changed.emit(id)
 
 #endregion
 
@@ -188,6 +192,7 @@ var quest_list : Array[Quest]
 # 퀘스트 수주(수주중 태그 추가)
 func receive_quest(quest : Quest):
 	quest_list.append(quest)
+	quest.quest_activate()
 	TagManager.add_tag_tree(PlayerData,"Quest.process."+quest.id)
 	print( quest.id," Receive, Current QuestCount :",quest_list.size())
 	quest_updated.emit(quest,true)

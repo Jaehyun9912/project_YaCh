@@ -35,7 +35,7 @@ func check_quest(quest : Quest)-> bool:
 	if TagManager.has_tag(PlayerData,PROCESS_TREE+quest.id):
 		return false
 	#수주에 필요한 태그 존재여부 확인
-	if !Quest.condition_check(quest.accept_condition):
+	if !Quest.check_conditions(quest.accept_condition):
 		return false
 	return true
 

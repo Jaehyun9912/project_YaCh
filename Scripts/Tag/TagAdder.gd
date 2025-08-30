@@ -9,7 +9,7 @@ extends Node
 
 # 태그 확인 후 태그 붙이기
 func condition_process() -> bool:
-	if Quest.condition_check(conditions):
+	if Quest.check_conditions(conditions):
 		#모든 조건 충족
 		for i in add_tags:
 			TagManager.add_tag_tree(PlayerData,i)

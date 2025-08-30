@@ -61,6 +61,12 @@ var rewards:
 			return data["rewards"]
 		return PackedStringArray()
 
+var condition_list : Array[Condition]
+
+func quest_activate():
+	var condition = get_quest_condition()
+	for c in condition:
+		condition_list.append(Condition.new(c))
 
 static func check_condition(condition : String) -> bool:
 	# 반전 확인
@@ -90,7 +96,7 @@ static func check_condition(condition : String) -> bool:
 	return true
 
 # 조건 순회. 하나라도 미충족 시 false 반환
-static func condition_check(conditions : PackedStringArray)-> bool:
+static func check_conditions(conditions : PackedStringArray)-> bool:
 	for i in conditions:
 		var check = check_condition(i)
 		if !check:
@@ -128,7 +134,7 @@ func is_clearable(npc_name : String) -> bool:
 		return false
 	# 클리어 조건 확인
 	var condition = get_quest_condition()
-	if Quest.condition_check(condition):
+	if Quest.check_conditions(condition):
 		return true
 	else:
 		return false
