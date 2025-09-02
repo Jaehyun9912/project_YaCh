@@ -1,7 +1,6 @@
-[gd_scene load_steps=5 format=3 uid="uid://ba7rocg7oxxgq"]
+[gd_scene load_steps=4 format=3 uid="uid://ba7rocg7oxxgq"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/UI/casting_panel.gd" id="1_p2pkk"]
-[ext_resource type="Script" path="res://Scripts/System/round_button.gd" id="2_8fr6q"]
 [ext_resource type="PackedScene" uid="uid://p6i634j8rs6u" path="res://Objects/UI/Battle/skill_button_manager.tscn" id="3_wuir5"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_8ggxu"]
@@ -45,16 +44,5 @@ anchor_top = 0.256131
 anchor_right = 0.899722
 anchor_bottom = 0.354224
 metadata/_edit_use_anchors_ = true
-
-[node name="Button" type="TextureRect" parent="."]
-visible = false
-layout_mode = 0
-offset_left = 112.0
-offset_top = 241.0
-offset_right = 254.0
-offset_bottom = 297.0
-script = ExtResource("2_8fr6q")
-
-[connection signal="button_clicked" from="Button" to="." method="_on_button_pressed"]
 
 [editable path="SkillButtonManager"]

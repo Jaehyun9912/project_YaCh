@@ -1,7 +1,7 @@
 class_name SkillButtonManager extends Control
 
 # 스킬 버튼들
-@onready var buttons = get_tree().get_nodes_in_group("skill_buttons")
+var buttons: Array[RoundButton] = []
 # 가운데 버튼 (반격용) 
 @onready var center_button = $SkillButtons/CenterButton as RoundButton
 
@@ -36,7 +36,11 @@ signal skill_activated(button_index, target)
 # 대상이 변경되었을 때
 signal target_changed(target, isally)
 
+var get_skill_by_index = null
+
 func _ready():
+	for btn in $SkillButtons.get_children():
+		buttons.append(btn as RoundButton)
 	# 버튼에 시그널 연결 
 	for i in len(buttons):
 		var btn = buttons[i] as RoundButton
@@ -44,7 +48,9 @@ func _ready():
 		
 		btn.button_down.connect(on_skillbutton_down.bind(btn, index))
 		btn.button_up.connect(on_skillbutton_up)
-	
+	if get_skill_by_index == null or get_skill_by_index.is_null():
+		get_skill_by_index = Callable(SkillManager, "get_player_skill")
+
 # 마우스 이벤트 
 func _input(event):
 	# 누르고 있으면 마우스 위치에 버튼 이미지 놓기 (터치도 같은 방식인지 확인 필요함)
@@ -100,8 +106,9 @@ func on_skillbutton_down(btn, index):
 	var parent = get_parent()
 	parent.move_child(self, parent.get_child_count() - 1)
 		
-	var skill = SkillManager.get_player_skill(index)
-	
+	var skill = get_skill_by_index.call(index)
+	if skill == null:
+		return
 	# 가림 패널 활성화 후 마우스에 버튼 이미지 부착 
 	$Cover.visible = true
 	button_img.visible = true
@@ -119,7 +126,7 @@ func on_skillbutton_down(btn, index):
 	ViewManager.side_panel.set_info_panel(skill.get("name", ""), skill.get("description", ""))
 	
 	# 스킬 정보에 따라 선택 버튼 생성
-	var skill_target = SkillManager.get_target(index)
+	var skill_target = SkillManager.get_target(skill)
 	button_cnt = 0
 	
 	# 대상에게 적용하기

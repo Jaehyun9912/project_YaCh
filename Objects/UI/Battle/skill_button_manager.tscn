@@ -29,7 +29,7 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 1.15
 theme_override_styles/panel = SubResource("StyleBoxEmpty_7x350")
 
-[node name="SkillButton" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+[node name="SkillButton" parent="SkillButtons" instance=ExtResource("2_ddtok")]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.0444444
@@ -43,7 +43,7 @@ grow_vertical = 2
 pivot_offset = Vector2(40, 40)
 metadata/_edit_use_anchors_ = true
 
-[node name="SkillButton2" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+[node name="SkillButton2" parent="SkillButtons" instance=ExtResource("2_ddtok")]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.213889
@@ -57,7 +57,7 @@ grow_vertical = 0
 pivot_offset = Vector2(40, 40)
 metadata/_edit_use_anchors_ = true
 
-[node name="SkillButton3" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+[node name="SkillButton3" parent="SkillButtons" instance=ExtResource("2_ddtok")]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.588889
@@ -72,7 +72,7 @@ grow_vertical = 0
 pivot_offset = Vector2(40, 40)
 metadata/_edit_use_anchors_ = true
 
-[node name="SkillButton4" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+[node name="SkillButton4" parent="SkillButtons" instance=ExtResource("2_ddtok")]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.752778
@@ -87,7 +87,7 @@ grow_vertical = 2
 pivot_offset = Vector2(40, 40)
 metadata/_edit_use_anchors_ = true
 
-[node name="CenterButton" parent="SkillButtons" groups=["skill_buttons"] instance=ExtResource("2_ddtok")]
+[node name="CenterButton" parent="SkillButtons" instance=ExtResource("2_ddtok")]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.361111

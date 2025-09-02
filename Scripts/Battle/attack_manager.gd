@@ -34,18 +34,18 @@ func _on_battle_use_skill(index, target_info):
 	
 	#var element = cur_skill.get("element", {})
 	#if element.has("type"):
-			#battle.attrubute_bar.add_value(element["type"], element["amount"])
+			#battle.attribute_bar.add_value(element["type"], element["amount"])
 	var effect = cur_skill.get("effect", {})
 	for type in effect:
 		if type == SkillManager.ACTION_POINT_ID:
 			battle.now_character.point += effect[type]
 		else:
-			battle.attrubute_bar.add_value(type, effect[type])
+			battle.attribute_bar.add_value(type, effect[type])
 	
 
 # 공격 함수 
 func do_attack():
-	var apply = SkillManager.get_value(cur_skill)
+	var apply = SkillManager.get_value(cur_skill).get("level", 0)
 	#var apply = cur_skill.get("apply", 0)
 	#if not apply is float:
 		#print("Attack's apply is not number!")
