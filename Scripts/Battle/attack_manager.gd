@@ -45,7 +45,7 @@ func _on_battle_use_skill(index, target_info):
 
 # 공격 함수 
 func do_attack():
-	var apply = SkillManager.get_value(cur_skill)
+	var apply = SkillManager.get_value(cur_skill).get("level", 0)
 	#var apply = cur_skill.get("apply", 0)
 	#if not apply is float:
 		#print("Attack's apply is not number!")

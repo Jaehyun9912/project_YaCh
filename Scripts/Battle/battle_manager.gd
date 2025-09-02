@@ -40,7 +40,6 @@ var min_point_use = 1
 var battle_panel : BattlePanel
 @onready var enemy_manager = $EnemyManager as EnemyManager
 @onready var attribute_bar = $Interact/AttributeBar
-@onready var waitTimer = $WaitTimer as Timer
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()

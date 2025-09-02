@@ -24,10 +24,12 @@ func _ready():
 	special_skills = DataManager.get_data_folder("Skill/Special")
 	
 # 플레이어의 스킬 얻어오기 
-func get_player_skill(index: int):
+func get_player_skill(index: int) -> Dictionary:
 	if 0 <= index and index < len(player_skill):
 		return get_skill(player_skill[index])
-	return null
+
+	print("잘못된 스킬 인덱스! : " + str(index))
+	return Dictionary()
 
 # 들어온 ID에 해당하는 스킬의 정보가 담긴 딕셔너리 반환 
 func get_skill(id : String):
@@ -89,8 +91,10 @@ func _get_standardized_points(data) -> Dictionary:
 	return {}
 			
 # 스킬의 target 정보를 얻어오는 함수 (기본값 "one")
-func get_target(player_skill_index: int):
-	var skill = get_player_skill(player_skill_index)
+func get_target(skill: Dictionary):
+	# var skill = get_player_skill(player_skill_index)
+	if skill.get("type", "") in ["counter", "parrying"]:
+		return "self"
 	return skill.get("target", "one")
 
 func get_useable_special_skills(special_type: SpecialSkillType, point, attribute_bar):

@@ -3,8 +3,6 @@ class_name EnemyManager extends Node
 @onready var battle = $".." as BattleManager
 @onready var timer = $EnemyTimer as Timer
 
-@onready var skill_buttons = $SkillButtonManager as SkillButtonManager
-
 #enum AttackStatus 
 #{
 	#Ready,
@@ -45,7 +43,7 @@ func _on_battle_scene_turn_character_changed(turn_char: BattleCharacter):
 	# 사용할 스킬과 그 스킬의 데미지 계산 
 	var next_skill = get_next_skill(turn_char.skills)
 	print(next_skill)
-	damage = get_damage_by_skill(next_skill, turn_char.attack)
+	damage = SkillManager.get_value(next_skill).get("level", 0)
 	
 	# 정보 패널 띄우기
 	#upper.set_panel_with_time(next_skill.name, next_skill.description % damage, 2)
@@ -83,18 +81,23 @@ func get_next_skill(skills):
 	return skill_info[skills[rn]]
 	
 # skill 읽어서 데미지 계산 후 반환 
-func get_damage_by_skill(skill, char_damage):
-	var dmg = skill.get("damage", 0)
-	var apply = skill.get("apply_type", "add")
+# func get_damage_by_skill(skill):
+# 	var value = skill.get("value", 0)
+# 	if value is int or value is float:
+# 		return value
+# 	elif value is Dictionary:
+# 		return value.get("level", 0)
+	# var dmg = skill.get("damage", 0)
+	# var apply = skill.get("apply_type", "add")
 	
-	match apply:
-		"add":
-			return dmg + char_damage
-		"multiply":
-			return dmg * char_damage
-		_:
-			printerr("Wrong Apply Type! ", apply)
-			return 0
+	# match apply:
+	# 	"add":
+	# 		return dmg + char_damage
+	# 	"multiply":
+	# 		return dmg * char_damage
+	# 	_:
+	# 		printerr("Wrong Apply Type! ", apply)
+	# 		return 0
 	
 # 스킬을 읽고 코스트 딕셔너리를 반환 		
 func get_cost(skill):

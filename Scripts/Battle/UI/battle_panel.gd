@@ -2,7 +2,6 @@ extends Control
 class_name BattlePanel
 
 @onready var action_point = $TurnPointBar/ActionPoint as Label
-@onready var skill_button = $SkillButtonManager as SkillButtonManager
 @onready var turn_point_bar = $TurnPointBar as TurnPointBar
 @onready var top_button = $TopButton
 
@@ -10,6 +9,7 @@ var skill_buttons
 var choicePanel
 
 var manager: BattleManager
+var skill_button: SkillButtonManager
 
 var action_text := "행동력 %d/%d"
 
@@ -38,6 +38,7 @@ var current_point
 # 시작시
 func _ready():
 	manager = ViewManager.world_instance.get_node("BattleScene") as BattleManager
+	skill_button = $SkillButtonManager as SkillButtonManager
 	skill_button.battle_panel = self
 	
 	# signal 연결
@@ -93,7 +94,7 @@ func _process(_delta):
 		turn_point_bar.update_point(current_charcter)
 		current_point = current_charcter.current_point
 
-# 현재 행동력보다 많은 행동력 소모하는 버튼 비활성화
+# 조건을 만족하는 스킬만 활성화
 func _check_skill_is_possible():
 	if current_charcter == null or not current_charcter.is_player:
 		return

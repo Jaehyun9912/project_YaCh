@@ -2,6 +2,7 @@ class_name CastingPanel extends Control
 
 var callback_func: Callable
 var battle_panel: BattlePanel
+var button_manager: SkillButtonManager
 
 enum CastingButtonType {
 	Counter,
@@ -12,6 +13,8 @@ var twn = null
 
 func _ready():
 	visible = false
+	button_manager = $SkillButtonManager as SkillButtonManager
+	button_manager.get_skill_by_index = _button_manager_get_skill
 
 func set_casting_panel(text, time, button_type: CastingButtonType, callback: Callable):
 	visible = true
@@ -55,3 +58,7 @@ func _set_button_by_type(button_type: CastingButtonType):
 	for i in useable_skills:
 		pass
 		
+func _button_manager_get_skill(index):
+	if index < 0 or index >= PlayerData.special_skills.size():
+		return null
+	return PlayerData.special_skills[index]
