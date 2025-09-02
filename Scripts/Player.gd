@@ -41,6 +41,12 @@ var skills:
 	set(value):
 		data["skills"] = value
 
+var special_skills:
+	get:
+		return data.get("special_skills", [])
+	set(value):
+		data["special_skills"] = value
+
 var inventory:
 	get:
 		return data["inventory"]

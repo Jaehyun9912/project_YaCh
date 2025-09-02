@@ -10,9 +10,9 @@ func _ready():
 	attribute["none"] = Color.DARK_GRAY
 	
 # 속성을 얻어오는 함수, 존재하지 않는 속성을 얻어올 경우 null 반환 
-func get_attribute_color(name : String):
-	if name in attribute.keys():
-		return attribute[name]
+func get_attribute_color(attribute_name : String):
+	if attribute_name in attribute.keys():
+		return attribute[attribute_name]
 	else:
 		return null
 		

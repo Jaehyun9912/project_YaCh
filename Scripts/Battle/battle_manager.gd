@@ -39,7 +39,7 @@ var min_point_use = 1
 # 매니저 
 var battle_panel : BattlePanel
 @onready var enemy_manager = $EnemyManager as EnemyManager
-@onready var attrubute_bar = $Interact/AttributeBar
+@onready var attribute_bar = $Interact/AttributeBar
 @onready var waitTimer = $WaitTimer as Timer
 
 # 캐릭터들의 정보를 담은 리스트
@@ -120,7 +120,7 @@ func _battle_set():
 			return
 	
 	# 속성 정보 세팅 
-	attrubute_bar.init(map_data.get("attribute", 100))
+	attribute_bar.init(map_data.get("attribute", 100))
 	total_point = map_data.get("point", 100)
 	
 	var idx = 0
@@ -191,10 +191,10 @@ func _battle():
 			total_point += total_point_add
 
 # 턴 진행하는 캐릭터 변경
-func change_now_char(char : BattleCharacter, point):
-	now_character = char
+func change_now_char(new_char : BattleCharacter, point):
+	now_character = new_char
 	turn_cost = point
-	turn_character_changed.emit(char)
+	turn_character_changed.emit(new_char)
 
 #endregion
 
@@ -211,7 +211,7 @@ func remove_cost(skill):
 	if "element" in cost:
 		var element = cost.get("element", {})
 		for e in element:
-			attrubute_bar.remove_value(e, element[e])
+			attribute_bar.remove_value(e, element[e])
 
 # 버튼 눌렀을때
 func on_battle_panel_skill_actived(index : BattlePanel.ButtonType, target):

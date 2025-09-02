@@ -3,15 +3,25 @@ extends Node
 # 플레이어의 스킬을 관리함
 # 적의 스킬은 EnemyManager에서 관리함 
 
+enum SpecialSkillType {
+	COUNTER,
+	PARRYING
+}
+
 var skills
-var player_skill
+var special_skills
+
+var player_skill: 
+	get: return PlayerData.skills
+var player_special_skill:
+	get: return PlayerData.special_skills
+
 const ACTION_POINT_ID = "point"
 
 func _ready():
 	#skills = DataManager.get_data("Skill/skill_info")
 	skills = DataManager.get_data_folder("Skill/Player")
-	#print(skills)
-	player_skill = PlayerData.skills
+	special_skills = DataManager.get_data_folder("Skill/Special")
 	
 # 플레이어의 스킬 얻어오기 
 func get_player_skill(index: int):
@@ -38,11 +48,11 @@ func get_value(skill: Dictionary):
 	return value
 
 # 스킬이 사용 가능한지 확인하는 함수
-func check_requirement(player_skill_index: int, current_action_point: int, attribute_bar) -> bool:
-	var skill = get_player_skill(player_skill_index)
+func check_requirement(skill: Dictionary, current_action_point: int, attribute_bar) -> bool:
+	# var skill = get_player_skill(player_skill_index)
 	
 	# 1. cost와 requirements 변환
-	var requirements_dict = _get_standardized_points(skill.get("requirements", {}))
+	var requirements_dict = _get_standardized_points(skill.get("requirement", {}))
 	var cost_dict = _get_standardized_points(skill.get("cost", {}))
 	
 	# 2. requirements를 cost의 수치 이상으로 보장
@@ -77,78 +87,19 @@ func _get_standardized_points(data) -> Dictionary:
 	elif data is Dictionary:
 		return data
 	return {}
-# 플레이어의 스킬이 사용 가능한지 확인하기
-#func check_requirement(player_skill_index: int, current_point: int, attribute_bar):
-	#var skill = get_player_skill(player_skill_index)
-	#
-	## cost 값이 숫자이면 Dictionary로 변환
-	#var cost = skill.get("cost", {})
-	#if not cost is Dictionary:
-		#cost = {"point": cost}
-	#
-	## requirements가 설정되지 않았거나 cost보다 낮으면 cost와 동일하게 설정
-	#var requirements = skill.get("requirement", cost)
-	#if not requirements is Dictionary:
-		#requirements = {"point": requirements}
-	#requirements["point"] = max(requirements["point"], cost["point"])
-	#
-	## 요구 조건을 충족하는지 확인
-	#if current_point < requirements.get("point", 0):
-		#return false  # 행동력이 부족함
-	#
-	## 원소 확인 
-	#if "element" in requirements:
-		#var required_element = requirements.get("element", {}).duplicate(true)
-		#var cost_element = cost.get("element", {})
-		#
-		## cost에 있지만 requirements에 없는 요소 추가
-		#for type in cost_element:
-			#if type not in required_element:
-				#required_element[type] = cost_element[type]
-				#
-		## requirement가 cost의 수치보다 낮으면 cost로 설정	
-		#for type in required_element:
-			#required_element[type] = max(required_element[type], cost_element.get(type, 0))
-		#
-		## 요구 속성치를 가져옴
-		#for type in required_element:
-			#var player_amount = attribute_bar.get_element(type)
-			#var amount = required_element[type]
-			#
-			## 만약 현재 필드 속성치보다 요구치가 높으면 실패 
-			#if amount > player_amount:
-				#return false
-	#
-	#return true  # 모든 조건 충족
 			
 # 스킬의 target 정보를 얻어오는 함수 (기본값 "one")
 func get_target(player_skill_index: int):
 	var skill = get_player_skill(player_skill_index)
 	return skill.get("target", "one")
-	#var type = skill.get("type", "")
-	#var target = skill.get("target", null)
-	#
-	#if target == null:
-		#printerr("Target is not exist")
-		#return null
-	#
-	#match type:
-		#"attack":
-			#match target:
-				#"one", "all", "self": return target
-				#_:
-					#printerr("target이 잘못 설정되었습니다. 기본값 one을 반환합니다.")
-					#return "one"
-		#"effect":
-			#if target is String and target == "self":
-				#return target
-			#elif target is Dictionary:
-				#if not "team" in target: target["team"] = false
-				#if not "is_all" in target: target["is_all"] = false
-				#return target
-		#"summon":
-			#printerr("Summon Target is WIP")
-		#"field":
-			#printerr("Field Target is WIP")
-		#_:
-			#printerr("Wrong Type : " + type)
+
+func get_useable_special_skills(special_type: SpecialSkillType, point, attribute_bar):
+	var type = "counter"
+	if special_type == SpecialSkillType.PARRYING:
+		type = "parrying"
+
+	var useable_skills = []
+	for skill in player_special_skill:
+		if skill.get("type") == type and check_requirement(skill, point, attribute_bar):
+			useable_skills.append(skill)
+	return useable_skills

@@ -57,6 +57,7 @@ func _ready():
 		if skill == null:
 			btn.lock_disable = true
 	#manager.turn_end.emit()
+	$CastingPanel.battle_panel = self
 
 # 턴 변경되었음을 받는 함수
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
@@ -99,7 +100,7 @@ func _check_skill_is_possible():
 	
 	for i in len(skill_buttons):
 		if i < ButtonType.CENTER:
-			skill_buttons[i].disabled = not SkillManager.check_requirement(i, current_charcter.current_point, manager.attrubute_bar)
+			skill_buttons[i].disabled = not SkillManager.check_requirement(SkillManager.get_player_skill(i), current_charcter.current_point, manager.attribute_bar)
 		else:
 			return
 
