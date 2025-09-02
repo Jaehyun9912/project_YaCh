@@ -16,32 +16,6 @@ color = Color(0.607843, 0.607843, 0.607843, 1)
 script = ExtResource("1_p2pkk")
 metadata/_edit_use_anchors_ = true
 
-[node name="Label" type="Label" parent="."]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 53.0
-offset_right = 359.0
-offset_bottom = 140.0
-text = "그거 하는 중"
-label_settings = SubResource("LabelSettings_8ggxu")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ProgressBar" type="ProgressBar" parent="."]
-layout_mode = 0
-offset_left = 40.0
-offset_top = 158.0
-offset_right = 323.0
-offset_bottom = 194.0
-
-[node name="Button" type="TextureRect" parent="."]
-layout_mode = 0
-offset_left = 112.0
-offset_top = 241.0
-offset_right = 254.0
-offset_bottom = 297.0
-script = ExtResource("2_8fr6q")
-
 [node name="SkillButtonManager" parent="." instance=ExtResource("3_wuir5")]
 layout_mode = 1
 offset_right = 9.15527e-05
@@ -51,6 +25,35 @@ grow_vertical = 1
 
 [node name="CenterButton" parent="SkillButtonManager/SkillButtons" index="4"]
 visible = false
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+anchor_left = 0.00278552
+anchor_top = 0.0190736
+anchor_right = 1.0
+anchor_bottom = 0.256131
+text = "그거 하는 중"
+label_settings = SubResource("LabelSettings_8ggxu")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 0
+anchor_left = 0.111421
+anchor_top = 0.256131
+anchor_right = 0.899722
+anchor_bottom = 0.354224
+metadata/_edit_use_anchors_ = true
+
+[node name="Button" type="TextureRect" parent="."]
+visible = false
+layout_mode = 0
+offset_left = 112.0
+offset_top = 241.0
+offset_right = 254.0
+offset_bottom = 297.0
+script = ExtResource("2_8fr6q")
 
 [connection signal="button_clicked" from="Button" to="." method="_on_button_pressed"]
 
