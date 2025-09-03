@@ -61,26 +61,26 @@ var rewards:
 			return data["rewards"]
 		return PackedStringArray()
 
-var condition_list : Array[Condition]
+var condition_list: Array[Condition]
 
 func quest_activate():
 	var condition = get_quest_condition()
 	for c in condition:
 		condition_list.append(Condition.new(c))
 
-static func check_condition(condition : String) -> bool:
+static func check_condition(condition: String) -> bool:
 	# 반전 확인
 	var negative = false
 	if condition.begins_with("!"):
 		condition = condition.right(-1)
 		negative = true
 	# 조건 분야 확인(태그, 아이템, 스탯)
-	var arr = condition.split(":",true,1)
-	var check : bool
-	if arr.size()==1:
-		check = TagManager.tag_compare(PlayerData,arr[0])
+	var arr = condition.split(":", true, 1)
+	var check: bool
+	if arr.size() == 1:
+		check = TagManager.tag_compare(PlayerData, arr[0])
 	elif arr[0] == "tag":
-		check = TagManager.tag_compare(PlayerData,arr[1])
+		check = TagManager.tag_compare(PlayerData, arr[1])
 	elif arr[0] == "stat":
 		check = PlayerData.stat_compare(arr[1])
 	elif arr[0] == "item":
@@ -96,8 +96,15 @@ static func check_condition(condition : String) -> bool:
 	return true
 
 # 조건 순회. 하나라도 미충족 시 false 반환
-static func check_conditions(conditions : PackedStringArray)-> bool:
+static func check_conditions(conditions: PackedStringArray) -> bool:
 	for i in conditions:
+		var check = check_condition(i)
+		if !check:
+			return false
+	return true
+
+func can_accept_quest() -> bool:
+	for i in accept_condition:
 		var check = check_condition(i)
 		if !check:
 			return false
@@ -106,7 +113,7 @@ static func check_conditions(conditions : PackedStringArray)-> bool:
 func get_quest_condition() -> Array:
 	var condition = process_condition as Array[String]
 	for i in submit:
-		var item_tag = "!item:"+i["id"]+"<" + str(i["count"])
+		var item_tag = "!item:" + i["id"] + "<" + str(i["count"])
 		condition.append(item_tag)
 	return condition
 
@@ -114,23 +121,23 @@ func get_quest_condition() -> Array:
 func get_quest_data() -> Dictionary:
 	var condition = get_quest_condition()
 	var dict = {
-		"title" : title,
-		"description" : description,
-		"id" : id,
-		"accept_condition" : accept_condition,
-		"process_condition" : condition,
-		"clear_NPC" : clear_NPC,
-		"rewards" : rewards
+		"title": title,
+		"description": description,
+		"id": id,
+		"accept_condition": accept_condition,
+		"process_condition": condition,
+		"clear_NPC": clear_NPC,
+		"rewards": rewards
 	}
 	return dict
 
 
 # 퀘스트 클리어 조건 확인하기
-func is_clearable(npc_name : String) -> bool:
+func is_clearable(npc_name: String) -> bool:
 	# 클리어 NPC 확인
 	if clear_NPC != npc_name:
 		return false
-	if !TagManager.has_tag(PlayerData,"Quest.process."+id):
+	if !TagManager.has_tag(PlayerData, "Quest.process." + id):
 		return false
 	# 클리어 조건 확인
 	var condition = get_quest_condition()
