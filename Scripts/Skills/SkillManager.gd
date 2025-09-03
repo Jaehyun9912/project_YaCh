@@ -49,6 +49,8 @@ func get_value(skill: Dictionary):
 			return {"level": value}
 	return value
 
+func check_requirement_battle(skill: Dictionary, battle_manager: BattleManager) -> bool:
+	return check_requirement(skill, battle_manager.now_character.current_point, battle_manager.attribute_bar)
 # 스킬이 사용 가능한지 확인하는 함수
 func check_requirement(skill: Dictionary, current_action_point: int, attribute_bar) -> bool:
 	# var skill = get_player_skill(player_skill_index)
@@ -104,6 +106,8 @@ func get_useable_special_skills(special_type: SpecialSkillType, point, attribute
 
 	var useable_skills = []
 	for skill in player_special_skill:
-		if skill.get("type") == type and check_requirement(skill, point, attribute_bar):
+		var info = special_skills.get(skill, null)
+		
+		if info.get("type") == type and check_requirement(info, point, attribute_bar):
 			useable_skills.append(skill)
 	return useable_skills

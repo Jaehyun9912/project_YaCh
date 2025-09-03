@@ -45,4 +45,6 @@ anchor_right = 0.899722
 anchor_bottom = 0.354224
 metadata/_edit_use_anchors_ = true
 
+[connection signal="skill_activated" from="SkillButtonManager" to="." method="_on_skill_button_manager_skill_activated"]
+
 [editable path="SkillButtonManager"]

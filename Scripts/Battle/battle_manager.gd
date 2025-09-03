@@ -202,15 +202,30 @@ func change_now_char(new_char : BattleCharacter, point):
 func remove_cost(skill):
 	var cost = skill.get("cost", {})
 	
-	if not cost is Dictionary:
+	if cost is int or cost is float:
 		turn_cost -= cost
 		return
-		
-	turn_cost -= cost.get("point", 0)
-	if "element" in cost:
-		var element = cost.get("element", {})
-		for e in element:
-			attribute_bar.remove_value(e, element[e])
+
+	for i in cost:
+		if i == SkillManager.ACTION_POINT_ID:
+			turn_cost -= cost.get(i, 0)
+		else:
+			attribute_bar.remove_value(i, cost[i])
+
+	# turn_cost -= cost.get(SkillManager.ACTION_POINT_ID, 0)
+	# if "element" in cost:
+	# 	var element = cost.get("element", {})
+	# 	for e in element:
+	# 		attribute_bar.remove_value(e, element[e])
+
+func set_effect(skill):
+	var effect = skill.get("effect", {})
+	for type in effect:
+		if type == SkillManager.ACTION_POINT_ID:
+			now_character.point += effect[type]
+		else:
+			attribute_bar.add_value(type, effect[type])
+	
 
 # 버튼 눌렀을때
 func on_battle_panel_skill_actived(index : BattlePanel.ButtonType, target):
