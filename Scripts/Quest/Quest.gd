@@ -95,18 +95,17 @@ static func check_condition(condition: String) -> bool:
 		return false
 	return true
 
-# 조건 순회. 하나라도 미충족 시 false 반환
-static func check_conditions(conditions: PackedStringArray) -> bool:
-	for i in conditions:
-		var check = check_condition(i)
-		if !check:
-			return false
-	return true
 
 func can_accept_quest() -> bool:
 	for i in accept_condition:
 		var check = check_condition(i)
 		if !check:
+			return false
+	return true
+
+func can_clear_quest() -> bool:
+	for i in condition_list:
+		if !i.check:
 			return false
 	return true
 
@@ -140,8 +139,7 @@ func is_clearable(npc_name: String) -> bool:
 	if !TagManager.has_tag(PlayerData, "Quest.process." + id):
 		return false
 	# 클리어 조건 확인
-	var condition = get_quest_condition()
-	if Quest.check_conditions(condition):
+	if can_clear_quest():
 		return true
 	else:
 		return false

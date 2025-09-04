@@ -1,8 +1,7 @@
 extends Control
 
 
-
-var content : BagContent
+var content: BagContent
 
 var title:
 	get:
@@ -20,16 +19,11 @@ func set_panel(_content):
 	title.text = content.get_title()
 	description.text = content.get_description()
 	if content is Quest:
-		var list = content.get_quest_condition()
-		var s : String
-		for i in list:
-			var complete = Quest.check_condition(i)
-			if complete:
-				s+= "[V] "
+		var s = ""
+		for i in content.condition_list:
+			if i.check:
+				s += "[V] "
 			else:
-				s+="[] "
-			s+= i+"\n"
+				s += "[] "
+			s += i.condition + "\n"
 		condition_box.text = s
-	
-	
-	
