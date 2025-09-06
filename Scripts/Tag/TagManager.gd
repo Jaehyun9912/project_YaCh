@@ -165,9 +165,10 @@ func _add_tag(node: Node, tag: String, count = 1) -> void:
 		# 없으면 태그 딕셔너리 추가
 		var arr = {tag: count}
 		dict[node] = arr
+	# 태그 대분류에 따른 시그널 발생 방식
 	if upper[0] == "Quest":
 		on_quest_tag_changed.emit(node, tag, count)
 	elif upper[0] == "Battle":
 		on_battle_tag_changed.emit(node, tag, count)
-	else:
+	else: # 시그널 대분류 지정 없을 경우 기본 시그널 호출
 		on_tag_changed.emit(node, tag, count)
