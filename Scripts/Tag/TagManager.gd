@@ -1,13 +1,15 @@
 extends Node
 
-signal on_tag_changed(node : Node, tag : String, count : int)
+signal on_tag_changed(node: Node, tag: String, count: int)
+signal on_quest_tag_changed(node: Node, tag: String, count: int)
+signal on_battle_tag_changed(node: Node, tag: String, count: int)
 
 # 노드 오브젝트(key) : 딕셔너리(문자열 : 카운트)
-var dict : Dictionary
+var dict: Dictionary
 
 
 # 노드가 가지고 있는 태그 반환
-func get_tags(node : Node) -> PackedStringArray:
+func get_tags(node: Node) -> PackedStringArray:
 	if dict.has(node):
 		return dict[node].keys()
 	# 없으면 새 딕셔너리 반환
@@ -15,44 +17,44 @@ func get_tags(node : Node) -> PackedStringArray:
 
 
 # 노드의 해당 태그 카운트 반환
-func get_tag_count(node : Node, tag : String)-> int:
-	if has_tag(node,tag):
+func get_tag_count(node: Node, tag: String) -> int:
+	if has_tag(node, tag):
 		return dict[node][tag]
 	# 없으면 0 반환
 	return 0
 
 # 태그 트리 추가(.으로 구분해서 상위부터 하위태그까지 전부 추가)
-func add_tag_tree(node : Node, tag : String, count =1):
+func add_tag_tree(node: Node, tag: String, count = 1):
 	# 해당 태그를 각 태그 부분으로 분류
 	var tag_tree = tag.split(".")
 	# 상위 태그부터 추가
-	var lower_tag = tag_tree[0]
+	var upper_tag = tag_tree[0]
 	tag_tree.remove_at(0)
-	_add_tag(node,lower_tag,count)
+	_add_tag(node, upper_tag, count)
 	for tag_part in tag_tree:
-		lower_tag += "." + tag_part
-		_add_tag(node,lower_tag,count)
+		upper_tag += "." + tag_part
+		_add_tag(node, upper_tag, count)
 
 
 # 해당 태그 삭제 및 상위 태그 카운트 감소
-func remove_tag_tree(node : Node, tag : String) -> bool:
+func remove_tag_tree(node: Node, tag: String) -> bool:
 	# 시작 태그가 있으면 삭제 없으면 반환
-	var count = get_tag_count(node,tag)
-	if !_remove_tag(node,tag):
+	var count = get_tag_count(node, tag)
+	if !_remove_tag(node, tag):
 		return false
 	var tags = dict[node] as Dictionary
 	# 해당 태그로 시작하는 하위태그 제거
 	for node_tag in tags.keys():
 		var upper_tag = tag + "."
 		if node_tag.begins_with(upper_tag):
-			_remove_tag(node,node_tag)
+			_remove_tag(node, node_tag)
 	# 삭제한 태그의 상위 태그에 카운트 값 감소
-	decrease_tag_tree(node,_get_upper_tag(tag),count)
+	decrease_tag_tree(node, _get_upper_tag(tag), count)
 	return true
 
 
 # 해당 태그가 있는지 확인
-func has_tag(node : Node, tag : String) -> bool:
+func has_tag(node: Node, tag: String) -> bool:
 	# 해당 노드가 태그가 없을 경우 false 반환
 	if !dict.has(node):
 		return false
@@ -65,7 +67,7 @@ func has_tag(node : Node, tag : String) -> bool:
 
 
 # 태그 일정 부분으로 해당 태그 찾기
-func find_tag(node : Node, tag : String) -> String:
+func find_tag(node: Node, tag: String) -> String:
 	var tags = get_tags(node)
 	tag = "." + tag
 	for i in tags:
@@ -76,12 +78,12 @@ func find_tag(node : Node, tag : String) -> String:
 
 
 # 태그의 부등호 비교해서 충족 시 true 반환
-func tag_compare(node : Node,tag : String) -> bool:
-	var comparer = [">" , "<", "="]
+func tag_compare(node: Node, tag: String) -> bool:
+	var comparer = [">", "<", "="]
 	for i in comparer:
-		var tag_part = tag.split(i,true,2)
-		if tag_part.size()==2:
-			var tag_count = TagManager.get_tag_count(node,tag_part[0])
+		var tag_part = tag.split(i, true, 2)
+		if tag_part.size() == 2:
+			var tag_count = TagManager.get_tag_count(node, tag_part[0])
 			if i == ">" && tag_count > tag_part[1].to_int():
 				return true
 			elif i == "<" && tag_count < tag_part[1].to_int():
@@ -91,12 +93,9 @@ func tag_compare(node : Node,tag : String) -> bool:
 			else:
 				return false
 	# 태그가 있는지 없는지만 확인(태그에 부등호가 없는경우)
-	if TagManager.has_tag(node,tag):
+	if TagManager.has_tag(node, tag):
 		return true
 	return false
-
-
-	
 
 
 # 씬 로드 될때 할당 해제된 노드 제거
@@ -107,40 +106,40 @@ func clean_dict():
 
 
 # 하위 태그부터 하나씩 카운트 만큼 감소(0보다 작아지면 해당 태그 삭제)
-func decrease_tag_tree(node : Node, tag :String, count = 1):
-	_decrease_tag(node,tag,count)
+func decrease_tag_tree(node: Node, tag: String, count = 1):
+	_decrease_tag(node, tag, count)
 	var upper_tag = _get_upper_tag(tag)
 	if upper_tag == "":
 		return
-	decrease_tag_tree(node,upper_tag,count)
+	decrease_tag_tree(node, upper_tag, count)
 
 
 # 태그의 상위 태그 가져오기
-func _get_upper_tag(tag : String):
+func _get_upper_tag(tag: String):
 	var s = tag.reverse()
-	var tag_part = s.split(".",true,1)
+	var tag_part = s.split(".", true, 1)
 	if tag_part.size() < 2:
 		return ""
 	return tag_part[1].reverse()
 
 
 # 태그 카운트 감소. 0이면 태그 삭제
-func _decrease_tag(node : Node, tag : String, count = 1) -> int:
+func _decrease_tag(node: Node, tag: String, count = 1) -> int:
 	if !dict.has(node):
 		return 0
 	var tags = dict[node] as Dictionary
 	if !tags.has(tag):
 		return 0
 	tags[tag] -= count
-	on_tag_changed.emit(node,tag,tags[tag])
+	on_tag_changed.emit(node, tag, tags[tag])
 	if tags[tag] <= 0:
-		_remove_tag(node,tag)
+		_remove_tag(node, tag)
 		return 0
 	return tags[tag]
 
 
 # 단일 태그 제거 성공 시 true 실패 시 false
-func _remove_tag(node : Node, tag : String) -> bool:
+func _remove_tag(node: Node, tag: String) -> bool:
 	if dict.has(node):
 		var tags = dict[node] as Dictionary
 		# 태그가 있으면 제거
@@ -151,24 +150,24 @@ func _remove_tag(node : Node, tag : String) -> bool:
 
 
 # 단일 태그 추가(외부 사용 X)
-func _add_tag(node : Node, tag : String, count = 1) -> void:
+func _add_tag(node: Node, tag: String, count = 1) -> void:
+	var upper = tag.split(".", true, 1)
 	# 태그가 1개 이상 있을 경우
 	if dict.has(node):
 		var tags = dict[node] as Dictionary
 		# 태그를 가지고 있을 경우 count 추가
 		if tags.has(tag):
 			tags[tag] += count
-			on_tag_changed.emit(node,tag,tags[tag])
-			return
-		# 태그 추가
-		tags[tag] = count
-		on_tag_changed.emit(node,tag,count)
+		else:
+			# 태그 추가
+			tags[tag] = count
 	else:
 		# 없으면 태그 딕셔너리 추가
-		var arr = { tag : count }
+		var arr = {tag: count}
 		dict[node] = arr
-		on_tag_changed.emit(node,tag,count)
-
-
-
-
+	if upper[0] == "Quest":
+		on_quest_tag_changed.emit(node, tag, count)
+	elif upper[0] == "Battle":
+		on_battle_tag_changed.emit(node, tag, count)
+	else:
+		on_tag_changed.emit(node, tag, count)
