@@ -4,13 +4,16 @@ var callback_func: Callable
 var battle_panel: BattlePanel
 var button_manager: SkillButtonManager
 
+var useable_skills
+
 enum CastingButtonType {
 	Counter,
-	Parrying
+	Parrying,
+	CounterPlayer,
+	ParryingPlayer
 }
 
 var twn = null
-var button_skill = []
 
 func _ready():
 	visible = false
@@ -40,36 +43,35 @@ func _on_end_tween():
 	visible = false
 
 func _set_button_by_type(button_type: CastingButtonType):
-	var useable_skills
 	match button_type:
 		CastingButtonType.Counter:
 			useable_skills = SkillManager.get_useable_special_skills(SkillManager.SpecialSkillType.COUNTER, battle_panel.current_charcter.point, battle_panel.manager.attribute_bar)
 		CastingButtonType.Parrying:
 			useable_skills = SkillManager.get_useable_special_skills(SkillManager.SpecialSkillType.PARRYING, battle_panel.current_charcter.point, battle_panel.manager.attribute_bar)
+		_:
+			useable_skills = []
 
-	for i in button_manager.buttons:
-		i.visible = false
-
-	button_skill.clear()
+	print("useable_skills: ", useable_skills)
 	var index = 0
 	for i in useable_skills:
-		button_skill.append(i)
 		button_manager.buttons[index].visible = true
 		index += 1
-		if button_skill.size() >= 4:
+		if index >= 4:
 			break
-
+	for j in range(index, 4):
+		button_manager.buttons[j].visible = false
+		
 func _button_manager_get_skill(index):
-	if index < 0 or index >= PlayerData.special_skills.size():
+	if index < 0 or index >= useable_skills.size():
 		return null
-	return SkillManager.special_skills[PlayerData.special_skills[index]]
+	return SkillManager.special_skills[useable_skills[index]]
 
 
 func _on_skill_button_manager_skill_activated(button_index, _target):
 	if twn is Tween:
 		twn.kill()
 		twn = null
-	battle_panel.manager.remove_cost(button_skill[button_index])
-	battle_panel.manager.set_effect(button_skill[button_index])
+	battle_panel.manager.remove_cost(useable_skills[button_index])
+	battle_panel.manager.set_effect(useable_skills[button_index])
 	callback_func.call(false)
 	visible = false

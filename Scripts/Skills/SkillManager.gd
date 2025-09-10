@@ -17,6 +17,9 @@ var player_special_skill:
 	get: return PlayerData.special_skills
 
 const ACTION_POINT_ID = "point"
+# 스킬 시전 시간
+const SKILL_ACTIVE_TIME = 0.5
+const SKILL_CASTING_CONSTANT = 0.3
 
 func _ready():
 	#skills = DataManager.get_data("Skill/skill_info")
@@ -66,7 +69,7 @@ func check_requirement(skill: Dictionary, current_action_point: int, attribute_b
 		requirements_dict[type] = max(required_value, cost_value)
 	
 	# 3. 행동력(ActionPoint) 조건 확인
-	var required_ap = requirements_dict.get(ACTION_POINT_ID, 0.0)
+	var required_ap = requirements_dict.get(ACTION_POINT_ID, -1)
 	if current_action_point < required_ap:
 		return false
 	
@@ -106,8 +109,19 @@ func get_useable_special_skills(special_type: SpecialSkillType, point, attribute
 
 	var useable_skills = []
 	for skill in player_special_skill:
-		var info = special_skills.get(skill, null)
+		var info = special_skills.get(skill, {})
 		
 		if info.get("type") == type and check_requirement(info, point, attribute_bar):
 			useable_skills.append(skill)
 	return useable_skills
+
+	# 스킬의 구축 시간 계산하기
+func get_casting_time(skill: Dictionary, attribute_bar):
+	#(소모 행동력 X 구축상수) X (1 - (해당 속성 누적치 / 2)
+	var cost = _get_standardized_points(skill.get("cost", {}))
+	var action_point_cost = cost.get(ACTION_POINT_ID, 0)
+	var element = AttributeInfomation.get_attribute_by_skill(skill)
+	var attribute_amount = attribute_bar.get_element(element)
+
+	var casting_time = (action_point_cost * SKILL_CASTING_CONSTANT) * (1 - ((attribute_amount / attribute_bar.total_value) / 2.0))
+	return casting_time

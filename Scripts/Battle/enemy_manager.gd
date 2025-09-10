@@ -59,14 +59,14 @@ func _on_battle_scene_turn_character_changed(turn_char: BattleCharacter):
 	battle.remove_cost(current_skill)
 
 	# 대기했다가 공격 후 종료
-	battle.battle_panel.set_casting_panel("적 캐스팅 중", 2, CastingPanel.CastingButtonType.Counter, _on_end_casting)
+	battle.set_casting_panel("마법 구축 중", SkillManager.get_casting_time(current_skill, battle.attribute_bar), CastingPanel.CastingButtonType.Counter, _on_end_casting)
 	#await timer.timeout
 	
 func _on_end_casting(is_success):
 	if is_success:
 		timer.start(0.1)
-		await timer.timeout
-		battle.battle_panel.set_casting_panel("마법 시전 중", 1, CastingPanel.CastingButtonType.Parrying, _on_end_spell)
+		await timer.timeout	
+		battle.set_casting_panel("마법 시전 중", SkillManager.SKILL_ACTIVE_TIME, CastingPanel.CastingButtonType.Parrying, _on_end_spell)
 	else:
 		battle.apply_counter(battle.now_character, player)
 

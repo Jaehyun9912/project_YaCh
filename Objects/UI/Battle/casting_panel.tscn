@@ -25,6 +25,9 @@ grow_vertical = 1
 [node name="CenterButton" parent="SkillButtonManager/SkillButtons" index="4"]
 visible = false
 
+[node name="Cover" parent="SkillButtonManager" index="1"]
+color = Color(0.803922, 0.803922, 0.803922, 0)
+
 [node name="Label" type="Label" parent="."]
 layout_mode = 0
 anchor_left = 0.00278552

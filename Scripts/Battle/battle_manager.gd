@@ -267,6 +267,8 @@ func apply_counter(target, counter):
 	print("반격! 가져온 행동력: ", add_score)
 	print(counter.current_point)
 	
+func set_casting_panel(title, time, button_type, callback):
+	battle_panel.set_casting_panel(title, time, button_type, callback)
 #endregion
 	
 #region END

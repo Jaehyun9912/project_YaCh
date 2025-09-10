@@ -16,8 +16,8 @@ func get_attribute_color(attribute_name : String):
 	else:
 		return null
 		
-# 스킬 정보를 넣으면 자동으로 가장 큰 값을 가진 속성 색을 반환하는 함수 
-func get_attribute_color_by_skill(skill: Dictionary):
+# 스킬 정보를 넣으면 자동으로 가장 큰 값을 가진 속성의 이름을 반환하는 함수
+func get_attribute_by_skill(skill: Dictionary):
 	var effects = skill.get("effect", {})
 	var large = "none"
 	for ele in effects:
@@ -25,5 +25,5 @@ func get_attribute_color_by_skill(skill: Dictionary):
 			continue
 		if effects[ele] > effects.get(large, 0):
 			large = ele
-
-	return get_attribute_color(effects.get(large, "none"))
+	return large
+	# return get_attribute_color(effects.get(large, "none"))

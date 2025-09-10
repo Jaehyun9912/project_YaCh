@@ -108,6 +108,7 @@ func on_skillbutton_down(btn, index):
 		
 	var skill = get_skill_by_index.call(index)
 	if skill == null:
+		print("skill is null!")
 		return
 	# 가림 패널 활성화 후 마우스에 버튼 이미지 부착 
 	$Cover.visible = true
@@ -118,7 +119,8 @@ func on_skillbutton_down(btn, index):
 	# 버튼 누른 위치에 취소 크기를 설정하는 원 생성 
 	cancel_area.visible = true
 	cancel_area.position = btn.position
-	cancel_area.modulate = AttributeInfomation.get_attribute_color_by_skill(skill)
+	var element = AttributeInfomation.get_attribute_by_skill(skill)
+	cancel_area.modulate = AttributeInfomation.get_attribute_color(element)
 	var tween = create_tween()
 	tween.tween_property(cancel_area, "scale", cancel_button_size, 0.1)
 	
@@ -131,33 +133,36 @@ func on_skillbutton_down(btn, index):
 	
 	# 대상에게 적용하기
 	# 문자열일 때 (attack, effect(self))
-	if skill_target is String:
-		is_ally = false
-		match skill_target:
-			"one":
-				current_choice_mode = ChoiceMode.ONE
-				button_cnt = len(battle_panel.get_all_enemy())
-			"all":
-				current_choice_mode = ChoiceMode.ALL
-				button_cnt = len(battle_panel.get_all_enemy())
-			"self":
-				current_choice_mode = ChoiceMode.SELF
-				button_cnt = 0
+	is_ally = false
+	match skill_target:
+		"one":
+			current_choice_mode = ChoiceMode.ONE
+			button_cnt = len(battle_panel.get_all_enemy())
+		"all":
+			current_choice_mode = ChoiceMode.ALL
+			button_cnt = len(battle_panel.get_all_enemy())
+		"self":
+			current_choice_mode = ChoiceMode.SELF
+			button_cnt = 0
+		"team":
+			is_ally = true
+		"field":
+			pass
 		
 	# Dictionary일 때 (effect, summon, field)
-	elif skill_target is Dictionary:
-		is_ally = skill_target.get("team", false)
-		var is_all = skill_target.get("is_all", false)
-		if is_all:
-			current_choice_mode = ChoiceMode.ALL
-		else:
-			current_choice_mode = ChoiceMode.ONE
+	# elif skill_target is Dictionary:
+	# 	is_ally = skill_target.get("team", false)
+	# 	var is_all = skill_target.get("is_all", false)
+	# 	if is_all:
+	# 		current_choice_mode = ChoiceMode.ALL
+	# 	else:
+	# 		current_choice_mode = ChoiceMode.ONE
 		
-		# 타겟 유형에 따라 적/아군 개수 가져오기 
-		if is_ally:
-			button_cnt = len(battle_panel.get_all_ally())
-		else:
-			button_cnt = len(battle_panel.get_all_enemy())
+	# 	# 타겟 유형에 따라 적/아군 개수 가져오기 
+	# 	if is_ally:
+	# 		button_cnt = len(battle_panel.get_all_ally())
+	# 	else:
+	# 		button_cnt = len(battle_panel.get_all_enemy())
 		
 	# 선택 시작
 	# 0 -> 오른쪽에 적 버튼 생성
