@@ -12,7 +12,7 @@ var buttons: Array[RoundButton] = []
 
 @onready var choice_btn_man = $ChoiceButtonManager as ChoiceButtonManager
 # 버튼 사이 라인
-@onready var line = $Line2D as Line2D
+# @onready var line = $Line2D as Line2D
 # 상위 오브젝트
 var battle_panel: BattlePanel
 
@@ -27,6 +27,9 @@ enum ChoiceMode {NONE, ONE, ALL, SELF}
 var current_choice_mode: ChoiceMode
 var button_cnt := 0
 var before_mouse_pos
+
+var button_init_color: Color
+var button_enable_color := Color(1, 1, 1, 1)
 
 @export var cancel_button_size = Vector2(4, 4)
 
@@ -51,6 +54,8 @@ func _ready():
 	if get_skill_by_index == null or get_skill_by_index.is_null():
 		get_skill_by_index = Callable(SkillManager, "get_player_skill")
 
+	button_init_color = button_img.modulate
+
 # 마우스 이벤트 
 func _input(event):
 	# 누르고 있으면 마우스 위치에 버튼 이미지 놓기 (터치도 같은 방식인지 확인 필요함)
@@ -69,25 +74,26 @@ func _input(event):
 			# 한명만 
 			ChoiceMode.ONE:
 				# 직선 최신화 
-				line.set_point_position(0, mouse)
+				# line.set_point_position(0, mouse)
 				
 				# 가장 가까운 버튼 가져와서 기존 선택된 버튼이 아니면 교체 
 				var target = choice_btn_man.get_nearest_button(mouse)
 				if target != target_index:
 					target_index = target
 					choice_btn_man.make_button_special(target_index)
-					line.set_point_position(1, choice_btn_man.get_button_center(target_index))
+					# line.set_point_position(1, choice_btn_man.get_button_center(target_index))
 					
 					target_changed.emit(target_index, is_ally)
 			# 전체
 			ChoiceMode.ALL:
-				line.visible = false
+				# line.visible = false
 				choice_btn_man.make_button_special_all()
 			# 자기 자신
 			ChoiceMode.SELF:
-				line.set_point_position(0, mouse)
-				var player_button_pos = cancel_area.position + cancel_button_size / 2
-				line.set_point_position(1, player_button_pos)
+				# line.set_point_position(0, mouse)
+				# var player_button_pos = cancel_area.position + cancel_button_size / 2
+				# line.set_point_position(1, player_button_pos)
+				pass
 	before_mouse_pos = mouse
 	
 # 스킬 버튼 OnOff 설정 
@@ -120,7 +126,9 @@ func on_skillbutton_down(btn, index):
 	cancel_area.visible = true
 	cancel_area.position = btn.position
 	var element = AttributeInfomation.get_attribute_by_skill(skill)
-	cancel_area.modulate = AttributeInfomation.get_attribute_color(element)
+	var color = AttributeInfomation.get_attribute_color(element)
+	cancel_area.modulate = color
+	button_enable_color = color
 	var tween = create_tween()
 	tween.tween_property(cancel_area, "scale", cancel_button_size, 0.1)
 	
@@ -198,7 +206,7 @@ func on_skillbutton_up():
 	$Cover.visible = false
 	button_img.visible = false
 	cancel_area.visible = false
-	line.visible = false
+	# line.visible = false
 	button_cnt = 0
 	current_choice_mode = ChoiceMode.NONE
 	
@@ -217,8 +225,9 @@ func on_skillbutton_up():
 # 마우스가 취소 지역에 들어갔을 때 
 func _on_button_cancel_area_mouse_entered():
 	is_on_cancel_area = true
-	line.visible = false
+	# line.visible = false
 	target_index = -1
+	button_img.modulate = button_init_color
 	
 	choice_btn_man.make_button_special(-1)
 	target_changed.emit(target_index, is_ally)
@@ -226,4 +235,14 @@ func _on_button_cancel_area_mouse_entered():
 # 마우스가 취소 지역에서 나갔을 때 
 func _on_button_cancel_area_mouse_exited():
 	is_on_cancel_area = false
-	line.visible = true
+	button_img.modulate = button_enable_color
+	# line.visible = true
+
+# 마우스가 눌러져 있음에도 스크립트로 강제로 취소시키기
+func cancel_choice():
+	# 안눌린 상태면 무시
+	if current_button == -1:
+		return
+	current_button = -1
+	is_on_cancel_area = true
+	on_skillbutton_up()

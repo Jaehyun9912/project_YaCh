@@ -21,6 +21,7 @@ offset_right = 9.15527e-05
 offset_bottom = 183.5
 grow_horizontal = 1
 grow_vertical = 1
+color = Color(0.607843, 0.607843, 0.607843, 0)
 
 [node name="CenterButton" parent="SkillButtonManager/SkillButtons" index="4"]
 visible = false

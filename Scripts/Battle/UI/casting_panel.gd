@@ -20,6 +20,7 @@ func _ready():
 	button_manager = $SkillButtonManager as SkillButtonManager
 	button_manager.get_skill_by_index = _button_manager_get_skill
 
+# 캐스팅 버튼 설정하기
 func set_casting_panel(text, time, button_type: CastingButtonType, callback: Callable):
 	visible = true
 	$Label.text = text
@@ -35,13 +36,16 @@ func set_casting_panel(text, time, button_type: CastingButtonType, callback: Cal
 	twn.tween_property(progress, "value", 100, time)
 	twn.finished.connect(_on_end_tween)
 	
+# 캐스팅이 성공적으로 종료되었을 때 
 func _on_end_tween():
 	#print("tween End")
 	twn = null
 	callback_func.call(true)
+	button_manager.cancel_choice()
 		
 	visible = false
 
+# 버튼 타입에 따라 사용 가능한 스킬 설정
 func _set_button_by_type(button_type: CastingButtonType):
 	match button_type:
 		CastingButtonType.Counter:
@@ -61,17 +65,22 @@ func _set_button_by_type(button_type: CastingButtonType):
 	for j in range(index, 4):
 		button_manager.buttons[j].visible = false
 		
+# 스킬 버튼 매니저가 스킬 정보를 얻어올 때 호출하는 함수
 func _button_manager_get_skill(index):
 	if index < 0 or index >= useable_skills.size():
 		return null
 	return SkillManager.special_skills[useable_skills[index]]
 
-
+# 스킬 버튼 매니저에서 스킬이 선택되었을 때 호출되는 함수
 func _on_skill_button_manager_skill_activated(button_index, _target):
 	if twn is Tween:
 		twn.kill()
 		twn = null
-	battle_panel.manager.remove_cost(useable_skills[button_index])
-	battle_panel.manager.set_effect(useable_skills[button_index])
 	callback_func.call(false)
+
+	# 카운터/패링 스킬 코스트, 이펙트 적용
+	var skill = SkillManager.special_skills[useable_skills[button_index]]
+	battle_panel.manager.remove_cost(skill)
+	battle_panel.manager.set_effect(skill)
+	
 	visible = false

@@ -22,13 +22,13 @@ func _on_battle_use_skill(index, target_info):
 	cur_skill = SkillManager.get_player_skill(index)
 	battle.remove_cost(cur_skill)
 
-	battle.set_casting_panel("마법 구축 중", SkillManager.get_casting_time(cur_skill, battle.attribute_bar), CastingPanel.CastingButtonType.Parrying, _on_end_casting)
+	battle.set_casting_panel("마법 구축 중", SkillManager.get_casting_time(cur_skill, battle.attribute_bar), CastingPanel.CastingButtonType.CounterPlayer, _on_end_casting)
 
 func _on_end_casting(is_success):
 	if is_success:
 		timer.start(0.1)
 		await timer.timeout
-		battle.set_casting_panel("마법 시전 중", SkillManager.SKILL_ACTIVE_TIME, CastingPanel.CastingButtonType.Parrying, _on_end_spell)
+		battle.set_casting_panel("마법 시전 중", SkillManager.SKILL_ACTIVE_TIME, CastingPanel.CastingButtonType.ParryingPlayer, _on_end_spell)
 
 func _on_end_spell(is_success):
 	if is_success:

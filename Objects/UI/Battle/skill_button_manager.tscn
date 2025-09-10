@@ -129,7 +129,7 @@ expand_mode = 1
 
 [node name="ButtonImage" type="TextureRect" parent="."]
 visible = false
-modulate = Color(0.807843, 0.807843, 0.807843, 1)
+self_modulate = Color(0.380392, 0.380392, 0.380392, 1)
 layout_mode = 0
 offset_right = 80.0
 offset_bottom = 80.0
