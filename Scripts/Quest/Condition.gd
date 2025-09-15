@@ -23,10 +23,10 @@ func _init(_condition):
 
 		if arr.size() == 1:
 			partials.append(arr[0])
-			TagManager.on_quest_tag_changed.connect(_check_tag) # 퀘스트 별로 태그를 대분류에 맞게 또 분기해야함
+			TagManager.on_tag_changed.connect(_check_tag) # 퀘스트 별로 태그를 대분류에 맞게 또 분기해야함
 		elif arr[0] == "tag":
 			partials.append(arr[1])
-			TagManager.on_quest_tag_changed.connect(_check_tag)
+			TagManager.on_tag_changed.connect(_check_tag)
 		elif arr[0] == "stat":
 			#check = PlayerData.stat_compare(arr[1])
 			pass
@@ -46,7 +46,7 @@ func _check_tag(node: Node, _tag: String, _count: int):
 	check = TagManager.tag_compare(PlayerData, partials[0])
 	if check:
 		print(partials[0], "clear")
-		TagManager.on_quest_tag_changed.disconnect(_check_tag)
+		TagManager.on_tag_changed.disconnect(_check_tag)
 
 func _check_inventory(_id: String, _count: int):
 	check = PlayerData.item_compare(partials[0])

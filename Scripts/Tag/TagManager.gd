@@ -1,8 +1,7 @@
 extends Node
+class_name TagService
 
 signal on_tag_changed(node: Node, tag: String, count: int)
-signal on_quest_tag_changed(node: Node, tag: String, count: int)
-signal on_battle_tag_changed(node: Node, tag: String, count: int)
 
 # 노드 오브젝트(key) : 딕셔너리(문자열 : 카운트)
 var dict: Dictionary
@@ -165,10 +164,13 @@ func _add_tag(node: Node, tag: String, count = 1) -> void:
 		# 없으면 태그 딕셔너리 추가
 		var arr = {tag: count}
 		dict[node] = arr
-	# 태그 대분류에 따른 시그널 발생 방식
-	if upper[0] == "Quest":
-		on_quest_tag_changed.emit(node, tag, count)
-	elif upper[0] == "Battle":
-		on_battle_tag_changed.emit(node, tag, count)
-	else: # 시그널 대분류 지정 없을 경우 기본 시그널 호출
-		on_tag_changed.emit(node, tag, count)
+	on_tag_changed.emit(node, tag, count)
+
+func change_tag(node: Node, tag: String, count: int):
+	if count > 0:
+		add_tag_tree(node, tag, count)
+	elif count < 0:
+		decrease_tag_tree(node, tag, -count)
+	else:
+		return
+	print(dict[node])
