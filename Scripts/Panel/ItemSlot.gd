@@ -25,3 +25,12 @@ func get_title():
 
 func get_description():
 	return item_data["description"]
+
+
+func use():
+	if data.has("count"):
+		data["count"] -=1
+		if data["count"] ==0:
+			queue_free()
+	queue_free()
+	print("아이템 사용")

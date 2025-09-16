@@ -158,12 +158,12 @@ func can_clear_quest(quest: Dictionary):
 			return false
 	return true
 	
-func get_quest_condition(quest : Dictionary) -> Array:
-	var condition : PackedStringArray
+func get_quest_condition(quest : Dictionary) -> Dictionary:
+	var condition : Dictionary
 	if quest.has("process_condition"):
-		condition = quest["process_condition"] as Array[String]
+		condition = quest["process_condition"] as Dictionary
 	if quest.has("submit"):
 		for i in quest["submit"]:
 			var item_tag = "!item:" + i["id"] + "<" + str(i["count"])
-			condition.append(item_tag)
+			condition[item_tag] = i["description"]
 	return condition

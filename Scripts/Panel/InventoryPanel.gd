@@ -103,7 +103,7 @@ func set_slot_info(slot : InventorySlot):
 				action.set_action(read_slot.bind(slot),i)
 				pass
 			else:
-				action.set_action(slot.data.call.bind(i),i)
+				action.set_action(slot.call.bind(i),i)
 				action.on_clicked.connect(slot.update_slot)
 
 func discard_slot():

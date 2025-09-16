@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://idlnoetrttir"]
 
-[ext_resource type="Script" path="res://Interacts/SubUI/ItemOptionBox.gd" id="1_hkuaq"]
+[ext_resource type="Script" path="res://Scripts/Panel/Option/ItemOptionBox.gd" id="1_hkuaq"]
 
 [node name="ItemOptionBox" type="MarginContainer"]
 custom_minimum_size = Vector2(0, 60)
