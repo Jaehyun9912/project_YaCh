@@ -58,7 +58,7 @@ func _update_panel():
 	#리스트에 해당하는 퀘스트 버튼 생성
 	for i in PlayerData.quest_list:
 		#클리어 가능하면 옵션 버튼 활성화 아니면 비활성화
-		if i.is_clearable(quest_manager.manager_name):
+		if quest_manager.can_clear_quest(i):
 			#클리어 가능한 퀘스트는 버튼 색 변경
 			var style = StyleBoxFlat.new()
 			style.bg_color = Color.CHOCOLATE
@@ -70,14 +70,14 @@ func _update_panel():
 
 
 # 단일 버튼 생성 후 퀘스트와 바인딩
-func _set_quest_button(parent,quest : Quest, mode):
+func _set_quest_button(parent, quest, mode):
 	var button = Button.new()
-	button.text = quest.title
+	button.text = quest["title"]
 	button.pressed.connect(_show_quest_detail.bind(quest,mode))
 	parent.add_child(button)
 	return button
 
-func _show_quest_detail(quest: Quest, mode):
+func _show_quest_detail(quest, mode):
 	var panel = ViewManager.push_panel("QuestDetailPanel",ViewManager.SCREEN.FULL)
 	panel.option_pressed.connect(detail_interact)
 	panel.any_button_pressed.connect(ViewManager.erase_panel.bind(panel))

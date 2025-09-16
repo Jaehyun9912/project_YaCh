@@ -11,10 +11,10 @@ func set_item_description(slot : InventorySlot):
 		$"ColorRect/ColorRect".hide()
 		return
 	$"ColorRect/ColorRect".show()
-	print(slot.data.data)
+	print(slot.data)
 	
-	$"ColorRect/ColorRect/Label".text = slot.data.get_title()
-	$"ColorRect/ColorRect/RichTextLabel".text = slot.data.get_description()
+	$"ColorRect/ColorRect/Label".text = slot.get_title()
+	$"ColorRect/ColorRect/RichTextLabel".text = slot.get_description()
 
 func exit():
 	on_exit.emit()

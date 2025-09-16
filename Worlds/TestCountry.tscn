@@ -64,7 +64,7 @@ address = "Battle"
 type = "BattlePanel"
 metadata/World = "forest"
 
-[node name="TagAdder" parent="forest" instance=ExtResource("2_aytmn")]
+[node name="TagProvider" parent="forest" instance=ExtResource("2_aytmn")]
 conditions = Array[String](["Quest.process.quest1"])
 add_tags = Array[String](["Quest.process.quest1.alpha"])
 
@@ -82,5 +82,5 @@ shape = SubResource("BoxShape3D_pxeb4")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Talk"]
 mesh = SubResource("BoxMesh_7h2iq")
 
-[connection signal="input_event" from="forest" to="forest/TagAdder" method="_on_location_clicked"]
+[connection signal="input_event" from="forest" to="forest/TagProvider" method="_on_location_clicked"]
 [connection signal="input_event" from="Talk" to="Talk" method="_on_location_clicked"]

@@ -3,6 +3,7 @@ extends Node#Area3D
 @export var address : String
 @export var type : String
 
+
 func _on_location_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
 		print("Location Clicked : " + address)

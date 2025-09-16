@@ -3,7 +3,7 @@ class_name InventorySlot
 
 signal OnSlotClicked
 
-var data : BagContent
+var data
 var _nameText : Label
 var nameText:
 	get:
@@ -15,26 +15,20 @@ var countText :
 	get:
 		return $"ItemCount" as Label
 
-
 func on_clicked(event : InputEvent):
 	if event is InputEventMouseButton:
 		if event.pressed:
 			OnSlotClicked.emit()
 		
 
-func set_slot(_data : BagContent):
+func set_slot(_data):
 	data = _data
+	countText.hide()
 	update_slot()
 		
 
 func update_slot():
-	nameText.text = data.get_title()
-	if data is CountableItem:
-		countText.text = "x" + str(data.data["count"])
-		if data.data["count"] == 0:
-			self.queue_free()
-	else:
-		countText.hide()
+	pass
 
 
 func set_highlight(highlight : bool):
@@ -42,3 +36,4 @@ func set_highlight(highlight : bool):
 		color = Color("dab53a")
 	else:
 		color = Color("7cc3b2")
+

@@ -33,12 +33,7 @@ func _ready():
 	$"Inventory/Category/Right".pressed.connect(change_category.bind(1))
 	
 	change_category(0)
-	read_panel = ViewManager.push_panel("QuestConditionPanel",ViewManager.SCREEN.TOP)
-	read_panel.hide()
-	on_exit.connect(ViewManager.erase_panel.bind(read_panel))
-	on_select_changed.connect(func(slot):
-		read_panel.hide()
-		)
+	
 	
 
 #region 인벤토리 세팅
@@ -52,12 +47,9 @@ func set_item_slot(num : int):
 	clear_slot()
 	data = PlayerData.inventory
 	for i in data:
-		var item_data = DataManager.get_item_data(i["id"])
-		if item_data.get("category") != category[num]:
-			continue
-		var item = CountableItem.new(i)
-		var slot = slot_prefab.instantiate() as InventorySlot
-		slot.set_slot(item)
+		var slot = slot_prefab.instantiate()
+		slot.set_script(ItemSlot)
+		slot.set_slot(i)
 		slot.tree_exited.connect(set_slot_info.bind(null))
 		slotContainer.add_child(slot)
 		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
@@ -69,7 +61,8 @@ func set_quest_slot():
 	clear_slot()
 	data = PlayerData.quest_list
 	for i in data:
-		var slot = slot_prefab.instantiate() as InventorySlot
+		var slot = slot_prefab.instantiate()
+		slot.set_script(QuestSlot)
 		slot.set_slot(i)
 		slotContainer.add_child(slot)
 		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
@@ -80,9 +73,9 @@ func set_artifact_slot():
 	clear_slot()
 	data = PlayerData.artifact
 	for i in data:
-		var item = Artifact.new(i)
-		var slot = slot_prefab.instantiate() as InventorySlot
-		slot.set_slot(item)
+		var slot = slot_prefab.instantiate()
+		slot.set_script(ArtifactSlot)
+		slot.set_slot(i)
 		slotContainer.add_child(slot)
 		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
 		slot.set_highlight(false)
@@ -103,7 +96,7 @@ func set_slot_info(slot : InventorySlot):
 		return
 	selected_slot.set_highlight(true)
 	for i in action_list:
-		if slot.data.has_method(i):
+		if slot.has_method(i):
 			var action = option_prefab.instantiate() as ActionBox
 			actionContainer.add_child(action)
 			if i == "read":

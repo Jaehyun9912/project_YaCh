@@ -184,25 +184,25 @@ func _get_artifact(id : String):
 signal quest_updated
 
 # 수주 중인 퀘스트 리스트
-var quest_list : Array[Quest]
+var quest_list : Array
 
 
 
 
 # 퀘스트 수주(수주중 태그 추가)
-func receive_quest(quest : Quest):
+func receive_quest(quest):
 	quest_list.append(quest)
-	quest.quest_activate()
-	TagManager.add_tag_tree(PlayerData,"Quest.process."+quest.id)
-	print( quest.id," Receive, Current QuestCount :",quest_list.size())
+	#quest.quest_activate()
+	TagManager.add_tag_tree(PlayerData,"Quest.process."+quest["id"])
+	print( quest["id"]," Receive, Current QuestCount :",quest_list.size())
 	quest_updated.emit(quest,true)
 
 
 # 퀘스트 클리어(클리어 태그 추가)
-func clear_quest(quest: Quest):
+func clear_quest(quest):
 	PlayerData.quest_list.erase(quest)
-	TagManager.remove_tag_tree(PlayerData,"Quest.process."+quest.id)
-	TagManager.add_tag_tree(PlayerData,"Quest.clear."+quest.id)
+	TagManager.remove_tag_tree(PlayerData,"Quest.process."+quest["id"])
+	TagManager.add_tag_tree(PlayerData,"Quest.clear."+quest["id"])
 	quest_updated.emit(quest,false)
 
 

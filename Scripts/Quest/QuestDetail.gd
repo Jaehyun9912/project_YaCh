@@ -1,7 +1,7 @@
 extends Control
 
 # 수주, 클리어 관련 버튼 이벤트
-signal option_pressed(quest:Quest, mode: Mode)
+signal option_pressed(quest, mode: Mode)
 
 signal any_button_pressed()
 
@@ -16,7 +16,7 @@ enum Mode{
 var curMode : Mode
 
 # 현재 표시중인 퀘스트
-var quest : Quest
+var quest
 
 func _ready():
 	get_window().size_changed.connect(_on_size_changed)
@@ -39,12 +39,12 @@ func _on_size_changed():
 		buttons.anchor_top = 0.5
 
 # 해당 퀘스트에 대한 디테일 패널 표시 
-func set_quest(get_quest : Quest, mode : Mode) -> void:
+func set_quest(get_quest, mode : Mode) -> void:
 	quest = get_quest
 	curMode = mode
 	# 디테일 패널 정보 표시
-	$"QuestDescription/Label".text = quest.title
-	$"QuestDescription/RichTextLabel".text = quest.description
+	$"QuestDescription/Label".text = quest["title"]
+	$"QuestDescription/RichTextLabel".text = quest["description"]
 	# 모드에 따른 수주/클리어 버튼 활성화 여부 설정
 	var option_panel = $"Btns/VBoxContainer/OptionPanel"
 	if mode == Mode.PROCESS:
