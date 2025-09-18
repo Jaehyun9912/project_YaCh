@@ -1,0 +1,18 @@
+{
+	"counter1": {
+		"type": "counter",
+		"name": "반격하기",
+		"description": "적의 공격을 막고 반격한다.",
+		"requirement": {
+			"fire": 0
+		}
+	},
+	"parrying1": {
+		"type": "parrying",
+		"name": "패링하기",
+		"description": "적의 공격을 막아낸다.",
+		"requirement": {
+			"fire": 0
+		}
+	}
+}

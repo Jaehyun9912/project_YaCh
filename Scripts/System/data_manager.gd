@@ -8,7 +8,9 @@ const USER_PATH = "user://"
 
 # 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
 func get_data(data_path: String) -> Dictionary:
-	var path = DEFAULT_PATH + data_path + ".json"
+	var path = DEFAULT_PATH + data_path
+	if not data_path.ends_with(".json"):
+		path += ".json"
 	
 	# 경로에 파일이 없을 경우 빈 딕셔너리 반환 
 	if not FileAccess.file_exists(path):
@@ -26,6 +28,50 @@ func get_data(data_path: String) -> Dictionary:
 	else:
 		printerr(json.get_error_message())
 		return Dictionary()
+	
+# 프로젝트의 Data 폴더에서 특정 폴더의 모든 json 파일을 읽어서 합쳐오는 함수
+func get_data_folder(data_path: String) -> Dictionary:
+	var path = DEFAULT_PATH + data_path
+	var combined_data = {}
+
+	# 파일 경로가 오면 파일 내용을 읽어 반환
+	if FileAccess.file_exists(path):
+		return get_data(data_path)
+
+	# 폴더 경로가 오면 폴더를 열고 내용을 탐색
+	var dir_access = DirAccess.open(path)
+	if dir_access:
+		dir_access.list_dir_begin()
+		var file_or_dir_name = dir_access.get_next()
+		
+		while file_or_dir_name != "":
+			# "."과 ".."은 건너뛰기 
+			if file_or_dir_name == "." or file_or_dir_name == "..":
+				file_or_dir_name = dir_access.get_next()
+				continue
+			
+			# 현재 항목의 전체 경로
+			var full_path = data_path.path_join(file_or_dir_name)
+			#print(full_path)
+			
+			if dir_access.current_is_dir():
+				# 폴더인지 확인해서 폴더라면 재귀
+				var sub_folder_data = get_data_folder(full_path)
+				combined_data.merge(sub_folder_data, true)
+			else:
+				# json 파일이면 읽기
+				if full_path.ends_with(".json"):
+					var file_data = get_data(full_path)
+					combined_data.merge(file_data, true)
+			
+			file_or_dir_name = dir_access.get_next()
+			
+		dir_access.list_dir_end()
+	else:
+		print("Error: Could not open directory at path: ", data_path)
+	
+	return combined_data
+		
 	
 # 프로젝의 user 경로에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
 func load_data(data_path: String) -> Dictionary:

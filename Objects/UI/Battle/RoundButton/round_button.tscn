@@ -14,6 +14,7 @@ offset_bottom = 100.0
 texture = ExtResource("1_ck00n")
 expand_mode = 1
 script = ExtResource("2_h7tp8")
+button_text = "SkillButton"
 
 [node name="Button" type="Button" parent="."]
 modulate = Color(1, 1, 1, 0)

@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://ba7rocg7oxxgq"]
+
+[ext_resource type="Script" path="res://Scripts/Battle/UI/casting_panel.gd" id="1_p2pkk"]
+[ext_resource type="PackedScene" uid="uid://p6i634j8rs6u" path="res://Objects/UI/Battle/skill_button_manager.tscn" id="3_wuir5"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_8ggxu"]
+font_size = 24
+
+[node name="CastingPanel" type="ColorRect"]
+anchors_preset = -1
+anchor_top = -0.00129534
+anchor_right = 0.997222
+anchor_bottom = 0.474093
+color = Color(0.607843, 0.607843, 0.607843, 1)
+script = ExtResource("1_p2pkk")
+metadata/_edit_use_anchors_ = true
+
+[node name="SkillButtonManager" parent="." instance=ExtResource("3_wuir5")]
+layout_mode = 1
+offset_right = 9.15527e-05
+offset_bottom = 183.5
+grow_horizontal = 1
+grow_vertical = 1
+color = Color(0.607843, 0.607843, 0.607843, 0)
+
+[node name="CenterButton" parent="SkillButtonManager/SkillButtons" index="4"]
+visible = false
+
+[node name="Cover" parent="SkillButtonManager" index="1"]
+color = Color(0.803922, 0.803922, 0.803922, 0)
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+anchor_left = 0.00278552
+anchor_top = 0.0190736
+anchor_right = 1.0
+anchor_bottom = 0.256131
+text = "그거 하는 중"
+label_settings = SubResource("LabelSettings_8ggxu")
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 0
+anchor_left = 0.111421
+anchor_top = 0.256131
+anchor_right = 0.899722
+anchor_bottom = 0.354224
+metadata/_edit_use_anchors_ = true
+
+[connection signal="skill_activated" from="SkillButtonManager" to="." method="_on_skill_button_manager_skill_activated"]
+
+[editable path="SkillButtonManager"]

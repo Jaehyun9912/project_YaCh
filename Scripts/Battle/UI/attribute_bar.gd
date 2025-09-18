@@ -14,31 +14,31 @@ var max_value : float
 var total_value : float
 	
 # max_value 및 none 설정 
-func init(max):
-	max_value = max
-	add_value("none", max)
-	
+func init(max_amount):
+	max_value = max_amount
+	add_value("none", max_amount)
+
 	update_value()
 
 # 기존 속성 업데이트 또는 새로운 속성 추가 
-func add_value(name : String, amount : float):
+func add_value(attribute_name : String, amount : float):
 	# 기존 속성에 값 추가 (0 ~ max_value로 범위 고정) 
-	if name in type:
-		type[name][0] += amount
-		
+	if attribute_name in type:
+		type[attribute_name][0] += amount
+
 		# 0이 되면 속성 제거
-		if type[name][0] <= 0:
-			amount -= type[name][0]
-			type[name][0] = 0
-			type[name][1].queue_free()
-			type.erase(name)
-		elif type[name][0] > max_value:
-			amount -= type[name][0] - max_value
-			type[name][0] = max_value
+		if type[attribute_name][0] <= 0:
+			amount -= type[attribute_name][0]
+			type[attribute_name][0] = 0
+			type[attribute_name][1].queue_free()
+			type.erase(attribute_name)
+		elif type[attribute_name][0] > max_value:
+			amount -= type[attribute_name][0] - max_value
+			type[attribute_name][0] = max_value
 	# 새로운 속성일 경우 새롭게 추가 
 	else:
-		add_new_bar(name, amount)
-		
+		add_new_bar(attribute_name, amount)
+
 	# 만약 총합이 최대치보다 많아질 경우 
 	total_value += amount
 	#print("total:", total_value) 
@@ -54,30 +54,30 @@ func add_value(name : String, amount : float):
 	update_value()	
 
 # 속성 지우기
-func remove_value(name : String, amount : float):
-	add_value(name, -amount)
+func remove_value(attribute_name : String, amount : float):
+	add_value(attribute_name, -amount)
 
 # 모든 속성 바를 자신이 차지하는 값만큼 비율을 계산해 막대 길이 조정 
 func update_value():
-	for name in type:
-		#print(name, ":", type[name][0] / max_value)
-		type[name][1].size_flags_stretch_ratio = type[name][0] / max_value
+	for attribute_name in type:
+		#print(attribute_name, ":", type[attribute_name][0] / max_value)
+		type[attribute_name][1].size_flags_stretch_ratio = type[attribute_name][0] / max_value
 
 # 새로운 속성 바를 추가하기 
-func add_new_bar(name : String, amount : float):
+func add_new_bar(attribute_name : String, amount : float):
 	var newBar = ColorRect.new()
 	
 	# ColorRect를 생성해서 설정.
 	$VBoxContainer.add_child(newBar)
-	#newBar.color = attribute_color[name]
-	var new_color = AttributeInfomation.get_attribute_color(name)
+	#newBar.color = attribute_color[attribute_name]
+	var new_color = AttributeInfomation.get_attribute_color(attribute_name)
 	if new_color == null:
 		printerr("속성 이름 잘못됨!")
 		return
 	newBar.color = new_color
 	newBar.size_flags_vertical = Control.SIZE_EXPAND_FILL
 
-	type[name] = [amount, newBar]
+	type[attribute_name] = [amount, newBar]
 
 # 속성 중 가장 작은 속성 추출 (0이거나 인자로 주어진 속성 제외) 
 func find_min(skip : String) -> String:
@@ -86,10 +86,10 @@ func find_min(skip : String) -> String:
 	
 	# 주어진 속성을 제외한 최소값 구하기.
 	var n = "none"
-	var min = max_value + 10
+	var min_value = max_value + 10
 	for i in type:
 		if i == skip or type[i][0] == 0: continue
-		if type[i][0] < min:
-			min = type[i][0]
+		if type[i][0] < min_value:
+			min_value = type[i][0]
 			n = i
 	return n
