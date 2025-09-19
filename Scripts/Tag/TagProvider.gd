@@ -1,25 +1,26 @@
 extends Node
+class_name TagProvider
 
 
-@export var conditions: Array[String]
-@export var add_tags: Array[String]
+signal on_tag_requested(node: Node, tag: String, count: int)
+
+@export var tag_list: Array[String]
+
 
 var tag_service
 
-func _init(_tag_service):
-	tag_service = _tag_service
-	
-	
-# 태그 확인 후 태그 붙이기
-func condition_process() -> bool:
-	for i in add_tags:
-		#tag_service.on_tag_requested.emit(PlayerData, i, 1)
-		pass
-	return true
 
+func _init():
+	tag_service = DiContainer.get_tag_service()
+	if tag_service.has_method("change_tag_tree"):
+		on_tag_requested.connect(tag_service.change_tag_tree)
 
-# 물체와 상호작용
-func _on_location_clicked(_camera, _event, _pos, _n, _shape_idx):
-	if _event is InputEventMouseButton and _event.pressed:
-		print("TagAdderClicked")
-		condition_process()
+func _exit_tree():
+	if tag_service.has_method("change_tag_tree"):
+		on_tag_requested.disconnect(tag_service.change_tag_tree)
+	
+func work(node: Node):
+	for i in tag_list:
+		on_tag_requested.emit(node, i, 1)
+		print("Tag Requested")
+	pass

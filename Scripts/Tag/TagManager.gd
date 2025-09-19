@@ -1,7 +1,7 @@
 extends Node
 class_name TagService
 
-signal on_tag_changed(node: Node, tag: String, count: int)
+signal on_tag_changed(node: Node)
 
 # 노드 오브젝트(key) : 딕셔너리(문자열 : 카운트)
 var dict: Dictionary
@@ -33,6 +33,7 @@ func add_tag_tree(node: Node, tag: String, count = 1):
 	for tag_part in tag_tree:
 		upper_tag += "." + tag_part
 		_add_tag(node, upper_tag, count)
+	on_tag_changed.emit(node)
 
 
 # 해당 태그 삭제 및 상위 태그 카운트 감소
@@ -119,10 +120,11 @@ func _decrease_tag(node: Node, tag: String, count = 1) -> int:
 	if !tags.has(tag):
 		return 0
 	tags[tag] -= count
-	on_tag_changed.emit(node, tag, tags[tag])
 	if tags[tag] <= 0:
 		_remove_tag(node, tag)
+		on_tag_changed.emit(node)
 		return 0
+	on_tag_changed.emit(node)
 	return tags[tag]
 
 
@@ -153,7 +155,7 @@ func _add_tag(node: Node, tag: String, count = 1) -> void:
 		# 없으면 태그 딕셔너리 추가
 		var arr = {tag: count}
 		dict[node] = arr
-	on_tag_changed.emit(node, tag, count)
+	
 
 # count 0 입력 시 해당 태그 즉시 제거
 func change_tag_tree(node: Node, tag: String, count: int):
