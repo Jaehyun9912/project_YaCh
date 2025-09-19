@@ -19,19 +19,22 @@ var quest_list: Array
 # 수주 가능한 퀘스트
 var quest_queue: Array
 
-
+var tag_service
 # 퀘스트 매니저 생성자
 func _init(npc_name: String):
 	_npc_name = npc_name
+	tag_service = DiContainer.get_tag_service()
+	print(tag_service)
 	_import_quest()
 	enqueue_quest()
-
-
+	
+	
 # 퀘스트 수주 조건 확인 -> 수주 가능 여부 반환
-func check_quest(quest : Dictionary) -> bool:
+func check_quest(quest: Dictionary) -> bool:
 	#퀘스트를 수주 중일 때는 추가 수주 불가능
-	if TagManager.has_tag(PlayerData, PROCESS_TREE + quest.id):
-		return false
+	if tag_service.has_method("has_tag"):
+		if tag_service.has_tag(PlayerData, PROCESS_TREE + quest.id):
+			return false
 	#수주에 필요한 태그 존재여부 확인
 	if quest.has("accept_condition"):
 		for i in quest["accept_condition"]:
@@ -48,8 +51,6 @@ func enqueue_quest() -> void:
 		if check_quest(i):
 			quest_queue.append(i)
 			# 태그 수주 가능으로 변경
-			TagManager.remove_tag_tree(self, UNACCEPT_TREE + i.id)
-			TagManager.add_tag_tree(self, ACCEPT_TREE + i.id)
 
 
 # 퀘스트 수주
@@ -70,10 +71,6 @@ func clear_quest(quest) -> bool:
 		printerr("퀘스트 클리어 불가!")
 		return false
 	
-
-	# 수주중 태그 삭제 후 클리어 태그 부여
-	TagManager.remove_tag_tree(self, PROCESS_TREE + quest.id)
-	TagManager.add_tag_tree(self, CLEAR_TREE + quest.id)
 	# 클리어
 	PlayerData.clear_quest(quest)
 	submit_item(quest)
@@ -107,7 +104,7 @@ func _import_quest() -> void:
 	# 지역 상관없이 수주가능한 퀘스트 생성
 	for datum in data["All"]:
 		quest_list.append(datum)
-		print("datum : " ,datum)
+		print("datum : ", datum)
 	
 	# 특수 지역에서만 받을 수 있는 퀘스트 생성
 	var location_quest = ViewManager.cur_meta_data["address"]
@@ -127,9 +124,11 @@ func check_condition(condition: String) -> bool:
 	var arr = condition.split(":", true, 1)
 	var check: bool
 	if arr.size() == 1:
-		check = TagManager.tag_compare(PlayerData, arr[0])
+		if tag_service.has_method("tag_compare"):
+			check = tag_service.tag_compare(PlayerData, arr[0])
 	elif arr[0] == "tag":
-		check = TagManager.tag_compare(PlayerData, arr[1])
+		if tag_service.has_method("tag_compare"):
+			check = tag_service.tag_compare(PlayerData, arr[1])
 	elif arr[0] == "stat":
 		check = PlayerData.stat_compare(arr[1])
 	elif arr[0] == "item":
@@ -150,7 +149,10 @@ func can_clear_quest(quest: Dictionary):
 			return false
 	if quest.has("id"):
 		var id = quest["id"]
-		if !TagManager.has_tag(PlayerData,"Quest.process."+id):
+		if tag_service.has_method("has_tag"):
+			if !tag_service.has_tag(PlayerData, "Quest.process." + id):
+				return false
+		else:
 			return false
 	var condition = get_quest_condition(quest)
 	for i in condition:
@@ -158,8 +160,8 @@ func can_clear_quest(quest: Dictionary):
 			return false
 	return true
 	
-func get_quest_condition(quest : Dictionary) -> Dictionary:
-	var condition : Dictionary
+func get_quest_condition(quest: Dictionary) -> Dictionary:
+	var condition: Dictionary
 	if quest.has("process_condition"):
 		condition = quest["process_condition"] as Dictionary
 	if quest.has("submit"):

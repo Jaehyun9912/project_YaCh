@@ -11,3 +11,6 @@ func get_title():
 
 func get_description():
 	return data["description"]
+
+func read():
+	pass

@@ -10,7 +10,6 @@ func set_slot(_data):
 	update_slot()
 
 	
-
 func update_slot():
 	nameText.text = item_data["name"]
 	if data.has("count"):
@@ -28,9 +27,15 @@ func get_description():
 
 
 func use():
-	if data.has("count"):
-		data["count"] -=1
-		if data["count"] ==0:
-			queue_free()
-	queue_free()
 	print("아이템 사용")
+	discard()
+
+
+func discard():
+	if data.has("count"):
+		data["count"] -= 1
+		if data["count"] == 0:
+			queue_free()
+			return
+	else:
+		queue_free()

@@ -9,7 +9,7 @@ var current_scene: Node = null
 var world_instance: Node3D = null
 var current_panel: CanvasLayer = null
 
-var side_panel : SidePanel = null
+var side_panel: SidePanel = null
 
 var cur_meta_data: Dictionary
 
@@ -27,10 +27,7 @@ var panel_ratio:
 		return panel_ratio
 
 
-
-
-
-func get_view():	
+func get_view():
 	current_scene = get_tree().current_scene
 	if current_scene != null:
 		world_instance = current_scene.get_node("World")
@@ -40,7 +37,7 @@ func get_view():
 	pass
 
 
-func load_world(world_name: String, panel_name: String = "", meta_data: Dictionary = Dictionary()) -> void :
+func load_world(world_name: String, panel_name: String = "", meta_data: Dictionary = Dictionary()) -> void:
 	# get current scene
 	get_view()
 	
@@ -65,13 +62,10 @@ func load_world(world_name: String, panel_name: String = "", meta_data: Dictiona
 		erase_panel(child)
 	# load new Panel
 	if panel_name != "":
-		push_panel(panel_name,SCREEN.BOTTOM)
+		push_panel(panel_name, SCREEN.BOTTOM)
 	# 사라진 오브젝트의 태그 값 제거
-	TagManager.clean_dict()
+	#TagManager.clean_dict()
 	_on_size_changed()
-
-
-
 
 
 #region UI_Panel
@@ -101,19 +95,18 @@ func _on_size_changed():
 		panel.anchor_top = 0.5
 
 
-
-enum SCREEN{
+enum SCREEN {
 	TOP,
 	BOTTOM,
 	FULL
 }
 # 패널 추가
-func push_panel(panel_name : String,screen_location : SCREEN):
+func push_panel(panel_name: String, screen_location: SCREEN):
 	get_view()
 	# 패널 생성, 전시 후 해당 패널 반환
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
 	current_panel.add_child(panel as Node)
-	_set_screen_size(panel,screen_location)
+	_set_screen_size(panel, screen_location)
 	if panel.has_signal("on_exit"):
 		panel.on_exit.connect(erase_panel.bind(panel))
 	return panel
@@ -126,17 +119,17 @@ func erase_panel(panel):
 	
 
 # 스크린 위치 지정 
-func _set_screen_size(panel:Control,screen_location:SCREEN) -> void:
+func _set_screen_size(panel: Control, screen_location: SCREEN) -> void:
 	if screen_location == SCREEN.BOTTOM:
 		panel.anchor_left = 0
-		panel.anchor_top = 1-panel_ratio
+		panel.anchor_top = 1 - panel_ratio
 		panel.anchor_right = 1
 		panel.anchor_bottom = 1
 	elif screen_location == SCREEN.TOP:
 		panel.anchor_left = 0
 		panel.anchor_top = 0
 		panel.anchor_right = 1
-		panel.anchor_bottom = 1-panel_ratio
+		panel.anchor_bottom = 1 - panel_ratio
 	elif screen_location == SCREEN.FULL:
 		panel.anchor_left = 0
 		panel.anchor_top = 0
@@ -147,16 +140,16 @@ func _set_screen_size(panel:Control,screen_location:SCREEN) -> void:
 func update_panels_size():
 	get_view()
 	var _panel = current_panel.get_child(0)
-	_set_screen_size(_panel,SCREEN.BOTTOM)
+	_set_screen_size(_panel, SCREEN.BOTTOM)
 		
 #endregion
 
 # 컷신 보여주기(이미지 경로는 나중에 폴더 만들고 경로 조정할 예정)
-func show_cutscene(path,screen : SCREEN):
-	var panel = push_panel("CutScenePanel",screen)
+func show_cutscene(path, screen: SCREEN):
+	var panel = push_panel("CutScenePanel", screen)
 	if screen == SCREEN.FULL:
-		_set_screen_size(side_panel,screen)
-	panel.tree_exited.connect(_set_screen_size.bind(side_panel,SCREEN.TOP))
+		_set_screen_size(side_panel, screen)
+	panel.tree_exited.connect(_set_screen_size.bind(side_panel, SCREEN.TOP))
 	
 	var texture = load_texture_from_file(path)
 	panel.set_image(texture)
@@ -179,4 +172,3 @@ func load_texture_from_file(path: String) -> Texture2D:
 	
 	var texture = ImageTexture.create_from_image(image)
 	return texture
-

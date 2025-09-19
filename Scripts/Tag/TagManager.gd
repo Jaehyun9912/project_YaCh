@@ -16,7 +16,7 @@ func get_tags(node: Node) -> PackedStringArray:
 
 
 # 노드의 해당 태그 카운트 반환
-func get_tag_count(node: Node, tag: String) -> int:
+func _get_tag_count(node: Node, tag: String) -> int:
 	if has_tag(node, tag):
 		return dict[node][tag]
 	# 없으면 0 반환
@@ -38,7 +38,7 @@ func add_tag_tree(node: Node, tag: String, count = 1):
 # 해당 태그 삭제 및 상위 태그 카운트 감소
 func remove_tag_tree(node: Node, tag: String) -> bool:
 	# 시작 태그가 있으면 삭제 없으면 반환
-	var count = get_tag_count(node, tag)
+	var count = _get_tag_count(node, tag)
 	if !_remove_tag(node, tag):
 		return false
 	var tags = dict[node] as Dictionary
@@ -65,24 +65,13 @@ func has_tag(node: Node, tag: String) -> bool:
 	return false
 
 
-# 태그 일정 부분으로 해당 태그 찾기
-func find_tag(node: Node, tag: String) -> String:
-	var tags = get_tags(node)
-	tag = "." + tag
-	for i in tags:
-		# 해당 부분 태그로 종료하는 태그만 반환
-		if i.ends_with(tag):
-			return i
-	return String()
-
-
 # 태그의 부등호 비교해서 충족 시 true 반환
 func tag_compare(node: Node, tag: String) -> bool:
 	var comparer = [">", "<", "="]
 	for i in comparer:
 		var tag_part = tag.split(i, true, 2)
 		if tag_part.size() == 2:
-			var tag_count = TagManager.get_tag_count(node, tag_part[0])
+			var tag_count = _get_tag_count(node, tag_part[0])
 			if i == ">" && tag_count > tag_part[1].to_int():
 				return true
 			elif i == "<" && tag_count < tag_part[1].to_int():
@@ -92,7 +81,7 @@ func tag_compare(node: Node, tag: String) -> bool:
 			else:
 				return false
 	# 태그가 있는지 없는지만 확인(태그에 부등호가 없는경우)
-	if TagManager.has_tag(node, tag):
+	if has_tag(node, tag):
 		return true
 	return false
 
@@ -166,11 +155,12 @@ func _add_tag(node: Node, tag: String, count = 1) -> void:
 		dict[node] = arr
 	on_tag_changed.emit(node, tag, count)
 
-func change_tag(node: Node, tag: String, count: int):
+# count 0 입력 시 해당 태그 즉시 제거
+func change_tag_tree(node: Node, tag: String, count: int):
 	if count > 0:
 		add_tag_tree(node, tag, count)
 	elif count < 0:
 		decrease_tag_tree(node, tag, -count)
 	else:
-		return
+		remove_tag_tree(node, tag)
 	print(dict[node])

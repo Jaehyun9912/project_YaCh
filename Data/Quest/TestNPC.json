@@ -46,7 +46,14 @@
 			],
 			"process_condition": {
 				"artifact:pandora_cube":"판도라 큐브 보유"
-			}
+			},
+			"submit":[
+				{
+					"id": "bomb",
+					"count": 5,
+					"description":"폭탄 5개 제출"
+				}
+			]
 		}
 	],
 	"CountryTower": [
