@@ -4,6 +4,10 @@ class_name BattlePanel
 @onready var action_point = $TurnPointBar/ActionPoint as Label
 @onready var turn_point_bar = $TurnPointBar as TurnPointBar
 @onready var top_button = $TopButton
+@onready var peer_button = $PeerSkillButton as RoundButton
+
+# 동료 스킬 쿨타임
+var peer_cooldown := 0
 
 var skill_buttons
 var choicePanel
@@ -26,7 +30,7 @@ enum ButtonType {
 }
 
 # 버튼 신호를 외부와 연결해주는 신호
-signal skill_actived(index : BattlePanel.ButtonType, target)
+signal skill_actived(index, target, is_casting)
 
 # 현재 턴 캐릭터의 정보
 var current_charcter: BattleCharacter
@@ -42,12 +46,13 @@ func _ready():
 	skill_button.battle_panel = self
 	
 	# signal 연결
+	manager.battle_panel = self
 	manager.turn_character_changed.connect(_on_battle_scene_turn_character_changed)
 	manager.turn_cycle_start.connect(_on_turn_cycle_start)
 	manager.add_log.connect($BattleLog.add_log)
-	manager.battle_panel = self
+	manager.skill_used.connect(_on_skill_used)
 	skill_actived.connect(manager.on_battle_panel_skill_actived)
-	
+
 	skill_buttons = skill_button.buttons
 	
 	# 버튼에 함수 설정, 플레이어 스킬 맞지 않으면 버튼 비활성화 
@@ -59,6 +64,10 @@ func _ready():
 			btn.lock_disable = true
 	#manager.turn_end.emit()
 	$CastingPanel.battle_panel = self
+
+	var peer_skill = PlayerData.peer_skill
+	if peer_skill == "" or peer_skill == null:
+		peer_button.visible = false
 
 # 턴 변경되었음을 받는 함수
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
@@ -84,15 +93,17 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 	else:
 		skill_button.set_all_buttons(false)
 	
-# 무한 반복
-func _process(_delta):
-	# 행동력 표시 반영
+# 어떤 스킬이 사용되었음을 받는 함수
+func _on_skill_used():
+	# 현재 캐릭터의 행동력 갱신
 	if current_charcter != null:
-		if (current_charcter.current_point == current_point): return
-		
 		action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
 		turn_point_bar.update_point(current_charcter)
 		current_point = current_charcter.current_point
+
+	# 동료 스킬 조건 체크
+	_check_peer_skill()
+	
 
 # 조건을 만족하는 스킬만 활성화
 func _check_skill_is_possible():
@@ -107,7 +118,7 @@ func _check_skill_is_possible():
 
 # 스킬 발동을 받아서 전달
 func _on_skill_button_manager_skill_activated(skill : BattlePanel.ButtonType, target):
-	skill_actived.emit(skill, target)
+	skill_actived.emit(skill, target, true)
 	_check_skill_is_possible()
 
 #region getter
@@ -154,3 +165,37 @@ func _on_top_button_button_pressed(btn : BattlePanel.ButtonType):
 			
 func set_casting_panel(text, time, is_button_visible, callback):
 	$CastingPanel.set_casting_panel(text, time, is_button_visible, callback)
+
+func _check_peer_skill():
+	print("check peer skill")
+	var peer_skill = PlayerData.peer_skill
+	var skill = SkillManager.get_peer_skill(peer_skill)
+	if skill == null:
+		peer_button.disabled = true
+		return
+
+	if peer_cooldown > 0:
+		peer_cooldown -= 1
+		peer_button.disabled = true
+		peer_button.set_text(str(peer_cooldown))
+		return
+	else:
+		peer_button.reset_text()
+
+	if not SkillManager.check_requirement(skill, current_charcter.current_point, manager.attribute_bar):
+		peer_button.disabled = true
+		return
+
+	peer_button.disabled = false
+
+func _on_peer_skill_button_button_clicked():
+	var peer_skill = PlayerData.peer_skill
+	var skill = SkillManager.get_peer_skill(peer_skill)
+	if skill == null:
+		return
+
+	peer_cooldown = skill.get("cooldown", 0)
+	print("peer cooldown : ", peer_cooldown)
+	
+	skill_actived.emit(skill, "self", false)
+	

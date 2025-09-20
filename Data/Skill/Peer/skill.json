@@ -1,0 +1,13 @@
+{
+    "peer_heal1": {
+        "name": "Peer Heal I",
+        "description": "자신을 약간 치유합니다.",
+        "type": "attack",
+        "target": "self",
+        "value": -10,
+        "cooldown": 3,
+        "requirement": {
+            "fire": 10
+        }
+    }
+}   

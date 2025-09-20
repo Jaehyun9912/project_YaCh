@@ -1,5 +1,5 @@
 extends Node
-class_name Player
+# class_name Player
 
 const max_inventory_slots = 9
 
@@ -46,6 +46,12 @@ var special_skills:
 		return data.get("special_skills", [])
 	set(value):
 		data["special_skills"] = value
+
+var peer_skill:
+	get:
+		return data.get("peer_skill", "")
+	set(value):
+		data["peer_skill"] = value
 
 var inventory:
 	get:

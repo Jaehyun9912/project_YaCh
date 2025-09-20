@@ -14,7 +14,8 @@ offset_bottom = 100.0
 texture = ExtResource("1_ck00n")
 expand_mode = 1
 script = ExtResource("2_h7tp8")
-button_text = "SkillButton"
+disable_color = Color(0.658824, 0.658824, 0.658824, 1)
+button_text = "Skill Button"
 
 [node name="Button" type="Button" parent="."]
 modulate = Color(1, 1, 1, 0)
@@ -40,6 +41,8 @@ grow_horizontal = 2
 grow_vertical = 2
 text = "Skill Button"
 label_settings = SubResource("LabelSettings_0kr68")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="button_down" from="Button" to="." method="_on_button_button_down"]
 [connection signal="button_up" from="Button" to="." method="_on_button_button_up"]

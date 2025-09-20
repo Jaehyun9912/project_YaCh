@@ -8,18 +8,21 @@ class_name RoundButton
 @export var disable_color := Color(0.9, 0.9, 0.9)
 
 @export var button_text: String
+@export var font_size := 14
 
 @onready var label = $Label as Label
 @onready var init_text = button_text
 
 func _ready():
-	#label.text = button_text
-	pass
+	label.text = button_text
+	label.add_theme_font_size_override("font_size", font_size)
+	disabled = init_disabled
 	
 #func _init():
 	#label.text = button_text
 
-# 버튼 활성화 비활성화 여부
+# 버튼 활성화 비활성화 
+@export var init_disabled = false
 var disabled = false :
 	get:
 		return disabled

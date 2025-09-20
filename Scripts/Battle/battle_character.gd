@@ -21,6 +21,9 @@ var hp:
 	get:
 		return _hp
 	set(value):
+		if value > max_hp:
+			value = max_hp
+
 		var diff = value - _hp
 		_hp = value
 		_hp_label.text = hp_text_string % [hp, max_hp]
