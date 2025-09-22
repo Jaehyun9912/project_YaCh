@@ -1,0 +1,43 @@
+[gd_scene load_steps=3 format=3 uid="uid://bywby213cjyfx"]
+
+[ext_resource type="Script" path="res://Scripts/Panel/InventorySlot.gd" id="1_hj1ui"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_7ux2a"]
+font_color = Color(0, 0, 0, 1)
+
+[node name="ColorRect2" type="ColorRect"]
+custom_minimum_size = Vector2(0, 30)
+color = Color(0.486275, 0.764706, 0.698039, 1)
+script = ExtResource("1_hj1ui")
+
+[node name="ItemName" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_left = 8.0
+offset_top = -11.5
+offset_right = 193.0
+offset_bottom = 11.5
+grow_vertical = 2
+text = "폭탄"
+label_settings = SubResource("LabelSettings_7ux2a")
+vertical_alignment = 1
+
+[node name="ItemCount" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -40.0
+offset_top = -11.5
+offset_bottom = 11.5
+grow_horizontal = 0
+grow_vertical = 2
+text = "x 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="gui_input" from="." to="." method="on_clicked"]

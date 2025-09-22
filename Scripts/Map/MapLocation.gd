@@ -43,6 +43,6 @@ func enter_world():
 	print("AreaClicked : ",location)
 
 # 해당 월드로 이동
-func _on_location_clicked(viewport: Node, event: InputEvent, shape_idx: int):
+func _on_location_clicked(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if event is InputEventMouseButton and event.is_pressed():
 		enter_world()

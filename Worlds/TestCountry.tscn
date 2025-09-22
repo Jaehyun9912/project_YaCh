@@ -1,8 +1,9 @@
-[gd_scene load_steps=13 format=3 uid="uid://bpgurardg7lfa"]
+[gd_scene load_steps=14 format=3 uid="uid://bpgurardg7lfa"]
 
 [ext_resource type="PackedScene" uid="uid://bmy7udp4256gu" path="res://Worlds/WorldObjects/country_tower.tscn" id="1_4y7yr"]
 [ext_resource type="PackedScene" uid="uid://ckfx4fnhhqrdh" path="res://Worlds/WorldObjects/forest.tscn" id="2_5u1m3"]
-[ext_resource type="PackedScene" uid="uid://d2t82rft22it8" path="res://Objects/Quest/TagAdder.tscn" id="2_aytmn"]
+[ext_resource type="Script" path="res://Scripts/Tag/TagSupervisor.gd" id="3_bibe1"]
+[ext_resource type="Script" path="res://Scripts/Tag/TagProvider.gd" id="4_olhay"]
 [ext_resource type="Script" path="res://Scripts/World/Location.gd" id="4_yjwxt"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3l6fm"]
@@ -64,15 +65,19 @@ address = "Battle"
 type = "BattlePanel"
 metadata/World = "forest"
 
-[node name="TagAdder" parent="forest" instance=ExtResource("2_aytmn")]
-conditions = Array[String](["Quest.process.quest1"])
-add_tags = Array[String](["Quest.process.quest1.alpha"])
+[node name="Supervisor" type="Node" parent="forest"]
+script = ExtResource("3_bibe1")
+tag_list = Array[String](["Quest.process.quest1"])
+
+[node name="Provider" type="Node" parent="forest/Supervisor"]
+script = ExtResource("4_olhay")
+tag_list = Array[String](["Quest.process.quest1.alpha"])
 
 [node name="Talk" type="Area3D" parent="."]
 transform = Transform3D(0.901077, 0, 0.433659, 0, 1, 0, -0.433659, 0, 0.901077, 21.5609, 5.09986, -35.1547)
 script = ExtResource("4_yjwxt")
-address = "Map"
-type = "MapPanel"
+address = "TestCountry"
+type = "InventoryPanel"
 metadata/map = "TestMap"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Talk"]
@@ -82,5 +87,6 @@ shape = SubResource("BoxShape3D_pxeb4")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Talk"]
 mesh = SubResource("BoxMesh_7h2iq")
 
-[connection signal="input_event" from="forest" to="forest/TagAdder" method="_on_location_clicked"]
+[connection signal="on_location_interacted" from="forest" to="forest/Supervisor" method="work"]
+[connection signal="on_tag_responsed" from="forest/Supervisor" to="forest/Supervisor/Provider" method="work"]
 [connection signal="input_event" from="Talk" to="Talk" method="_on_location_clicked"]

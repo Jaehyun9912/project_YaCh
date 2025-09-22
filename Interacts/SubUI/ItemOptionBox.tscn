@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://idlnoetrttir"]
+
+[ext_resource type="Script" path="res://Scripts/Panel/Option/ItemOptionBox.gd" id="1_hkuaq"]
+
+[node name="ItemOptionBox" type="MarginContainer"]
+custom_minimum_size = Vector2(0, 60)
+size_flags_vertical = 3
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+script = ExtResource("1_hkuaq")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 2
+text = "폐기"
+clip_text = true

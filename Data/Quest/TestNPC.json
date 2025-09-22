@@ -8,9 +8,9 @@
 			"accept_condition": [
 				"!Quest.clear.quest1"
 			],
-			"process_condition": [
-				"Quest.process.quest1.alpha"
-			],
+			"process_condition": {
+				"Quest.process.quest1.alpha":"숲에 진입하기"
+			},
 			"rewards": [
 				{
 					"id": "bomb",
@@ -26,9 +26,9 @@
 			"accept_condition": [
 				"!Quest.clear.quest2"
 			],
-			"process_condition": [
-				"Quest.clear"
-			],
+			"process_condition": {
+				"Quest.clear":"다른 퀘스트 클리어하기"
+			},
 			"rewards": [
 				{
 					"id": "potion",
@@ -44,8 +44,15 @@
 			"accept_condition": [
 				"!Quest.clear.quest3"
 			],
-			"process_condition": [
-				"artifact:pandora_cube"
+			"process_condition": {
+				"artifact:pandora_cube":"판도라 큐브 보유"
+			},
+			"submit":[
+				{
+					"id": "bomb",
+					"count": 5,
+					"description":"폭탄 5개 제출"
+				}
 			]
 		}
 	],
@@ -53,10 +60,17 @@
 		{
 			"id": "quest4",
 			"title": "테스트 퀘스트 4",
-			"description": "테스트4",
+			"description": "포션 5개 제출하기",
 			"clear_NPC": "TestNPC",
 			"accept_condition": [
 				"!Quest.clear.quest4"
+			],
+			"submit":[
+				{
+					"id": "potion",
+					"count": 5,
+					"description":"포션 5개 제출"
+				}
 			]
 		},
 		{
@@ -65,16 +79,16 @@
 			"description": "테스트4",
 			"clear_NPC": "TestNPC",
 			"accept_condition": [
-				"!Quest.clear.quest4"
+				"!Quest.clear.quest5"
 			]
 		},
 		{
 			"id": "quest6",
 			"title": "테스트 퀘스트 6",
 			"description": "테스트4",
-			"clear_NPC": "CountryTower",
+			"clear_NPC": "TestNPC",
 			"accept_condition": [
-				"!Quest.clear.quest4"
+				"!Quest.clear.quest6"
 			]
 		},
 		{
@@ -83,7 +97,7 @@
 			"description": "테스트4",
 			"clear_NPC": "CountryTower",
 			"accept_condition": [
-				"!Quest.clear.quest4"
+				"!Quest.clear.quest7"
 			]
 		},
 		{
@@ -92,7 +106,7 @@
 			"description": "테스트4",
 			"clear_NPC": "CountryTower",
 			"accept_condition": [
-				"!Quest.clear.quest4"
+				"!Quest.clear.quest8"
 			]
 		},
 		{
@@ -101,7 +115,7 @@
 			"description": "테스트4",
 			"clear_NPC": "CountryTower",
 			"accept_condition": [
-				"!Quest.clear.quest4"
+				"!Quest.clear.quest9"
 			]
 		}
 	]

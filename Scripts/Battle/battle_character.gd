@@ -1,9 +1,9 @@
 extends Node3D
 class_name BattleCharacter
 
-signal character_died(char : BattleCharacter)
+signal character_died(char: BattleCharacter)
 
-const  hp_text_string := "HP : %d / %d"
+const hp_text_string := "HP : %d / %d"
 @onready var _hp_label := $HpLabel
 @onready var _notify_label := $NotifyLabel
 @onready var _notify_timer := $NotifyLabel/Timer
@@ -44,15 +44,19 @@ var current_point: int
 
 var init_outline_size
 var init_outline_color
+var tag_service
 
 func _ready():
 	init_outline_size = _hp_label.outline_size
 	init_outline_color = _hp_label.outline_modulate
+	tag_service = DiContainer.get_tag_service()
 
 # 죽었을 때 
 func _died():
 	character_died.emit(self)
-	TagManager.remove_tag_tree(self, tag)
+	
+	if tag_service.has_method("change_tag_tree"):
+		tag_service.change_tag_tree(self, tag, 0)
 	
 # 캐릭터 위에 메세지 띄우기 
 func notify_msg(msg, color):
@@ -77,14 +81,15 @@ func set_character(data: Dictionary, tag_id: String):
 	max_hp = data.get("max_hp", data.hp)
 	speed = data.speed
 	mana = data.mana
-	_hp = data.hp	
+	_hp = data.hp
 	_hp_label.text = hp_text_string % [hp, max_hp]
 	
 	skills = data.skills
 	
 	# 태그 추가하기 
 	tag = "Battle." + tag_id
-	TagManager.add_tag_tree(self, tag)
+	if tag_service.has_method("change_tag_tree"):
+		tag_service.change_tag_tree(self, tag, 1)
 	#print(data)
 	
 # 캐릭터의 체력 텍스트 외곽선 설정 
@@ -98,6 +103,6 @@ func set_hp_outline_red(): set_hp_outline(30, Color.RED)
 func set_hp_outline_green(): set_hp_outline(30, Color.GREEN)
 
 # 적이면 빨간색, 아군이면 초록색으로 설정 (아직은 IsPlayer로 구분 
-func set_hp_outline_target(): 
+func set_hp_outline_target():
 	if is_player: set_hp_outline_green()
 	else: set_hp_outline_red()

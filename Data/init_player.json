@@ -18,12 +18,12 @@
 	"inventory": [
 		{
 			"id": "item:potion",
-			"count": 1,
+			"count": 9,
 			"slot": 0
 		},
 		{
 			"id": "item:bomb",
-			"count": 1,
+			"count": 6,
 			"slot": 1
 		}
 	],

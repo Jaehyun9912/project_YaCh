@@ -19,6 +19,7 @@ layer = 0
 [node name="SidePanelLayer" type="CanvasLayer" parent="."]
 
 [node name="SidePanel" parent="SidePanelLayer" instance=ExtResource("3_ux45a")]
+visible = false
 
 [node name="Option" parent="SidePanelLayer" instance=ExtResource("4_c1stb")]
 

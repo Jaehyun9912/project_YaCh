@@ -1,11 +1,14 @@
-extends Node#Area3D
+extends Node # Area3D
 
-@export var address : String
-@export var type : String
+@export var address: String
+@export var type: String
+
+signal on_location_interacted(node: Node)
 
 func _on_location_clicked(_camera, _event, _pos, _n, _shape_idx):
 	if _event is InputEventMouseButton and _event.pressed:
 		print("Location Clicked : " + address)
+		on_location_interacted.emit(PlayerData)
 		var meta_data = Dictionary()
 		for i in get_meta_list():
 			meta_data[i] = get_meta(i)
@@ -18,4 +21,4 @@ func _on_button_clicked():
 	var meta_data = Dictionary()
 	for i in get_meta_list():
 		meta_data[i] = get_meta(i)
-	ViewManager.load_world(address,type,meta_data)
+	ViewManager.load_world(address, type, meta_data)
