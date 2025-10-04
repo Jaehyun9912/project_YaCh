@@ -1,29 +1,28 @@
 extends Control
 
+signal on_exit
+
 var _cut_scene:
 	get:
 		return $"TextureRect" as TextureRect
 
-var timer : float = 0
+# meta데이터에서 그림 받아오기 또는 그림 파일 경로 받아와서 표시하기
+func initialize(data: Dictionary):
+	print("CutScene")
+	pass
 
 
 # 개별적으로 설정하지 않으면 view매니저에서 이미지 가져오기 및 세팅
 func _ready():
-	if timer <=0:
-		set_cutScene(ViewManager.cur_meta_data["Image"] as Texture2D,1)	
+	pass
 
 
 # 컷신 패널 일반적인 세팅 방법
-func set_cutScene(texture : Texture2D, time =0.1):
+func set_cutScene(texture: Texture2D):
 	_cut_scene.texture = texture
-	timer = time
 
-func _process(delta):
-	if timer>0:
-		timer-=delta
 
-func onClicked(event:InputEvent):
-	if event.is_pressed() && timer <= 0:
+func onClicked(event: InputEvent):
+	if event.is_pressed():
 		print("Clicked")
-		ViewManager.erase_panel(self)
-
+		on_exit.emit()
