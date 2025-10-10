@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://do7bbpvoabqdh"]
+[gd_scene load_steps=6 format=3 uid="uid://do7bbpvoabqdh"]
 
 [ext_resource type="PackedScene" uid="uid://2qnlhnafs2lx" path="res://Worlds/Map.tscn" id="1_e4bd6"]
+[ext_resource type="PackedScene" uid="uid://mjduysbt2pju" path="res://Objects/MapLocation.tscn" id="2_6soab"]
 [ext_resource type="PackedScene" uid="uid://ujhj8734sgr6" path="res://Interacts/MapPanel.tscn" id="3_nmvnj"]
 [ext_resource type="PackedScene" uid="uid://bg4hkcksoc7en" path="res://Interacts/UI/SidePanel.tscn" id="3_ux45a"]
 [ext_resource type="PackedScene" uid="uid://bymetbjca5yjf" path="res://Interacts/UI/Option.tscn" id="4_c1stb"]
@@ -10,11 +11,13 @@
 [node name="World" type="Node3D" parent="."]
 
 [node name="Map" parent="World" instance=ExtResource("1_e4bd6")]
+location_resource = ExtResource("2_6soab")
 
 [node name="Interact" type="CanvasLayer" parent="."]
 layer = 0
 
-[node name="MapPanel" parent="Interact" instance=ExtResource("3_nmvnj")]
+[node name="MapPanel" parent="Interact" node_paths=PackedStringArray("map") instance=ExtResource("3_nmvnj")]
+map = NodePath("../../World/Map")
 
 [node name="SidePanelLayer" type="CanvasLayer" parent="."]
 

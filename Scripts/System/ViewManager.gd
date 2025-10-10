@@ -37,7 +37,7 @@ func get_view():
 	pass
 
 
-func load_world(world_name: String, panel_name: String = "", meta_data: Dictionary = Dictionary()) -> void:
+func load_world(world_name: String, panel_name: String = "", meta_data: Dictionary = {}) -> void:
 	# get current scene
 	get_view()
 	
@@ -55,14 +55,15 @@ func load_world(world_name: String, panel_name: String = "", meta_data: Dictiona
 	# load new world
 	var new_world = load(WORLD_PATH + world_name + ".tscn")
 	print(WORLD_PATH + world_name)
-	world_instance.add_child(new_world.instantiate())
+	var world = new_world.instantiate()
+	world_instance.add_child(world)
 	
 	# remove current Panels
 	for child in current_panel.get_children():
 		erase_panel(child)
 	# load new Panel
 	if panel_name != "":
-		push_panel(panel_name, SCREEN.BOTTOM)
+		var panel = push_panel(panel_name, SCREEN.BOTTOM, meta_data, world)
 	# 사라진 오브젝트의 태그 값 제거
 	#TagManager.clean_dict()
 	_on_size_changed()
@@ -100,8 +101,8 @@ enum SCREEN {
 	BOTTOM,
 	FULL
 }
-# 패널 추가
-func push_panel(panel_name: String, screen_location: SCREEN):
+# 패널 추가(메타 데이터, 현재 월드에 대한 의존성 필요 시 주입)
+func push_panel(panel_name: String, screen_location: SCREEN, meta_data: Dictionary = {}, world: Node = null):
 	get_view()
 	# 패널 생성, 전시 후 해당 패널 반환
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
@@ -109,6 +110,10 @@ func push_panel(panel_name: String, screen_location: SCREEN):
 	_set_screen_size(panel, screen_location)
 	if panel.has_signal("on_exit"):
 		panel.on_exit.connect(erase_panel.bind(panel))
+	if panel.has_method("initialize"):
+		panel.initialize(meta_data)
+	if panel.has_method("initialize_world"):
+		panel.initialize_world(world)
 	return panel
 
 
@@ -144,19 +149,6 @@ func update_panels_size():
 		
 #endregion
 
-# 컷신 보여주기(이미지 경로는 나중에 폴더 만들고 경로 조정할 예정)
-func show_cutscene(path, screen: SCREEN):
-	var panel = push_panel("CutScenePanel", screen)
-	if screen == SCREEN.FULL:
-		_set_screen_size(side_panel, screen)
-	panel.tree_exited.connect(_set_screen_size.bind(side_panel, SCREEN.TOP))
-	
-	var texture = load_texture_from_file(path)
-	panel.set_image(texture)
-	#_set_screen_size(SidePanel,SCREEN.FULL)
-
-# 경로에 위치한 png 이미지를 texture2D로 변환해 반환
-# 함수 위치 변경 가능
 
 func load_texture_from_file(path: String) -> Texture2D:
 	var file = FileAccess.open(path, FileAccess.READ)

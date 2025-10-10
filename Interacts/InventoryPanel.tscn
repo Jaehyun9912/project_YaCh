@@ -7,7 +7,7 @@
 
 [node name="InventoryPanel" type="Control"]
 layout_mode = 3
-anchor_top = 0.5
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -16,7 +16,15 @@ script = ExtResource("1_pt6c8")
 slot_prefab = ExtResource("2_gjluc")
 option_prefab = ExtResource("4_uohd5")
 
-[node name="Inventory" type="ColorRect" parent="."]
+[node name="Inventory" type="Control" parent="."]
+layout_mode = 1
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Inventory" type="ColorRect" parent="Inventory"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 0.8
@@ -24,7 +32,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Category" type="ColorRect" parent="Inventory"]
+[node name="Category" type="ColorRect" parent="Inventory/Inventory"]
 layout_mode = 0
 offset_left = 57.0
 offset_top = 21.0
@@ -32,7 +40,7 @@ offset_right = 232.0
 offset_bottom = 61.0
 color = Color(0.909804, 0.301961, 0.313726, 1)
 
-[node name="Label" type="Label" parent="Inventory/Category"]
+[node name="Label" type="Label" parent="Inventory/Inventory/Category"]
 layout_mode = 0
 offset_left = 37.0
 offset_right = 173.0
@@ -41,7 +49,7 @@ text = "배틀 아이템"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Left" type="Button" parent="Inventory/Category"]
+[node name="Left" type="Button" parent="Inventory/Inventory/Category"]
 layout_mode = 0
 offset_left = -46.0
 offset_top = -1.0
@@ -49,7 +57,7 @@ offset_right = -6.0
 offset_bottom = 42.0
 text = "<"
 
-[node name="Right" type="Button" parent="Inventory/Category"]
+[node name="Right" type="Button" parent="Inventory/Inventory/Category"]
 layout_mode = 0
 offset_left = 183.0
 offset_top = -2.0
@@ -57,7 +65,7 @@ offset_right = 223.0
 offset_bottom = 41.0
 text = ">"
 
-[node name="TextureRect" type="TextureRect" parent="Inventory/Category"]
+[node name="TextureRect" type="TextureRect" parent="Inventory/Inventory/Category"]
 layout_mode = 1
 anchors_preset = 4
 anchor_top = 0.5
@@ -70,7 +78,7 @@ grow_vertical = 2
 texture = ExtResource("1_38nj3")
 expand_mode = 4
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Inventory"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Inventory/Inventory"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.05
@@ -80,28 +88,29 @@ anchor_bottom = 0.95
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Inventory/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Inventory/Inventory/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 0
 size_flags_stretch_ratio = 0.0
 
-[node name="ItemSlot" parent="Inventory/ScrollContainer/VBoxContainer" instance=ExtResource("2_gjluc")]
+[node name="ItemSlot" parent="Inventory/Inventory/ScrollContainer/VBoxContainer" instance=ExtResource("2_gjluc")]
 layout_mode = 2
 color = Color(0.854902, 0.709804, 0.227451, 1)
 
-[node name="ColorRect2" type="ColorRect" parent="."]
+[node name="ColorRect2" type="ColorRect" parent="Inventory"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.8
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -1.16
+offset_right = 3.05176e-05
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.901961, 0.729412, 0.627451, 1)
 
-[node name="ScrollContainer" type="ScrollContainer" parent="ColorRect2"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Inventory/ColorRect2"]
 layout_mode = 1
 anchors_preset = -1
 anchor_right = 1.0
@@ -109,11 +118,11 @@ anchor_bottom = 0.8
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect2/ScrollContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Inventory/ColorRect2/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Exit" type="Button" parent="ColorRect2"]
+[node name="Exit" type="Button" parent="Inventory/ColorRect2"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -128,4 +137,57 @@ grow_horizontal = 2
 grow_vertical = 0
 text = "닫기"
 
-[connection signal="pressed" from="ColorRect2/Exit" to="." method="exit"]
+[node name="Detail" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.545098, 0.666667, 0.913725, 1)
+
+[node name="ContentImage" type="TextureRect" parent="Detail"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.6
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_38nj3")
+
+[node name="Detail" type="ColorRect" parent="Detail"]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.7
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.211765, 0.211765, 0.211765, 1)
+
+[node name="Label" type="Label" parent="Detail/Detail"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.3
+offset_bottom = -0.0030098
+grow_horizontal = 2
+grow_vertical = 2
+text = "아이템 이름"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Detail/Detail"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "던지면 터진다."
+fit_content = true
+
+[connection signal="pressed" from="Inventory/ColorRect2/Exit" to="." method="exit"]

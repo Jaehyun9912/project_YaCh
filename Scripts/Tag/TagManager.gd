@@ -99,6 +99,7 @@ func decrease_tag_tree(node: Node, tag: String, count = 1):
 	_decrease_tag(node, tag, count)
 	var upper_tag = _get_upper_tag(tag)
 	if upper_tag == "":
+		on_tag_changed.emit(node)
 		return
 	decrease_tag_tree(node, upper_tag, count)
 
@@ -122,9 +123,7 @@ func _decrease_tag(node: Node, tag: String, count = 1) -> int:
 	tags[tag] -= count
 	if tags[tag] <= 0:
 		_remove_tag(node, tag)
-		on_tag_changed.emit(node)
 		return 0
-	on_tag_changed.emit(node)
 	return tags[tag]
 
 

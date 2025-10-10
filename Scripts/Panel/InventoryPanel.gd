@@ -1,15 +1,16 @@
 extends Control
 
 signal on_exit
-signal on_select_changed(slot : InventorySlot)
+signal on_select_changed(slot: InventorySlot)
 
-@export var slot_prefab : Resource
-@export var option_prefab : Resource
+@export var slot_prefab: Resource
+@export var option_prefab: Resource
 
 var slotContainer: VBoxContainer
-var actionContainer : VBoxContainer
+var actionContainer: VBoxContainer
+var detail_panel: Control
 
-var selected_slot : InventorySlot
+var selected_slot: InventorySlot
 
 var data
 
@@ -17,33 +18,41 @@ var data
 var action_list = ["use", "discard", "read"]
 
 # 인벤토리 카테고리
-var category = ["battle","consume","artifact","quest"]
-var category_name =["배틀 아이템","소모 아이템","아티펙트","퀘스트"]
+var category = ["battle", "consume", "artifact", "quest"]
+var category_name = ["배틀 아이템", "소모 아이템", "아티펙트", "퀘스트"]
 
-var cur_category : int
-var read_panel : Control
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	slotContainer = $"Inventory/ScrollContainer/VBoxContainer" as VBoxContainer
-	actionContainer = $"ColorRect2/ScrollContainer/VBoxContainer" as VBoxContainer
-	
+var cur_category: int
+var read_panel: Control
+
+
+func initialize(meta_data: Dictionary):
+	slotContainer = $"Inventory/Inventory/ScrollContainer/VBoxContainer" as VBoxContainer
+	actionContainer = $"Inventory/ColorRect2/ScrollContainer/VBoxContainer" as VBoxContainer
+	detail_panel = $"Detail" as Control
+
+	if meta_data.has("mode"):
+		if meta_data["mode"] == "full":
+			detail_panel.show()
+			on_select_changed.connect(set_item_description)
+			pass
+		elif meta_data["mode"] == "half":
+			detail_panel.hide()
+			pass
 	
 	cur_category = 0
-	$"Inventory/Category/Left".pressed.connect(change_category.bind(-1))
-	$"Inventory/Category/Right".pressed.connect(change_category.bind(1))
+	$"Inventory/Inventory/Category/Left".pressed.connect(change_category.bind(-1))
+	$"Inventory/Inventory/Category/Right".pressed.connect(change_category.bind(1))
 	
 	change_category(0)
 	
-	
-
 #region 인벤토리 세팅
 func clear_slot():
 	for i in slotContainer.get_child_count():
 		slotContainer.get_child(i).queue_free()
 
 # 인벤토리 아이템 데이터 세팅
-func set_item_slot(num : int):
-	$"Inventory/Category/Label".text = category_name[num]
+func set_item_slot(num: int):
+	$"Inventory/Inventory/Category/Label".text = category_name[num]
 	clear_slot()
 	data = PlayerData.inventory
 	for i in data:
@@ -57,7 +66,7 @@ func set_item_slot(num : int):
 
 # 퀘스트 데이터 세팅
 func set_quest_slot():
-	$"Inventory/Category/Label".text = "퀘스트"
+	$"Inventory/Inventory/Category/Label".text = "퀘스트"
 	clear_slot()
 	data = PlayerData.quest_list
 	for i in data:
@@ -69,7 +78,7 @@ func set_quest_slot():
 		slot.set_highlight(false)
 
 func set_artifact_slot():
-	$"Inventory/Category/Label".text = "아티펙트"
+	$"Inventory/Inventory/Category/Label".text = "아티펙트"
 	clear_slot()
 	data = PlayerData.artifact
 	for i in data:
@@ -82,7 +91,7 @@ func set_artifact_slot():
 #endregion
 
 # 슬롯 클릭 시 그 아이템에 맞는 UI 세팅
-func set_slot_info(slot : InventorySlot):
+func set_slot_info(slot: InventorySlot):
 	for i in actionContainer.get_child_count():
 		actionContainer.get_child(i).queue_free()
 	if selected_slot != null:
@@ -99,38 +108,17 @@ func set_slot_info(slot : InventorySlot):
 		if slot.has_method(i):
 			var action = option_prefab.instantiate() as ActionBox
 			actionContainer.add_child(action)
-			if i == "read":
-				action.set_action(read_slot.bind(slot),i)
-				pass
-			else:
-				action.set_action(slot.call.bind(i),i)
-				action.on_clicked.connect(slot.update_slot)
-
-func discard_slot():
-	if selected_slot == null:
-		return
-	var isEmpty = selected_slot.data.discard()
-	if isEmpty:
-		selected_slot.queue_free()
-	else:
-		selected_slot.update_slot()
-
-
-func read_slot(slot):
-	if read_panel.visible:
-		read_panel.hide()
-	else:
-		read_panel.show()
-		read_panel.set_panel(slot.data)
+			action.set_action(slot.call.bind(i), i)
+			action.on_clicked.connect(slot.update_slot)
 	
 
 func exit():
 	on_exit.emit()
 
-func change_category(direction : int):
-	cur_category+=direction
-	if cur_category >= category.size() || cur_category<0:
-		cur_category%=category.size()
+func change_category(direction: int):
+	cur_category += direction
+	if cur_category >= category.size() || cur_category < 0:
+		cur_category %= category.size()
 	set_slot_info(null)
 	# 현재 카테고리에 맞는 인벤토리 슬롯 표시
 	if category[cur_category] == "quest":
@@ -139,4 +127,14 @@ func change_category(direction : int):
 		set_artifact_slot()
 	else:
 		set_item_slot(cur_category)
+
+# 현재 선택한 슬롯에 대한 디테일 표시
+func set_item_description(slot: InventorySlot):
+	if slot == null:
+		$"Detail/Detail".hide()
+		return
+	$"Detail/Detail".show()
+	print(slot.data)
 	
+	$"Detail/Detail/Label".text = slot.get_title()
+	$"Detail/Detail/RichTextLabel".text = slot.get_description()
