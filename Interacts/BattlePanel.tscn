@@ -67,6 +67,7 @@ offset_bottom = 0.0
 metadata/_edit_use_anchors_ = true
 
 [node name="PeerSkillButton" parent="." instance=ExtResource("7_vq420")]
+visible = false
 layout_mode = 0
 offset_left = 13.0
 offset_top = -366.0

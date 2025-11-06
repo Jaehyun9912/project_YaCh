@@ -247,7 +247,7 @@ func on_battle_panel_skill_actived(index, target, is_casting):
 			BattlePanel.ButtonType.SKILL4:
 				use_skill.emit(3, target, is_casting)
 			BattlePanel.ButtonType.RUN:
-				_battle_end(END_TYPE.RUN)
+				battle_end(END_TYPE.RUN)
 			_:
 				pass
 	
@@ -280,7 +280,7 @@ enum END_TYPE {
 }
 
 # 들어온 타입에 따라 전투 종료 
-func _battle_end(type: END_TYPE):
+func battle_end(type: END_TYPE):
 	# 도망, 적 전부 처치 전투 종료 구현하기 
 	is_battle_end = true
 	
@@ -345,7 +345,7 @@ func check_dead_char():
 		
 		if dead == player_character:
 			print("player dead")
-			_battle_end(END_TYPE.LOSE)
+			battle_end(END_TYPE.LOSE)
 			return true
 		else:
 			turn_char.erase(dead)
@@ -353,7 +353,7 @@ func check_dead_char():
 			enemy_character.erase(dead)
 		
 			if enemy_character.size() == 0:
-				_battle_end(END_TYPE.WIN)
+				battle_end(END_TYPE.WIN)
 				return true
 	return false
 

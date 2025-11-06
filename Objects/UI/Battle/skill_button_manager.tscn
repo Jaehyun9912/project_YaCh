@@ -100,6 +100,7 @@ offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(1.054, 1)
+button_text = "턴 종료"
 metadata/_edit_use_anchors_ = true
 
 [node name="Cover" type="ColorRect" parent="."]

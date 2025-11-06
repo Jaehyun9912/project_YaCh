@@ -24,8 +24,8 @@ enum ButtonType {
 	SKILL4,
 	CENTER,
 	INVENTORY,
-	LOG,
 	QUEST,
+	LOG,
 	RUN,
 }
 
@@ -62,12 +62,17 @@ func _ready():
 		var skill = SkillManager.get_player_skill(i)
 		if skill == null:
 			btn.lock_disable = true
+		else:
+			btn.set_text(skill.get("name", "Skill"))
 	#manager.turn_end.emit()
 	$CastingPanel.battle_panel = self
 
 	var peer_skill = PlayerData.peer_skill
 	if peer_skill == "" or peer_skill == null:
 		peer_button.visible = false
+
+	# 처음에는 도망가기 비활성화
+	top_button.set_button_disabled(ButtonType.RUN, true)
 
 # 턴 변경되었음을 받는 함수
 func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
@@ -92,6 +97,9 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 		_check_skill_is_possible()
 	else:
 		skill_button.set_all_buttons(false)
+
+	# 동료 스킬 조건 체크
+	_check_peer_skill()
 	
 # 어떤 스킬이 사용되었음을 받는 함수
 func _on_skill_used():
@@ -100,9 +108,6 @@ func _on_skill_used():
 		action_point.text = action_text % [current_charcter.current_point, current_charcter.point]
 		turn_point_bar.update_point(current_charcter)
 		current_point = current_charcter.current_point
-
-	# 동료 스킬 조건 체크
-	_check_peer_skill()
 	
 
 # 조건을 만족하는 스킬만 활성화
@@ -162,10 +167,13 @@ func _on_top_button_button_pressed(btn : BattlePanel.ButtonType):
 	match btn:
 		ButtonType.LOG:
 			$BattleLog.enable_panel()
+		ButtonType.RUN:
+			manager.battle_end(BattleManager.END_TYPE.RUN)
 			
 func set_casting_panel(text, time, is_button_visible, callback):
 	$CastingPanel.set_casting_panel(text, time, is_button_visible, callback)
 
+# 동료 스킬 사용 가능한지 체크
 func _check_peer_skill():
 	print("check peer skill")
 	var peer_skill = PlayerData.peer_skill
@@ -175,9 +183,9 @@ func _check_peer_skill():
 		return
 
 	if peer_cooldown > 0:
+		peer_button.set_text(str(peer_cooldown))
 		peer_cooldown -= 1
 		peer_button.disabled = true
-		peer_button.set_text(str(peer_cooldown))
 		return
 	else:
 		peer_button.reset_text()
@@ -188,6 +196,7 @@ func _check_peer_skill():
 
 	peer_button.disabled = false
 
+# 동료 스킬 버튼 클릭
 func _on_peer_skill_button_button_clicked():
 	var peer_skill = PlayerData.peer_skill
 	var skill = SkillManager.get_peer_skill(peer_skill)
@@ -196,6 +205,9 @@ func _on_peer_skill_button_button_clicked():
 
 	peer_cooldown = skill.get("cooldown", 0)
 	print("peer cooldown : ", peer_cooldown)
+
+	peer_button.disabled = true
+	peer_button.set_text(str(peer_cooldown))
 	
 	skill_actived.emit(skill, "self", false)
 	
