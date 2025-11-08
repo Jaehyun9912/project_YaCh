@@ -8,7 +8,11 @@
 		"base_attack",
 		"base_fire",
 		"base_water",
-		"base_dirt",
+		"base_dirt"
+	],
+	"special_skills": [
+		"counter1",
+		"parrying1"
 	],
 	
 	"inventory": [

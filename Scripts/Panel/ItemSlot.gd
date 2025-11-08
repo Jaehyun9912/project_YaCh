@@ -25,6 +25,11 @@ func get_title():
 func get_description():
 	return item_data["description"]
 
+func get_slot_method_list(condition: Dictionary) -> Array:
+	var arr = ["discard"]
+	if (condition["isBattle"] == true) == (item_data["category"] == "battle"):
+		arr.insert(0, "use")
+	return arr
 
 func use():
 	print("아이템 사용")
