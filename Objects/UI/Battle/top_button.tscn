@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" path="res://Scripts/Battle/UI/top_button.gd" id="1_g52kp"]
 
-[node name="TopButton" type="ColorRect"]
+[node name="TopButton" type="ColorRect" node_paths=PackedStringArray("buttons")]
 anchors_preset = 10
 anchor_right = 1.0
 offset_bottom = 50.0
 grow_horizontal = 2
 color = Color(1, 1, 1, 0)
 script = ExtResource("1_g52kp")
+buttons = [NodePath("TopButtonContainer/BagButton"), NodePath("TopButtonContainer/QuestButton"), NodePath("TopButtonContainer/LogButton"), NodePath("TopButtonContainer/RunButton")]
 
 [node name="TopButtonContainer" type="HBoxContainer" parent="."]
 layout_mode = 1

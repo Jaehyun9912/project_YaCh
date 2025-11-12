@@ -23,8 +23,21 @@ grow_horizontal = 1
 grow_vertical = 1
 color = Color(0.607843, 0.607843, 0.607843, 0)
 
+[node name="SkillButton" parent="SkillButtonManager/SkillButtons" index="0"]
+button_text = "SkillButton"
+
+[node name="SkillButton2" parent="SkillButtonManager/SkillButtons" index="1"]
+button_text = "SkillButton"
+
+[node name="SkillButton3" parent="SkillButtonManager/SkillButtons" index="2"]
+button_text = "SkillButton"
+
+[node name="SkillButton4" parent="SkillButtonManager/SkillButtons" index="3"]
+button_text = "SkillButton"
+
 [node name="CenterButton" parent="SkillButtonManager/SkillButtons" index="4"]
 visible = false
+button_text = "SkillButton"
 
 [node name="Cover" parent="SkillButtonManager" index="1"]
 color = Color(0.803922, 0.803922, 0.803922, 0)

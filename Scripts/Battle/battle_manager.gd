@@ -9,13 +9,14 @@ signal turn_character_changed(new_character : BattleCharacter)
 signal turn_end
 
 # 스킬을 처리해줄 함수를 호출하는 신호 
-signal use_skill(index, target)
+signal use_skill(index, target, is_casting)
 # 전투 사이클 시작을 알리는 신호
 signal turn_cycle_start
 # 로그 기록하는 신호
 signal add_log(info: String)
-# 공격 상태를 보내주는 신호 (반격 체크 용)
-#signal attack_status_changed(status: EnemyManager.AttackStatus)
+# 어떤 스킬이든 (적 포함) 발동하면 알리는 신호
+# 인자는 현재 필요 없어서 임시로 빼둠
+signal skill_used
 #endregion
 
 #region Var
@@ -179,7 +180,7 @@ func _battle():
 			add_turn_end_log()
 			ViewManager.side_panel.set_hp_panel()
 			turn_character_changed.emit(null)
-			if _check_dead_char():
+			if check_dead_char():
 				return
 			if is_battle_end:
 				return
@@ -228,32 +229,32 @@ func set_effect(skill):
 	
 
 # 버튼 눌렀을때
-func on_battle_panel_skill_actived(index : BattlePanel.ButtonType, target):
-	#var cost := 0
-	#print("target : ", target)
-	match index:
-		# 버튼에 해당하는 효과 발동 
-		BattlePanel.ButtonType.CENTER:
-			#match enemy_manager.status:
-				#EnemyManager.AttackStatus.Ready:
-					#apply_counter(now_character, player_character)
-				#_:
-			turn_end.emit()
-		BattlePanel.ButtonType.SKILL1:
-			use_skill.emit(0, target)
-		BattlePanel.ButtonType.SKILL2:
-			use_skill.emit(1, target)
-		BattlePanel.ButtonType.SKILL3:
-			use_skill.emit(2, target)
-		BattlePanel.ButtonType.SKILL4:
-			use_skill.emit(3, target)
-		BattlePanel.ButtonType.RUN:
-			_battle_end(END_TYPE.RUN)
+func on_battle_panel_skill_actived(index, target, is_casting):
+	
+	if index is Dictionary:
+		use_skill.emit(index, target, is_casting)
+	else:
+		match index:
+			# 버튼에 해당하는 효과 발동 
+			BattlePanel.ButtonType.CENTER:
+				turn_end.emit()
+			BattlePanel.ButtonType.SKILL1:
+				use_skill.emit(0, target, is_casting)
+			BattlePanel.ButtonType.SKILL2:
+				use_skill.emit(1, target, is_casting)
+			BattlePanel.ButtonType.SKILL3:
+				use_skill.emit(2, target, is_casting)
+			BattlePanel.ButtonType.SKILL4:
+				use_skill.emit(3, target, is_casting)
+			BattlePanel.ButtonType.RUN:
+				battle_end(END_TYPE.RUN)
+			_:
+				pass
 	
 	if now_character.current_point < min_point_use:
 		turn_end.emit()
 			
-	_check_dead_char()
+	check_dead_char()
 	
 # 카운터 발동 함수
 func apply_counter(target, counter):
@@ -279,7 +280,7 @@ enum END_TYPE {
 }
 
 # 들어온 타입에 따라 전투 종료 
-func _battle_end(type: END_TYPE):
+func battle_end(type: END_TYPE):
 	# 도망, 적 전부 처치 전투 종료 구현하기 
 	is_battle_end = true
 	
@@ -336,7 +337,7 @@ func _on_end_button_pressed():
 
 #region 죽은 캐릭터
 # 죽은 캐릭터 처리하는 함수
-func _check_dead_char():
+func check_dead_char():
 # 턴 종료 후 사망한 캐릭터 처리
 	while dead_player.size() > 0:
 		var dead = dead_player.pop_back()
@@ -344,7 +345,7 @@ func _check_dead_char():
 		
 		if dead == player_character:
 			print("player dead")
-			_battle_end(END_TYPE.LOSE)
+			battle_end(END_TYPE.LOSE)
 			return true
 		else:
 			turn_char.erase(dead)
@@ -352,7 +353,7 @@ func _check_dead_char():
 			enemy_character.erase(dead)
 		
 			if enemy_character.size() == 0:
-				_battle_end(END_TYPE.WIN)
+				battle_end(END_TYPE.WIN)
 				return true
 	return false
 

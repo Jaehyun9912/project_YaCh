@@ -10,6 +10,7 @@ enum SpecialSkillType {
 
 var skills
 var special_skills
+var peer_skills
 
 var player_skill: 
 	get: return PlayerData.skills
@@ -19,12 +20,16 @@ var player_special_skill:
 const ACTION_POINT_ID = "point"
 # 스킬 시전 시간
 const SKILL_ACTIVE_TIME = 0.5
+# 스킬 구축 시간 상수 (행동력 소모량에 곱해짐)
 const SKILL_CASTING_CONSTANT = 0.3
+# 최소 스킬 구축 시간
+const SKILL_MIN_CASTING_TIME = 0.5
 
 func _ready():
 	#skills = DataManager.get_data("Skill/skill_info")
 	skills = DataManager.get_data_folder("Skill/Player")
 	special_skills = DataManager.get_data_folder("Skill/Special")
+	peer_skills = DataManager.get_data_folder("Skill/Peer")
 	
 # 플레이어의 스킬 얻어오기 
 func get_player_skill(index: int) -> Dictionary:
@@ -102,6 +107,7 @@ func get_target(skill: Dictionary):
 		return "self"
 	return skill.get("target", "one")
 
+# 사용 가능한 특수 스킬 얻어오기
 func get_useable_special_skills(special_type: SpecialSkillType, point, attribute_bar):
 	var type = "counter"
 	if special_type == SpecialSkillType.PARRYING:
@@ -115,7 +121,7 @@ func get_useable_special_skills(special_type: SpecialSkillType, point, attribute
 			useable_skills.append(skill)
 	return useable_skills
 
-	# 스킬의 구축 시간 계산하기
+# 스킬의 구축 시간 계산하기
 func get_casting_time(skill: Dictionary, attribute_bar):
 	#(소모 행동력 X 구축상수) X (1 - (해당 속성 누적치 / 2)
 	var cost = _get_standardized_points(skill.get("cost", {}))
@@ -123,5 +129,10 @@ func get_casting_time(skill: Dictionary, attribute_bar):
 	var element = AttributeInfomation.get_attribute_by_skill(skill)
 	var attribute_amount = attribute_bar.get_element(element)
 
+	# 구축 시간 계산
 	var casting_time = (action_point_cost * SKILL_CASTING_CONSTANT) * (1 - ((attribute_amount / attribute_bar.total_value) / 2.0))
+	casting_time = max(casting_time, SKILL_MIN_CASTING_TIME)
 	return casting_time
+
+func get_peer_skill(id: String):
+	return peer_skills.get(id, null)

@@ -13,17 +13,27 @@
 		"description": "적을 전부 10데미지로 공격하며 불 원소 10을 쌓는다.\n행동력 10을 소모한다.",
 		"target": "all",
 		"value": 10,
-		"cost": {"point": 4},
-		"effect": {"fire": 10}
+		"cost": {
+			"point": 4
+		},
+		"effect": {
+			"fire": 15
+		}
 	},
 	"base_water": {
 		"type": "attack",
 		"name": "회복하기",
 		"description": "나의 체력을 10 회복한다. 물 원소 11을 쌓는다.\n행동력 10과 흙 원소 1을 소모한다.",
 		"target": "self",
-		"value": {"level": -10},
-		"cost": {"point": 4},
-		"effect": {"water": 11}
+		"value": {
+			"level": -10
+		},
+		"cost": {
+			"point": 4
+		},
+		"effect": {
+			"water": 11
+		}
 	},
 	"base_dirt": {
 		"type": "attack",

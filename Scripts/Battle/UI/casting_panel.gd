@@ -55,10 +55,11 @@ func _set_button_by_type(button_type: CastingButtonType):
 		_:
 			useable_skills = []
 
-	print("useable_skills: ", useable_skills)
+	# print("useable_skills: ", useable_skills)
 	var index = 0
 	for i in useable_skills:
 		button_manager.buttons[index].visible = true
+		button_manager.buttons[index].set_text(SkillManager.special_skills[i].get("name", ""))
 		index += 1
 		if index >= 4:
 			break

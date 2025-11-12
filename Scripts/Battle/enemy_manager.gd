@@ -74,10 +74,12 @@ func _on_end_spell(is_success):
 	if is_success:
 		player.hp -= damage
 		battle.set_effect(current_skill)
+		# 일단 한번 공격하면 턴 종료하도록
+		battle.turn_end.emit()
+		battle.check_dead_char()
 	else:
 		pass
-	# 일단 한번 공격하면 턴 종료하도록
-	battle.turn_end.emit()
+	battle.skill_used.emit()
 	player.set_hp_outline_default()
 	
 # 적 데이터를 읽고 다음에 수행할 스킬을 반환함 
