@@ -1,28 +1,49 @@
-extends Control
+class_name AttributeBar extends Control
+
+# 속성 임계점 도달 시 동작 방식
+enum ThresholdActiveType {
+	# 광역 효과, 속성치 리셋
+	EXPLODE,
+	# 전체 버프, 속성치 유지
+	KEEP,
+}
+
+var max_value : float
+var total_value : float
+var value_threshold : float
+var threshold_exceeded_type: ThresholdActiveType
+
+# 임계점 도달한 속성
+var threshold_exceeded: String
+
+# 속성 수치가 임계점을 넘었을 때
+signal attribute_threshold_exceeded(attribute_name : String, active_type : ThresholdActiveType)
+# 속성 수치가 임계점 아래로 감소하였을 때 (KEEP에서 버프 제거용)
+signal attribute_threshold_recovered(attribute_name : String)
 
 # [String] = [float, ColorRect]
 # 속성의 수치와 해당하는 사각형 반환 
 var type : Dictionary
 
+# id에 해당하는 속성값을 가져옴 (없으면 0)
 func get_element(id):
 	if id in type.keys():
 		return type[id][0]
 	else:
 		return 0
-
-var max_value : float
-var total_value : float
 	
 # max_value 및 none 설정 
-func init(max_amount):
-	max_value = max_amount
-	add_value("none", max_amount)
+func init(init_max: float, threshold: float, active_type: ThresholdActiveType):
+	max_value = init_max
+	value_threshold = threshold
+	threshold_exceeded_type = active_type
+	add_value(AttributeInformation.NONE_ATTRIBUTE, init_max)
 
 	update_value()
 
 # 기존 속성 업데이트 또는 새로운 속성 추가 
 func add_value(attribute_name : String, amount : float):
-	# 기존 속성에 값 추가 (0 ~ max_value로 범위 고정) 
+	# 기존 속성에 값 추가 (0 ~ max_value로 범위 고정)
 	if attribute_name in type:
 		type[attribute_name][0] += amount
 
@@ -39,28 +60,43 @@ func add_value(attribute_name : String, amount : float):
 	else:
 		add_new_bar(attribute_name, amount)
 
-	# 만약 총합이 최대치보다 많아질 경우 
+	# 만약 총합이 최대치보다 많아질 경우
 	total_value += amount
 	#print("total:", total_value) 
 	if total_value > max_value:
 		# 빈 속성을 우선적으로 제거 
-		if "none" in type and type["none"][0] > 0:
-			add_value("none", max_value - total_value)
+		if AttributeInformation.NONE_ATTRIBUTE in type and type[AttributeInformation.NONE_ATTRIBUTE][0] > 0:
+			add_value(AttributeInformation.NONE_ATTRIBUTE, max_value - total_value)
 		# 빈 속성이 없을 경우 가장 작은 속성을 제거
 		else:
-			var minimum = find_min(name)
+			var minimum = find_min(attribute_name)
 			add_value(minimum, max_value - total_value)
+
+	# 임계점 도달 확인 (None 속성 제외)
+	if attribute_name != AttributeInformation.NONE_ATTRIBUTE and attribute_name in type:
+		if type[attribute_name][0] >= value_threshold:
+			threshold_exceeded = attribute_name
+			attribute_threshold_exceeded.emit(attribute_name, threshold_exceeded_type)
+			if threshold_exceeded_type == ThresholdActiveType.EXPLODE:
+				# 임계점 도달 시 속성치 리셋
+				var current_value = type[attribute_name][0]
+				add_value(attribute_name, -current_value)
+				add_value(AttributeInformation.NONE_ATTRIBUTE, current_value)
+		else:
+			# 임계점 아래로 내려갔을 때
+			if threshold_exceeded_type != ThresholdActiveType.EXPLODE and threshold_exceeded == attribute_name:
+				threshold_exceeded = ""
+				attribute_threshold_recovered.emit(attribute_name)
 			
 	update_value()	
 
-# 속성 지우기
 func remove_value(attribute_name : String, amount : float):
 	add_value(attribute_name, -amount)
 
 # 모든 속성 바를 자신이 차지하는 값만큼 비율을 계산해 막대 길이 조정 
 func update_value():
 	for attribute_name in type:
-		#print(attribute_name, ":", type[attribute_name][0] / max_value)
+		#print(name, ":", type[name][0] / max_value)
 		type[attribute_name][1].size_flags_stretch_ratio = type[attribute_name][0] / max_value
 
 # 새로운 속성 바를 추가하기 
@@ -70,7 +106,7 @@ func add_new_bar(attribute_name : String, amount : float):
 	# ColorRect를 생성해서 설정.
 	$VBoxContainer.add_child(newBar)
 	#newBar.color = attribute_color[attribute_name]
-	var new_color = AttributeInfomation.get_attribute_color(attribute_name)
+	var new_color = AttributeInformation.get_attribute_color(attribute_name)
 	if new_color == null:
 		printerr("속성 이름 잘못됨!")
 		return
@@ -85,7 +121,7 @@ func find_min(skip : String) -> String:
 		return type.keys[0]
 	
 	# 주어진 속성을 제외한 최소값 구하기.
-	var n = "none"
+	var n = AttributeInformation.NONE_ATTRIBUTE
 	var min_value = max_value + 10
 	for i in type:
 		if i == skip or type[i][0] == 0: continue

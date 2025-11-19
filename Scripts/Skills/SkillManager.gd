@@ -126,7 +126,7 @@ func get_casting_time(skill: Dictionary, attribute_bar):
 	#(소모 행동력 X 구축상수) X (1 - (해당 속성 누적치 / 2)
 	var cost = _get_standardized_points(skill.get("cost", {}))
 	var action_point_cost = cost.get(ACTION_POINT_ID, 0)
-	var element = AttributeInfomation.get_attribute_by_skill(skill)
+	var element = AttributeInformation.get_attribute_by_skill(skill)
 	var attribute_amount = attribute_bar.get_element(element)
 
 	# 구축 시간 계산

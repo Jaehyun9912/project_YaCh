@@ -1,0 +1,18 @@
+[
+    {
+        "name": "none",
+        "color": "#a8a8a8"
+    },
+    {
+        "name": "fire",
+        "color": "#ff0000"
+    },
+    {
+        "name": "water",
+        "color": "#0000ff"
+    },
+    {
+        "name": "dirt",
+        "color": "#8a4513"
+    }
+]

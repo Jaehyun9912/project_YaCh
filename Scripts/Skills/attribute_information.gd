@@ -2,12 +2,23 @@ extends Node
 
 var attribute : Dictionary
 
-# 속성을 코드로 작성할 수 있게 구성 
+const NONE_ATTRIBUTE = "none"
+
 func _ready():
-	attribute["fire"] = Color.RED
-	attribute["water"] = Color.BLUE
-	attribute["dirt"] = Color.SADDLE_BROWN
-	attribute["none"] = Color.DARK_GRAY
+	# attribute["fire"] = Color.RED
+	# attribute["water"] = Color.BLUE
+	# attribute["dirt"] = Color.SADDLE_BROWN
+	# attribute["none"] = Color.DARK_GRAY
+	var attr_data = DataManager.get_data("attribute_info.json")
+	if attr_data == null:
+		printerr("Attribute info data load failed!")
+		attribute = {}
+	else:
+		attribute = {}
+		for att in attr_data:
+			if att.has("name"):
+				attribute[att["name"]] = Color(att.get("color", "#000000"))
+			
 	
 # 속성을 얻어오는 함수, 존재하지 않는 속성을 얻어올 경우 null 반환 
 func get_attribute_color(attribute_name : String):

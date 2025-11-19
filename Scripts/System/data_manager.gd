@@ -6,8 +6,9 @@ const USER_PATH = "user://"
 @onready var items = get_data("Item/item")
 @onready var artifacts = get_data("Item/artifact")
 
-# 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
-func get_data(data_path: String) -> Dictionary:
+# 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 null 반환)
+# 기존에 Dictionary를 반환하던 표시는 JSON Array를 반환하지 못해 제거
+func get_data(data_path: String):
 	var path = DEFAULT_PATH + data_path
 	if not data_path.ends_with(".json"):
 		path += ".json"
@@ -15,11 +16,11 @@ func get_data(data_path: String) -> Dictionary:
 	# 경로에 파일이 없을 경우 빈 딕셔너리 반환 
 	if not FileAccess.file_exists(path):
 		printerr("NoFileInPath " + path)
-		return Dictionary()
+		return null
 	var file = FileAccess.open(path, FileAccess.READ)
 	
 	# 불러온 파일을 JSON 파일로 변환시켜 반환.
-	# 만약 반환에 실패할 경우 빈 딕셔너리를 반환함.
+	# 만약 반환에 실패할 경우 null 반환
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
 	print(json.data)
@@ -27,10 +28,10 @@ func get_data(data_path: String) -> Dictionary:
 		return json.data
 	else:
 		printerr(json.get_error_message())
-		return Dictionary()
+		return null
 	
 # 프로젝트의 Data 폴더에서 특정 폴더의 모든 json 파일을 읽어서 합쳐오는 함수
-func get_data_folder(data_path: String) -> Dictionary:
+func get_data_folder(data_path: String):
 	var path = DEFAULT_PATH + data_path
 	var combined_data = {}
 

@@ -40,7 +40,8 @@ var min_point_use = 1
 # 매니저 
 var battle_panel : BattlePanel
 @onready var enemy_manager = $EnemyManager as EnemyManager
-@onready var attribute_bar = $Interact/AttributeBar
+@onready var attribute_bar = $Interact/AttributeBar as AttributeBar
+@onready var attribute_event_manager = $AttributeEventManager as AttributeEventManager
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
@@ -90,6 +91,8 @@ func _ready():
 	
 	timer.queue_free()
 
+	attribute_event_manager.init(attribute_bar)
+
 	_battle_set()
 	_battle()
 
@@ -120,7 +123,7 @@ func _battle_set():
 			return
 	
 	# 속성 정보 세팅 
-	attribute_bar.init(map_data.get("attribute", 100))
+	attribute_bar.init(map_data.get("attribute", 100), 90, AttributeBar.ThresholdActiveType.EXPLODE)
 	total_point = map_data.get("point", 100)
 	
 	var idx = 0
