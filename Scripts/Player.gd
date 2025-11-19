@@ -1,5 +1,5 @@
 extends Node
-class_name Player
+# class_name Player
 
 # 아이템 변화 시 (id,count), 아티펙트 변화 시 (id)
 signal on_inventory_changed
@@ -43,6 +43,18 @@ var skills:
 		return data["skills"]
 	set(value):
 		data["skills"] = value
+
+var special_skills:
+	get:
+		return data.get("special_skills", [])
+	set(value):
+		data["special_skills"] = value
+
+var peer_skill:
+	get:
+		return data.get("peer_skill", "")
+	set(value):
+		data["peer_skill"] = value
 
 var inventory:
 	get:

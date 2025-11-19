@@ -8,8 +8,10 @@ anchor_left = -0.0111111
 anchor_top = 0.015544
 anchor_right = -0.0111111
 anchor_bottom = 0.015544
-offset_right = 40.0
-offset_bottom = 293.0
+offset_left = 5.0
+offset_top = -11.0
+offset_right = 45.0
+offset_bottom = 282.0
 script = ExtResource("1_p66x6")
 metadata/_edit_use_anchors_ = true
 

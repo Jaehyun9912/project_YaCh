@@ -39,12 +39,16 @@ func set_point(chars: Array, total_value):
 	end_set_point.emit()
 		
 # 바뀐 행동력을 반영함 
-func update_point(char: BattleCharacter):
-	turn_bar_dict[char.name].set_point(char.current_point)
+func update_point(character: BattleCharacter):
+	turn_bar_dict[character.name].set_point(character.current_point)
+
+func set_outline(character: BattleCharacter, is_counter: bool):
+	for i in turn_bar_dict.keys():
+		turn_bar_dict[i].set_outline(i == character.name, is_counter)
 
 # 캐릭터가 죽었을 때 행동력 바를 정리함 
-func remove_bar(char):
-	var char_name = char.name
+func remove_bar(character: BattleCharacter):
+	var char_name = character.name
 	var removed_bar = turn_bar_dict[char_name]
 	
 	removed_bar.set_point(0)
@@ -55,6 +59,7 @@ func remove_bar(char):
 	
 	removed_bar.queue_free()
 	
+# 최초 등장 애니메이션
 func first_appear_anim():
 	var tween = create_tween()
 	var bar = $ProgressBar

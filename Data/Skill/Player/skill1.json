@@ -1,0 +1,53 @@
+{
+	"base_attack": {
+		"type": "attack",
+		"name": "기본 공격",
+		"description": "적을 1명 10데미지로 공격한다.\n행동력 10을 소모한다.",
+		"target": "one",
+		"value": 1,
+		"cost": 10
+	},
+	"base_fire": {
+		"type": "attack",
+		"name": "기본 불 공격",
+		"description": "적을 전부 10데미지로 공격하며 불 원소 10을 쌓는다.\n행동력 10을 소모한다.",
+		"target": "all",
+		"value": 10,
+		"cost": {
+			"point": 4
+		},
+		"effect": {
+			"fire": 15
+		}
+	},
+	"base_water": {
+		"type": "attack",
+		"name": "회복하기",
+		"description": "나의 체력을 10 회복한다. 물 원소 11을 쌓는다.\n행동력 10과 흙 원소 1을 소모한다.",
+		"target": "self",
+		"value": {
+			"level": -10
+		},
+		"cost": {
+			"point": 4
+		},
+		"effect": {
+			"water": 11
+		}
+	},
+	"base_dirt": {
+		"type": "attack",
+		"name": "기본 땅 공격",
+		"description": "적을 1명 10데미지로 공격하며 흙 원소 14를 쌓는다.\n행동력 10을 소모한다.\n불 원소 2가 존재해야한다.",
+		"target": "one",
+		"value": 10,
+		"cost": 10,
+		"requirement": {
+			"point": 12,
+			"fire": 2
+		},
+		"effect": {
+			"dirt": 14
+		}
+	}
+}

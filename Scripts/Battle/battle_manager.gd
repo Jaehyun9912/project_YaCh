@@ -9,30 +9,38 @@ signal turn_character_changed(new_character : BattleCharacter)
 signal turn_end
 
 # 스킬을 처리해줄 함수를 호출하는 신호 
-signal use_skill(index, target)
+signal use_skill(index, target, is_casting)
 # 전투 사이클 시작을 알리는 신호
 signal turn_cycle_start
 # 로그 기록하는 신호
 signal add_log(info: String)
-# BattlePanel로 메세지 전달하는 신호
-signal send_msg_to_panel(msg: BattlePanel.Order)
+# 어떤 스킬이든 (적 포함) 발동하면 알리는 신호
+# 인자는 현재 필요 없어서 임시로 빼둠
+signal skill_used
 #endregion
 
 #region Var
-
 # 행동력 포인트
 var total_point = 100
+# 최초의 행동력 포인트
 var init_total_point
+# 매 턴 추가되는 행동력
 var total_point_add
 
+# 행동력 총합
+var total_speed = 0
+# 반격 시 기본으로 추가되는 행동력
+var counter_addition = 10
+
+# 지나간 턴 수
 var turn_count := 0
 
 # 가장 적은 포인트를 사용하는 행동 (자동 턴 넘기기 용)
 var min_point_use = 1
 # 매니저 
+var battle_panel : BattlePanel
 @onready var enemy_manager = $EnemyManager as EnemyManager
-@onready var attrubute_bar = $Interact/AttributeBar
-@onready var waitTimer = $WaitTimer as Timer
+@onready var attribute_bar = $Interact/AttributeBar
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
@@ -63,6 +71,7 @@ var map_data : Dictionary
 # 전투 종료 여부
 var is_battle_end := false
 
+# 맵 데이터 체크하는 변수들
 @export var Check = ["enemys"]
 #endregion
 
@@ -111,7 +120,7 @@ func _battle_set():
 			return
 	
 	# 속성 정보 세팅 
-	attrubute_bar.init(map_data.get("attribute", 100))
+	attribute_bar.init(map_data.get("attribute", 100))
 	total_point = map_data.get("point", 100)
 	
 	var idx = 0
@@ -135,7 +144,7 @@ func _battle_set():
 
 # 속도에 따른 행동력 계산 후 정렬에 반영 
 func update_turn_point():
-	var total_speed = 0
+	total_speed = 0
 	for i in turn_char:
 		total_speed += i.speed
 		
@@ -153,12 +162,11 @@ func _battle():
 		turn_cycle_start.emit()
 		add_log.emit("%s 턴 시작" % turn_count)
 		
-		# 매니저 쪽에서 turn end 발동 대기
+		# Panel 쪽에서 turn end 발동 대기
 		await turn_end
 		
 		for i in turn_char:
-			now_character = i
-			turn_character_changed.emit(i)
+			change_now_char(i, i.point)
 			
 			# 플레이어 턴 
 			if i.is_player == true:
@@ -172,7 +180,7 @@ func _battle():
 			add_turn_end_log()
 			ViewManager.side_panel.set_hp_panel()
 			turn_character_changed.emit(null)
-			if _check_dead_char():
+			if check_dead_char():
 				return
 			if is_battle_end:
 				return
@@ -182,6 +190,12 @@ func _battle():
 		if total_point < init_total_point * 2:
 			total_point += total_point_add
 
+# 턴 진행하는 캐릭터 변경
+func change_now_char(new_char : BattleCharacter, point):
+	now_character = new_char
+	turn_cost = point
+	turn_character_changed.emit(new_char)
+
 #endregion
 
 #region Skill func
@@ -189,39 +203,73 @@ func _battle():
 func remove_cost(skill):
 	var cost = skill.get("cost", {})
 	
-	if not cost is Dictionary:
+	if cost is int or cost is float:
 		turn_cost -= cost
 		return
-		
-	turn_cost -= cost.get("point", 0)
-	if "element" in cost:
-		var element = cost.get("element", {})
-		for e in element:
-			attrubute_bar.remove_value(e, element[e])
+
+	for i in cost:
+		if i == SkillManager.ACTION_POINT_ID:
+			turn_cost -= cost.get(i, 0)
+		else:
+			attribute_bar.remove_value(i, cost[i])
+
+	# turn_cost -= cost.get(SkillManager.ACTION_POINT_ID, 0)
+	# if "element" in cost:
+	# 	var element = cost.get("element", {})
+	# 	for e in element:
+	# 		attribute_bar.remove_value(e, element[e])
+
+func set_effect(skill):
+	var effect = skill.get("effect", {})
+	for type in effect:
+		if type == SkillManager.ACTION_POINT_ID:
+			now_character.point += effect[type]
+		else:
+			attribute_bar.add_value(type, effect[type])
+	
 
 # 버튼 눌렀을때
-func on_battle_panel_skill_actived(index : BattlePanel.Buttons, target):
-	#var cost := 0
-	#print("target : ", target)
-	match index:
-		# 버튼에 해당하는 효과 발동 
-		BattlePanel.Buttons.CENTER:
-			turn_end.emit()
-		BattlePanel.Buttons.SKILL1:
-			use_skill.emit(0, target)
-		BattlePanel.Buttons.SKILL2:
-			use_skill.emit(1, target)
-		BattlePanel.Buttons.SKILL3:
-			use_skill.emit(2, target)
-		BattlePanel.Buttons.SKILL4:
-			use_skill.emit(3, target)
-		BattlePanel.Buttons.RUN:
-			_battle_end(END_TYPE.RUN)
+func on_battle_panel_skill_actived(index, target, is_casting):
+	
+	if index is Dictionary:
+		use_skill.emit(index, target, is_casting)
+	else:
+		match index:
+			# 버튼에 해당하는 효과 발동 
+			BattlePanel.ButtonType.CENTER:
+				turn_end.emit()
+			BattlePanel.ButtonType.SKILL1:
+				use_skill.emit(0, target, is_casting)
+			BattlePanel.ButtonType.SKILL2:
+				use_skill.emit(1, target, is_casting)
+			BattlePanel.ButtonType.SKILL3:
+				use_skill.emit(2, target, is_casting)
+			BattlePanel.ButtonType.SKILL4:
+				use_skill.emit(3, target, is_casting)
+			BattlePanel.ButtonType.RUN:
+				battle_end(END_TYPE.RUN)
+			_:
+				pass
 	
 	if now_character.current_point < min_point_use:
 		turn_end.emit()
 			
-	_check_dead_char()
+	check_dead_char()
+	
+# 카운터 발동 함수
+func apply_counter(target, counter):
+	# 남은 턴 * (내 속도 / 모든 속도 합) + 보정치 > 필드전체행동력비례 최솟값
+	var add_score = max(target.current_point * (counter.speed / total_speed) + counter_addition, total_point * 0.1)
+	
+	#enemy_manager.status = EnemyManager.AttackStatus.End
+	change_now_char(counter, add_score)
+	battle_panel.turn_point_bar.set_outline(counter, true)
+	
+	print("반격! 가져온 행동력: ", add_score)
+	print(counter.current_point)
+	
+func set_casting_panel(title, time, button_type, callback):
+	battle_panel.set_casting_panel(title, time, button_type, callback)
 #endregion
 	
 #region END
@@ -232,7 +280,7 @@ enum END_TYPE {
 }
 
 # 들어온 타입에 따라 전투 종료 
-func _battle_end(type: END_TYPE):
+func battle_end(type: END_TYPE):
 	# 도망, 적 전부 처치 전투 종료 구현하기 
 	is_battle_end = true
 	
@@ -289,7 +337,7 @@ func _on_end_button_pressed():
 
 #region 죽은 캐릭터
 # 죽은 캐릭터 처리하는 함수
-func _check_dead_char():
+func check_dead_char():
 # 턴 종료 후 사망한 캐릭터 처리
 	while dead_player.size() > 0:
 		var dead = dead_player.pop_back()
@@ -297,7 +345,7 @@ func _check_dead_char():
 		
 		if dead == player_character:
 			print("player dead")
-			_battle_end(END_TYPE.LOSE)
+			battle_end(END_TYPE.LOSE)
 			return true
 		else:
 			turn_char.erase(dead)
@@ -305,7 +353,7 @@ func _check_dead_char():
 			enemy_character.erase(dead)
 		
 			if enemy_character.size() == 0:
-				_battle_end(END_TYPE.WIN)
+				battle_end(END_TYPE.WIN)
 				return true
 	return false
 

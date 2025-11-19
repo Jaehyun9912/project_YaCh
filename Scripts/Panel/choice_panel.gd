@@ -2,15 +2,10 @@ extends Control
 
 
 func _on_button_1_pressed():
-	var skills = PlayerData.skills
-	skills[0] = "base_attack"
-	skills[1] = "base_fire"
-	skills[2] = "base_water"
-	skills[3] = "base_dirt"
-	PlayerData.skills = skills
+	PlayerData.reset_player()
 	PlayerData.save_player()
-	print(skills)
-	
+	print("Player Data Reset: ", PlayerData.skills)
+
 
 #디버그용으로 잠시
 func _on_button_2_pressed():
