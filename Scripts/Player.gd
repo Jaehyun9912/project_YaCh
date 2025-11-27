@@ -111,44 +111,8 @@ func reset_player():
 	DataManager.save_data(data, "player")
 #endregion
 
-#region Money
-
-func get_money(money_name: String) -> int:
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			return money[money_name]
-	return 0
-
-func set_money(money_name: String, amount: int):
-	if data.has("money"):
-		var money = data["money"]
-		money[money_name] = amount
-	else:
-		data["money"] = {money_name: amount}
-
-func add_money(money_name: String, amount: int):
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			money[money_name] += amount
-		else:
-			money[money_name] = amount
-	else:
-		data["money"] = {money_name: amount}
-
-func pay_money(money_name: String, amount: int) -> bool:
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			if money[money_name] >= amount:
-				money[money_name] -= amount
-				return true
-	return false
-
-#endregion
-
 #region Inventory
+
 func add_new_item(id: String, count: int):
 	var sp = id.split(":")
 	var item
@@ -312,24 +276,96 @@ func get_item_count(id: String) -> int:
 			return i["count"]
 	return 0
 
+
+#endregion
+
+func check_data(arr: Array) -> bool:
+	# arr의 마지막은 조건문으로 구성되어있음
+	# arr전까지의 조건을 data에서 타고 들어가 마지막 딕셔너리를 가져온다.
+	# 해당 데이터가 존재하지 않으면 일단 false 반환 -> 
+	var dict = PlayerData.data
+	var last_index = arr.size() - 1
+	for i in range(0, last_index):
+		print(dict, arr[i])
+		if dict.has(arr[i]):
+			dict = dict[arr[i]]
+		else:
+			return false
+	return Condition.dict_compare(dict, arr[last_index])
+	
+
+#region Money
+
+func get_money(money_name: String) -> int:
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			return money[money_name]
+	return 0
+
+func set_money(money_name: String, amount: int):
+	if data.has("money"):
+		var money = data["money"]
+		money[money_name] = amount
+	else:
+		data["money"] = {money_name: amount}
+
+func add_money(money_name: String, amount: int):
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			money[money_name] += amount
+		else:
+			money[money_name] = amount
+	else:
+		data["money"] = {money_name: amount}
+
+func pay_money(money_name: String, amount: int) -> bool:
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			if money[money_name] >= amount:
+				money[money_name] -= amount
+				return true
+	return false
+
 #endregion
 
 #region Map
 
-func get_unlock_maps(mapName) -> Array:
+func get_unlock_maps(mapName: String) -> Array:
 	if data.has("map"):
 		var map = data["map"]
 		if map.has(mapName):
 			return map[mapName]
 	return []
 
-func unlock_map(mapName, locationName):
+func unlock_map(mapName: String, locationName: String):
 	if !data.has("map"):
 		data["map"] = {}
 	
 	var arr = get_unlock_maps(mapName)
 	arr.append(locationName)
 	data["map"][mapName] = arr
+
+
+#endregion
+
+#region Renown
+
+func get_guild_renown(guildId: String) -> int:
+	if data.has("renown"):
+		var guild = data["renown"]
+		if guild.has(guildId):
+			return guild[guildId]
+	return 0
+
+func set_guild_renown(guildId: String, renown: int):
+	if !data.has("renown"):
+		data["renown"] = {}
 	
+	var guild = data["renown"]
+	guild[guildId] = renown
+
 
 #endregion

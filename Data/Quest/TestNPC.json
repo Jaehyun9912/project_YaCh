@@ -1,5 +1,5 @@
 {
-	"Guild" : "GuildName",
+	"guild" : "GuildName",
 	"All": [
 		{
 			"id": "quest1",
@@ -12,7 +12,7 @@
 			"process_condition": {
 				"Quest.process.quest1.alpha":"숲에 진입하기"
 			},
-			"token": [
+			"tokens": [
 				{
 					"id": "bomb",
 					"count": 5
@@ -55,7 +55,7 @@
 			"process_condition": {
 				"artifact:pandora_cube":"판도라 큐브 보유"
 			},
-			"submit":[
+			"submits":[
 				{
 					"id": "bomb",
 					"count": 5,
@@ -73,7 +73,7 @@
 			"accept_condition": [
 				"!Quest.clear.quest4"
 			],
-			"submit":[
+			"submits":[
 				{
 					"id": "potion",
 					"count": 5,
@@ -88,7 +88,10 @@
 			"clear_NPC": "TestNPC",
 			"accept_condition": [
 				"!Quest.clear.quest5"
-			]
+			],
+			"process_condition": {
+				"money:test>50":"test재화 50개 보유"
+			},
 		},
 		{
 			"id": "quest6",
@@ -96,7 +99,8 @@
 			"description": "테스트4",
 			"clear_NPC": "TestNPC",
 			"accept_condition": [
-				"!Quest.clear.quest6"
+				"!Quest.clear.quest6",
+				"Guild:>100"
 			]
 		},
 		{

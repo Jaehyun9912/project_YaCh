@@ -34,5 +34,8 @@
 		"TestCountry":[
 			"Forest","Mountain"
 		]
+	},
+	"guild":{
+		"void":100
 	}
 }
