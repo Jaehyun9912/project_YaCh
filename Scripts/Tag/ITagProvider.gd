@@ -8,7 +8,7 @@ var tag_service
 
 func _init(list : Array[String]):
 	tag_list = list
-	tag_service = DiContainer.get_tag_service()
+	tag_service = TagService
 	if tag_service.has_method("change_tag_tree"):
 		on_tag_requested.connect(tag_service.change_tag_tree)
 

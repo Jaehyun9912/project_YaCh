@@ -1,10 +1,10 @@
 extends InventorySlot
 class_name QuestSlot
 
-var tag_manager: TagService
+var tag_manager: TagManager
 
 func _init():
-	tag_manager = DiContainer.get_tag_service()
+	tag_manager = TagService
 
 func update_slot():
 	nameText.text = data["title"]

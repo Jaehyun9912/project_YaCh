@@ -1,5 +1,5 @@
 extends Node
-class_name TagService
+class_name TagManager
 
 signal on_tag_changed(node: Node)
 

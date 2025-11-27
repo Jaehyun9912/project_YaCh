@@ -81,6 +81,7 @@ var cur_location:
 	set(value):
 		data["location"] = value
 
+
 func save_player():
 	DataManager.save_data(data, "player")
 
@@ -233,7 +234,7 @@ signal quest_updated
 # 수주 중인 퀘스트 리스트
 var quest_list: Array
 
-@onready var tag_service = DiContainer.get_tag_service()
+@onready var tag_service = TagService
 
 # 퀘스트 수주(수주중 태그 추가)
 func receive_quest(quest):
@@ -310,5 +311,25 @@ func get_item_count(id: String) -> int:
 		if i["id"] == "item:" + id:
 			return i["count"]
 	return 0
+
+#endregion
+
+#region Map
+
+func get_unlock_maps(mapName) -> Array:
+	if data.has("map"):
+		var map = data["map"]
+		if map.has(mapName):
+			return map[mapName]
+	return []
+
+func unlock_map(mapName, locationName):
+	if !data.has("map"):
+		data["map"] = {}
+	
+	var arr = get_unlock_maps(mapName)
+	arr.append(locationName)
+	data["map"][mapName] = arr
+	
 
 #endregion

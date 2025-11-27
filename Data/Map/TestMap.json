@@ -6,6 +6,16 @@
 			"xPos" : 100,
 			"yPos" : 122,
 		},
-	]
+	],
+	"Conditions":{
+		"SubLocation1":{
+			"xPos":150,
+			"yPos":200,
+		},
+		"SubLocation3":{
+			"xPos":150,
+			"yPos":200,
+		},
+	}
 	
 }

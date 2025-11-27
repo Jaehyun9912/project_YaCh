@@ -23,7 +23,7 @@ var tag_service
 # 퀘스트 매니저 생성자
 func _init(npc_name: String):
 	_npc_name = npc_name
-	tag_service = DiContainer.get_tag_service()
+	tag_service = TagService
 	print(tag_service)
 	_import_quest()
 	enqueue_quest()

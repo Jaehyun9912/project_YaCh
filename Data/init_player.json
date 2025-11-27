@@ -29,5 +29,10 @@
 		}
 	],
 	
-	"artifacts" : {}
+	"artifacts" : {},
+	"map":{
+		"TestCountry":[
+			"Forest","Mountain"
+		]
+	}
 }
