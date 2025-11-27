@@ -12,19 +12,22 @@ var detail_panel: Control
 
 var selected_slot: InventorySlot
 
-var data
+
+var inventory_data
+
+# 전투 아이템 사용 제한(이후에 이 변수 값을 늘려서 다른 제한 추가)
+var isBattle: bool
 
 # 각 아이템에서 사용 가능한 기능(해당 배열에 있는 기능만 사용 가능)
 var action_list = ["use", "discard", "read"]
 
 # 인벤토리 카테고리
-var category = ["battle", "consume", "artifact", "quest"]
-var category_name = ["배틀 아이템", "소모 아이템", "아티펙트", "퀘스트"]
+var category = [["battle", "배틀 아이템"], ["consume", "소모 아이템"], ["artifact", "아티펙트"], ["quest", "퀘스트"]]
 
 var cur_category: int
 var read_panel: Control
 
-
+# 초기 설정
 func initialize(meta_data: Dictionary):
 	slotContainer = $"Inventory/Inventory/ScrollContainer/VBoxContainer" as VBoxContainer
 	actionContainer = $"Inventory/ColorRect2/ScrollContainer/VBoxContainer" as VBoxContainer
@@ -38,7 +41,9 @@ func initialize(meta_data: Dictionary):
 		elif meta_data["mode"] == "half":
 			detail_panel.hide()
 			pass
-	
+	isBattle = false
+	if meta_data.has("isBattle"):
+		isBattle = meta_data["isBattle"]
 	cur_category = 0
 	$"Inventory/Inventory/Category/Left".pressed.connect(change_category.bind(-1))
 	$"Inventory/Inventory/Category/Right".pressed.connect(change_category.bind(1))
@@ -51,11 +56,13 @@ func clear_slot():
 		slotContainer.get_child(i).queue_free()
 
 # 인벤토리 아이템 데이터 세팅
-func set_item_slot(num: int):
-	$"Inventory/Inventory/Category/Label".text = category_name[num]
+func set_item_slot():
 	clear_slot()
-	data = PlayerData.inventory
-	for i in data:
+	inventory_data = PlayerData.inventory
+	for i in inventory_data:
+		var item_data = DataManager.get_item_data(i["id"])
+		if item_data["category"] != category[cur_category][0]:
+			continue
 		var slot = slot_prefab.instantiate()
 		slot.set_script(ItemSlot)
 		slot.set_slot(i)
@@ -66,10 +73,9 @@ func set_item_slot(num: int):
 
 # 퀘스트 데이터 세팅
 func set_quest_slot():
-	$"Inventory/Inventory/Category/Label".text = "퀘스트"
 	clear_slot()
-	data = PlayerData.quest_list
-	for i in data:
+	inventory_data = PlayerData.quest_list
+	for i in inventory_data:
 		var slot = slot_prefab.instantiate()
 		slot.set_script(QuestSlot)
 		slot.set_slot(i)
@@ -78,10 +84,9 @@ func set_quest_slot():
 		slot.set_highlight(false)
 
 func set_artifact_slot():
-	$"Inventory/Inventory/Category/Label".text = "아티펙트"
 	clear_slot()
-	data = PlayerData.artifact
-	for i in data:
+	inventory_data = PlayerData.artifact
+	for i in inventory_data:
 		var slot = slot_prefab.instantiate()
 		slot.set_script(ArtifactSlot)
 		slot.set_slot(i)
@@ -104,7 +109,10 @@ func set_slot_info(slot: InventorySlot):
 		on_select_changed.emit(null)
 		return
 	selected_slot.set_highlight(true)
-	for i in action_list:
+
+	# 나중에 다른 제한 걸리면 dictionary로 사용 예정
+	var methods = slot.get_slot_method_list({"isBattle": isBattle})
+	for i in methods:
 		if slot.has_method(i):
 			var action = option_prefab.instantiate() as ActionBox
 			actionContainer.add_child(action)
@@ -120,13 +128,15 @@ func change_category(direction: int):
 	if cur_category >= category.size() || cur_category < 0:
 		cur_category %= category.size()
 	set_slot_info(null)
+
+	$"Inventory/Inventory/Category/Label".text = category[cur_category][1]
 	# 현재 카테고리에 맞는 인벤토리 슬롯 표시
-	if category[cur_category] == "quest":
+	if category[cur_category][0] == "quest":
 		set_quest_slot()
-	elif category[cur_category] == "artifact":
+	elif category[cur_category][0] == "artifact":
 		set_artifact_slot()
 	else:
-		set_item_slot(cur_category)
+		set_item_slot()
 
 # 현재 선택한 슬롯에 대한 디테일 표시
 func set_item_description(slot: InventorySlot):

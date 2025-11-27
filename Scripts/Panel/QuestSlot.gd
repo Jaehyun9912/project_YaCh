@@ -16,6 +16,9 @@ func get_title():
 func get_description():
 	return data["description"]
 
+func get_slot_method_list(condition: Dictionary) -> Array:
+	return ["read"]
+
 func read():
 	print("퀘스트 오픈")
 	if data.has("process_condition"):

@@ -14,9 +14,9 @@ func check_condition(condition) -> bool:
 	var arr = condition.split(":", true, 1)
 	var check: bool
 	if arr.size() == 1:
-		check = TagManager.tag_compare(PlayerData, arr[0])
+		check = DiContainer._tag_service.tag_compare(PlayerData, arr[0])
 	elif arr[0] == "tag":
-		check = TagManager.tag_compare(PlayerData, arr[1])
+		check = DiContainer._tag_service.tag_compare(PlayerData, arr[1])
 	elif arr[0] == "stat":
 		check = PlayerData.stat_compare(arr[1])
 	elif arr[0] == "item":

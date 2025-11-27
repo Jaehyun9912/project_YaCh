@@ -59,6 +59,11 @@ func receive_quest(quest) -> bool:
 	if !check_quest(quest):
 		printerr("퀘스트 수주 불가!")
 		return false
+	# 퀘스트용 토큰 아이템 부여
+	if quest.has("token"):
+		var token = quest["token"]
+		for i in token:
+			PlayerData.add_new_item(i.id, i.count)
 	# 수주
 	PlayerData.receive_quest(quest)
 	return true
@@ -73,26 +78,18 @@ func clear_quest(quest) -> bool:
 	
 	# 클리어
 	PlayerData.clear_quest(quest)
-	submit_item(quest)
-	give_reward(quest)
-	#print(quest.id , " Clear")
-	return true
-
-
-# 보상 지급
-func give_reward(quest):
-	if quest.has("rewards"):
-		var rewards = quest["rewards"]
-		for i in rewards:
-			PlayerData.add_new_item(i.id, i.count)
-
-
-# 제출 아이템 회수
-func submit_item(quest):
+	# 아이템 회수
 	if quest.has("submit"):
 		var submit = quest["submit"]
 		for i in submit:
 			PlayerData.add_new_item(i.id, -i.count)
+	# 보상 수령
+	if quest.has("rewards"):
+		var rewards = quest["rewards"]
+		for i in rewards:
+			PlayerData.add_new_item(i.id, i.count)
+	#print(quest.id , " Clear")
+	return true
 
 
 # json에서 _npc_name의 퀘스트 로드
