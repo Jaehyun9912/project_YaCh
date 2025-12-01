@@ -6,20 +6,14 @@
 			"title": "승급 시험",
 			"description": "해당 길드 평판이 10 이상이면 수주 가능",
 			"accept_condition": [
-				"guild:void>10"
+				"renown:void>10"
 			],
-			"tokens":[
-				"money:shard:100",
-				"item:bomb:5"
+			"submits":[
+				"money:shard>10"
 			],
 			"rewards":[
-				"money:shard+100",
-				"renown:void+1",
-				"item:bomb+5"
-			],
-			"submits":{
-				"money:shard-1":"샤드 1개 제출"
-			}
+				"money:shard"
+			]
 		},
 	],
 }
