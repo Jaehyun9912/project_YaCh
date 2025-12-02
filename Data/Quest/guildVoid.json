@@ -8,11 +8,14 @@
 			"accept_condition": [
 				"renown:void>10"
 			],
-			"submits":[
-				"money:shard>10"
+			"tokens":[
+				"money:shard+10"
 			],
+			"submits":{
+				"money:shard-10": "샤드 10개 제출"
+			},
 			"rewards":[
-				"money:shard"
+				"money:shard+10"
 			]
 		},
 	],

@@ -67,7 +67,7 @@ func has_tag(node: Node, tag: String) -> bool:
 
 
 # 태그의 부등호 비교해서 충족 시 true 반환
-func tag_compare(node: Node, tag: String) -> bool:
+func cmp_tag(node: Node, tag: String) -> bool:
 	var comparer = [">", "<", "="]
 	for i in comparer:
 		var tag_part = tag.split(i, true, 2)

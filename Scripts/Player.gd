@@ -220,7 +220,7 @@ func clear_quest(quest):
 
 
 # 스탯 비교
-func stat_compare(condition: String) -> bool:
+func cmp_stat(condition: String) -> bool:
 	var comparer = [">", "<", "="]
 	for i in comparer:
 		var partial_tag = condition.split(i, true, 2)
@@ -241,7 +241,7 @@ func stat_compare(condition: String) -> bool:
 
 
 # 인벤토리 아이템 개수 비교
-func item_compare(condition: String) -> bool:
+func cmp_item(condition: String) -> bool:
 	var comparer = [">", "<", "="]
 	var item_count = 0
 	for i in comparer:
@@ -265,7 +265,7 @@ func item_compare(condition: String) -> bool:
 
 
 # 아티펙트 보유 여부 확인
-func artifact_compare(condition: String) -> bool:
+func cmp_artifact(condition: String) -> bool:
 	return artifact.has(condition)
 
 
@@ -277,12 +277,8 @@ func get_item_count(id: String) -> int:
 	return 0
 
 
-#endregion
-
-func check_data(arr: Array) -> bool:
-	# arr의 마지막은 조건문으로 구성되어있음
-	# arr전까지의 조건을 data에서 타고 들어가 마지막 딕셔너리를 가져온다.
-	# 해당 데이터가 존재하지 않으면 일단 false 반환 -> 
+# 현재 해금된 지역 확인
+func cmp_map(arr: Array) -> bool:
 	var dict = PlayerData.data
 	var last_index = arr.size() - 1
 	for i in range(0, last_index):
@@ -291,8 +287,53 @@ func check_data(arr: Array) -> bool:
 			dict = dict[arr[i]]
 		else:
 			return false
-	return Condition.dict_compare(dict, arr[last_index])
-	
+	return dict.has(arr[last_index])
+
+# 길드 평판 비교
+func cmp_renown(condition: String) -> bool:
+	var comparer = [">", "<", "="]
+	var renown = 0
+	for i in comparer:
+		var part = condition.split(i, true, 2)
+		if part.size() == 2:
+			# 아이템이 인벤토리에 얼마나 있는지 확인
+			renown = get_guild_renown(part[0])
+			if i == ">" && renown >= part[1].to_int():
+				return true
+			elif i == "<" && renown <= part[1].to_int():
+				return true
+			elif i == "=" && renown == part[1].to_int():
+				return true
+			else:
+				return false
+	renown = get_guild_renown(condition)
+	if renown > 0:
+		return true
+	return false
+
+func cmp_money(condition: String) -> bool:
+	var comparer = [">", "<", "="]
+	var money = 0
+	for i in comparer:
+		var part = condition.split(i, true, 2)
+		if part.size() == 2:
+			# 아이템이 인벤토리에 얼마나 있는지 확인
+			money = get_money(part[0])
+			if i == ">" && money >= part[1].to_int():
+				return true
+			elif i == "<" && money <= part[1].to_int():
+				return true
+			elif i == "=" && money == part[1].to_int():
+				return true
+			else:
+				return false
+	money = get_money(condition)
+	if money > 0:
+		return true
+	return false
+
+
+#endregion	
 
 #region Money
 

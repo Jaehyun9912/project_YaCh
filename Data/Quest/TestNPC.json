@@ -42,7 +42,8 @@
 					"id": "potion",
 					"count": 5
 				}
-			]
+			],
+			"renown":10
 		},
 		{
 			"id": "quest3",

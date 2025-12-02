@@ -90,6 +90,9 @@ func clear_quest(quest) -> bool:
 		var rewards = quest["rewards"]
 		for i in rewards:
 			PlayerData.add_new_item(i.id, i.count)
+	if quest.has("renown"):
+		var curRenown = PlayerData.get_guild_renown(guildId)
+		PlayerData.set_guild_renown(guildId, curRenown + quest["renown"])
 	#print(quest.id , " Clear")
 	return true
 
