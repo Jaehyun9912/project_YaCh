@@ -1,7 +1,7 @@
 class_name EnemyManager extends Node
 
-@onready var battle = $".." as BattleManager
 @onready var timer = $EnemyTimer as Timer
+var battle : BattleManager
 
 #enum AttackStatus 
 #{
@@ -23,9 +23,9 @@ var player:
 	get: return battle.player_character
 var damage
 	
-func _ready():
+func init(battle_manager: BattleManager):
+	battle = battle_manager
 	skill_info = DataManager.get_data_folder("Skill/Enemy")
-	#print(skill_info)
 
 # 적의 행동 수행 
 func _on_battle_scene_turn_character_changed(turn_char: BattleCharacter):
@@ -73,7 +73,7 @@ func _on_end_casting(is_success):
 func _on_end_spell(is_success):
 	if is_success:
 		player.hp -= damage
-		battle.set_effect(current_skill)
+		battle.set_attribute_change(current_skill)
 		# 일단 한번 공격하면 턴 종료하도록
 		battle.turn_end.emit()
 		battle.check_dead_char()

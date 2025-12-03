@@ -60,7 +60,7 @@ func skill_active(skill: Dictionary, target):
 		"field":
 			do_field()
 
-	battle.set_effect(skill)	
+	battle.set_attribute_change(skill)	
 	battle.check_dead_char()
 	battle.skill_used.emit()
 	ViewManager.side_panel.set_hp_panel()

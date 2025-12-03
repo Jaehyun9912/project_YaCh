@@ -42,6 +42,7 @@ var battle_panel : BattlePanel
 @onready var enemy_manager = $EnemyManager as EnemyManager
 @onready var attribute_bar = $Interact/AttributeBar as AttributeBar
 @onready var attribute_event_manager = $AttributeEventManager as AttributeEventManager
+@onready var effect_manager = $EffectManager as EffectManager
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
@@ -49,11 +50,16 @@ var player_character : BattleCharacter
 var ally_character : Array[BattleCharacter]
 var enemy_character : Array[BattleCharacter]
 
+# 전체 적용되는 field_stat 저장용
+# 예를 들어 각 원소는 id_power가 key, value는 그 속성의 배수임 (기본값 1)
+# 단 effect 등에서 수정할때에는 field를 앞에 붙여야함 (ex: field_fire_power)
+var field_stat = {}
+
 # 각 그룹의 수 
 var enemy_count: 
 	get: return len(enemy_character)
 var ally_count: 
-	get: return len(ally_character) + 1
+	get: return len(ally_character)
 
 # 현재 턴인 캐릭터의 정보
 var now_character: BattleCharacter
@@ -73,13 +79,12 @@ var map_data : Dictionary
 var is_battle_end := false
 
 # 맵 데이터 체크하는 변수들
-@export var Check = ["enemys"]
+var _check = ["enemys"]
 #endregion
 
 #region other funcs
 # 패널 쪽에서 설정 후 종료되면 전투 시작 
 func _ready():
-
 	var panel = $Interact/ResultPanel as ResultPanel
 	var timer = Timer.new() as Timer
 	add_child(timer)
@@ -91,7 +96,9 @@ func _ready():
 	
 	timer.queue_free()
 
-	attribute_event_manager.init(attribute_bar)
+	attribute_event_manager.init(attribute_bar, self)
+	effect_manager.init(self)
+	enemy_manager.init(self)
 
 	_battle_set()
 	_battle()
@@ -116,14 +123,14 @@ func _battle_set():
 		printerr("No MapData!")
 		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
 	
-	for i in Check:
+	for i in _check:
 		if map_data.has(i) == false:
 			printerr("No " + i)
 			ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
 			return
 	
 	# 속성 정보 세팅 
-	attribute_bar.init(map_data.get("attribute", 100), 90, AttributeBar.ThresholdActiveType.EXPLODE)
+	attribute_bar.init(map_data.get("attribute", 100))
 	total_point = map_data.get("point", 100)
 	
 	var idx = 0
@@ -144,6 +151,8 @@ func _battle_set():
 		
 	total_point_add = total_point * 0.2
 	init_total_point = total_point
+
+	ally_character.append(player_character)
 
 # 속도에 따른 행동력 계산 후 정렬에 반영 
 func update_turn_point():
@@ -216,19 +225,13 @@ func remove_cost(skill):
 		else:
 			attribute_bar.remove_value(i, cost[i])
 
-	# turn_cost -= cost.get(SkillManager.ACTION_POINT_ID, 0)
-	# if "element" in cost:
-	# 	var element = cost.get("element", {})
-	# 	for e in element:
-	# 		attribute_bar.remove_value(e, element[e])
-
-func set_effect(skill):
-	var effect = skill.get("effect", {})
-	for type in effect:
+func set_attribute_change(skill):
+	var attribute = skill.get("attribute", {})
+	for type in attribute:
 		if type == SkillManager.ACTION_POINT_ID:
-			now_character.point += effect[type]
+			now_character.point += attribute[type]
 		else:
-			attribute_bar.add_value(type, effect[type])
+			attribute_bar.add_value(type, attribute[type])
 	
 
 # 버튼 눌렀을때
@@ -284,51 +287,21 @@ enum END_TYPE {
 
 # 들어온 타입에 따라 전투 종료 
 func battle_end(type: END_TYPE):
-	# 도망, 적 전부 처치 전투 종료 구현하기 
 	is_battle_end = true
 	
 	# 모든 버튼 비활성화 
 	ViewManager.current_panel.get_node("BattlePanel").end()
-	var msg = $Interact/ResultPanel as ResultPanel
+	var result_panel = $Interact/ResultPanel as ResultPanel
 	
 	match type:
 		END_TYPE.RUN:
-			msg.set_panel("전투에서 도망쳤다!")
-			#msg.text = "전투에서 도망쳤다!"
+			result_panel.process_run()
+			
 		END_TYPE.WIN:
-			#msg.text = "전투에서 승리했다!"
-			
-			var reward = ""
-			# 보상 부여
-			if map_data.has("rewards"):
-				var rewards_data = map_data.rewards
-				# 아이템 가져오기
-				var items_to_reward = rewards_data.get("item", [])
+			result_panel.process_win(map_data)
 
-				# 보상 아이템 설정하기
-				for i in items_to_reward:
-					
-					# ID 체크 
-					var item_id = i.get("id")
-					if item_id == null:
-						printerr("No Item ID in rewards!")
-						continue
-
-					var item = DataManager.get_item_artifact_data(item_id)
-					# 개수 기본값 1
-					var count = i.get("count", 1)
-
-					# 보상 텍스트에 아이템 이름 추가하기
-					reward += item.name
-					if count > 1:
-						reward += " " + str(count) + "개"
-					reward += "\n"
-					# 추가하기
-					PlayerData.add_new_item(item_id, count)
-			
-			msg.set_panel("전투에서 승리했다!", "보상", reward)
 		END_TYPE.LOSE:
-			msg.set_panel("전투에서 패배했다...")
+			result_panel.process_lose()
 
 func _on_end_button_pressed():
 	if is_battle_end:

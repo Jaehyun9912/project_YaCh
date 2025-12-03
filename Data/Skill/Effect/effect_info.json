@@ -5,7 +5,7 @@
 		"turn": "every",
 		"restore": false,
 		"value": 10,
-		"power": 10
+		"duration": 3
 	}
 	
 }
