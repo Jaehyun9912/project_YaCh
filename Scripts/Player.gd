@@ -332,6 +332,33 @@ func cmp_money(condition: String) -> bool:
 		return true
 	return false
 
+func execute_cmd(cmd : String)-> void:
+	var format = ["+","-"]
+	var list = Condition.string_to_condition(cmd)
+	if list[1] == "map":
+		# format = [negative, map, mapName, locationName]
+		unlock_map(list[2],list[3],list[0])
+	elif list[1] == "item":
+		# format = [negative,item,아이템 +/- count]
+		for i in format:
+			var part = list[2].split(i,true)
+			if part.size() ==2:
+				var count = part[1].to_int()
+				if i == "-":
+					count *=-1
+				add_new_item(part[0],count)
+				break
+	elif list[1] == "money":
+		# format = [negative,money,moneyType +/- count]
+		for i in format:
+			var part = list[2].split(i,true)
+			if part.size() ==2:
+				var count = part[1].to_int()
+				if i == "-":
+					count *=-1
+				add_money(part[0],count)
+				break
+		pass
 
 #endregion	
 
@@ -381,12 +408,15 @@ func get_unlock_maps(mapName: String) -> Array:
 			return map[mapName]
 	return []
 
-func unlock_map(mapName: String, locationName: String):
+func unlock_map(mapName: String, locationName: String, unlock = true):
 	if !data.has("map"):
 		data["map"] = {}
 	
 	var arr = get_unlock_maps(mapName)
-	arr.append(locationName)
+	if unlock:
+		arr.append(locationName)
+	else:
+		arr.erase(locationName)
 	data["map"][mapName] = arr
 
 

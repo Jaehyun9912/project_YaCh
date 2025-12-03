@@ -140,11 +140,7 @@ func get_quest_condition(quest: Dictionary) -> Dictionary:
 		condition = quest["process_condition"] as Dictionary
 	if quest.has("submits"):
 		for i in quest["submits"]:
-			print(i)
-			var part = i.split("-", true, 2)
-			if part.size() == 1:
-				continue
-			var combine = part[0] + ">" + part[1]
+			var combine = Condition.cmd_to_cmp(i)
 			condition[combine] = quest["submits"][i]
 	print(condition)
 	return condition

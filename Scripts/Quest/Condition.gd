@@ -20,9 +20,17 @@ static func string_to_condition(condition: String) -> Array:
 	values.append_array(arr)
 	return arr
 
-static func submit_to_condition(submit: String) -> String:
-	var part = submit.split("-", true, 2)
-	return part[0] + ">" + part[1]
+static func cmd_to_cmp(submit: String) -> String:
+	var condition = submit
+	# 아티펙트 회수나 지역 잠금인지 확인
+	if submit.begins_with("!"):
+		condition = submit.right(-1)
+	var part = condition.split("-", true, 2)
+	# 아이템, 돈 회수인지 확인
+	if part.size() ==2:
+		condition = part[0] + ">" + part[1]
+	# 명령문에서 비교문으로 전환후 condition으로 전환해서 반환
+	return condition
 
 
 # 개별 조건 확인
