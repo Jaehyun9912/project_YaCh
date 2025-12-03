@@ -355,10 +355,12 @@ func execute_cmd(cmd: String) -> void:
 			if part.size() == 2:
 				var count = part[1].to_int()
 				if i == "-":
-					count *= -1
-				add_money(part[0], count)
+					pay_money(part[0], count)
+				else:
+					add_money(part[0], count)
 				break
-		pass
+	else:
+		printerr("데이터 형식 오류 : ", cmd)
 
 #endregion	
 

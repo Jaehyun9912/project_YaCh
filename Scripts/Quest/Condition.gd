@@ -63,7 +63,7 @@ static func check_condition(condition: String) -> bool:
 		check = PlayerData.cmp_map(list.slice(1))
 	# 그 외 조건이 있는지 확인하고 없으면 데이터 에러로 판별
 	else:
-		printerr("데이터 형식 오류")
+		printerr("데이터 형식 오류 : ", condition)
 		return false
 	if list[0] == check:
 		return false
