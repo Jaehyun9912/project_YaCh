@@ -8,6 +8,9 @@
 			"accept_condition": [
 				"renown:void>10"
 			],
+			"process_condition":{
+				"map:TestCountry:Forest":"숲 지역 해금"
+			},
 			"tokens":[
 				"money:shard+10"
 			],
@@ -16,7 +19,27 @@
 			},
 			"rewards":[
 				"money:shard+10"
-			]
+			],
+			"renown":20
 		},
+		{
+			"id": "void1",
+			"title": "기초 퀘스트",
+			"description": "승급용 아이템 교환하기",
+			"process_condition":{
+				"money:shard>90":"샤드 100개 보유"
+			},
+			"tokens":[
+				"item:bomb+2",
+				"money:shard+100"
+			],
+			"submits":{
+				"item:bomb-1":"폭탄 1개 제출"
+			},
+			"rewards":[
+				"item:bomb+100"
+			],
+			"renown":10
+		}
 	],
 }

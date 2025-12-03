@@ -32,7 +32,7 @@
 	"artifacts" : {},
 	"map":{
 		"TestCountry":[
-			"Forest","Mountain"
+			"forest","Mountain"
 		]
 	},
 	"guild":{

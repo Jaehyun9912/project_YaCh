@@ -1,5 +1,5 @@
 {
-	"guild" : "GuildName",
+	"guild" : "Demacia",
 	"All": [
 		{
 			"id": "quest1",
@@ -12,19 +12,7 @@
 			"process_condition": {
 				"Quest.process.quest1.alpha":"숲에 진입하기"
 			},
-			"tokens": [
-				{
-					"id": "bomb",
-					"count": 5
-				}
-			]
-			,
-			"rewards": [
-				{
-					"id": "bomb",
-					"count": 5
-				}
-			]
+			"renown":30
 		},
 		{
 			"id": "quest2",
@@ -38,12 +26,9 @@
 				"Quest.clear":"다른 퀘스트 클리어하기"
 			},
 			"rewards": [
-				{
-					"id": "potion",
-					"count": 5
-				}
+				"item:potion+5"
 			],
-			"renown":10
+			"renown":30
 		},
 		{
 			"id": "quest3",
@@ -57,26 +42,22 @@
 				"artifact:pandora_cube":"판도라 큐브 보유"
 			},
 			"submits":{
-				"item:bomb>5":"폭탄 5개 제출"
-			}
+				"!map:TestCountry:forest":"숲 지역 잠금",
+				"item:bomb-5":"폭탄 5개 제출"
+			},
+			"renown":100
 		}
 	],
 	"CountryTower": [
 		{
 			"id": "quest4",
 			"title": "테스트 퀘스트 4",
-			"description": "포션 5개 제출하기",
+			"description": "숲 지역이 해금되어 있어야함",
 			"clear_NPC": "TestNPC",
 			"accept_condition": [
-				"!Quest.clear.quest4"
+				"!Quest.clear.quest4",
+				"map:TestCountry:forest"
 			],
-			"submits":[
-				{
-					"id": "potion",
-					"count": 5,
-					"description":"포션 5개 제출"
-				}
-			]
 		},
 		{
 			"id": "quest5",
@@ -97,35 +78,8 @@
 			"clear_NPC": "TestNPC",
 			"accept_condition": [
 				"!Quest.clear.quest6",
-				"renown:con>100"
+				"renown:Demacia>100"
 			]
 		},
-		{
-			"id": "quest7",
-			"title": "테스트 퀘스트 7",
-			"description": "테스트4",
-			"clear_NPC": "CountryTower",
-			"accept_condition": [
-				"!Quest.clear.quest7"
-			]
-		},
-		{
-			"id": "quest8",
-			"title": "테스트 퀘스트 8",
-			"description": "테스트4",
-			"clear_NPC": "CountryTower",
-			"accept_condition": [
-				"!Quest.clear.quest8"
-			]
-		},
-		{
-			"id": "quest9",
-			"title": "테스트 퀘스트 9",
-			"description": "테스트4",
-			"clear_NPC": "CountryTower",
-			"accept_condition": [
-				"!Quest.clear.quest9"
-			]
-		}
 	]
 }

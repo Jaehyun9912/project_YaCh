@@ -65,7 +65,7 @@ func receive_quest(quest) -> bool:
 	if quest.has("tokens"):
 		var token = quest["tokens"]
 		for i in token:
-			PlayerData.add_new_item(i.id, i.count)
+			PlayerData.execute_cmd(i)
 	# 수주
 	PlayerData.receive_quest(quest)
 	return true
@@ -84,16 +84,15 @@ func clear_quest(quest) -> bool:
 	if quest.has("submits"):
 		var submit = quest["submits"]
 		for i in submit:
-			PlayerData.add_new_item(i.id, -i.count)
+			PlayerData.execute_cmd(i)
 	# 보상 수령
 	if quest.has("rewards"):
 		var rewards = quest["rewards"]
 		for i in rewards:
-			PlayerData.add_new_item(i.id, i.count)
+			PlayerData.execute_cmd(i)
 	if quest.has("renown"):
 		var curRenown = PlayerData.get_guild_renown(guildId)
 		PlayerData.set_guild_renown(guildId, curRenown + quest["renown"])
-	#print(quest.id , " Clear")
 	return true
 
 

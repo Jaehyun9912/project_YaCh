@@ -18,7 +18,7 @@ static func string_to_condition(condition: String) -> Array:
 		print(arr[0])
 		arr.insert(0, "tag")
 	values.append_array(arr)
-	return arr
+	return values
 
 static func cmd_to_cmp(submit: String) -> String:
 	var condition = submit
@@ -27,7 +27,7 @@ static func cmd_to_cmp(submit: String) -> String:
 		condition = submit.right(-1)
 	var part = condition.split("-", true, 2)
 	# 아이템, 돈 회수인지 확인
-	if part.size() ==2:
+	if part.size() == 2:
 		condition = part[0] + ">" + part[1]
 	# 명령문에서 비교문으로 전환후 condition으로 전환해서 반환
 	return condition
@@ -40,7 +40,7 @@ static func check_condition(condition: String) -> bool:
 	# 조건 분야 확인(태그, 아이템, 스탯)
 	var check: bool
 	if list[1] == "tag":
-		if TagService.has_method("tag_compare"):
+		if TagService.has_method("cmp_tag"):
 			# format = [negative,tag,태그id]
 			check = TagService.cmp_tag(PlayerData, list[2])
 	elif list[1] == "stat":

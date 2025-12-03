@@ -73,9 +73,9 @@ func cmp_tag(node: Node, tag: String) -> bool:
 		var tag_part = tag.split(i, true, 2)
 		if tag_part.size() == 2:
 			var tag_count = _get_tag_count(node, tag_part[0])
-			if i == ">" && tag_count > tag_part[1].to_int():
+			if i == ">" && tag_count >= tag_part[1].to_int():
 				return true
-			elif i == "<" && tag_count < tag_part[1].to_int():
+			elif i == "<" && tag_count <= tag_part[1].to_int():
 				return true
 			elif i == "=" && tag_count == tag_part[1].to_int():
 				return true
