@@ -11,6 +11,13 @@
 			"process_condition": {
 				"Quest.process.quest1.alpha":"숲에 진입하기"
 			},
+			"token": [
+				{
+					"id": "bomb",
+					"count": 5
+				}
+			]
+			,
 			"rewards": [
 				{
 					"id": "bomb",

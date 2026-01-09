@@ -68,7 +68,7 @@ var artifact:
 		return data["artifacts"]
 	set(value):
 		data["artifacts"] = value
-		
+
 # data 저장 
 
 var cur_location:
@@ -108,6 +108,43 @@ func reset_player():
 	data = new_player
 	
 	DataManager.save_data(data, "player")
+#endregion
+
+#region Money
+
+func get_money(money_name: String) -> int:
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			return money[money_name]
+	return 0
+
+func set_money(money_name: String, amount: int):
+	if data.has("money"):
+		var money = data["money"]
+		money[money_name] = amount
+	else:
+		data["money"] = {money_name: amount}
+
+func add_money(money_name: String, amount: int):
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			money[money_name] += amount
+		else:
+			money[money_name] = amount
+	else:
+		data["money"] = {money_name: amount}
+
+func pay_money(money_name: String, amount: int) -> bool:
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			if money[money_name] >= amount:
+				money[money_name] -= amount
+				return true
+	return false
+
 #endregion
 
 #region Inventory
@@ -188,7 +225,6 @@ func _get_artifact(id: String):
 		on_inventory_changed.emit(id)
 
 #endregion
-
 
 #region Quest
 
