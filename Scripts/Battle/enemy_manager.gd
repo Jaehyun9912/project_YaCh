@@ -47,7 +47,7 @@ func _on_battle_scene_turn_character_changed(turn_char: BattleCharacter):
 		# 가능한 스킬이 없으면 턴 종료
 		battle.turn_end.emit()
 		return
-	print(current_skill)
+	print("Enemy will Use: " + str(current_skill))
 
 	damage = get_damage_by_skill(current_skill)
 

@@ -13,9 +13,13 @@ var special_skills
 var peer_skills
 
 var player_skill: 
-	get: return PlayerData.skills
+	get: return PlayerData.data.get("skills", []) # 리스트가 없으면 빈 배열 반환
+
 var player_special_skill:
-	get: return PlayerData.special_skills
+	get: return PlayerData.data.get("special_skills", [])
+
+var player_peer_skill_id:
+	get: return PlayerData.data.get("peer_skill", "")
 
 const ACTION_POINT_ID = "point"
 # 스킬 시전 시간
@@ -36,7 +40,7 @@ func get_player_skill(index: int) -> Dictionary:
 	if 0 <= index and index < len(player_skill):
 		return get_skill(player_skill[index])
 
-	print("잘못된 스킬 인덱스! : " + str(index))
+	printerr("잘못된 스킬 인덱스! : " + str(index))
 	return Dictionary()
 
 # 들어온 ID에 해당하는 스킬의 정보가 담긴 딕셔너리 반환 

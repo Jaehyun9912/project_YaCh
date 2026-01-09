@@ -23,7 +23,7 @@ func get_data(data_path: String):
 	# 만약 반환에 실패할 경우 null 반환
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
-	print(json.data)
+	# print(json.data)
 	if error == OK:
 		return json.data
 	else:
