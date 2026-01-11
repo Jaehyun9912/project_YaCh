@@ -11,6 +11,7 @@ enum SpecialSkillType {
 var skills
 var special_skills
 var peer_skills
+var buff_data # 추가: 버프 원본 데이터 저장
 
 var player_skill: 
 	get: return PlayerData.data.get("skills", []) # 리스트가 없으면 빈 배열 반환
@@ -35,6 +36,15 @@ func _ready():
 	special_skills = DataManager.get_data_folder("Skill/Special")
 	peer_skills = DataManager.get_data_folder("Skill/Peer")
 	
+	buff_data = DataManager.get_data_folder("Skill/Effect")
+
+# 버프 ID로 SkillBuff 객체를 생성하여 반환
+func get_buff(id: String) -> SkillBuff:
+	if id in buff_data:
+		return SkillBuff.create_from_dict(id, buff_data[id])
+	printerr("잘못된 버프 ID! : " + id)
+	return null
+
 # 플레이어의 스킬 얻어오기 
 func get_player_skill(index: int) -> Dictionary:
 	if 0 <= index and index < len(player_skill):

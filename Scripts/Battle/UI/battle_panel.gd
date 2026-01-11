@@ -67,7 +67,7 @@ func _ready():
 	#manager.turn_end.emit()
 	$CastingPanel.battle_panel = self
 
-	var peer_skill = PlayerData.peer_skill
+	var peer_skill = SkillManager.player_peer_skill_id
 	if peer_skill == "" or peer_skill == null:
 		peer_button.visible = false
 
@@ -176,7 +176,7 @@ func set_casting_panel(text, time, is_button_visible, callback):
 # 동료 스킬 사용 가능한지 체크
 func _check_peer_skill():
 	# print("check peer skill")
-	var peer_skill = PlayerData.peer_skill
+	var peer_skill = SkillManager.player_peer_skill_id
 	var skill = SkillManager.get_peer_skill(peer_skill)
 	if skill == null:
 		peer_button.disabled = true
@@ -198,7 +198,7 @@ func _check_peer_skill():
 
 # 동료 스킬 버튼 클릭
 func _on_peer_skill_button_button_clicked():
-	var peer_skill = PlayerData.peer_skill
+	var peer_skill = SkillManager.player_peer_skill_id
 	var skill = SkillManager.get_peer_skill(peer_skill)
 	if skill == null:
 		return

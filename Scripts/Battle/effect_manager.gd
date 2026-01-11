@@ -69,16 +69,23 @@ func _apply_effect(effect, is_remove = false):
 		return
 		
 	# is_remove가 false일 때 효과 적용 로직 구현
+	var data = effect["data"]
 	var target = effect["target"]
-	var stat_target = effect["data"].get("target", "")
-	var oper = effect["data"].get("oper", "")
-	var value = effect["data"].get("value", 0)
+	var stat_targets = data.get("target", "")
+	if not stat_targets is Array: stat_targets = [stat_targets]
 
-	if stat_target is String:
-		_apply_stat_change(target, stat_target, oper, value)
-	elif stat_target is Array:
-		for st in stat_target:
-			_apply_stat_change(target, st, oper, value)
+	var oper = data.get("oper", "")
+	var value = data.get("value", 0)
+
+	# 복구가 필요한 경우 반대 연산 수행
+	if is_remove:
+		if not data.get("restore", false): # 단, restore가 true일 때만
+			return
+		oper = _get_reverse_oper(oper)
+
+    # 모든 대상 스탯에 대해 적용
+	for st in stat_targets:
+		_apply_stat_change(target, st, oper, value)
 
 func _get_reverse_oper(oper: String) -> String:
 	match oper:

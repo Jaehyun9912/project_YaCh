@@ -8,112 +8,97 @@ const hp_text_string := "HP : %d / %d"
 @onready var _notify_label := $NotifyLabel
 @onready var _notify_timer := $NotifyLabel/Timer
 
-# 스탯 관리용 딕셔너리
-# 구조: "stat_name": { "base": 10, "add": 0, "mult": 1.0 }
-var _stats: Dictionary = {}
+# 스탯 관리자
+var stat_manager: CharacterStat
 
 var speed: float:
-    get: return get_stat("speed")
+    get: return stat_manager.get_speed()
 var attack: float:
-    get: return get_stat("attack")
+    get: return stat_manager.get_stat("attack", 0.0)
 var max_hp: float:
-    get: return get_stat("max_hp")
+    get: return stat_manager.get_max_hp()
 var mana: float:
-    get: return get_stat("mana")
+    get: return stat_manager.get_stat("mana", 0.0) # 현재 마나 (세션값)
+var max_mana: float:
+    get: return stat_manager.get_max_mana()
 
 var skills
-
 var tag: String
 
-var _hp
+var _hp: float
 var hp:
     get:
         return _hp
     set(value):
-        # max_hp는 이제 getter를 통해 계산된 값을 가져옴
-        if value > max_hp:
-            value = max_hp
+        var m_hp = max_hp
+        if value > m_hp: value = m_hp
 
         var diff = value - _hp
         _hp = value
-        _hp_label.text = hp_text_string % [hp, max_hp]
+        _hp_label.text = hp_text_string % [int(_hp), int(m_hp)]
         
-        if hp <= 0:
+        # set_character 이전에 호출되는 것 방지
+        if not is_inside_tree(): return
+
+        if _hp <= 0:
             _died()
-        elif diff > 0:
-            notify_msg(diff, Color.GREEN)
-        else:
-            notify_msg(diff, Color.RED)
+        elif diff != 0:
+            var color = Color.GREEN if diff > 0 else Color.RED
+            notify_msg(int(abs(diff)), color)
             
         if is_player:
-            PlayerData.hp = _hp;
-            
+            PlayerData.hp = _hp
+
 # 행동력 
 var point: int
 var current_point: int
 
 # 플레이어인지 확인용 
 @export var is_player := false
-
-var init_outline_size
-var init_outline_color
 var tag_service
 
 func _ready():
-    init_outline_size = _hp_label.outline_size
-    init_outline_color = _hp_label.outline_modulate
     tag_service = DiContainer.get_tag_service()
+    # 플레이어라면 PlayerData에 이미 생성된 stat_manager가 있을 것이므로 
+    # set_character에서 연결만 해줌.
 
-# 스탯 초기화 함수
-func init_stat(stat_name: String, value: float):
-    _stats[stat_name] = {
-        "base": value,
-        "add": 0.0,
-        "mult": 1.0
-    }
-
-# 스탯 계산 함수 (Base + Add) * Mult
-func get_stat(stat_name: String) -> float:
-    if not _stats.has(stat_name):
-        return 0.0
+# 캐릭터 정보 설정 
+func set_character(data: Dictionary, tag_id: String):
+    if is_player:
+        # 플레이어는 PlayerData에 있는 stat_manager를 그대로 참조
+        stat_manager = PlayerData.stat_manager
+    else:
+        # 적은 새로운 Stat 매니저 생성 및 데이터 주입
+        stat_manager = EnemyStat.new()
+        add_child(stat_manager)
+        stat_manager.setup(self, data)
     
-    var s = _stats[stat_name]
-    return (s["base"] + s["add"]) * s["mult"]
+    # 초기 HP 설정 (데이터에 없으면 max_hp로 설정)
+    _hp = data.get("hp", max_hp)
+    _hp_label.text = hp_text_string % [int(_hp), int(max_hp)]
+    
+    skills = data.get("skills", [])
+    tag = "Battle." + tag_id
+    if tag_service.has_method("change_tag_tree"):
+        tag_service.change_tag_tree(self, tag, 1)
 
-# 스탯 수정 함수
+# 스탯 수정 함수 (전투 중 버프나 데미지 처리)
 func modify_stat(stat_name: String, oper: String, value: float):
-    # 체력만 별도 처리
     if stat_name == "hp":
         match oper:
-            "add":
-                hp += value
-            "remove":
-                hp -= value
-            "multiply":
-                hp = int(hp * value)
-            "divide":
-                if value != 0:
-                    hp = int(hp / value)
-        _hp_label.text = hp_text_string % [hp, max_hp]
+            "add": hp += value
+            "remove": hp -= value
         return
 
-    if not _stats.has(stat_name):
-        printerr("Stat not found: ", stat_name)
-        return
-
+    # CharacterStat의 딕셔너리 데이터를 직접 수정
+    var cur_val = stat_manager.get_stat(stat_name, 0.0)
     match oper:
-        "add":
-            _stats[stat_name]["add"] += value
-        "remove":
-            _stats[stat_name]["add"] -= value
-        "multiply":
-            _stats[stat_name]["mult"] *= value
-        "divide":
-            if value != 0:
-                _stats[stat_name]["mult"] /= value
-
+        "add": stat_manager.set_stat(stat_name, cur_val + value)
+        "remove": stat_manager.set_stat(stat_name, cur_val - value)
+        "multiply": stat_manager.set_stat(stat_name, cur_val * value)
+    
     if stat_name == "max_hp":
-        _hp_label.text = hp_text_string % [hp, max_hp]
+        _hp_label.text = hp_text_string % [int(hp), int(max_hp)]
 
 # 죽었을 때 
 func _died():
@@ -127,41 +112,22 @@ func notify_msg(msg, color):
     _notify_label.text = str(msg)
     _notify_label.modulate = color
     _notify_label.visible = true
+    
+    _notify_timer.stop()
     _notify_timer.start()
     
     # 잠시후 종료 
     await _notify_timer.timeout
     
     _notify_label.visible = false
-	
-# 캐릭터 정보 설정 
-func set_character(data: Dictionary, tag_id: String):
-    #name = data.name
-    
-    # 스탯 초기화 방식으로 변경
-    init_stat("attack", data.get("attack", 0))
-    init_stat("max_hp", data.get("max_hp", data.hp))
-    init_stat("speed", data.speed)
-    init_stat("mana", data.mana)
-    
-    _hp = data.hp
-    _hp_label.text = hp_text_string % [hp, max_hp]
-    
-    skills = data.skills
-    
-    # 태그 추가하기 
-    tag = "Battle." + tag_id
-    if tag_service.has_method("change_tag_tree"):
-        tag_service.change_tag_tree(self, tag, 1)
-    #print(data)
-    
+
 # 캐릭터의 체력 텍스트 외곽선 설정 
 func set_hp_outline(size: int, color: Color):
     _hp_label.outline_size = size
     _hp_label.outline_modulate = color
 
 # 미리 설정된 프리셋 
-func set_hp_outline_default(): set_hp_outline(init_outline_size, init_outline_color)
+func set_hp_outline_default(): set_hp_outline(30, Color.BLACK)
 func set_hp_outline_red(): set_hp_outline(30, Color.RED)
 func set_hp_outline_green(): set_hp_outline(30, Color.GREEN)
 
