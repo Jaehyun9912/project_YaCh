@@ -22,7 +22,7 @@ ViewManager="*res://Scripts/System/ViewManager.gd"
 DataManager="*res://Scripts/System/data_manager.gd"
 SkillManager="*res://Scripts/Skills/SkillManager.gd"
 AttributeInfomation="*res://Scripts/Skills/attribute_infomation.gd"
-DiContainer="*res://Scripts/System/DIContainer.gd"
+TagService="*res://Scripts/Tag/TagManager.gd"
 
 [display]
 

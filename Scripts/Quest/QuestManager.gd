@@ -20,11 +20,13 @@ var quest_list: Array
 var quest_queue: Array
 
 var tag_service
+
+var guildId: String
 # 퀘스트 매니저 생성자
 func _init(npc_name: String):
 	_npc_name = npc_name
-	tag_service = DiContainer.get_tag_service()
-	print(tag_service)
+	tag_service = TagService
+	
 	_import_quest()
 	enqueue_quest()
 	
@@ -38,7 +40,7 @@ func check_quest(quest: Dictionary) -> bool:
 	#수주에 필요한 태그 존재여부 확인
 	if quest.has("accept_condition"):
 		for i in quest["accept_condition"]:
-			if !check_condition(i):
+			if !Condition.check_condition(i):
 				return false
 	return true
 
@@ -60,10 +62,10 @@ func receive_quest(quest) -> bool:
 		printerr("퀘스트 수주 불가!")
 		return false
 	# 퀘스트용 토큰 아이템 부여
-	if quest.has("token"):
-		var token = quest["token"]
+	if quest.has("tokens"):
+		var token = quest["tokens"]
 		for i in token:
-			PlayerData.add_new_item(i.id, i.count)
+			PlayerData.execute_cmd(i)
 	# 수주
 	PlayerData.receive_quest(quest)
 	return true
@@ -79,16 +81,18 @@ func clear_quest(quest) -> bool:
 	# 클리어
 	PlayerData.clear_quest(quest)
 	# 아이템 회수
-	if quest.has("submit"):
-		var submit = quest["submit"]
+	if quest.has("submits"):
+		var submit = quest["submits"]
 		for i in submit:
-			PlayerData.add_new_item(i.id, -i.count)
+			PlayerData.execute_cmd(i)
 	# 보상 수령
 	if quest.has("rewards"):
 		var rewards = quest["rewards"]
 		for i in rewards:
-			PlayerData.add_new_item(i.id, i.count)
-	#print(quest.id , " Clear")
+			PlayerData.execute_cmd(i)
+	if quest.has("renown"):
+		var curRenown = PlayerData.get_guild_renown(guildId)
+		PlayerData.set_guild_renown(guildId, curRenown + quest["renown"])
 	return true
 
 
@@ -98,6 +102,9 @@ func _import_quest() -> void:
 	var data = DataManager.get_data("Quest/" + _npc_name)
 	#print(data)
 	
+	# 소속 표시
+
+	guildId = data["guild"]
 	# 지역 상관없이 수주가능한 퀘스트 생성
 	for datum in data["All"]:
 		quest_list.append(datum)
@@ -108,37 +115,6 @@ func _import_quest() -> void:
 	if data.has(location_quest):
 		for datum in data[location_quest]:
 			quest_list.append(datum)
-
-
-# 개별 조건 확인
-func check_condition(condition: String) -> bool:
-	# 반전 확인
-	var negative = false
-	if condition.begins_with("!"):
-		condition = condition.right(-1)
-		negative = true
-	# 조건 분야 확인(태그, 아이템, 스탯)
-	var arr = condition.split(":", true, 1)
-	var check: bool
-	if arr.size() == 1:
-		if tag_service.has_method("tag_compare"):
-			check = tag_service.tag_compare(PlayerData, arr[0])
-	elif arr[0] == "tag":
-		if tag_service.has_method("tag_compare"):
-			check = tag_service.tag_compare(PlayerData, arr[1])
-	elif arr[0] == "stat":
-		check = PlayerData.stat_compare(arr[1])
-	elif arr[0] == "item":
-		check = PlayerData.item_compare(arr[1])
-	elif arr[0] == "artifact":
-		check = PlayerData.artifact_compare(arr[1])
-	# 조건 문자열이 이상할 경우
-	else:
-		printerr("Condition Error")
-		return false
-	if negative == check:
-		return false
-	return true
 
 func can_clear_quest(quest: Dictionary):
 	if quest.has("clear_NPC"):
@@ -153,7 +129,7 @@ func can_clear_quest(quest: Dictionary):
 			return false
 	var condition = get_quest_condition(quest)
 	for i in condition:
-		if !check_condition(i):
+		if !Condition.check_condition(i):
 			return false
 	return true
 	
@@ -161,8 +137,9 @@ func get_quest_condition(quest: Dictionary) -> Dictionary:
 	var condition: Dictionary
 	if quest.has("process_condition"):
 		condition = quest["process_condition"] as Dictionary
-	if quest.has("submit"):
-		for i in quest["submit"]:
-			var item_tag = "!item:" + i["id"] + "<" + str(i["count"])
-			condition[item_tag] = i["description"]
+	if quest.has("submits"):
+		for i in quest["submits"]:
+			var combine = Condition.cmd_to_cmp(i)
+			condition[combine] = quest["submits"][i]
+	print(condition)
 	return condition

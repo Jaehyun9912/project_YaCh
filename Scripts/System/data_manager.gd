@@ -22,7 +22,7 @@ func get_data(data_path: String) -> Dictionary:
 	# 만약 반환에 실패할 경우 빈 딕셔너리를 반환함.
 	var json = JSON.new()
 	var error = json.parse(file.get_as_text())
-	print(json.data)
+	#print(json.data)
 	if error == OK:
 		return json.data
 	else:
@@ -113,7 +113,7 @@ func get_item_artifact_data(id: String):
 		return get_artifact_data(id)
 		
 # 들어온 ID에 해당하는 아이템의 정보가 담긴 딕셔너리 반환 
-func get_item_data(id : String) -> Dictionary:
+func get_item_data(id: String) -> Dictionary:
 	var sp = id.split(":")
 	if sp.size() > 1 and sp[0] == "item":
 		id = sp[1]
@@ -125,7 +125,7 @@ func get_item_data(id : String) -> Dictionary:
 		return Dictionary()
 		
 # 들어온 ID에 해당하는 아티팩트의 정보가 담긴 딕셔너리 반환 
-func get_artifact_data(id : String) -> Dictionary:
+func get_artifact_data(id: String) -> Dictionary:
 	var sp = id.split(":")
 	if sp.size() > 1 and sp[0] == "artifact":
 		id = sp[1]

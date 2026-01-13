@@ -1,5 +1,5 @@
 extends Node
-class_name TagService
+class_name TagManager
 
 signal on_tag_changed(node: Node)
 
@@ -67,15 +67,15 @@ func has_tag(node: Node, tag: String) -> bool:
 
 
 # 태그의 부등호 비교해서 충족 시 true 반환
-func tag_compare(node: Node, tag: String) -> bool:
+func cmp_tag(node: Node, tag: String) -> bool:
 	var comparer = [">", "<", "="]
 	for i in comparer:
 		var tag_part = tag.split(i, true, 2)
 		if tag_part.size() == 2:
 			var tag_count = _get_tag_count(node, tag_part[0])
-			if i == ">" && tag_count > tag_part[1].to_int():
+			if i == ">" && tag_count >= tag_part[1].to_int():
 				return true
-			elif i == "<" && tag_count < tag_part[1].to_int():
+			elif i == "<" && tag_count <= tag_part[1].to_int():
 				return true
 			elif i == "=" && tag_count == tag_part[1].to_int():
 				return true

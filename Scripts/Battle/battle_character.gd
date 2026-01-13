@@ -52,7 +52,7 @@ var tag_service
 func _ready():
 	init_outline_size = _hp_label.outline_size
 	init_outline_color = _hp_label.outline_modulate
-	tag_service = DiContainer.get_tag_service()
+	tag_service = TagService
 
 # 죽었을 때 
 func _died():
