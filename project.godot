@@ -40,6 +40,10 @@ project/assembly_name="YaCh"
 
 import/fbx/enabled=false
 
+[gui]
+
+theme/custom="res://Themes/PlayerBase.theme"
+
 [rendering]
 
 renderer/rendering_method="mobile"
