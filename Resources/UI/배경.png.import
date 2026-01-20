@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjc5rdervdjs4"
-path="res://.godot/imported/Baford.png-f179011122147bff167913012625506f.ctex"
+uid="uid://dxmykwn0u21tj"
+path="res://.godot/imported/배경.png-d0ba67cdd20de60a31c00851993b89e2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Baford.png"
-dest_files=["res://.godot/imported/Baford.png-f179011122147bff167913012625506f.ctex"]
+source_file="res://Resources/UI/배경.png"
+dest_files=["res://.godot/imported/배경.png-d0ba67cdd20de60a31c00851993b89e2.ctex"]
 
 [params]
 
