@@ -72,7 +72,7 @@ func _on_end_casting(is_success):
 
 func _on_end_spell(is_success):
 	if is_success:
-		player.hp -= damage
+		player.apply_damage(damage)
 		battle.set_attribute_change(current_skill)
 		# 일단 한번 공격하면 턴 종료하도록
 		battle.turn_end.emit()

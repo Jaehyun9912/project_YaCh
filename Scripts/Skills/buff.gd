@@ -57,6 +57,9 @@ static func create_from_dict(orig_id: String, data: Dictionary) -> SkillBuff:
     
     return b
 
+func is_additive() -> bool:
+    return value_type == "add"
+
 func check_update_logic(event: BuffHandler.BuffEvent) -> bool:
     if not has_duration:
         return false

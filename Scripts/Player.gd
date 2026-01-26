@@ -10,7 +10,6 @@ var stat_manager: PlayerStat
 
 func _ready():
 	stat_manager = PlayerStat.new()
-	add_child(stat_manager)
 
 	load_player()
 	
@@ -321,16 +320,18 @@ func get_item_count(id: String) -> int:
 func gain_skill_exp(amount: float, is_combat: bool = false, mana_consumed: float = 0):
 	stat_manager.add_skill_exp(amount, mana_consumed, is_combat)
 
-# 영구 마나 최대치 증가 (아이템 사용 등)
+# 영구 마나 최대치 증가 
 func gain_permanent_mana(amount: float):
 	stat_manager.add_permanent_mana(amount)
 
-# 장비 변경 시 스탯 업데이트 (방어구 무게 등 반영)
+# 장비 변경 시 스탯 업데이트
 func update_equipment_stats(armor_weight: float):
 	stat_manager.update_equipment_stats(armor_weight)
 
-# 들어오는 데미지 계산 (방어력, 버프 반영)
-func calculate_incoming_damage(raw_damage: float) -> float:
-	return stat_manager.calculate_incoming_damage(raw_damage)
+# 체력 감소
+func apply_damage(amount: float) -> float:
+	var damage = stat_manager.calculate_incoming_damage(amount)
+	hp -= damage
+	return damage
 
 #endregion

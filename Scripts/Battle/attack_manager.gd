@@ -74,13 +74,13 @@ func do_attack(skill: Dictionary, target):
 		#return
 	# self 전용 구현 
 	if target is String and target == "self":
-		battle.player_character.hp -= apply
+		battle.player_character.apply_heal(apply)
 	else:
 		# 설정된 적 공격 
 		for i in target:
 			var enemy = battle.enemy_character[i]
-			battle.add_attack_log(battle.now_character.name, enemy.name, apply, enemy.hp)
-			enemy.hp -= apply
+			var damage = enemy.apply_damage(apply)
+			battle.add_attack_log(battle.now_character.name, enemy.name, damage, enemy.hp)
 		
 func do_effect():
 	pass

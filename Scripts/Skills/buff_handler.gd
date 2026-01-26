@@ -1,4 +1,4 @@
-class_name BuffHandler extends Node
+class_name BuffHandler extends RefCounted
 
 class BuffEvent:
     enum Type { TURN, TIME_PASS, ACTION_POINT, LOCATION_CHANGE, ATTRIBUTE_CHANGE }
@@ -7,10 +7,15 @@ class BuffEvent:
     var attribute: String = ""
 
 var active_buffs: Array[SkillBuff] = []
-var target: WeakRef # player_stat, battle_character 등 버프를 적용할 대상
+var _target_ref: WeakRef # RefCounted간 순환 참조 방지용
 
-func setup(set_target):
-    self.target = set_target
+# 실제 사용 시 get_ref()를 통해 접근하는 프로퍼티
+var target: CharacterStat:
+    get:
+        return _target_ref.get_ref() if _target_ref else null
+
+func setup(set_target: CharacterStat):
+    _target_ref = weakref(set_target)
 
 func add_buff(buff_id: String):
     var buff = SkillManager.get_buff(buff_id)
@@ -26,6 +31,9 @@ func get_buffs(target_stat: String) -> Array[SkillBuff]:
     return result
 
 func buff_update(event: BuffEvent):
+    if not target: # CharacterStat이 이미 지워졌다면 중단
+        return
+        
     var expired_buffs: Array[SkillBuff] = []
     for buff in active_buffs:
         if buff.check_update_logic(event):

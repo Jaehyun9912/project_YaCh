@@ -29,25 +29,11 @@ var _hp: float
 var hp:
     get:
         return _hp
-    set(value):
-        var m_hp = max_hp
-        if value > m_hp: value = m_hp
-
-        var diff = value - _hp
+    set(value): # apply_damage, apply_heal 함수로 처리하므로 refresh는 수행하지 않음 (따라서 직접 설정은 자제)
+        # var diff = value - _hp
         _hp = value
-        _hp_label.text = hp_text_string % [int(_hp), int(m_hp)]
-        
-        # set_character 이전에 호출되는 것 방지
-        if not is_inside_tree(): return
-
-        if _hp <= 0:
-            _died()
-        elif diff != 0:
-            var color = Color.GREEN if diff > 0 else Color.RED
-            notify_msg(int(abs(diff)), color)
+        # _refresh_hp_status(diff)
             
-        if is_player:
-            PlayerData.hp = _hp
 
 # 행동력 
 var point: int
@@ -70,7 +56,6 @@ func set_character(data: Dictionary, tag_id: String):
     else:
         # 적은 새로운 Stat 매니저 생성 및 데이터 주입
         stat_manager = EnemyStat.new()
-        add_child(stat_manager)
         stat_manager.setup(self, data)
     
     # 초기 HP 설정 (데이터에 없으면 max_hp로 설정)
@@ -82,23 +67,28 @@ func set_character(data: Dictionary, tag_id: String):
     if tag_service.has_method("change_tag_tree"):
         tag_service.change_tag_tree(self, tag, 1)
 
-# 스탯 수정 함수 (전투 중 버프나 데미지 처리)
-func modify_stat(stat_name: String, oper: String, value: float):
-    if stat_name == "hp":
-        match oper:
-            "add": hp += value
-            "remove": hp -= value
-        return
-
-    # CharacterStat의 딕셔너리 데이터를 직접 수정
-    var cur_val = stat_manager.get_stat(stat_name, 0.0)
-    match oper:
-        "add": stat_manager.set_stat(stat_name, cur_val + value)
-        "remove": stat_manager.set_stat(stat_name, cur_val - value)
-        "multiply": stat_manager.set_stat(stat_name, cur_val * value)
+# 내부 공용 UI 업데이트 함수
+func _refresh_hp_status(diff: float):
+    _hp_label.text = hp_text_string % [int(_hp), int(max_hp)]
     
-    if stat_name == "max_hp":
-        _hp_label.text = hp_text_string % [int(hp), int(max_hp)]
+    if _hp <= 0:
+        _died()
+    elif diff != 0:
+        var color = Color.GREEN if diff > 0 else Color.RED
+        notify_msg(int(abs(diff)), color)
+
+func apply_damage(amount: float) -> float:
+    var damage = stat_manager.calculate_incoming_damage(amount)
+    _hp = max(_hp - damage, 0)
+    _refresh_hp_status(-damage)
+    return damage
+
+func apply_heal(amount: float) -> float:
+    var old_hp = _hp
+    _hp = min(_hp + amount, max_hp)
+    var actual_heal = _hp - old_hp
+    _refresh_hp_status(actual_heal)
+    return actual_heal
 
 # 죽었을 때 
 func _died():
@@ -111,9 +101,9 @@ func _died():
 func notify_msg(msg, color):
     _notify_label.text = str(msg)
     _notify_label.modulate = color
-    _notify_label.visible = true
     
     _notify_timer.stop()
+    _notify_label.visible = true
     _notify_timer.start()
     
     # 잠시후 종료 
