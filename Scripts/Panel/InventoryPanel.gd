@@ -6,9 +6,9 @@ signal on_select_changed(slot: InventorySlot)
 @export var slot_prefab: Resource
 @export var option_prefab: Resource
 
-var slotContainer: VBoxContainer
-var actionContainer: VBoxContainer
-var detail_panel: Control
+@export var slotContainer: VBoxContainer
+@export var actionContainer: VBoxContainer
+var detail_panel: ItemDetailPanel
 
 var selected_slot: InventorySlot
 
@@ -29,9 +29,7 @@ var read_panel: Control
 
 # 초기 설정
 func initialize(meta_data: Dictionary):
-	slotContainer = $"Inventory/Inventory/ScrollContainer/VBoxContainer" as VBoxContainer
-	actionContainer = $"Inventory/ColorRect2/ScrollContainer/VBoxContainer" as VBoxContainer
-	detail_panel = $"Detail" as Control
+	detail_panel = ViewManager.push_panel("ItemDetailPanel", ViewManager.SCREEN.TOP) as ItemDetailPanel
 
 	if meta_data.has("mode"):
 		if meta_data["mode"] == "full":
@@ -121,6 +119,7 @@ func set_slot_info(slot: InventorySlot):
 	
 
 func exit():
+	detail_panel.on_exit.emit()
 	on_exit.emit()
 
 func change_category(direction: int):
@@ -141,10 +140,9 @@ func change_category(direction: int):
 # 현재 선택한 슬롯에 대한 디테일 표시
 func set_item_description(slot: InventorySlot):
 	if slot == null:
-		$"Detail/Detail".hide()
+		detail_panel.hide()
 		return
-	$"Detail/Detail".show()
+	detail_panel.show()
+	detail_panel.SetSlotInfo(slot)
 	print(slot.data)
-	
-	$"Detail/Detail/Label".text = slot.get_title()
-	$"Detail/Detail/RichTextLabel".text = slot.get_description()
+

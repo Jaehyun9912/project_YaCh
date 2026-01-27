@@ -9,7 +9,7 @@ func _on_button_1_pressed():
 
 #디버그용으로 잠시
 func _on_button_2_pressed():
-	var _panel = ViewManager.push_panel("InventoryPanel", ViewManager.SCREEN.FULL, {"mode": "full"})
+	var _panel = ViewManager.push_panel("InventoryPanel", ViewManager.SCREEN.BOTTOM, {"mode": "full"})
 	
 	
 func _on_button_3_pressed():

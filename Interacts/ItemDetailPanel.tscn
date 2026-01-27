@@ -1,0 +1,57 @@
+[gd_scene load_steps=3 format=3 uid="uid://dm2lclbdv025p"]
+
+[ext_resource type="Script" path="res://Scripts/Panel/ItemDetailPanel.gd" id="1_ccs4n"]
+[ext_resource type="Texture2D" uid="uid://1u8ct4uc8xd8" path="res://icon.svg" id="1_unxdu"]
+
+[node name="Detail" type="ColorRect" node_paths=PackedStringArray("title", "description")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.545098, 0.666667, 0.913725, 0)
+script = ExtResource("1_ccs4n")
+title = NodePath("Detail/Label")
+description = NodePath("Detail/RichTextLabel")
+
+[node name="ContentImage" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.1
+anchor_top = 0.1
+anchor_right = 0.9
+anchor_bottom = 0.6
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_unxdu")
+
+[node name="Detail" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.7
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.211765, 0.211765, 0.211765, 1)
+
+[node name="Label" type="Label" parent="Detail"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.3
+offset_bottom = -0.0030098
+grow_horizontal = 2
+grow_vertical = 2
+text = "아이템 이름"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Detail"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.3
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "던지면 터진다."
+fit_content = true
