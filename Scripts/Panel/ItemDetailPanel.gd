@@ -6,6 +6,6 @@ signal on_exit
 @export var title : Label
 @export var description : RichTextLabel
 
-func SetSlotInfo(slot : InventorySlot):
+func set_slot_info(slot : InventorySlot):
 	title.text = slot.get_title()
 	description.text = slot.get_description()

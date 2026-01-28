@@ -143,6 +143,6 @@ func set_item_description(slot: InventorySlot):
 		detail_panel.hide()
 		return
 	detail_panel.show()
-	detail_panel.SetSlotInfo(slot)
+	detail_panel.set_slot_info(slot)
 	print(slot.data)
 
