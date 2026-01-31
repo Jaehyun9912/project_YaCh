@@ -1,6 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://bywby213cjyfx"]
-
-[ext_resource type="Script" path="res://Scripts/Panel/InventorySlot.gd" id="1_hj1ui"]
+[gd_scene load_steps=2 format=3 uid="uid://bywby213cjyfx"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_7ux2a"]
 font_color = Color(0, 0, 0, 1)
@@ -8,7 +6,6 @@ font_color = Color(0, 0, 0, 1)
 [node name="ColorRect2" type="ColorRect"]
 custom_minimum_size = Vector2(0, 30)
 color = Color(0.486275, 0.764706, 0.698039, 1)
-script = ExtResource("1_hj1ui")
 
 [node name="ItemName" type="Label" parent="."]
 layout_mode = 1

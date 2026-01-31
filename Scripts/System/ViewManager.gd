@@ -7,7 +7,9 @@ const PANEL_PATH = "res://Interacts/"
 
 var current_scene: Node = null
 var world_instance: Node3D = null
-var current_panel: CanvasLayer = null
+var current_panel: Node = null
+var top_panel : Node = null
+var bottom_panel : Node = null
 
 var side_panel: SidePanel = null
 
@@ -16,22 +18,16 @@ var cur_meta_data: Dictionary
 var old_map: String
 var old_panel: String
 
-var panel_ratio:
-	set(value):
-		panel_ratio = value
-		#ratio_changed.emit(value)
-		update_panels_size()
-	get:
-		if panel_ratio == null:
-			panel_ratio = 0.5
-		return panel_ratio
+
 
 
 func get_view():
 	current_scene = get_tree().current_scene
 	if current_scene != null:
 		world_instance = current_scene.get_node("World")
-		current_panel = current_scene.get_node("Interact")
+		current_panel = current_scene.get_node("InteractLayer")
+		top_panel = current_panel.get_child(0).get_child(0)
+		bottom_panel = current_panel.get_child(0).get_child(1)
 		side_panel = current_scene.get_node("SidePanelLayer/SidePanel")
 		print(side_panel.name)
 	pass
@@ -43,7 +39,7 @@ func load_world(world_name: String, panel_name: String = "", meta_data: Dictiona
 	
 	# 이전 맵 정보 저장
 	old_map = world_instance.get_child(0).name
-	old_panel = current_panel.get_child(0).name
+	old_panel = bottom_panel.get_child(0).name
 	
 	# remove current world instance
 	world_instance.get_child(0).queue_free()
@@ -59,14 +55,16 @@ func load_world(world_name: String, panel_name: String = "", meta_data: Dictiona
 	world_instance.add_child(world)
 	
 	# remove current Panels
-	for child in current_panel.get_children():
+	for child in top_panel.get_children():
+		erase_panel(child)
+	for child in bottom_panel.get_children():
 		erase_panel(child)
 	# load new Panel
 	if panel_name != "":
-		var panel = push_panel(panel_name, SCREEN.BOTTOM, meta_data, world)
+		push_panel(panel_name, SCREEN.BOTTOM, meta_data, world)
 	# 사라진 오브젝트의 태그 값 제거
 	#TagManager.clean_dict()
-	_on_size_changed()
+	#_on_size_changed()
 
 
 #region UI_Panel
@@ -106,8 +104,11 @@ func push_panel(panel_name: String, screen_location: SCREEN, meta_data: Dictiona
 	get_view()
 	# 패널 생성, 전시 후 해당 패널 반환
 	var panel = load(PANEL_PATH + panel_name + ".tscn").instantiate()
-	current_panel.add_child(panel as Node)
-	_set_screen_size(panel, screen_location)
+	if screen_location == SCREEN.BOTTOM:
+		bottom_panel.add_child(panel as Node)
+	elif screen_location == SCREEN.TOP:
+		top_panel.add_child(panel as Node)
+	#_set_screen_size(panel, screen_location)
 	if panel.has_signal("on_exit"):
 		panel.on_exit.connect(erase_panel.bind(panel))
 	if panel.has_method("initialize"):
@@ -119,33 +120,21 @@ func push_panel(panel_name: String, screen_location: SCREEN, meta_data: Dictiona
 
 # 패널 제거
 func erase_panel(panel):
-	if current_panel.get_children().has(panel):
-		current_panel.remove_child(panel)
+	if top_panel.get_children().has(panel):
+		top_panel.remove_child(panel)
+		return
+	if bottom_panel.get_children().has(panel):
+		bottom_panel.remove_child(panel)
+		return
+	pass
 	
 
-# 스크린 위치 지정 
-func _set_screen_size(panel: Control, screen_location: SCREEN) -> void:
-	if screen_location == SCREEN.BOTTOM:
-		panel.anchor_left = 0
-		panel.anchor_top = 1 - panel_ratio
-		panel.anchor_right = 1
-		panel.anchor_bottom = 1
-	elif screen_location == SCREEN.TOP:
-		panel.anchor_left = 0
-		panel.anchor_top = 0
-		panel.anchor_right = 1
-		panel.anchor_bottom = 1 - panel_ratio
-	elif screen_location == SCREEN.FULL:
-		panel.anchor_left = 0
-		panel.anchor_top = 0
-		panel.anchor_right = 1
-		panel.anchor_bottom = 1
 
 
 func update_panels_size():
 	get_view()
-	var _panel = current_panel.get_child(0)
-	_set_screen_size(_panel, SCREEN.BOTTOM)
+	#var _panel = current_panel.get_child(0)
+	#_set_screen_size(_panel, SCREEN.BOTTOM)
 		
 #endregion
 

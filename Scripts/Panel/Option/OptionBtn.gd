@@ -3,8 +3,9 @@ extends Node
 
 
 func _ready():
-	var bar = $"ColorRect/HScrollBar" as HScrollBar
-	bar.value = ViewManager.panel_ratio
+	#var bar = $"ColorRect/HScrollBar" as HScrollBar
+	#bar.value = ViewManager.panel_ratio
+	pass
 # UI 표시
 func toggle_UI(open : bool) -> void:
 	if open:

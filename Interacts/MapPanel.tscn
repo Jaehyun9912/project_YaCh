@@ -1,134 +1,116 @@
-[gd_scene load_steps=3 format=3 uid="uid://ujhj8734sgr6"]
+[gd_scene load_steps=2 format=3 uid="uid://brqmajgw24nki"]
 
 [ext_resource type="Script" path="res://Scripts/Map/MapPanel.gd" id="1_bm1x8"]
-[ext_resource type="Theme" uid="uid://odd4wpjfulyi" path="res://Themes/PlayerBase.theme" id="2_txdno"]
 
-[node name="MapUI" type="Control"]
-layout_mode = 3
+[node name="MapUI" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("2_txdno")
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("1_bm1x8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-alignment = 2
-
-[node name="GameView" type="Control" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="Panel" type="PanelContainer" parent="VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Panel"]
+[node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2
 theme_override_constants/margin_left = 10
 theme_override_constants/margin_top = 10
 theme_override_constants/margin_right = 10
 theme_override_constants/margin_bottom = 30
 
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Panel/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 alignment = 1
 
-[node name="ArrowPanel" type="MarginContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer"]
+[node name="ArrowPanel" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 3.0
 
-[node name="MovePanel" type="GridContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel"]
+[node name="MovePanel" type="GridContainer" parent="MarginContainer/VBoxContainer/ArrowPanel"]
 layout_mode = 2
 columns = 3
 
-[node name="Empty" type="Control" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Empty" type="Control" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Up" type="Button" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Up" type="Button" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Up"
 
-[node name="Empty2" type="Control" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Empty2" type="Control" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Left" type="Button" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Left" type="Button" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Left"
 
-[node name="Select" type="Button" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Select" type="Button" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Select"
 
-[node name="Right" type="Button" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Right" type="Button" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Right"
 
-[node name="Empty3" type="Control" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Empty3" type="Control" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Down" type="Button" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Down" type="Button" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Down"
 
-[node name="Empty4" type="Control" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
+[node name="Empty4" type="Control" parent="MarginContainer/VBoxContainer/ArrowPanel/MovePanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="HSeparator" type="HSeparator" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="BagPanel" type="MarginContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer"]
+[node name="BagPanel" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/BagPanel"]
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer/VBoxContainer/BagPanel"]
 layout_mode = 2
 
-[node name="BagPanel" type="GridContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/BagPanel/CenterContainer"]
+[node name="BagPanel" type="GridContainer" parent="MarginContainer/VBoxContainer/BagPanel/CenterContainer"]
 custom_minimum_size = Vector2(300, 100)
 layout_mode = 2
 columns = 2
 
-[node name="Button2" type="Button" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/BagPanel/CenterContainer/BagPanel"]
+[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/BagPanel/CenterContainer/BagPanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "가방"
 
-[node name="Bag" type="Button" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/BagPanel/CenterContainer/BagPanel"]
+[node name="Bag" type="Button" parent="MarginContainer/VBoxContainer/BagPanel/CenterContainer/BagPanel"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "가방"
 
-[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Up" to="." method="_move_cursor" binds= [1]]
-[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Left" to="." method="_move_cursor" binds= [4]]
-[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Select" to="." method="enter_world"]
-[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Right" to="." method="_move_cursor" binds= [2]]
-[connection signal="pressed" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Down" to="." method="_move_cursor" binds= [3]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Up" to="." method="_move_cursor" binds= [1]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Left" to="." method="_move_cursor" binds= [4]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Select" to="." method="enter_world"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Right" to="." method="_move_cursor" binds= [2]]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ArrowPanel/MovePanel/Down" to="." method="_move_cursor" binds= [3]]

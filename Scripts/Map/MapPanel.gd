@@ -5,7 +5,7 @@ extends Node
 # 의존성 주입
 func initialize_world(node: Node):
 	if node is Map:
-		map = node
+		map = node as Map
 	print(node)
 
 
