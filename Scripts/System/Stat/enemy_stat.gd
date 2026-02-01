@@ -5,7 +5,7 @@ var max_hp = null
 
 func get_max_hp() -> float:
     if max_hp != null:
-        return max_hp
+        return get_buff_stats("max_hp", float(max_hp))
     return super.get_max_hp()
 
 func setup(target: Node, data: Dictionary):

@@ -25,9 +25,7 @@
         "name": "회복하기",
         "description": "나의 체력을 10 회복한다. 물 원소 11을 쌓는다.\n행동력 10과 흙 원소 1을 소모한다.",
         "target": "self",
-        "value": {
-            "level": -10
-        },
+        "value": 10,
         "cost": {
             "point": 4
         },
@@ -42,21 +40,12 @@
         "target": "one",
         "value": 1,
         "cost": 10,
+        "effect_id": "test_common_add",
         "requirement": {
             "point": 12
         },
         "attribute": {
             "dirt": 45
-        }
-    },
-    "test_buff_skill": {
-        "type": "effect",
-        "name": "마나 증폭",
-        "description": "2턴간 자신의 최대 마나를 50 증가시킨다.\n행동력 5를 소모한다.",
-        "target": "self",
-        "effect_id": "test_mana_add",
-        "cost": {
-            "point": 5
         }
     }
 }

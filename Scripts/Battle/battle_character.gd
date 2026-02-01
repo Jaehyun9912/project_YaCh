@@ -58,6 +58,8 @@ func set_character(data: Dictionary, tag_id: String):
         stat_manager = EnemyStat.new()
         stat_manager.setup(self, data)
     
+    stat_manager.stat_changed.connect(_on_stat_changed)
+    
     # 초기 HP 설정 (데이터에 없으면 max_hp로 설정)
     _hp = data.get("hp", max_hp)
     _hp_label.text = hp_text_string % [int(_hp), int(max_hp)]
@@ -80,6 +82,8 @@ func _refresh_hp_status(diff: float):
 # 버프 추가
 func add_buff(buff_id: String):
     stat_manager.add_buff(buff_id)
+func add_buff_object(buff: SkillBuff):
+    stat_manager.add_buff_object(buff)
 
 # 적용된 데미지 계산 및 체력 갱신
 func apply_damage(amount: float) -> float:
@@ -104,18 +108,29 @@ func _died():
         tag_service.change_tag_tree(self, tag, 0)
     
 # 캐릭터 위에 메세지 띄우기 
-func notify_msg(msg, color):
+func notify_msg(msg, color: Color):
     _notify_label.text = str(msg)
     _notify_label.modulate = color
-    
+
     _notify_timer.stop()
     _notify_label.visible = true
     _notify_timer.start()
-    
+
     # 잠시후 종료 
     await _notify_timer.timeout
     
     _notify_label.visible = false
+    
+func _on_stat_changed(stat_name, _new_value):
+    # 스탯 변경 시 처리 로직
+    # HP, Mana 등 주요 스탯 변경 시 UI 갱신 등
+    # print("Stat changed: %s -> %s" % [stat_name, str(_new_value)])
+    if stat_name == "max_hp":
+        _refresh_hp_status(0)
+    elif stat_name == "max_mana":
+        # 마나 UI 갱신 로직이 있다면 호출
+        pass
+
 
 # 캐릭터의 체력 텍스트 외곽선 설정 
 func set_hp_outline(size: int, color: Color):

@@ -1,11 +1,14 @@
 class_name CharacterStat
 extends RefCounted
 
+signal stat_changed(stat_name, new_value)
+
 var _target: Node
 var _data: Dictionary
 var armor_weight: float = 0
 
 var buff_handler: BuffHandler
+var _buff_cache: Dictionary = {}
 
 # 공식 계산용 함수 
 const BASE_MANA_DEFAULT = 100
@@ -20,6 +23,7 @@ func setup(target: Node, data: Dictionary):
 
     buff_handler = BuffHandler.new()
     buff_handler.setup(self)
+    buff_handler.buff_changed.connect(_on_buff_changed)
 
     _init_stats()
 
@@ -40,16 +44,19 @@ func _get_base_max_mana_logic() -> float:
     var permanent = _data.get("mana_bonus", 0)
     return (BASE_MANA_DEFAULT + (level * LEVEL_MANA_COEF)) + permanent
 
+# 마나 최대치
 func get_max_mana() -> float:
     var base_mana = _get_base_max_mana_logic()
     var buff_data = get_buff_stats("mana", base_mana)
     return buff_data
 
+# 체력 최대치
 func get_max_hp() -> float:
     var base_mana = _get_base_max_mana_logic()
     var buff_data = get_buff_stats("max_hp", base_mana * HP_SCALE_CONST)
     return buff_data
 
+# 속도 계산
 func get_speed() -> float:
     var level = get_skill_level()
     var permanent = _data.get("speed_bonus", 0)
@@ -59,44 +66,80 @@ func get_speed() -> float:
     var buff_data = get_buff_stats("speed", base_speed)
     return buff_data
 
+# 들어오는 데미지 계산
 func calculate_incoming_damage(raw_damage: float) -> float:
     var base_value = 1.0 - armor_weight
     var buff_data = get_buff_stats("damage_reduction", base_value)
     buff_data = 0 if buff_data < 0 else buff_data
     return raw_damage * buff_data
 
+# 방어구 무게 설정
 func set_armor_weight(new_armor_weight: float):
     armor_weight = new_armor_weight
 
+# 속도 보너스 설정
 func set_speed_bonus(amount: float):
     _data["speed_bonus"] = amount
 
+# 마나 보너스 설정
 func set_mana_bonus(amount: float):
     _data["mana_bonus"] = amount
 
+# 기본 스탯 접근 함수
 func get_stat(key, default=null): return _data.get(key, default)
 func set_stat(key, val): _data[key] = val
+
+func _on_buff_changed(buff: SkillBuff, _is_added: bool):
+    var target_stat = buff.target
+    
+    # 캐시 재계산
+    _recalculate_buff_cache(target_stat)
+    
+    # 해당 스탯의 현재 값을 다시 계산
+    var current_val = get_stat(target_stat, 0)
+    
+    # getter가 있는 특수 스탯 처리
+    if target_stat == "max_hp":
+        current_val = get_max_hp()
+        print("Max HP changed: ", current_val)
+    elif target_stat == "max_mana":
+        current_val = get_max_mana()
+    elif target_stat == "speed":
+        current_val = get_speed()
+    elif target_stat == "damage_reduction":
+        current_val = calculate_incoming_damage(100) # 더미 값으로 비율 확인용
+
+    print("Stat changed: ", target_stat, " New Value: ", current_val)
+        
+    stat_changed.emit(target_stat, current_val)
+
 #endregion
 
 #region BuffEvent
+# buff_handler 관련 래퍼 함수
 func add_buff(buff_id: String):
     buff_handler.add_buff(buff_id)
 
-func buff_update(event: BuffHandler.BuffEvent):
-    buff_handler.buff_update(event)
-
-func get_buff_stats(target_stat: String, base_value: float):
-    var buffs = buff_handler.get_buffs(target_stat) as Array[SkillBuff]
-    var result = base_value
+func add_buff_object(buff: SkillBuff):
+    buff_handler.add_buff_instance(buff)
+func _recalculate_buff_cache(stat_name: String):
+    var buffs = buff_handler.get_buffs(stat_name)
+    var m = 1.0
+    var a = 0.0
     
-    match target_stat:
-        "mana":
-            # 마나는 버프 순서대로 연산
+    # 캐시 계산 전 디버깅 (버프가 있는데 적용 안되는 경우 확인용)
+    if buffs.size() > 0:
+        print("[StatCache] Recalculating for '%s' with %d buffs." % [stat_name, buffs.size()])
+    
+    match stat_name:
+        "max_mana":
+            # 마나는 버프 순서대로 연산 ((Base * m + a) + V or * V)
             for buff in buffs:
                 if buff.is_additive():
-                    result += buff.value
+                    a += buff.value
                 else:
-                    result *= buff.value
+                    m *= buff.value
+                    a *= buff.value
         "speed":
             # 속도는 곱셈 후 합 연산
             var mult_total = 1.0
@@ -106,12 +149,29 @@ func get_buff_stats(target_stat: String, base_value: float):
                     add_total += buff.value
                 else:
                     mult_total *= buff.value
-            result = (result * mult_total) + add_total
+            m = mult_total
+            a = add_total
         _:
-            # 나머지: 모두 더하기 (곱연산이 없음)
+            # 나머지: 모두 더하기
             for buff in buffs:
-                result += buff.value
+                # 여기서 buff.value가 0인지, 혹은 합연산인지 확인
+                # print(" - Processing Buff: %s Value: %s" % [buff.id, buff.value])
+                a += buff.value
+            m = 1.0
 
-    return result
+    _buff_cache[stat_name] = {"m": m, "a": a}
+
+# 특정 스탯에 적용된 버프들을 계산하여 최종 값 반환
+func get_buff_stats(target_stat: String, base_value: float):
+    # 캐시에 없으면 계산
+    if not _buff_cache.has(target_stat):
+        _recalculate_buff_cache(target_stat)
     
+    var cache = _buff_cache[target_stat]
+    
+    # 값이 이상할 경우 디버깅용
+    # if cache.a == 0 and cache.m == 1.0:
+    #     pass 
+    
+    return (base_value * cache.m) + cache.a 
 #endregion

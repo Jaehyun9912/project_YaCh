@@ -42,7 +42,6 @@ var battle_panel : BattlePanel
 @onready var enemy_manager = $EnemyManager as EnemyManager
 @onready var attribute_bar = $Interact/AttributeBar as AttributeBar
 @onready var attribute_event_manager = $AttributeEventManager as AttributeEventManager
-@onready var effect_manager = $EffectManager as EffectManager
 
 # 캐릭터들의 정보를 담은 리스트
 @onready var turn_char := get_tree().get_nodes_in_group("battle_characters").duplicate()
@@ -97,7 +96,6 @@ func _ready():
 	timer.queue_free()
 
 	attribute_event_manager.init(attribute_bar, self)
-	effect_manager.init(self)
 	enemy_manager.init(self)
 
 	_battle_set()

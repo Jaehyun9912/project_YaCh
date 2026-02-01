@@ -1,5 +1,7 @@
 class_name BuffHandler extends RefCounted
 
+signal buff_changed(buff: SkillBuff, is_added: bool)
+
 class BuffEvent:
 	enum Type { TURN, TIME_PASS, ACTION_POINT, LOCATION_CHANGE, ATTRIBUTE_CHANGE }
 	var type: Type
@@ -9,6 +11,7 @@ class BuffEvent:
 var active_buffs: Dictionary = {} # 현재 적용된 버프들 (key: stat, value: Array of SkillBuff)
 var _target_ref: WeakRef # RefCounted간 순환 참조 방지용
 
+
 # 실제 사용 시 get_ref()를 통해 접근하는 프로퍼티
 var target: CharacterStat:
 	get:
@@ -17,17 +20,25 @@ var target: CharacterStat:
 func setup(set_target: CharacterStat):
 	_target_ref = weakref(set_target)
 
+# 버프 ID를 바탕으로 버프 생성 후 추가
 func add_buff(buff_id: String):
 	var buff = SkillManager.get_buff(buff_id)
 	# active_buffs.append(buff)
 	if not buff:
 		push_error("BuffHandler: Failed to add buff. Buff ID not found: " + buff_id)
 		return
+	add_buff_instance(buff)
 
+# 버프 오브젝트를 바탕으로 인스턴스 생성 후 추가
+func add_buff_instance(buff: SkillBuff):
+	if not buff:
+		return
+		
 	if not active_buffs.has(buff.target):
 		active_buffs[buff.target] = []
 	active_buffs[buff.target].append(buff)
 	print("Buff added: ", buff.id)
+	buff_changed.emit(buff, true)
 
 func get_buffs(target_stat: String):
 	# 특정 스탯에 적용되는 버프들 반환 (없으면 빈 배열)
@@ -52,6 +63,7 @@ func remove_buff(buff: SkillBuff):
 		active_buffs[buff.target].erase(buff)
 		if active_buffs[buff.target].is_empty():
 			active_buffs.erase(buff.target)
+		buff_changed.emit(buff, false)
 
 	if buff.next_buff != "":
 		add_buff(buff.next_buff)
