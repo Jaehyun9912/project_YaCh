@@ -8,10 +8,10 @@ enum SpecialSkillType {
 	PARRYING
 }
 
-var skills
-var special_skills
-var peer_skills
-var buff_data # 추가: 버프 원본 데이터 저장
+var skills	# 스킬 정보 딕셔너리
+var special_skills	# 특수 스킬 정보 딕셔너리
+var peer_skills	# 동료 스킬 정보 딕셔너리
+var buff_data	# 버프 정보 딕셔너리
 
 var player_skill: 
 	get: return PlayerData.data.get("skills", []) # 리스트가 없으면 빈 배열 반환

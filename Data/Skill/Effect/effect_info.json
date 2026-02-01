@@ -1,11 +1,120 @@
 {
-	"poison": {
-		"target": "hp",
-		"oper": "remove",
-		"turn": "every",
-		"restore": false,
-		"value": 10,
-		"duration": 3
-	}
-	
+    "test_mana_add": {
+        "target": "mana",
+        "value_type": "add",
+        "value": 50,
+        "apply_type": "once",
+        "duration": {
+            "type": "turn",
+            "value": 2
+        }
+    },
+    "test_mana_mult": {
+        "target": "mana",
+        "value_type": "multiplier",
+        "value": 2.0,
+        "apply_type": "once",
+        "duration": {
+            "type": "turn",
+            "value": 2
+        }
+    },
+    "test_speed_add": {
+        "target": "speed",
+        "value_type": "add",
+        "value": 10,
+        "apply_type": "once",
+        "duration": {
+            "type": "turn",
+            "value": 2
+        }
+    },
+    "test_speed_mult": {
+        "target": "speed",
+        "value_type": "multiplier",
+        "value": 2.0,
+        "apply_type": "once",
+        "duration": {
+            "type": "turn",
+            "value": 2
+        }
+    },
+    "test_common_add": {
+        "target": "max_hp",
+        "value_type": "add",
+        "value": 100,
+        "apply_type": "once",
+        "duration": {
+            "type": "turn",
+            "value": 2
+        }
+    },
+    "test_dur_turn": {
+        "target": "speed",
+        "value": 10,
+        "duration": {
+            "type": "turn",
+            "value": 3
+        }
+    },
+    "test_dur_time": {
+        "target": "speed",
+        "value": 10,
+        "duration": {
+            "type": "time",
+            "value": 5.0
+        }
+    },
+    "test_dur_point": {
+        "target": "speed",
+        "value": 10,
+        "duration": {
+            "type": "point",
+            "value": 50
+        }
+    },
+    "test_dur_attr_under": {
+        "target": "damage_reduction",
+        "value": -0.5,
+        "duration": {
+            "type": "attribute_under",
+            "attribute": "hp",
+            "value": 30
+        }
+    },
+    "test_dur_attr_upper": {
+        "target": "damage_reduction",
+        "value": -0.5,
+        "duration": {
+            "type": "attribute_upper",
+            "attribute": "hp",
+            "value": 80
+        }
+    },
+    "test_chain_start": {
+        "target": "speed",
+        "value": 5,
+        "duration": {
+            "type": "turn",
+            "value": 1
+        },
+        "next_buff": "test_chain_sub"
+    },
+    "test_chain_sub": {
+        "target": "speed",
+        "value": 20,
+        "duration": {
+            "type": "turn",
+            "value": 1
+        }
+    },
+    "test_location": {
+        "target": "speed",
+        "value": 50,
+        "location": "forest",
+        "duration": {
+            "type": "turn",
+            "value": 99
+        }
+    }
 }

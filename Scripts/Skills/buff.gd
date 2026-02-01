@@ -6,7 +6,7 @@ enum DurationType { TIME, TURN, POINT, ATTR_UNDER, ATTR_UPPER }
 
 @export_group("Basic Info")
 @export var id: String
-@export var target: Array = [] # [string]
+@export var target: String = "" # 버프를 적용할 대상 속성 이름
 @export var value_type: String = "add" # "add", "multiplier"
 @export var value: float = 0.0
 
@@ -27,10 +27,10 @@ static func create_from_dict(orig_id: String, data: Dictionary) -> SkillBuff:
     var b = SkillBuff.new()
     b.id = orig_id
     
-    # Target이 문자열이면 배열로 변환
-    var t = data.get("target", "")
-    b.target = t if t is Array else [t]
-    
+    b.target = data.get("target", "")
+    if b.target == "":
+        push_error("SkillBuff " + orig_id + " has no target specified.")
+        return null
     b.value_type = data.get("value_type", "add")
     b.value = data.get("value", 0.0)
     b.restore = data.get("restore", false)
