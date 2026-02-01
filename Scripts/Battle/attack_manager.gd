@@ -49,43 +49,62 @@ func _on_end_spell(is_success):
 
 func skill_active(skill: Dictionary, target):
 	# 스킬의 유형에 따라 효과 결정 
-	match skill.get("type", ""):
-		"attack":
-			do_attack(skill, target)
-		"effect":
-			# 일단 임시로 속성만 채우도록 
-			do_effect()
-		"summon":
-			do_summon()
-		"field":
-			do_field()
+	# match skill.get("type", ""):
+	# 	"attack":
+	# 		do_attack(skill, target)
+	# 	"effect":
+	# 		do_effect(skill, target)
+	# 	"summon":
+	# 		do_summon()
+	# 	"field":
+	# 		do_field()
 
-	battle.set_attribute_change(skill)	
+	var value = skill.get("value", null)
+	if value != null:
+		do_attack(value, target)
+
+	var effect_id = skill.get("effect_id", "")
+	if effect_id != "":
+		do_effect(effect_id, target)
+
+	# TODO: summon, field 구현
+
+	var attribute = skill.get("attribute", {})
+	if attribute.size() > 0:
+		battle.set_attribute_change(attribute)	
+		
 	battle.check_dead_char()
 	battle.skill_used.emit()
 	ViewManager.side_panel.set_hp_panel()
 
 # 공격 함수 
-func do_attack(skill: Dictionary, target):
-	var apply = SkillManager.get_value(skill).get("level", 0)
+func do_attack(value, target):
 	#var apply = cur_skill.get("apply", 0)
 	#if not apply is float:
 		#print("Attack's apply is not number!")
 		#return
 	# self 전용 구현 
 	if target is String and target == "self":
-		battle.player_character.apply_heal(apply)
-	else:
+		battle.player_character.apply_heal(value)
+	elif target is Array:
 		# 설정된 적 공격 
 		for i in target:
 			var enemy = battle.enemy_character[i]
-			var damage = enemy.apply_damage(apply)
+			var damage = enemy.apply_damage(value)
 			battle.add_attack_log(battle.now_character.name, enemy.name, damage, enemy.hp)
 		
-func do_effect():
-	pass
+func do_effect(effect_id, target):
+	# self 전용 구현 
+	if target is String and target == "self":
+		battle.now_character.add_buff(effect_id)
+	elif target is Array:
+		# 설정된 적 적용 
+		for i in target:
+			var enemy = battle.enemy_character[i]
+			enemy.add_buff(effect_id)
 	
 func do_summon():
+	#var summon_id = skill.get("summon_id", "")
 	pass
 	
 func do_field():

@@ -225,8 +225,7 @@ func remove_cost(skill):
 		else:
 			attribute_bar.remove_value(i, cost[i])
 
-func set_attribute_change(skill):
-	var attribute = skill.get("attribute", {})
+func set_attribute_change(attribute):
 	for type in attribute:
 		if type == SkillManager.ACTION_POINT_ID:
 			now_character.point += attribute[type]

@@ -77,12 +77,18 @@ func _refresh_hp_status(diff: float):
         var color = Color.GREEN if diff > 0 else Color.RED
         notify_msg(int(abs(diff)), color)
 
+# 버프 추가
+func add_buff(buff_id: String):
+    stat_manager.add_buff(buff_id)
+
+# 적용된 데미지 계산 및 체력 갱신
 func apply_damage(amount: float) -> float:
     var damage = stat_manager.calculate_incoming_damage(amount)
     _hp = max(_hp - damage, 0)
     _refresh_hp_status(-damage)
     return damage
 
+# 적용된 회복량 계산 및 체력 갱신
 func apply_heal(amount: float) -> float:
     var old_hp = _hp
     _hp = min(_hp + amount, max_hp)

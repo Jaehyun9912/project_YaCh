@@ -29,7 +29,7 @@ func add_buff(buff_id: String):
 	active_buffs[buff.target].append(buff)
 	print("Buff added: ", buff.id)
 
-func get_buffs(target_stat: String) -> Array[SkillBuff]:
+func get_buffs(target_stat: String):
 	# 특정 스탯에 적용되는 버프들 반환 (없으면 빈 배열)
 	return active_buffs.get(target_stat, [])
 

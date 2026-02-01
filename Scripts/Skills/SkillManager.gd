@@ -61,16 +61,6 @@ func get_skill(id : String):
 		printerr("잘못된 스킬 ID! : " + id)
 		return null
 
-# 스킬의 value를 반환하는 함수 (attack의 단일 value는 딕셔너리로 변환해서)
-func get_value(skill: Dictionary):
-	var type = skill.get("type", "")
-	var value = skill.get("value", {})
-	
-	if type == "attack":
-		if value is float or value is int:
-			return {"level": value}
-	return value
-
 func check_requirement_battle(skill: Dictionary, battle_manager: BattleManager) -> bool:
 	return check_requirement(skill, battle_manager.now_character.current_point, battle_manager.attribute_bar)
 # 스킬이 사용 가능한지 확인하는 함수

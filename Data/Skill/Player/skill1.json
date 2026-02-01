@@ -48,5 +48,15 @@
         "attribute": {
             "dirt": 45
         }
+    },
+    "test_buff_skill": {
+        "type": "effect",
+        "name": "마나 증폭",
+        "description": "2턴간 자신의 최대 마나를 50 증가시킨다.\n행동력 5를 소모한다.",
+        "target": "self",
+        "effect_id": "test_mana_add",
+        "cost": {
+            "point": 5
+        }
     }
 }
