@@ -27,6 +27,9 @@ func setup(target: Node, data: Dictionary):
 
     _init_stats()
 
+func update_target(new_target: Node):
+    _target = new_target
+
 #region Stat
 
 func _init_stats():
@@ -88,6 +91,23 @@ func set_mana_bonus(amount: float):
 # 기본 스탯 접근 함수
 func get_stat(key, default=null): return _data.get(key, default)
 func set_stat(key, val): _data[key] = val
+
+# 실제 값 변경 적용 (Active Effect용)
+func apply_value_change(stat_name: String, value: float):
+    # 타겟이 있으면 타겟 메소드 우선 시도
+    if not is_instance_valid(_target): return
+
+    if stat_name == "hp":
+        if _target.has_method("change_hp"):
+            _target.change_hp(value)
+        elif "hp" in _target: # Setter가 있다면
+            _target.hp += value
+    
+    elif stat_name == "mana":
+        if _target.has_method("change_mana"):
+            _target.change_mana(value)
+        elif "mana" in _target:
+            _target.mana += value
 
 func _on_buff_changed(buff: SkillBuff, _is_added: bool):
     var target_stat = buff.target

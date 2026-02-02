@@ -19,11 +19,8 @@
                 },
                 {
                     "comment": "물 속성 위력 약화 (디버프)",
-                    "target": "field_water_power",
-                    "value_type": "multiplier",
-                    "apply_type": "once",
-                    "restore": true,
-                    "value": 0.5
+                    "target": "water",
+                    "value": -0.5
                 }
             ]
         }

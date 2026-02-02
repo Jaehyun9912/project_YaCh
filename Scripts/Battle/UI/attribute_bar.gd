@@ -135,6 +135,13 @@ func add_value(attribute_name: String, amount: float):
 func remove_value(attribute_name: String, amount: float):
 	add_value(attribute_name, -amount)
 
+# 속성 수치를 0으로 초기화
+func reset_value(attribute_name: String):
+	var current = get_element(attribute_name)
+	if current > 0:
+		remove_value(attribute_name, current)
+
+
 # 모든 속성 바를 자신이 차지하는 값만큼 비율을 계산해 막대 길이 조정 
 func update_value():
 	for attribute_name in type:
@@ -162,7 +169,7 @@ func add_new_bar(attribute_name: String, amount: float):
 # 속성 중 가장 작은 속성 추출 (0이거나 인자로 주어진 속성 제외) 
 func find_min(skip: String) -> String:
 	if (type.size() == 1):
-		return type.keys[0]
+		return type.keys()[0]
 	
 	# 주어진 속성을 제외한 최소값 구하기.
 	var n = AttributeInformation.NONE_ATTRIBUTE
@@ -178,8 +185,9 @@ func _on_threshold_exceeded(attribute_name: String, active_type: ThresholdActive
 	match active_type:
 		ThresholdActiveType.EXPLODE:
 			# 임계점 넘긴 속성은 0으로 초기화
-			add_value(attribute_name, -type[attribute_name][0])
+			reset_value(attribute_name)
 
+		# 임계점 넘긴 속성 강조 표시
 		ThresholdActiveType.KEEP:
 			threshold_exceeded = attribute_name
 			var co = AttributeInformation.get_attribute_color(attribute_name)

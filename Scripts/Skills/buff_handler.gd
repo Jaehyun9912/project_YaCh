@@ -8,7 +8,7 @@ class BuffEvent:
 	var value
 	var attribute: String = ""
 
-var active_buffs: Dictionary = {} # 현재 적용된 버프들 (key: stat, value: Array of SkillBuff)
+var active_buffs: Array[SkillBuff] = [] # 현재 적용된 버프들 (List)
 var _target_ref: WeakRef # RefCounted간 순환 참조 방지용
 
 
@@ -23,7 +23,6 @@ func setup(set_target: CharacterStat):
 # 버프 ID를 바탕으로 버프 생성 후 추가
 func add_buff(buff_id: String):
 	var buff = SkillManager.get_buff(buff_id)
-	# active_buffs.append(buff)
 	if not buff:
 		push_error("BuffHandler: Failed to add buff. Buff ID not found: " + buff_id)
 		return
@@ -34,47 +33,65 @@ func add_buff_instance(buff: SkillBuff):
 	if not buff:
 		return
 		
-	if not active_buffs.has(buff.target):
-		active_buffs[buff.target] = []
-	active_buffs[buff.target].append(buff)
+	active_buffs.append(buff)
 	print("Buff added: ", buff.id)
 	buff_changed.emit(buff, true)
+	
+	if target and buff.apply_type == SkillBuff.ApplyType.ONCE:
+		target.apply_value_change(buff.target, buff.value)
 
-func get_buffs(target_stat: String):
-	# 특정 스탯에 적용되는 버프들 반환 (없으면 빈 배열)
-	return active_buffs.get(target_stat, [])
+func get_buffs(target_stat: String) -> Array[SkillBuff]:
+	# 특정 스탯에 적용되는 버프들 필터링하여 반환
+	var result: Array[SkillBuff] = []
+	for buff in active_buffs:
+		if buff.target == target_stat:
+			result.append(buff)
+	return result
 
 func buff_update(event: BuffEvent):
 	if not target: # CharacterStat이 이미 지워졌다면 중단
 		return
 		
+	for buff in active_buffs:
+		# 매번 발동하는 타입이고, 이번 이벤트가 틱이라면 적용
+		if buff.apply_type == SkillBuff.ApplyType.EVERY and buff.is_tick_event(event):
+			target.apply_value_change(buff.target, buff.value)
+		
 	var expired_buffs: Array[SkillBuff] = []
-	for stat_key in active_buffs:
-		for buff in active_buffs[stat_key]:
-			if buff.check_update_logic(event):
-				expired_buffs.append(buff)
+	for buff in active_buffs:
+		if buff.check_update_logic(event):
+			expired_buffs.append(buff)
 
 	for buff in expired_buffs:
 		remove_buff(buff)
 		print("BuffHandler: Buff expired: ", buff.id)
 
 func remove_buff(buff: SkillBuff):
-	if active_buffs.has(buff.target):
-		active_buffs[buff.target].erase(buff)
-		if active_buffs[buff.target].is_empty():
-			active_buffs.erase(buff.target)
+	if buff in active_buffs:
+		if target and buff.apply_type == SkillBuff.ApplyType.END:
+			target.apply_value_change(buff.target, buff.value)
+			
+		active_buffs.erase(buff)
 		buff_changed.emit(buff, false)
 
-	if buff.next_buff != "":
-		add_buff(buff.next_buff)
+		if buff.next_buff != "":
+			add_buff(buff.next_buff)
 
 func clear_battle_buffs():
 	# 전투 관련 버프만 제거
 	var to_remove: Array[SkillBuff] = []
-	for stat_key in active_buffs:
-		for buff in active_buffs[stat_key]:
-			if buff.is_battle_buff():
-				to_remove.append(buff)
+	for buff in active_buffs:
+		if buff.is_battle_buff:
+			to_remove.append(buff)
+	
+	for buff in to_remove:
+		remove_buff(buff)
+
+func remove_buffs_by_id(buff_id: String):
+	var to_remove: Array[SkillBuff] = []
+	for buff in active_buffs:
+		if buff.id == buff_id:
+			to_remove.append(buff)
 	
 	for buff in to_remove:
 		remove_buff(buff)

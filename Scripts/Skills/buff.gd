@@ -2,25 +2,24 @@ extends Resource
 class_name SkillBuff
 
 enum ApplyType { ONCE, EVERY, END }
-enum DurationType { TIME, TURN, POINT, ATTR_UNDER, ATTR_UPPER }
+enum DurationType { NONE, TIME, TURN, POINT, ATTR_UNDER, ATTR_UPPER }
 
-@export_group("Basic Info")
-@export var id: String
-@export var target: String = "" # 버프를 적용할 대상 속성 이름
-@export var value_type: String = "add" # "add", "multiplier"
-@export var value: float = 0.0
+var id: String
+var target: String = "" # 버프를 적용할 대상 속성 이름
+var value_type: String = "add" # "add", "multiplier"
+var value: float = 0.0
 
-@export_group("Logic")
-@export var apply_type: ApplyType = ApplyType.ONCE
-@export var restore: bool = false
-@export var next_buff: String = ""
+var apply_type: ApplyType = ApplyType.ONCE
+var restore: bool = false
+var next_buff: String = ""
 
-@export_group("Duration & Condition")
-@export var has_duration: bool = false  # 지속시간이 있는지 여부
-@export var duration_type: DurationType # 지속시간 타입
-@export var duration_value: float = 0.0 # 지속시간 값
-@export var duration_attr: String = "" # attribute 계열용
-@export var location_condition: String = "" # 특정 지역/시간 ID
+var has_duration: bool = false  # 지속시간이 있는지 여부
+var duration_type: DurationType = DurationType.NONE # 지속시간 타입
+var duration_value: float = 0.0 # 지속시간 값
+var duration_attr: String = "" # attribute 계열용
+var location_condition: String = "" # 특정 지역/시간 ID
+
+var is_battle_buff: bool = false
 
 # JSON 데이터로부터 인스턴스 생성
 static func create_from_dict(orig_id: String, data: Dictionary) -> SkillBuff:
@@ -54,11 +53,29 @@ static func create_from_dict(orig_id: String, data: Dictionary) -> SkillBuff:
         b.duration_attr = d.get("attribute", "")
         
     b.location_condition = data.get("location", "")
+    b.is_battle_buff = b.duration_type in [DurationType.TURN, DurationType.POINT, DurationType.ATTR_UNDER, DurationType.ATTR_UPPER]
     
     return b
 
 func is_additive() -> bool:
     return value_type == "add"
+
+# 현재 이벤트가 지속시간 소모/발동 조건에 부합하는지 확인
+func is_tick_event(event: BuffHandler.BuffEvent) -> bool:
+    if not has_duration: return false
+    
+    match duration_type:
+        DurationType.TIME:
+            return event.type == BuffHandler.BuffEvent.Type.TIME_PASS
+        DurationType.TURN:
+            return event.type == BuffHandler.BuffEvent.Type.TURN
+        DurationType.POINT:
+            return event.type == BuffHandler.BuffEvent.Type.ACTION_POINT
+        DurationType.ATTR_UNDER:
+            return event.type == BuffHandler.BuffEvent.Type.ATTRIBUTE_CHANGE and event.attribute == duration_attr
+        DurationType.ATTR_UPPER:
+            return event.type == BuffHandler.BuffEvent.Type.ATTRIBUTE_CHANGE and event.attribute == duration_attr
+    return false
 
 func check_update_logic(event: BuffHandler.BuffEvent) -> bool:
     if not has_duration:
@@ -89,8 +106,3 @@ func is_location_valid(current_location: String) -> bool:
     if location_condition == "":
         return true
     return location_condition == current_location
-
-func is_battle_buff() -> bool:
-    if duration_type in [DurationType.TURN, DurationType.POINT, DurationType.ATTR_UNDER, DurationType.ATTR_UPPER]:
-        return true
-    return false

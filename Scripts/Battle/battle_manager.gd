@@ -50,8 +50,7 @@ var ally_character : Array[BattleCharacter]
 var enemy_character : Array[BattleCharacter]
 
 # 전체 적용되는 field_stat 저장용
-# 예를 들어 각 원소는 id_power가 key, value는 그 속성의 배수임 (기본값 1)
-# 단 effect 등에서 수정할때에는 field를 앞에 붙여야함 (ex: field_fire_power)
+# 예를 들어 각 원소는 id가 key, value는 그 속성의 배수임 (기본값 1) (예: {"fire": 0.8, "water": 1.2} )
 var field_stat = {}
 
 # 각 그룹의 수 
@@ -84,6 +83,7 @@ var _check = ["enemys"]
 #region other funcs
 # 패널 쪽에서 설정 후 종료되면 전투 시작 
 func _ready():
+
 	var panel = $Interact/ResultPanel as ResultPanel
 	var timer = Timer.new() as Timer
 	add_child(timer)
@@ -91,6 +91,10 @@ func _ready():
 	
 	timer.timeout.connect(panel._on_button_pressed)
 	timer.start(1)
+
+	for i in AttributeInformation.attribute.keys():
+		field_stat[i] = 1.0
+
 	await panel.check_button_pressed
 	
 	timer.queue_free()

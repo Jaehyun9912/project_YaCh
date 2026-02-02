@@ -99,7 +99,8 @@ func get_next_skill(skills):
 	
 # skill 읽어서 데미지 계산 후 반환 
 func get_damage_by_skill(skill):
-	var level = SkillManager.get_value(skill).get("level", 0)
+	# var level = SkillManager.get_value(skill).get("level", 0)
+	var level = skill.get("value", 0)
 	
 	var stat = skill.get("stat", null)
 	if stat == null:

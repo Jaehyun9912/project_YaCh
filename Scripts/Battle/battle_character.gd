@@ -33,7 +33,6 @@ var hp:
         # var diff = value - _hp
         _hp = value
         # _refresh_hp_status(diff)
-            
 
 # 행동력 
 var point: int
@@ -48,11 +47,16 @@ func _ready():
     # 플레이어라면 PlayerData에 이미 생성된 stat_manager가 있을 것이므로 
     # set_character에서 연결만 해줌.
 
+func _exit_tree():
+    if is_player and stat_manager and is_instance_valid(PlayerData):
+        stat_manager.update_target(PlayerData)
+
 # 캐릭터 정보 설정 
 func set_character(data: Dictionary, tag_id: String):
     if is_player:
         # 플레이어는 PlayerData에 있는 stat_manager를 그대로 참조
         stat_manager = PlayerData.stat_manager
+        stat_manager.update_target(self)
     else:
         # 적은 새로운 Stat 매니저 생성 및 데이터 주입
         stat_manager = EnemyStat.new()
@@ -85,19 +89,22 @@ func add_buff(buff_id: String):
 func add_buff_object(buff: SkillBuff):
     stat_manager.add_buff_object(buff)
 
+# 체력을 변환
+func change_hp(amount: float):
+    _hp = clamp(_hp + amount, 0, max_hp)
+    _refresh_hp_status(amount)
+
 # 적용된 데미지 계산 및 체력 갱신
 func apply_damage(amount: float) -> float:
     var damage = stat_manager.calculate_incoming_damage(amount)
-    _hp = max(_hp - damage, 0)
-    _refresh_hp_status(-damage)
+    change_hp(-damage)
     return damage
 
 # 적용된 회복량 계산 및 체력 갱신
 func apply_heal(amount: float) -> float:
     var old_hp = _hp
-    _hp = min(_hp + amount, max_hp)
+    change_hp(amount)
     var actual_heal = _hp - old_hp
-    _refresh_hp_status(actual_heal)
     return actual_heal
 
 # 죽었을 때 
