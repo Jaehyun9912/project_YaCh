@@ -285,7 +285,7 @@ func battle_end(type: END_TYPE):
 	is_battle_end = true
 	
 	# 모든 버튼 비활성화 
-	ViewManager.current_panel.get_node("BattlePanel").end()
+	ViewManager.bottom_panel.get_node("BattlePanel").end()
 	var msg = $Interact/ResultPanel as ResultPanel
 	
 	match type:

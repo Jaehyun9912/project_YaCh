@@ -22,7 +22,7 @@ func set_cutScene(texture: Texture2D):
 	_cut_scene.texture = texture
 
 
-func onClicked(event: InputEvent):
+func on_clicked(event: InputEvent):
 	if event.is_pressed():
 		print("Clicked")
 		on_exit.emit()

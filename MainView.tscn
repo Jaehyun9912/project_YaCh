@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://do7bbpvoabqdh"]
+[gd_scene load_steps=7 format=3 uid="uid://do7bbpvoabqdh"]
 
 [ext_resource type="PackedScene" uid="uid://2qnlhnafs2lx" path="res://Worlds/Map.tscn" id="1_e4bd6"]
 [ext_resource type="PackedScene" uid="uid://mjduysbt2pju" path="res://Objects/MapLocation.tscn" id="2_6soab"]
-[ext_resource type="PackedScene" uid="uid://ujhj8734sgr6" path="res://Interacts/MapPanel.tscn" id="3_nmvnj"]
+[ext_resource type="Theme" uid="uid://odd4wpjfulyi" path="res://Themes/PlayerBase.theme" id="3_056u1"]
+[ext_resource type="PackedScene" uid="uid://brqmajgw24nki" path="res://Interacts/MapPanel.tscn" id="3_nmvnj"]
 [ext_resource type="PackedScene" uid="uid://bg4hkcksoc7en" path="res://Interacts/UI/SidePanel.tscn" id="3_ux45a"]
 [ext_resource type="PackedScene" uid="uid://bymetbjca5yjf" path="res://Interacts/UI/Option.tscn" id="4_c1stb"]
 
@@ -13,11 +14,41 @@
 [node name="Map" parent="World" instance=ExtResource("1_e4bd6")]
 location_resource = ExtResource("2_6soab")
 
-[node name="Interact" type="CanvasLayer" parent="."]
-layer = 0
+[node name="InteractLayer" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+theme = ExtResource("3_056u1")
 
-[node name="MapPanel" parent="Interact" node_paths=PackedStringArray("map") instance=ExtResource("3_nmvnj")]
-map = NodePath("../../World/Map")
+[node name="PanelList" type="VBoxContainer" parent="InteractLayer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 2
+
+[node name="TopPanel" type="Control" parent="InteractLayer/PanelList"]
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="BottomPanel" type="Control" parent="InteractLayer/PanelList"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 1.2
+
+[node name="MapUI" parent="InteractLayer/PanelList/BottomPanel" node_paths=PackedStringArray("map") instance=ExtResource("3_nmvnj")]
+layout_mode = 1
+map = NodePath("../../../../World/Map")
 
 [node name="SidePanelLayer" type="CanvasLayer" parent="."]
 
