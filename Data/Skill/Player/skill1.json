@@ -36,13 +36,14 @@
     "base_dirt": {
         "type": "attack",
         "name": "기본 땅 공격",
-        "description": "적을 1명 10데미지로 공격하며 흙 원소 14를 쌓는다.\n행동력 10을 소모한다.\n불 원소 2가 존재해야한다.",
+        "description": "적을 1명 10데미지로 공격하며 흙 원소 45를 쌓는다.\n행동력 10을 소모한다.\n나에게 최대체력 100을 1턴간 부여한다.",
         "target": "one",
         "value": 1,
         "cost": 10,
         "effect_id": "test_common_add",
+        "effect_self": true,
         "requirement": {
-            "point": 12
+            "point": 10
         },
         "attribute": {
             "dirt": 45

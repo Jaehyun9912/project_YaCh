@@ -112,6 +112,10 @@ func apply_value_change(stat_name: String, value: float):
 func _on_buff_changed(buff: SkillBuff, _is_added: bool):
     var target_stat = buff.target
     
+    var old_max_hp = 0.0
+    if target_stat == "max_hp":
+        old_max_hp = get_max_hp()
+
     # 캐시 재계산
     _recalculate_buff_cache(target_stat)
     
@@ -121,6 +125,14 @@ func _on_buff_changed(buff: SkillBuff, _is_added: bool):
     # getter가 있는 특수 스탯 처리
     if target_stat == "max_hp":
         current_val = get_max_hp()
+        
+        var hp_diff = current_val - old_max_hp
+        if hp_diff > 0:
+            apply_value_change("hp", hp_diff)
+        elif hp_diff < 0:
+            # 최대 체력이 감소한 경우 현재 체력이 새로운 최대치를 넘지 않도록 조정
+            apply_value_change("hp", 0)
+            
         print("Max HP changed: ", current_val)
     elif target_stat == "max_mana":
         current_val = get_max_mana()
@@ -137,11 +149,18 @@ func _on_buff_changed(buff: SkillBuff, _is_added: bool):
 
 #region BuffEvent
 # buff_handler 관련 래퍼 함수
-func add_buff(buff_id: String):
-    buff_handler.add_buff(buff_id)
+func add_buff(buff_id: String, duration_add: int = 0):
+    buff_handler.add_buff(buff_id, duration_add)
 
 func add_buff_object(buff: SkillBuff):
     buff_handler.add_buff_instance(buff)
+
+func update_buffs(event: BuffHandler.BuffEvent):
+    buff_handler.buff_update(event)
+
+func remove_buffs_by_id(buff_id: String):
+    buff_handler.remove_buffs_by_id(buff_id)
+
 func _recalculate_buff_cache(stat_name: String):
     var buffs = buff_handler.get_buffs(stat_name)
     var m = 1.0

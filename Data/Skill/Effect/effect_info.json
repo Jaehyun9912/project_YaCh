@@ -46,7 +46,7 @@
         "apply_type": "once",
         "duration": {
             "type": "turn",
-            "value": 2
+            "value": 1
         }
     },
     "test_dur_turn": {

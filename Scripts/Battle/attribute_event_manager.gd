@@ -59,9 +59,9 @@ func _on_threshold_recovered(attribute_name: String):
 		exceeded_effects = []
 
 	for character in _battle_manager.ally_character:
-		character.buff_handler.remove_buffs_by_id("attribute_" + attribute_name)
+		character.stat_manager.remove_buffs_by_id("attribute_" + attribute_name)
 	for character in _battle_manager.enemy_character:
-		character.buff_handler.remove_buffs_by_id("attribute_" + attribute_name)
+		character.stat_manager.remove_buffs_by_id("attribute_" + attribute_name)
 
 # 턴 사이클 시작 시 처리
 func _on_battle_scene_turn_cycle_start():

@@ -84,8 +84,8 @@ func _refresh_hp_status(diff: float):
         notify_msg(int(abs(diff)), color)
 
 # 버프 추가
-func add_buff(buff_id: String):
-    stat_manager.add_buff(buff_id)
+func add_buff(buff_id: String, duration_add: int = 0):
+    stat_manager.add_buff(buff_id, duration_add)
 func add_buff_object(buff: SkillBuff):
     stat_manager.add_buff_object(buff)
 

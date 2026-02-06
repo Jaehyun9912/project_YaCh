@@ -48,24 +48,18 @@ func _on_end_spell(is_success):
 		pass
 
 func skill_active(skill: Dictionary, target):
-	# 스킬의 유형에 따라 효과 결정 
-	# match skill.get("type", ""):
-	# 	"attack":
-	# 		do_attack(skill, target)
-	# 	"effect":
-	# 		do_effect(skill, target)
-	# 	"summon":
-	# 		do_summon()
-	# 	"field":
-	# 		do_field()
-
+	# 스킬의 정보에 따라 발동
 	var value = skill.get("value", null)
+	var main_attribute = AttributeInformation.get_attribute_by_skill(skill)
+
 	if value != null:
-		do_attack(value, target)
+		do_attack(value, target, main_attribute)
 
 	var effect_id = skill.get("effect_id", "")
+	var effect_self = skill.get("effect_self", false)
 	if effect_id != "":
-		do_effect(effect_id, target)
+		var effect_target = target if not effect_self else "self"
+		do_effect(effect_id, effect_target)
 
 	# TODO: summon, field 구현
 
@@ -78,12 +72,10 @@ func skill_active(skill: Dictionary, target):
 	ViewManager.side_panel.set_hp_panel()
 
 # 공격 함수 
-func do_attack(value, target):
-	#var apply = cur_skill.get("apply", 0)
-	#if not apply is float:
-		#print("Attack's apply is not number!")
-		#return
+func do_attack(value, target, attribute_type):
 	# self 전용 구현 
+	value *= battle.field_stat.get(attribute_type, 1.0)
+
 	if target is String and target == "self":
 		battle.player_character.apply_heal(value)
 	elif target is Array:
@@ -101,7 +93,7 @@ func do_effect(effect_id, target):
 		# 설정된 적 적용 
 		for i in target:
 			var enemy = battle.enemy_character[i]
-			enemy.add_buff(effect_id)
+			enemy.add_buff(effect_id, 1)	# 내가 남한테 건 버프는 지속시간 1턴 증가
 	
 func do_summon():
 	#var summon_id = skill.get("summon_id", "")

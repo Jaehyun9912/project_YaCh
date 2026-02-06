@@ -31,7 +31,10 @@ func get_attribute_color(attribute_name : String):
 # 스킬 정보를 넣으면 자동으로 가장 큰 값을 가진 속성의 이름을 반환하는 함수
 func get_attribute_by_skill(skill: Dictionary):
 	var attribute_change = skill.get("attribute", {})
-	var large = "none"
+	if attribute_change.size() == 0:
+		return NONE_ATTRIBUTE
+		
+	var large = ""
 	for ele in attribute_change:
 		if ele == SkillManager.ACTION_POINT_ID:
 			continue

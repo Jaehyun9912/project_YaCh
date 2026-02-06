@@ -5,7 +5,7 @@ signal buff_changed(buff: SkillBuff, is_added: bool)
 class BuffEvent:
 	enum Type { TURN, TIME_PASS, ACTION_POINT, LOCATION_CHANGE, ATTRIBUTE_CHANGE }
 	var type: Type
-	var value
+	var value := 1
 	var attribute: String = ""
 
 var active_buffs: Array[SkillBuff] = [] # 현재 적용된 버프들 (List)
@@ -21,11 +21,14 @@ func setup(set_target: CharacterStat):
 	_target_ref = weakref(set_target)
 
 # 버프 ID를 바탕으로 버프 생성 후 추가
-func add_buff(buff_id: String):
+func add_buff(buff_id: String, duration_add: int = 0):
 	var buff = SkillManager.get_buff(buff_id)
 	if not buff:
 		push_error("BuffHandler: Failed to add buff. Buff ID not found: " + buff_id)
 		return
+		
+	if buff.has_duration:
+		buff.duration_value += duration_add
 	add_buff_instance(buff)
 
 # 버프 오브젝트를 바탕으로 인스턴스 생성 후 추가
@@ -37,7 +40,8 @@ func add_buff_instance(buff: SkillBuff):
 	print("Buff added: ", buff.id)
 	buff_changed.emit(buff, true)
 	
-	if target and buff.apply_type == SkillBuff.ApplyType.ONCE:
+	# 즉시 발동 타입인 경우 바로 적용
+	if target and (buff.apply_type == SkillBuff.ApplyType.ONCE or buff.apply_type == SkillBuff.ApplyType.EVERY):
 		target.apply_value_change(buff.target, buff.value)
 
 func get_buffs(target_stat: String) -> Array[SkillBuff]:
@@ -52,7 +56,7 @@ func get_buffs(target_stat: String) -> Array[SkillBuff]:
 func buff_update(event: BuffEvent):
 	if not target: # CharacterStat이 이미 지워졌다면 중단
 		return
-		
+
 	for buff in active_buffs:
 		# 매번 발동하는 타입이고, 이번 이벤트가 틱이라면 적용
 		if buff.apply_type == SkillBuff.ApplyType.EVERY and buff.is_tick_event(event):

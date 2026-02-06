@@ -21,7 +21,11 @@ var current_skill : Dictionary
 
 var player: 
 	get: return battle.player_character
+
+var current_character: BattleCharacter
+
 var damage
+var effect_id
 	
 func init(battle_manager: BattleManager):
 	battle = battle_manager
@@ -31,6 +35,8 @@ func init(battle_manager: BattleManager):
 func _on_battle_scene_turn_character_changed(turn_char: BattleCharacter):
 	if turn_char == null: return
 	if turn_char.is_player == true: return
+
+	current_character = turn_char
 
 	# 잠시 대기 
 	timer.start(1)
@@ -42,7 +48,7 @@ func _on_battle_scene_turn_character_changed(turn_char: BattleCharacter):
 	#timer.start(1.5)
 	
 	# 사용할 스킬과 그 스킬의 데미지 계산 
-	current_skill = get_next_skill(turn_char.skills)
+	current_skill = get_next_skill(current_character.skills)
 	if current_skill == null:
 		# 가능한 스킬이 없으면 턴 종료
 		battle.turn_end.emit()
@@ -50,11 +56,14 @@ func _on_battle_scene_turn_character_changed(turn_char: BattleCharacter):
 	print("Enemy will Use: " + str(current_skill))
 
 	damage = get_damage_by_skill(current_skill)
+	damage *= battle.field_stat.get(AttributeInformation.get_attribute_by_skill(current_skill), 1.0)
+
+	effect_id = current_skill.get("effect_id", "")
 
 	# 정보 패널 띄우기
 	#upper.set_panel_with_time(current_skill.name, current_skill.description % damage, 2)
 	ViewManager.side_panel.set_info_panel_with_time(current_skill.name, current_skill.description % damage, 2)
-	battle.add_attack_log(turn_char.name, "Player", damage, player.hp)
+	battle.add_attack_log(current_character.name, "Player", damage, player.hp)
 
 	battle.remove_cost(current_skill)
 
@@ -72,11 +81,20 @@ func _on_end_casting(is_success):
 
 func _on_end_spell(is_success):
 	if is_success:
+		# TODO: Self 스킬 구현
 		player.apply_damage(damage)
 		var attribute = current_skill.get("attribute", {})
 		if attribute.size() > 0:
 			battle.set_attribute_change(attribute)
-			
+
+		if effect_id != "":
+			if current_skill.get("effect_self", false) == true:
+				player.add_buff(effect_id, 1)	# 내가 남한테 건 버프는 지속시간 1턴 증가
+			else:
+				# 나한테 버프 걸기
+				current_character.add_buff(effect_id)
+
+
 		# 일단 한번 공격하면 턴 종료하도록
 		battle.turn_end.emit()
 		battle.check_dead_char()

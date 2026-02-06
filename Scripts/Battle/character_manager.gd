@@ -89,3 +89,14 @@ func check_dead_char() -> bool:
 func _on_character_died(dead : BattleCharacter):
 	print(dead.name, "is dead")
 	dead_player.append(dead)
+
+# 턴 진행하는 캐릭터 변경 (null 가능)
+func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
+	if new_character == null:
+		return
+
+	# 1. 버프 처리
+	var event = BuffHandler.BuffEvent.new()
+	event.type = BuffHandler.BuffEvent.Type.TURN
+	new_character.stat_manager.update_buffs(event)
+
