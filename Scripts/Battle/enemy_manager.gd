@@ -73,7 +73,10 @@ func _on_end_casting(is_success):
 func _on_end_spell(is_success):
 	if is_success:
 		player.apply_damage(damage)
-		battle.set_attribute_change(current_skill)
+		var attribute = current_skill.get("attribute", {})
+		if attribute.size() > 0:
+			battle.set_attribute_change(attribute)
+			
 		# 일단 한번 공격하면 턴 종료하도록
 		battle.turn_end.emit()
 		battle.check_dead_char()

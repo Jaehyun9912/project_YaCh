@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://6pfqnfdd6ia8"]
+[gd_scene load_steps=15 format=3 uid="uid://6pfqnfdd6ia8"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/battle_manager.gd" id="1_sql8d"]
 [ext_resource type="PackedScene" uid="uid://cfalpw5wnu5ff" path="res://Objects/Character/battle_character.tscn" id="3_2h6hx"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://Scripts/Battle/attack_manager.gd" id="4_3ewvu"]
 [ext_resource type="PackedScene" uid="uid://c3py4i51ebgp4" path="res://Objects/UI/Battle/result_panel.tscn" id="5_270jx"]
 [ext_resource type="Script" path="res://Scripts/Battle/attribute_event_manager.gd" id="7_4oe7u"]
+[ext_resource type="Script" path="res://Scripts/Battle/character_manager.gd" id="8_uimwg"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_glxg7"]
 sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
@@ -94,6 +95,9 @@ script = ExtResource("4_3ewvu")
 
 [node name="AttributeEventManager" type="Node" parent="."]
 script = ExtResource("7_4oe7u")
+
+[node name="CharacterManager" type="Node" parent="."]
+script = ExtResource("8_uimwg")
 
 [connection signal="turn_character_changed" from="." to="EnemyManager" method="_on_battle_scene_turn_character_changed"]
 [connection signal="turn_cycle_start" from="." to="AttributeEventManager" method="_on_battle_scene_turn_cycle_start"]

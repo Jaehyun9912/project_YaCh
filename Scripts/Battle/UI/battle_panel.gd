@@ -153,11 +153,13 @@ func _on_skill_button_manager_target_changed(target, isally):
 # 턴 사이클 한바퀴 시작
 func _on_turn_cycle_start():
 	skill_button.set_all_buttons(false)
+
+	# TODO: 턴 포인트바 제거 예정
 	if manager.turn_count == 1:
-		turn_point_bar.set_information(manager.turn_char)
+		turn_point_bar.set_information(manager.character_manager.turn_char)
 		turn_point_bar.first_appear_anim()
 	else:
-		turn_point_bar.set_point(manager.turn_char, manager.total_point)
+		turn_point_bar.set_point(manager.character_manager.turn_char, manager.total_point)
 	
 	await turn_point_bar.end_set_point
 	manager.turn_end.emit()

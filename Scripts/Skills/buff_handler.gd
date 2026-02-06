@@ -48,6 +48,7 @@ func get_buffs(target_stat: String) -> Array[SkillBuff]:
 			result.append(buff)
 	return result
 
+# 버프 업데이트 처리
 func buff_update(event: BuffEvent):
 	if not target: # CharacterStat이 이미 지워졌다면 중단
 		return
@@ -66,6 +67,7 @@ func buff_update(event: BuffEvent):
 		remove_buff(buff)
 		print("BuffHandler: Buff expired: ", buff.id)
 
+# 버프 제거
 func remove_buff(buff: SkillBuff):
 	if buff in active_buffs:
 		if target and buff.apply_type == SkillBuff.ApplyType.END:
@@ -77,8 +79,8 @@ func remove_buff(buff: SkillBuff):
 		if buff.next_buff != "":
 			add_buff(buff.next_buff)
 
+# 전투 관련 버프 모두 제거
 func clear_battle_buffs():
-	# 전투 관련 버프만 제거
 	var to_remove: Array[SkillBuff] = []
 	for buff in active_buffs:
 		if buff.is_battle_buff:
@@ -87,6 +89,7 @@ func clear_battle_buffs():
 	for buff in to_remove:
 		remove_buff(buff)
 
+# 특정 ID를 가진 버프 모두 제거
 func remove_buffs_by_id(buff_id: String):
 	var to_remove: Array[SkillBuff] = []
 	for buff in active_buffs:
