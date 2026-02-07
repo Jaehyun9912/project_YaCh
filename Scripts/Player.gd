@@ -443,3 +443,45 @@ func set_guild_renown(guildId: String, renown: int):
 
 
 #endregion
+
+#region Time
+
+enum TimeZone
+{
+	MORNING = 0,
+	NOON = 1,
+	EVENING =2,
+	NIGHT =3,
+}
+
+var _total_time : int
+
+var _time : TimeZone
+
+var time:
+	get:
+		return _time
+
+@export var action_count : int = 5
+
+var current_action_count : int
+
+signal on_time_changed(time : TimeZone)
+
+func spend_time(count : int):
+	# 행동한 가중치만큼 시간 진행
+	current_action_count += count
+	var zone : int = current_action_count / action_count
+	current_action_count %= action_count
+
+	if zone >0:
+		# 시간 진행에 따른 시간대 진행
+		_total_time += zone
+		_time = _total_time%TimeZone.size() as TimeZone
+		on_time_changed.emit(time)
+	
+
+	print(time)
+
+
+#endregion
