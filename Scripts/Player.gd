@@ -78,6 +78,7 @@ var cur_location:
 	set(value):
 		data["location"] = value
 
+
 func save_player():
 	DataManager.save_data(data, "player")
 
@@ -109,44 +110,8 @@ func reset_player():
 	DataManager.save_data(data, "player")
 #endregion
 
-#region Money
-
-func get_money(money_name: String) -> int:
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			return money[money_name]
-	return 0
-
-func set_money(money_name: String, amount: int):
-	if data.has("money"):
-		var money = data["money"]
-		money[money_name] = amount
-	else:
-		data["money"] = {money_name: amount}
-
-func add_money(money_name: String, amount: int):
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			money[money_name] += amount
-		else:
-			money[money_name] = amount
-	else:
-		data["money"] = {money_name: amount}
-
-func pay_money(money_name: String, amount: int) -> bool:
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			if money[money_name] >= amount:
-				money[money_name] -= amount
-				return true
-	return false
-
-#endregion
-
 #region Inventory
+
 func add_new_item(id: String, count: int):
 	var sp = id.split(":")
 	var item
@@ -232,7 +197,7 @@ signal quest_updated
 # 수주 중인 퀘스트 리스트
 var quest_list: Array
 
-@onready var tag_service = DiContainer.get_tag_service()
+@onready var tag_service = TagService
 
 # 퀘스트 수주(수주중 태그 추가)
 func receive_quest(quest):
@@ -254,7 +219,7 @@ func clear_quest(quest):
 
 
 # 스탯 비교
-func stat_compare(condition: String) -> bool:
+func cmp_stat(condition: String) -> bool:
 	var comparer = [">", "<", "="]
 	for i in comparer:
 		var partial_tag = condition.split(i, true, 2)
@@ -275,7 +240,7 @@ func stat_compare(condition: String) -> bool:
 
 
 # 인벤토리 아이템 개수 비교
-func item_compare(condition: String) -> bool:
+func cmp_item(condition: String) -> bool:
 	var comparer = [">", "<", "="]
 	var item_count = 0
 	for i in comparer:
@@ -299,7 +264,7 @@ func item_compare(condition: String) -> bool:
 
 
 # 아티펙트 보유 여부 확인
-func artifact_compare(condition: String) -> bool:
+func cmp_artifact(condition: String) -> bool:
 	return artifact.has(condition)
 
 
@@ -309,6 +274,172 @@ func get_item_count(id: String) -> int:
 		if i["id"] == "item:" + id:
 			return i["count"]
 	return 0
+
+
+# 현재 해금된 지역 확인
+func cmp_map(arr: Array) -> bool:
+	var dict = PlayerData.data
+	var last_index = arr.size() - 1
+	for i in range(0, last_index):
+		print(dict, arr[i])
+		if dict.has(arr[i]):
+			dict = dict[arr[i]]
+		else:
+			return false
+	return dict.has(arr[last_index])
+
+# 길드 평판 비교
+func cmp_renown(condition: String) -> bool:
+	var comparer = [">", "<", "="]
+	var renown = 0
+	for i in comparer:
+		var part = condition.split(i, true, 2)
+		if part.size() == 2:
+			# 아이템이 인벤토리에 얼마나 있는지 확인
+			renown = get_guild_renown(part[0])
+			if i == ">" && renown >= part[1].to_int():
+				return true
+			elif i == "<" && renown <= part[1].to_int():
+				return true
+			elif i == "=" && renown == part[1].to_int():
+				return true
+			else:
+				return false
+	renown = get_guild_renown(condition)
+	if renown > 0:
+		return true
+	return false
+
+func cmp_money(condition: String) -> bool:
+	var comparer = [">", "<", "="]
+	var money = 0
+	for i in comparer:
+		var part = condition.split(i, true, 2)
+		if part.size() == 2:
+			# 아이템이 인벤토리에 얼마나 있는지 확인
+			money = get_money(part[0])
+			if i == ">" && money >= part[1].to_int():
+				return true
+			elif i == "<" && money <= part[1].to_int():
+				return true
+			elif i == "=" && money == part[1].to_int():
+				return true
+			else:
+				return false
+	money = get_money(condition)
+	if money > 0:
+		return true
+	return false
+
+func execute_cmd(cmd: String) -> void:
+	var format = ["+", "-"]
+	var list = Condition.string_to_condition(cmd)
+	if list[1] == "map":
+		# format = [negative, map, mapName, locationName]
+		unlock_map(list[2], list[3], list[0])
+	elif list[1] == "item":
+		# format = [negative,item,아이템 +/- count]
+		for i in format:
+			var part = list[2].split(i, true)
+			if part.size() == 2:
+				var count = part[1].to_int()
+				if i == "-":
+					count *= -1
+				add_new_item(part[0], count)
+				break
+	elif list[1] == "money":
+		# format = [negative,money,moneyType +/- count]
+		for i in format:
+			var part = list[2].split(i, true)
+			if part.size() == 2:
+				var count = part[1].to_int()
+				if i == "-":
+					pay_money(part[0], count)
+				else:
+					add_money(part[0], count)
+				break
+	else:
+		printerr("데이터 형식 오류 : ", cmd)
+
+#endregion	
+
+#region Money
+
+func get_money(money_name: String) -> int:
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			return money[money_name]
+	return 0
+
+func set_money(money_name: String, amount: int):
+	if data.has("money"):
+		var money = data["money"]
+		money[money_name] = amount
+	else:
+		data["money"] = {money_name: amount}
+
+func add_money(money_name: String, amount: int):
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			money[money_name] += amount
+		else:
+			money[money_name] = amount
+	else:
+		data["money"] = {money_name: amount}
+
+func pay_money(money_name: String, amount: int) -> bool:
+	if data.has("money"):
+		var money = data["money"]
+		if money.has(money_name):
+			if money[money_name] >= amount:
+				money[money_name] -= amount
+				return true
+	return false
+
+#endregion
+
+#region Map
+
+func get_unlock_maps(mapName: String) -> Array:
+	if data.has("map"):
+		var map = data["map"]
+		if map.has(mapName):
+			return map[mapName]
+	return []
+
+func unlock_map(mapName: String, locationName: String, lock = false):
+	if !data.has("map"):
+		data["map"] = {}
+	
+	var arr = get_unlock_maps(mapName)
+	if lock:
+		arr.erase(locationName)
+	else:
+		if !arr.has(locationName):
+			arr.append(locationName)
+	data["map"][mapName] = arr
+
+
+#endregion
+
+#region Renown
+
+func get_guild_renown(guildId: String) -> int:
+	if data.has("renown"):
+		var guild = data["renown"]
+		if guild.has(guildId):
+			return guild[guildId]
+	return 0
+
+func set_guild_renown(guildId: String, renown: int):
+	if !data.has("renown"):
+		data["renown"] = {}
+	
+	var guild = data["renown"]
+	guild[guildId] = renown
+
 
 #endregion
 

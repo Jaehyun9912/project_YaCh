@@ -10,7 +10,7 @@ var flag : bool
 
 func _init(list : Array[String]):
 	tag_list = list
-	tag_service = DiContainer.get_tag_service()
+	tag_service = TagService
 	if tag_service.has_signal("on_tag_changed"):
 		tag_service.on_tag_changed.connect(work)
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://Scripts/Map/Map.gd" id="1_geqch"]
 [ext_resource type="Script" path="res://Scripts/Map/MapLocation.gd" id="2_wnxau"]
-[ext_resource type="Texture2D" uid="uid://cjc5rdervdjs4" path="res://Baford.png" id="3_ep0mk"]
+[ext_resource type="Texture2D" uid="uid://cjc5rdervdjs4" path="res://Resources/Maps/Baford.png" id="3_ep0mk"]
 [ext_resource type="Texture2D" uid="uid://1u8ct4uc8xd8" path="res://icon.svg" id="4_sls1m"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bwe5u"]

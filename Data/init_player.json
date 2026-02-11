@@ -31,5 +31,13 @@
 		}
 	],
 	
-	"artifacts" : {}
+	"artifacts" : {},
+	"map":{
+		"TestCountry":[
+			"forest","Mountain"
+		]
+	},
+	"guild":{
+		"void":100
+	}
 }

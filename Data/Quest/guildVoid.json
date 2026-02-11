@@ -1,0 +1,45 @@
+{
+	"guild" : "void",
+	"All": [
+		{
+			"id": "void10",
+			"title": "승급 시험",
+			"description": "해당 길드 평판이 10 이상이면 수주 가능",
+			"accept_condition": [
+				"renown:void>10"
+			],
+			"process_condition":{
+				"map:TestCountry:Forest":"숲 지역 해금"
+			},
+			"tokens":[
+				"money:shard+10"
+			],
+			"submits":{
+				"money:shard-10": "샤드 10개 제출"
+			},
+			"rewards":[
+				"money:shard+10"
+			],
+			"renown":20
+		},
+		{
+			"id": "void1",
+			"title": "기초 퀘스트",
+			"description": "승급용 아이템 교환하기",
+			"process_condition":{
+				"money:shard>90":"샤드 100개 보유"
+			},
+			"tokens":[
+				"item:bomb+2",
+				"money:shard+100"
+			],
+			"submits":{
+				"item:bomb-1":"폭탄 1개 제출"
+			},
+			"rewards":[
+				"item:bomb+100"
+			],
+			"renown":10
+		}
+	],
+}

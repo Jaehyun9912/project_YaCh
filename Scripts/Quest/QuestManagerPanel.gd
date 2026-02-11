@@ -78,11 +78,9 @@ func _set_quest_button(parent, quest, mode):
 	return button
 
 func _show_quest_detail(quest, mode):
-	var panel = ViewManager.push_panel("QuestDetailPanel",ViewManager.SCREEN.FULL)
+	var panel = ViewManager.push_panel("QuestButtonPanel",ViewManager.SCREEN.BOTTOM) as QuestButtonPanel
 	panel.option_pressed.connect(detail_interact)
-	panel.any_button_pressed.connect(ViewManager.erase_panel.bind(panel))
 	panel.set_quest(quest,mode)
-	return panel
 
 # 디버그용 처음씬으로 돌아가기
 func _go_main_scene():

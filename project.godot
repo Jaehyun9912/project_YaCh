@@ -23,6 +23,7 @@ DataManager="*res://Scripts/System/data_manager.gd"
 SkillManager="*res://Scripts/Skills/SkillManager.gd"
 AttributeInformation="*res://Scripts/Skills/attribute_information.gd"
 DiContainer="*res://Scripts/System/DIContainer.gd"
+TagService="*res://Scripts/Tag/TagManager.gd"
 
 [display]
 
@@ -39,6 +40,10 @@ project/assembly_name="YaCh"
 [filesystem]
 
 import/fbx/enabled=false
+
+[gui]
+
+theme/custom="res://Themes/PlayerBase.theme"
 
 [rendering]
 

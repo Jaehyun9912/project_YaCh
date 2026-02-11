@@ -1,0 +1,92 @@
+[gd_scene load_steps=14 format=3 uid="uid://bpgurardg7lfa"]
+
+[ext_resource type="PackedScene" uid="uid://bmy7udp4256gu" path="res://Worlds/WorldObjects/country_tower.tscn" id="1_4y7yr"]
+[ext_resource type="PackedScene" uid="uid://ckfx4fnhhqrdh" path="res://Worlds/WorldObjects/forest.tscn" id="2_5u1m3"]
+[ext_resource type="Script" path="res://Scripts/Tag/TagSupervisor.gd" id="3_bibe1"]
+[ext_resource type="Script" path="res://Scripts/Tag/TagProvider.gd" id="4_olhay"]
+[ext_resource type="Script" path="res://Scripts/World/Location.gd" id="4_yjwxt"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_3l6fm"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_pso7u"]
+sky_material = SubResource("ProceduralSkyMaterial_3l6fm")
+
+[sub_resource type="Environment" id="Environment_gfexo"]
+background_mode = 2
+sky = SubResource("Sky_pso7u")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2v754"]
+albedo_color = Color(0.137255, 0.294118, 0.00784314, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_rmixx"]
+material = SubResource("StandardMaterial3D_2v754")
+size = Vector2(100, 100)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_ctuce"]
+points = PackedVector3Array(-50, 0, -50, -50, 0, 50, 50, 0, -50, 50, 0, 50)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pxeb4"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_7h2iq"]
+
+[node name="TestCountry" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_gfexo")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866024, -0.433016, 0.250001, 0, 0.499998, 0.866026, -0.500003, 0.749999, -0.43301, 0, 50, 0)
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0.707107, -0.707107, 0, 0.707107, 0.707107, 1, 3.09086e-08, -3.09086e-08, -13.3217, 20.2786, -29.5667)
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_rmixx")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_ctuce")
+
+[node name="CountryTower" parent="." instance=ExtResource("1_4y7yr")]
+transform = Transform3D(0.901077, 0, 0.433659, 0, 1, 0, -0.433659, 0, 0.901077, 37.8081, 5.09986, -41.355)
+address = "CountryTower"
+type = "QuestManagerPanel"
+metadata/NPC = "TestNPC"
+
+[node name="forest" parent="." instance=ExtResource("2_5u1m3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5438, 0, -21.7805)
+address = "Battle"
+type = "BattlePanel"
+metadata/World = "forest"
+
+[node name="Supervisor" type="Node" parent="forest"]
+script = ExtResource("3_bibe1")
+tag_list = Array[String](["Quest.process.quest1"])
+
+[node name="Provider" type="Node" parent="forest/Supervisor"]
+script = ExtResource("4_olhay")
+tag_list = Array[String](["Quest.process.quest1.alpha"])
+
+[node name="Talk" type="Area3D" parent="."]
+transform = Transform3D(0.901077, 0, 0.433659, 0, 1, 0, -0.433659, 0, 0.901077, 21.5609, 5.09986, -35.1547)
+script = ExtResource("4_yjwxt")
+address = "CountryTower"
+type = "InventoryPanel"
+metadata/mode = "full"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Talk"]
+transform = Transform3D(1, -6.97574e-16, -3.04919e-23, 0, -4.37114e-08, 1, -6.97574e-16, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("BoxShape3D_pxeb4")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Talk"]
+mesh = SubResource("BoxMesh_7h2iq")
+
+[connection signal="on_location_interacted" from="forest" to="forest/Supervisor" method="work"]
+[connection signal="on_tag_responsed" from="forest/Supervisor" to="forest/Supervisor/Provider" method="work"]
+[connection signal="input_event" from="Talk" to="Talk" method="_on_location_clicked"]
