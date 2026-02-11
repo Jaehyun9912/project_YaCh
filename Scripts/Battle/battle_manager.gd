@@ -269,7 +269,7 @@ func battle_end(type: END_TYPE):
 	
 	# 모든 버튼 비활성화 
 	ViewManager.bottom_panel.get_node("BattlePanel").end()
-	var msg = $Interact/ResultPanel as ResultPanel
+	var result_panel = $Interact/ResultPanel as ResultPanel
 	
 	match type:
 		END_TYPE.RUN:
