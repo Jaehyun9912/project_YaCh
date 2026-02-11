@@ -35,12 +35,14 @@ func set_point(chars: Array, total_value):
 			ch.size_flags_stretch_ratio = float(i.point) / total_value
 			ch.set_max_point(i.point)
 	
-	await turn_bar_dict[chars[0].name].end_anim
+	# await turn_bar_dict[chars[0].name].end_anim
+	await turn_bar_dict.values()[0].end_anim
 	end_set_point.emit()
 		
 # 바뀐 행동력을 반영함 
 func update_point(character: BattleCharacter):
-	turn_bar_dict[character.name].set_point(character.current_point)
+	if turn_bar_dict.has(character.name):
+		turn_bar_dict[character.name].set_point(character.current_point)
 
 func set_outline(character: BattleCharacter, is_counter: bool):
 	for i in turn_bar_dict.keys():

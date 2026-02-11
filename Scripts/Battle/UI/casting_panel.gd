@@ -82,6 +82,6 @@ func _on_skill_button_manager_skill_activated(button_index, _target):
 	# 카운터/패링 스킬 코스트, 이펙트 적용
 	var skill = SkillManager.special_skills[useable_skills[button_index]]
 	battle_panel.manager.remove_cost(skill)
-	battle_panel.manager.set_effect(skill)
+	battle_panel.manager.set_attribute_change(skill)
 	
 	visible = false

@@ -125,8 +125,8 @@ func on_skillbutton_down(btn, index):
 	# 버튼 누른 위치에 취소 크기를 설정하는 원 생성 
 	cancel_area.visible = true
 	cancel_area.position = btn.position
-	var element = AttributeInfomation.get_attribute_by_skill(skill)
-	var color = AttributeInfomation.get_attribute_color(element)
+	var element = AttributeInformation.get_attribute_by_skill(skill)
+	var color = AttributeInformation.get_attribute_color(element)
 	cancel_area.modulate = color
 	button_enable_color = color
 	var tween = create_tween()

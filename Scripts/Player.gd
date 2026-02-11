@@ -6,55 +6,54 @@ signal on_inventory_changed
 
 const max_inventory_slots = 9
 
+var stat_manager: PlayerStat
+
 func _ready():
+	stat_manager = PlayerStat.new()
+
 	load_player()
 	
 #region Data
 var data: Dictionary
 # data에서 알아서 값을 뽑아오거나 넣어줌 
+# 능력치의 경우 stat_manager를 통해서 처리 (버프, 장비템 처리용)
 var max_hp:
 	get:
-		return data["max_hp"]
-	set(value):
-		data["max_hp"] = value
+        # 저장된 값이 아니라 계산된 값 호출
+		return stat_manager.get_max_hp()
 
 signal hp_changed
-var hp:
+var hp: # 현재 hp
 	get:
-		return data["hp"]
+		return stat_manager.get_stat("hp")
 	set(value):
-		data["hp"] = value
+		stat_manager.set_stat("hp", value)
 		hp_changed.emit(value)
 
 var speed:
 	get:
-		return data["speed"]
-	set(value):
-		data["speed"] = value
+		return stat_manager.get_speed()
 
-var mana:
+var mana: # 현재 mana
+# ? mana를 현재 저장할 필요가 있는지 확인 필요 (전투 때 매번 최대치인가?)
 	get:
-		return data["mana"]
+		return stat_manager.get_stat("mana")
 	set(value):
-		data["mana"] = value
+		stat_manager.set_stat("mana", value)
 
-var skills:
+var mana_max:
 	get:
-		return data["skills"]
-	set(value):
-		data["skills"] = value
+		return stat_manager.get_max_mana()
 
-var special_skills:
+var skill_exp: # 숙련도
 	get:
-		return data.get("special_skills", [])
+		return stat_manager.get_stat("skill_exp", 0)
 	set(value):
-		data["special_skills"] = value
+		stat_manager.set_stat("skill_exp", value)
 
-var peer_skill:
+var skill_level:
 	get:
-		return data.get("peer_skill", "")
-	set(value):
-		data["peer_skill"] = value
+		return stat_manager.get_skill_level()
 
 var inventory:
 	get:
@@ -68,8 +67,6 @@ var artifact:
 		return data["artifacts"]
 	set(value):
 		data["artifacts"] = value
-
-# data 저장 
 
 var cur_location:
 	get:
@@ -100,6 +97,8 @@ func load_player():
 	
 	for i in inventory:
 		inventory_slot_status[i["slot"]] = true
+
+	stat_manager.setup(self, data)
 	
 
 # 새로운 데이터 생성, 이때는 미리 만든 player파일을 가져옴 
@@ -441,5 +440,29 @@ func set_guild_renown(guildId: String, renown: int):
 	var guild = data["renown"]
 	guild[guildId] = renown
 
+
+#endregion
+
+#region ChangeStat
+
+# 숙련도(경험치) 획득
+# is_combat: 전투 중 획득 여부 (전투 중이면 마나 소모량 비례 추가)
+# mana_consumed: 전투 중 소모한 마나량
+func gain_skill_exp(amount: float, is_combat: bool = false, mana_consumed: float = 0):
+	stat_manager.add_skill_exp(amount, mana_consumed, is_combat)
+
+# 영구 마나 최대치 증가 
+func gain_permanent_mana(amount: float):
+	stat_manager.add_permanent_mana(amount)
+
+# 장비 변경 시 스탯 업데이트
+func update_equipment_stats(armor_weight: float):
+	stat_manager.update_equipment_stats(armor_weight)
+
+# 체력 감소
+func apply_damage(amount: float) -> float:
+	var damage = stat_manager.calculate_incoming_damage(amount)
+	hp -= damage
+	return damage
 
 #endregion

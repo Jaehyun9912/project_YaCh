@@ -67,7 +67,7 @@ func _ready():
 	#manager.turn_end.emit()
 	$CastingPanel.battle_panel = self
 
-	var peer_skill = PlayerData.peer_skill
+	var peer_skill = SkillManager.player_peer_skill_id
 	if peer_skill == "" or peer_skill == null:
 		peer_button.visible = false
 
@@ -153,11 +153,13 @@ func _on_skill_button_manager_target_changed(target, isally):
 # 턴 사이클 한바퀴 시작
 func _on_turn_cycle_start():
 	skill_button.set_all_buttons(false)
+
+	# TODO: 턴 포인트바 제거 예정
 	if manager.turn_count == 1:
-		turn_point_bar.set_information(manager.turn_char)
+		turn_point_bar.set_information(manager.character_manager.turn_char)
 		turn_point_bar.first_appear_anim()
 	else:
-		turn_point_bar.set_point(manager.turn_char, manager.total_point)
+		turn_point_bar.set_point(manager.character_manager.turn_char, manager.total_point)
 	
 	await turn_point_bar.end_set_point
 	manager.turn_end.emit()
@@ -175,8 +177,8 @@ func set_casting_panel(text, time, is_button_visible, callback):
 
 # 동료 스킬 사용 가능한지 체크
 func _check_peer_skill():
-	print("check peer skill")
-	var peer_skill = PlayerData.peer_skill
+	# print("check peer skill")
+	var peer_skill = SkillManager.player_peer_skill_id
 	var skill = SkillManager.get_peer_skill(peer_skill)
 	if skill == null:
 		peer_button.disabled = true
@@ -198,7 +200,7 @@ func _check_peer_skill():
 
 # 동료 스킬 버튼 클릭
 func _on_peer_skill_button_button_clicked():
-	var peer_skill = PlayerData.peer_skill
+	var peer_skill = SkillManager.player_peer_skill_id
 	var skill = SkillManager.get_peer_skill(peer_skill)
 	if skill == null:
 		return

@@ -8,14 +8,19 @@ enum SpecialSkillType {
 	PARRYING
 }
 
-var skills
-var special_skills
-var peer_skills
+var skills	# 스킬 정보 딕셔너리
+var special_skills	# 특수 스킬 정보 딕셔너리
+var peer_skills	# 동료 스킬 정보 딕셔너리
+var buff_data	# 버프 정보 딕셔너리
 
 var player_skill: 
-	get: return PlayerData.skills
+	get: return PlayerData.data.get("skills", []) # 리스트가 없으면 빈 배열 반환
+
 var player_special_skill:
-	get: return PlayerData.special_skills
+	get: return PlayerData.data.get("special_skills", [])
+
+var player_peer_skill_id:
+	get: return PlayerData.data.get("peer_skill", "")
 
 const ACTION_POINT_ID = "point"
 # 스킬 시전 시간
@@ -31,12 +36,21 @@ func _ready():
 	special_skills = DataManager.get_data_folder("Skill/Special")
 	peer_skills = DataManager.get_data_folder("Skill/Peer")
 	
+	buff_data = DataManager.get_data_folder("Skill/Effect")
+
+# 버프 ID로 SkillBuff 객체를 생성하여 반환
+func get_buff(id: String) -> SkillBuff:
+	if id in buff_data:
+		return SkillBuff.create_from_dict(id, buff_data[id])
+	printerr("잘못된 버프 ID! : " + id)
+	return null
+
 # 플레이어의 스킬 얻어오기 
 func get_player_skill(index: int) -> Dictionary:
 	if 0 <= index and index < len(player_skill):
 		return get_skill(player_skill[index])
 
-	print("잘못된 스킬 인덱스! : " + str(index))
+	printerr("잘못된 스킬 인덱스! : " + str(index))
 	return Dictionary()
 
 # 들어온 ID에 해당하는 스킬의 정보가 담긴 딕셔너리 반환 
@@ -46,16 +60,6 @@ func get_skill(id : String):
 	else:
 		printerr("잘못된 스킬 ID! : " + id)
 		return null
-
-# 스킬의 value를 반환하는 함수 (attack의 단일 value는 딕셔너리로 변환해서)
-func get_value(skill: Dictionary):
-	var type = skill.get("type", "")
-	var value = skill.get("value", {})
-	
-	if type == "attack":
-		if value is float or value is int:
-			return {"level": value}
-	return value
 
 func check_requirement_battle(skill: Dictionary, battle_manager: BattleManager) -> bool:
 	return check_requirement(skill, battle_manager.now_character.current_point, battle_manager.attribute_bar)
@@ -126,7 +130,7 @@ func get_casting_time(skill: Dictionary, attribute_bar):
 	#(소모 행동력 X 구축상수) X (1 - (해당 속성 누적치 / 2)
 	var cost = _get_standardized_points(skill.get("cost", {}))
 	var action_point_cost = cost.get(ACTION_POINT_ID, 0)
-	var element = AttributeInfomation.get_attribute_by_skill(skill)
+	var element = AttributeInformation.get_attribute_by_skill(skill)
 	var attribute_amount = attribute_bar.get_element(element)
 
 	# 구축 시간 계산
