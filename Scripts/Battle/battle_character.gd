@@ -43,7 +43,7 @@ var current_point: int
 var tag_service
 
 func _ready():
-    tag_service = DiContainer.get_tag_service()
+    tag_service = TagService
     # 플레이어라면 PlayerData에 이미 생성된 stat_manager가 있을 것이므로 
     # set_character에서 연결만 해줌.
 
@@ -56,11 +56,11 @@ func set_character(data: Dictionary, tag_id: String):
     if is_player:
         # 플레이어는 PlayerData에 있는 stat_manager를 그대로 참조
         stat_manager = PlayerData.stat_manager
-        stat_manager.update_target(self)
+        stat_manager.update_target(self )
     else:
         # 적은 새로운 Stat 매니저 생성 및 데이터 주입
         stat_manager = EnemyStat.new()
-        stat_manager.setup(self, data)
+        stat_manager.setup(self , data)
     
     stat_manager.stat_changed.connect(_on_stat_changed)
     
@@ -71,7 +71,7 @@ func set_character(data: Dictionary, tag_id: String):
     skills = data.get("skills", [])
     tag = "Battle." + tag_id
     if tag_service.has_method("change_tag_tree"):
-        tag_service.change_tag_tree(self, tag, 1)
+        tag_service.change_tag_tree(self , tag, 1)
 
 # 내부 공용 UI 업데이트 함수
 func _refresh_hp_status(diff: float):
@@ -109,10 +109,10 @@ func apply_heal(amount: float) -> float:
 
 # 죽었을 때 
 func _died():
-    character_died.emit(self)
+    character_died.emit(self )
     
     if tag_service.has_method("change_tag_tree"):
-        tag_service.change_tag_tree(self, tag, 0)
+        tag_service.change_tag_tree(self , tag, 0)
     
 # 캐릭터 위에 메세지 띄우기 
 func notify_msg(msg, color: Color):
