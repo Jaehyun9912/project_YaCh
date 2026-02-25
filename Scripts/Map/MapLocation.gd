@@ -2,7 +2,7 @@ class_name MapLocation
 extends Node2D
 
 # 맵에 위치하는 지역 데이터
-var _location_data : Dictionary
+var _location_data: Dictionary
 
 # 맵 상하좌우에 있는 지역 이름
 var left:
@@ -32,17 +32,18 @@ var location:
 		return _location_data["Location"]
 
 
-
+# 각 지역을 맵에 직접 배치
 func set_location(data):
 	_location_data = data
 	position.x = data["xPos"]
 	position.y = data["yPos"]
 
+# 해당 월드로 이동
 func enter_world():
 	ViewManager.load_world(location, "ChoicePanel")
-	print("AreaClicked : ",location)
+	print("AreaClicked : ", location)
 
-# 해당 월드로 이동
+# 지역 클릭 시 이동함수
 func _on_location_clicked(_viewport: Node, event: InputEvent, _shape_idx: int):
 	if event is InputEventMouseButton and event.is_pressed():
 		enter_world()

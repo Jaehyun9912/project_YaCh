@@ -116,6 +116,7 @@ func _import_quest() -> void:
 		for datum in data[location_quest]:
 			quest_list.append(datum)
 
+# 해당 퀘스트의 클리어 가능 여부 반환
 func can_clear_quest(quest: Dictionary):
 	if quest.has("clear_NPC"):
 		if quest["clear_NPC"] != _npc_name:
@@ -132,7 +133,8 @@ func can_clear_quest(quest: Dictionary):
 		if !Condition.check_condition(i):
 			return false
 	return true
-	
+
+# 퀘스트의 클리어 조건 반환
 func get_quest_condition(quest: Dictionary) -> Dictionary:
 	var condition: Dictionary
 	if quest.has("process_condition"):

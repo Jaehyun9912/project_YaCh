@@ -9,8 +9,7 @@ const max_inventory_slots = 9
 func _ready():
 	load_player()
 	
-#region Data
-var data: Dictionary
+#region Stat
 # data에서 알아서 값을 뽑아오거나 넣어줌 
 var max_hp:
 	get:
@@ -69,6 +68,30 @@ var artifact:
 	set(value):
 		data["artifacts"] = value
 
+# 스탯 비교
+func cmp_stat(condition: String) -> bool:
+	var comparer = [">", "<", "="]
+	for i in comparer:
+		var partial_tag = condition.split(i, true, 2)
+		if partial_tag.size() == 2:
+			print(data[partial_tag[0]], " ", i, " ", partial_tag[1])
+			# 태그 보유 여부 확인
+			if !data.has(partial_tag[0]):
+				return false
+			if i == ">" && data[partial_tag[0]] > partial_tag[1].to_int():
+				return true
+			elif i == "<" && data[partial_tag[0]] < partial_tag[1].to_int():
+				return true
+			elif i == "=" && data[partial_tag[0]] == partial_tag[1].to_int():
+				return true
+			else:
+				return false
+	return false
+
+#endregion
+
+#region Data
+var data: Dictionary
 # data 저장 
 
 var cur_location:
@@ -217,27 +240,6 @@ func clear_quest(quest):
 		tag_service.change_tag_tree(PlayerData, "Quest.process." + quest["id"], 0)
 		tag_service.change_tag_tree(PlayerData, "Quest.clear." + quest["id"], 1)
 	quest_updated.emit(quest, false)
-
-
-# 스탯 비교
-func cmp_stat(condition: String) -> bool:
-	var comparer = [">", "<", "="]
-	for i in comparer:
-		var partial_tag = condition.split(i, true, 2)
-		if partial_tag.size() == 2:
-			print(data[partial_tag[0]], " ", i, " ", partial_tag[1])
-			# 태그 보유 여부 확인
-			if !data.has(partial_tag[0]):
-				return false
-			if i == ">" && data[partial_tag[0]] > partial_tag[1].to_int():
-				return true
-			elif i == "<" && data[partial_tag[0]] < partial_tag[1].to_int():
-				return true
-			elif i == "=" && data[partial_tag[0]] == partial_tag[1].to_int():
-				return true
-			else:
-				return false
-	return false
 
 
 # 인벤토리 아이템 개수 비교
@@ -450,31 +452,31 @@ enum TimeZone
 {
 	MORNING = 0,
 	NOON = 1,
-	EVENING =2,
-	NIGHT =3,
+	EVENING = 2,
+	NIGHT = 3,
 }
 
-var _total_time : int
+var _total_time: int
 
-var _time : TimeZone
+var _time: TimeZone
 
 var time:
 	get:
 		return _time
 
-@export var action_count : int = 5
+@export var action_count: int = 5
 
-var current_action_count : int
+var current_action_count: int
 
-signal on_time_changed(time : TimeZone)
+signal on_time_changed(time: TimeZone)
 
-func spend_time(count : int):
+func spend_time(count: int):
 	# 행동한 가중치만큼 시간 진행
 	current_action_count += count
-	var zone : int = current_action_count / action_count
+	var zone: int = current_action_count / action_count
 	current_action_count %= action_count
 
-	if zone >0:
+	if zone > 0:
 		# 시간 진행에 따른 시간대 진행
 		_total_time += zone
 		_time = _total_time%TimeZone.size() as TimeZone
@@ -482,6 +484,19 @@ func spend_time(count : int):
 	
 
 	print(time)
+
+func cmp_time(condition: String):
+	var comparer = [">", "<", "="]
+	for i in comparer:
+		if condition.begins_with(i):
+			condition = condition.right(-1)
+			var value = condition.to_int()
+			if i == ">":
+				return time >= value
+			elif i == "<":
+				return time <= value
+			elif i == "=":
+				return time == value
 
 
 #endregion

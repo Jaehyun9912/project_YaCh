@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://3o67kjhyc38h"]
 
-[ext_resource type="Script" path="res://Scripts/Panel/LogPanel.gd" id="1_d0xjk"]
+[ext_resource type="Script" path="res://Scripts/Panel/ChatPanel.gd" id="1_d0xjk"]
 
 [node name="TextLogPanel" type="Control"]
 layout_mode = 3

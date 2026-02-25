@@ -21,17 +21,17 @@ func on_clicked(event: InputEvent):
 		if event.pressed:
 			OnSlotClicked.emit()
 		
-
+# 데이터 세팅
 func set_slot(_data):
 	data = _data
 	countText.hide()
 	update_slot()
 		
-
+# 데이터 변동 시 갱신
 func update_slot():
 	pass
 
-
+# 현재 선택 중일 경우 색상 변경
 func set_highlight(highlight: bool):
 	if highlight:
 		color = Color("dab53a")

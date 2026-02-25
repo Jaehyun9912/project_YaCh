@@ -49,6 +49,7 @@ func initialize(meta_data: Dictionary):
 	change_category(0)
 	
 #region 인벤토리 세팅
+
 func clear_slot():
 	for i in slotContainer.get_child_count():
 		slotContainer.get_child(i).queue_free()
@@ -81,6 +82,7 @@ func set_quest_slot():
 		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
 		slot.set_highlight(false)
 
+# 아티펙트 데이터 세팅
 func set_artifact_slot():
 	clear_slot()
 	inventory_data = PlayerData.artifact
@@ -122,6 +124,7 @@ func exit():
 	detail_panel.on_exit.emit()
 	on_exit.emit()
 
+# 현재 선택중인 카테고리에서 상대적 카테고리 변경
 func change_category(direction: int):
 	cur_category += direction
 	if cur_category >= category.size() || cur_category < 0:
@@ -145,4 +148,3 @@ func set_item_description(slot: InventorySlot):
 	detail_panel.show()
 	detail_panel.set_slot_info(slot)
 	print(slot.data)
-

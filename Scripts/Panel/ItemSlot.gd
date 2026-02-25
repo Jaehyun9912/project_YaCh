@@ -3,13 +3,14 @@ class_name ItemSlot
 
 var item_data
 
+# 아이템 데이터 세팅
 func set_slot(_data):
 	data = _data
 	item_data = DataManager.get_item_data(data["id"])
 	countText.show()
 	update_slot()
 
-	
+# 아이템 개수 변동 시 정보 갱신
 func update_slot():
 	nameText.text = item_data["name"]
 	if data.has("count"):

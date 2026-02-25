@@ -14,16 +14,14 @@ var talk_data
 var text_num
 
 
-
 func _ready():
 	ViewManager.side_panel.set_text_panel()
 	_load_data(ViewManager.cur_meta_data["Talk"])
 	_load_text_block("Start")
 	
 	
-
 # 데이터 불러오기
-func _load_data(file_name : String) -> void:
+func _load_data(file_name: String) -> void:
 	data = DataManager.get_data("Talk/" + file_name)
 	text_num = 0
 	
@@ -45,15 +43,15 @@ func _load_text() -> void:
 	# 선택지가 있을 때
 	if text_data.has("Choice"):
 		var choice = text_data["Choice"]
-		var panel = ViewManager.push_panel("BtnPanel",ViewManager.SCREEN.BOTTOM)
+		var panel = ViewManager.push_panel("BtnPanel", ViewManager.SCREEN.BOTTOM)
 		
 		for i in choice.keys():
 			var btn = panel.create_button(i)
 			btn.pressed.connect(func(): ViewManager.erase_panel(panel))
 			btn.pressed.connect(_load_text_block.bind(choice[i]))
 	
-	ViewManager.side_panel.set_text(speaker,dialogue)
-	_record_text(speaker,dialogue)
+	ViewManager.side_panel.set_text(speaker, dialogue)
+	_record_text(speaker, dialogue)
 	# 다음 순서가 존재할 때
 	if text_data.has("Next"):
 		var next_block = text_data["Next"]
@@ -62,11 +60,11 @@ func _load_text() -> void:
 		talk_data = data[next_block]
 		text_num = 0
 	else:
-		text_num+=1
+		text_num += 1
 
 
 # 대화블록 설정하기
-func _load_text_block(block_name :String)->void:
+func _load_text_block(block_name: String) -> void:
 	if data == null:
 		return
 	if !data.has(block_name):
@@ -76,7 +74,7 @@ func _load_text_block(block_name :String)->void:
 	_load_text()
 
 # 로그 패널에 대화 추가하기
-func _record_text(speaker,dialogue) -> void:
+func _record_text(speaker, dialogue) -> void:
 	var text = speaker + " : " + dialogue
 	var text_box = RichTextLabel.new()
 	text_box.fit_content = true
@@ -93,4 +91,4 @@ func _record_text(speaker,dialogue) -> void:
 
 # 디버그용
 func _go_main_scene():
-	ViewManager.load_world("TestCountry","ChoicePanel")
+	ViewManager.load_world(data["Escape"][0], data["Escape"][1])
