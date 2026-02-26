@@ -14,10 +14,22 @@
 			"Name":"문제",
 			"Text":"2 + 2 * 2 = ?",
 			"Choice":{
-				"6":"D1",
-				"0":"D2",
-				"8":"D2",
-				"100":"D2",
+				"6":{
+					"Next":"D1",
+					"Command":["item:bomb+2"]
+				},
+				"0":{
+					"Next":"D2"
+				},
+				"8":{
+					"Next":"D2",
+					"Condition":["artifact:pandora_cube"]
+				},
+				"100":{
+					"Next":"D2",
+					"Condition":["artifact:pandora_cube"]
+					
+				},
 			}
 		},
 	],

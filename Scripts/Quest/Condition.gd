@@ -76,3 +76,10 @@ static func check_condition(condition: String) -> bool:
 	if list[0] == check:
 		return false
 	return true
+
+# 조건 리스트 내부의 조건 확인, 모두 만족할 경우 true 반환
+static func check_conditions(conditions: PackedStringArray) -> bool:
+	for i in conditions:
+		if !check_condition(i):
+			return false
+	return true

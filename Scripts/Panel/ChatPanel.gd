@@ -52,15 +52,24 @@ func _load_text() -> void:
 	var speaker = text_data["Name"]
 	var dialogue = text_data["Text"]
 	
-	# 선택지가 있을 때
+	# 선택지가 있을 때 : "Choice" : { "선택지1": {"Next": "다음 블럭", "Condition":[조건들], "Command":[보상, 회수]}, "선택지2"...}
+	# 선택지 내부의 "Next"는 필수로 존재해야함
 	if text_data.has("Choice"):
 		var choice = text_data["Choice"]
 		var panel = ViewManager.push_panel("BtnPanel", ViewManager.SCREEN.BOTTOM)
 		
 		for i in choice.keys():
+			if choice[i].has("Condition"):
+				if !Condition.check_conditions(choice[i]["Condition"]):
+					continue
 			var btn = panel.create_button(i)
-			btn.pressed.connect(func(): ViewManager.erase_panel(panel))
-			btn.pressed.connect(_load_text_block.bind(choice[i]))
+			btn.pressed.connect(func():
+				ViewManager.erase_panel(panel)
+				if choice[i].has("Command"):
+					for cmd in choice[i]["Command"]:
+						PlayerData.execute_cmd(cmd)
+				_load_text_block(choice[i]["Next"])
+				)
 	
 	ViewManager.side_panel.set_text(speaker, dialogue)
 	_record_text(speaker, dialogue)
@@ -78,8 +87,10 @@ func _load_text() -> void:
 # 대화블록 설정하기
 func _load_text_block(block_name: String) -> void:
 	if data == null:
+		_go_main_scene()
 		return
 	if !data.has(block_name):
+		_go_main_scene()
 		return
 	talk_data = data[block_name]
 	text_num = 0
