@@ -1,10 +1,12 @@
 {
 	"Start":[
 		{
+			"Condition" : ["artifact:pandora_cube"],
 			"Name":"Start블럭 대화자",
 			"Text":"대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2대충 대화하는 내용2",
 		},
 		{
+			"Condition" : ["artifact:pandora_cube"],
 			"Name":"발언자1",
 			"Text":"대충 대화하는 내용2",
 		},

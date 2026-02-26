@@ -16,18 +16,30 @@ var text_num
 
 func _ready():
 	ViewManager.side_panel.set_text_panel()
-	_load_data(ViewManager.cur_meta_data["Talk"])
+	_load_data(ViewManager.cur_meta_data["Chat"])
 	_load_text_block("Start")
-	
-	
+
+
 # 데이터 불러오기
 func _load_data(file_name: String) -> void:
-	data = DataManager.get_data("Talk/" + file_name)
+	data = DataManager.get_data("Chat/" + file_name)
 	text_num = 0
 	
 
 # 블록 내 인덱스 텍스트 설정하기
 func _load_text() -> void:
+	while (text_num < talk_data.size()):
+		if talk_data[text_num].has("Condition"):
+			var flag = true
+			for condition in talk_data[text_num]["Condition"]:
+				if !Condition.check_condition(condition):
+					flag = false
+					break
+			if flag == false:
+				text_num += 1
+				continue
+		break
+
 	if talk_data.size() <= text_num:
 		print("EOT")
 		
@@ -80,13 +92,14 @@ func _record_text(speaker, dialogue) -> void:
 	text_box.fit_content = true
 	text_box.text = text
 	container.add_child(text_box)
+	container.move_child(text_box, 0)
 	
 	# 한 프레임 대기
 	await get_tree().process_frame;
 	
 	# 스크롤 바 아래로 고정하기
-	var scroll = container.get_parent() as ScrollContainer
-	scroll.get_v_scroll_bar().value = scroll.get_v_scroll_bar().max_value
+	#var scroll = container.get_parent() as ScrollContainer
+	#scroll.get_v_scroll_bar().value = scroll.get_v_scroll_bar().max_value
 	
 
 # 디버그용

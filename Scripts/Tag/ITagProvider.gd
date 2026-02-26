@@ -1,3 +1,4 @@
+extends RefCounted
 class_name ITagProvider
 
 signal on_tag_requested(node: Node, tag: String, count: int)
@@ -6,7 +7,8 @@ var tag_list: Array[String]
 
 var tag_service
 
-func _init(list : Array[String]):
+# 해당
+func _init(list: Array[String]):
 	tag_list = list
 	tag_service = TagService
 	if tag_service.has_method("change_tag_tree"):
