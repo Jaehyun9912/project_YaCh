@@ -59,12 +59,14 @@ func _load_text() -> void:
 		var panel = ViewManager.push_panel("BtnPanel", ViewManager.SCREEN.BOTTOM)
 		
 		for i in choice.keys():
+			# 선택지 생성 조건 확인
 			if choice[i].has("Condition"):
 				if !Condition.check_conditions(choice[i]["Condition"]):
 					continue
 			var btn = panel.create_button(i)
 			btn.pressed.connect(func():
 				ViewManager.erase_panel(panel)
+				# 선택지 보상 및 다음 대화 블럭으로 이동
 				if choice[i].has("Command"):
 					for cmd in choice[i]["Command"]:
 						PlayerData.execute_cmd(cmd)
