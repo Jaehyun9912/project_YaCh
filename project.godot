@@ -36,6 +36,10 @@ window/handheld/orientation=1
 
 project/assembly_name="YaCh"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/data_editor/plugin.cfg")
+
 [filesystem]
 
 import/fbx/enabled=false

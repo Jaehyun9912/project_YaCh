@@ -4,20 +4,20 @@ class_name SkillBuff
 enum ApplyType { ONCE, EVERY, END }
 enum DurationType { NONE, TIME, TURN, POINT, ATTR_UNDER, ATTR_UPPER }
 
-var id: String
-var target: String = "" # 버프를 적용할 대상 속성 이름
-var value_type: String = "add" # "add", "multiplier"
-var value: float = 0.0
+@export var id: String
+@export var target: String = "" # 버프를 적용할 대상 속성 이름
+@export var value_type: String = "add" # "add", "multiplier"
+@export var value: float = 0.0
 
-var apply_type: ApplyType = ApplyType.ONCE
-var restore: bool = false
-var next_buff: String = ""
+@export var apply_type: ApplyType = ApplyType.ONCE
+@export var restore: bool = false
+@export var next_buff: String = ""
 
-var has_duration: bool = false  # 지속시간이 있는지 여부
-var duration_type: DurationType = DurationType.NONE # 지속시간 타입
-var duration_value: float = 0.0 # 지속시간 값
-var duration_attr: String = "" # attribute 계열용
-var location_condition: String = "" # 특정 지역/시간 ID
+@export var has_duration: bool = false  # 지속시간이 있는지 여부
+@export var duration_type: DurationType = DurationType.NONE # 지속시간 타입
+@export var duration_value: float = 0.0 # 지속시간 값
+@export var duration_attr: String = "" # attribute 계열용
+@export var location_condition: String = "" # 특정 지역/시간 ID
 
 var is_battle_buff: bool = false
 
