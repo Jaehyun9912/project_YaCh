@@ -15,6 +15,8 @@ var _comment_label: Label
 var _control_container: VBoxContainer
 var _apply_button: Button
 var _status_label: Label
+var _path_line_edit: LineEdit = null
+var _path_file_dialog: FileDialog
 
 
 func _ready() -> void:
@@ -67,6 +69,13 @@ func _build_layout() -> void:
 	_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	inner.add_child(_status_label)
 
+	_path_file_dialog = FileDialog.new()
+	_path_file_dialog.access = FileDialog.ACCESS_RESOURCES
+	_path_file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
+	_path_file_dialog.title = "Select Resource Path"
+	_path_file_dialog.file_selected.connect(_on_path_file_selected)
+	add_child(_path_file_dialog)
+
 
 func show_field(meta: Dictionary) -> void:
 	_current_meta = meta.duplicate(true)
@@ -90,6 +99,7 @@ func _rebuild_control(expected_type: String, current_value: Variant) -> void:
 	for child in _control_container.get_children():
 		child.queue_free()
 	_current_control = null
+	_path_line_edit = null
 	_apply_button.visible = true
 
 	if SchemaUtils.is_enum_schema_type(expected_type):
@@ -108,6 +118,28 @@ func _rebuild_control(expected_type: String, current_value: Variant) -> void:
 	var normalized = expected_type.strip_edges().to_lower()
 
 	match normalized:
+		"path":
+			var path_row = HBoxContainer.new()
+			path_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+			var line_edit = LineEdit.new()
+			line_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			line_edit.text = _value_to_text(current_value)
+			line_edit.gui_input.connect(func(event):
+				if event is InputEventKey and event.pressed:
+					if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+						_on_apply_pressed()
+			)
+			path_row.add_child(line_edit)
+
+			var browse_button = Button.new()
+			browse_button.text = "Browse..."
+			browse_button.pressed.connect(_on_pick_path_pressed)
+			path_row.add_child(browse_button)
+
+			_control_container.add_child(path_row)
+			_path_line_edit = line_edit
+			_current_control = line_edit
 		"bool", "boolean":
 			var check = CheckBox.new()
 			check.text = "true"
@@ -131,6 +163,38 @@ func _rebuild_control(expected_type: String, current_value: Variant) -> void:
 			)
 			_control_container.add_child(line_edit)
 			_current_control = line_edit
+
+
+func _on_pick_path_pressed() -> void:
+	if _path_file_dialog == null:
+		return
+
+	_path_file_dialog.clear_filters()
+	_path_file_dialog.add_filter("*.png ; PNG Image")
+	_path_file_dialog.add_filter("*.jpg ; JPEG Image")
+	_path_file_dialog.add_filter("*.jpeg ; JPEG Image")
+	_path_file_dialog.add_filter("*.webp ; WEBP Image")
+	_path_file_dialog.add_filter("*.svg ; SVG Image")
+	_path_file_dialog.add_filter("*.tscn ; Packed Scene")
+	_path_file_dialog.add_filter("*.tres ; Resource")
+	_path_file_dialog.add_filter("*.res ; Resource")
+	_path_file_dialog.add_filter("*.json ; JSON")
+	_path_file_dialog.add_filter("*.* ; All Files")
+
+	if _path_line_edit != null and not _path_line_edit.text.is_empty():
+		_path_file_dialog.current_path = _path_line_edit.text
+	else:
+		_path_file_dialog.current_path = "res://"
+
+	_path_file_dialog.popup_centered_ratio(0.7)
+
+
+func _on_path_file_selected(selected_path: String) -> void:
+	if _path_line_edit == null:
+		return
+
+	var localized = ProjectSettings.localize_path(selected_path)
+	_path_line_edit.text = localized if not localized.is_empty() else selected_path
 
 
 func _on_apply_pressed() -> void:
@@ -189,8 +253,14 @@ func _read_and_validate(expected_type: String, last_value: Variant) -> Dictionar
 
 func _parse_by_type(raw_text: String, type_name: String, last_value: Variant) -> Dictionary:
 	match type_name:
-		"string", "path":
+		"string":
 			return {"ok": true, "value": raw_text}
+		"path":
+			if raw_text.is_empty():
+				return {"ok": true, "value": raw_text}
+			if raw_text.begins_with("res://") or raw_text.begins_with("user://"):
+				return {"ok": true, "value": raw_text}
+			return {"ok": false, "reason": "path 타입은 res:// 또는 user:// 경로를 사용하세요."}
 		"int":
 			if raw_text.is_valid_int():
 				return {"ok": true, "value": int(raw_text)}

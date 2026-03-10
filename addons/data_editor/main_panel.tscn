@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bbtq03s0r3onq"]
+[gd_scene load_steps=16 format=3 uid="uid://bbtq03s0r3onq"]
 
 [ext_resource type="Theme" uid="uid://do1u7rodrg2g5" path="res://addons/data_editor/assets/editor_theme.tres" id="1_8vgpy"]
 [ext_resource type="Script" path="res://addons/data_editor/scripts/main_panel.gd" id="2_e6kjt"]
@@ -22,6 +22,9 @@ font_size = 20
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bt6m7"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_splitbar"]
+bg_color = Color(0.235294, 0.27451, 0.34902, 0.9)
+
 [node name="MainPanel" type="PanelContainer" node_paths=PackedStringArray("package_title", "file_system", "editor", "inspector")]
 anchors_preset = 15
 anchor_right = 1.0
@@ -37,8 +40,8 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_q240q")
 script = ExtResource("2_e6kjt")
 package_title = NodePath("VBoxContainer/TopBar/MarginContainer/HBoxContainer/CurrentFile")
 file_system = NodePath("VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/FileSystem")
-editor = NodePath("VBoxContainer/MainArea/HBoxContainer/MainEditor/Editor")
-inspector = NodePath("VBoxContainer/MainArea/HBoxContainer/RightSidebar/PanelContainer")
+editor = NodePath("VBoxContainer/MainArea/HBoxContainer/RightSplit/MainEditor/Editor")
+inspector = NodePath("VBoxContainer/MainArea/HBoxContainer/RightSplit/RightSidebar/PanelContainer")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -122,12 +125,28 @@ size_flags_vertical = 3
 size_flags_stretch_ratio = 20.0
 theme = ExtResource("1_8vgpy")
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MainArea"]
+[node name="HBoxContainer" type="HSplitContainer" parent="VBoxContainer/MainArea"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+dragger_visibility = 0
+theme_override_constants/autohide = 0
+theme_override_constants/separation = 12
+theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_splitbar")
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MainArea/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="RightSplit" type="HSplitContainer" parent="VBoxContainer/MainArea/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.5
+dragger_visibility = 0
+theme_override_constants/autohide = 0
+theme_override_constants/separation = 12
+theme_override_styles/split_bar_background = SubResource("StyleBoxFlat_splitbar")
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MainArea/HBoxContainer/PanelContainer"]
 layout_mode = 2
@@ -191,12 +210,12 @@ theme = ExtResource("1_8vgpy")
 hide_root = true
 script = ExtResource("7_dilvo")
 
-[node name="MainEditor" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer"]
+[node name="MainEditor" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer/RightSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 3.0
 
-[node name="Editor" type="Tree" parent="VBoxContainer/MainArea/HBoxContainer/MainEditor"]
+[node name="Editor" type="Tree" parent="VBoxContainer/MainArea/HBoxContainer/RightSplit/MainEditor"]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_8vgpy")
@@ -207,12 +226,12 @@ hide_root = true
 select_mode = 1
 script = ExtResource("8_7ubte")
 
-[node name="RightSidebar" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer"]
+[node name="RightSidebar" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer/RightSplit"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_stretch_ratio = 0.5
 
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MainArea/HBoxContainer/RightSidebar"]
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MainArea/HBoxContainer/RightSplit/RightSidebar"]
 layout_mode = 2
 size_flags_vertical = 3
 script = ExtResource("9_owfh7")

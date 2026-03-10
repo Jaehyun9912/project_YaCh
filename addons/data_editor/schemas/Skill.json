@@ -6,7 +6,7 @@
       "name": { "type": "string", "comment": "스킬의 이름입니다.", "default": "" },
       "description": { "type": "string", "comment": "스킬의 설명입니다.", "default": "" },
       "owner_type": { "type": "enum:player,enemy,peer,special", "comment": "소유자 유형", "default": "player" },
-      "icon": { "type": "string", "comment": "아이콘 경로", "default": "res://icon.svg" }
+      "icon": { "type": "path", "comment": "아이콘 경로", "default": "res://icon.svg" }
     }
   },
   "requirements": {
