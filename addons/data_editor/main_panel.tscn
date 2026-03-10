@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bbtq03s0r3onq"]
+[gd_scene load_steps=15 format=3 uid="uid://bbtq03s0r3onq"]
 
 [ext_resource type="Theme" uid="uid://do1u7rodrg2g5" path="res://addons/data_editor/assets/editor_theme.tres" id="1_8vgpy"]
 [ext_resource type="Script" path="res://addons/data_editor/scripts/main_panel.gd" id="2_e6kjt"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://u6ddsqxh3njt" path="res://addons/data_editor/assets/plus-icon.png" id="5_ers2c"]
 [ext_resource type="Script" path="res://addons/data_editor/scripts/file_system.gd" id="7_dilvo"]
 [ext_resource type="Script" path="res://addons/data_editor/scripts/editor.gd" id="8_7ubte"]
+[ext_resource type="Script" path="res://addons/data_editor/scripts/editor_inspector.gd" id="9_owfh7"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q240q"]
 bg_color = Color(0.113725, 0.133333, 0.176471, 1)
@@ -21,7 +22,7 @@ font_size = 20
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bt6m7"]
 
-[node name="MainPanel" type="PanelContainer" node_paths=PackedStringArray("package_title", "file_system", "editor")]
+[node name="MainPanel" type="PanelContainer" node_paths=PackedStringArray("package_title", "file_system", "editor", "inspector")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -37,6 +38,7 @@ script = ExtResource("2_e6kjt")
 package_title = NodePath("VBoxContainer/TopBar/MarginContainer/HBoxContainer/CurrentFile")
 file_system = NodePath("VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/FileSystem")
 editor = NodePath("VBoxContainer/MainArea/HBoxContainer/MainEditor/Editor")
+inspector = NodePath("VBoxContainer/MainArea/HBoxContainer/RightSidebar/PanelContainer")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
 layout_mode = 2
@@ -192,54 +194,27 @@ script = ExtResource("7_dilvo")
 [node name="MainEditor" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MainArea/HBoxContainer/MainEditor"]
-layout_mode = 2
-size_flags_vertical = 3
-size_flags_stretch_ratio = 0.05
-
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MainArea/HBoxContainer/MainEditor/PanelContainer"]
-layout_mode = 2
-theme = ExtResource("1_8vgpy")
-theme_override_constants/margin_left = 8
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer/MainEditor/PanelContainer/MarginContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/MainArea/HBoxContainer/MainEditor/PanelContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("1_8vgpy")
-text = "KEY"
-
-[node name="Label2" type="Label" parent="VBoxContainer/MainArea/HBoxContainer/MainEditor/PanelContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme = ExtResource("1_8vgpy")
-text = "TYPE"
-
-[node name="Label3" type="Label" parent="VBoxContainer/MainArea/HBoxContainer/MainEditor/PanelContainer/MarginContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_stretch_ratio = 2.0
-theme = ExtResource("1_8vgpy")
-text = "VALUE
-"
+size_flags_stretch_ratio = 3.0
 
 [node name="Editor" type="Tree" parent="VBoxContainer/MainArea/HBoxContainer/MainEditor"]
 layout_mode = 2
 size_flags_vertical = 3
 theme = ExtResource("1_8vgpy")
 theme_override_styles/panel = SubResource("StyleBoxEmpty_bt6m7")
+columns = 3
+column_titles_visible = true
+hide_root = true
+select_mode = 1
 script = ExtResource("8_7ubte")
 
 [node name="RightSidebar" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MainArea/HBoxContainer/RightSidebar"]
 layout_mode = 2
 size_flags_vertical = 3
+script = ExtResource("9_owfh7")
 
 [connection signal="item_selected" from="VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/FileSystem" to="." method="_on_file_system_item_selected"]

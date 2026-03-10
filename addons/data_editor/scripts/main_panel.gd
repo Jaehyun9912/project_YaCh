@@ -4,6 +4,7 @@ extends Control
 @export var package_title: Label
 @export var file_system : DE_FileSystem
 @export var editor : DE_Editor
+@export var inspector : DE_EditorInspector
 
 var package_path = "res://Data"
 
@@ -11,6 +12,8 @@ var package_path = "res://Data"
 func _ready():
 	# 패키지 경로에 있는 파일들을 트리에 표시합니다.
 	load_package(package_path)
+	editor.item_selected_for_edit.connect(inspector.show_field)
+	inspector.value_confirmed.connect(editor.apply_external_edit)
 
 func load_package(path: String):
 	# 패키지 경로를 업데이트하고 트리를 새로 고칩니다.
@@ -29,9 +32,12 @@ func _on_file_system_item_selected():
 	var selected_item = file_system.get_selected()
 	var path = selected_item.get_metadata(0) # 메타데이터에서 경로 가져오기
 
-	if path:
-		var data = editor.parse_json(path)
-		print("Selected file: ", path)
-		print("Data: ", data)
+	if not path:
+		printerr("선택된 항목의 경로가 존재하지 않습니다.")
+		return
+
+	if FileAccess.file_exists(path) and path.ends_with(".json"):
+		editor.load_json_data(path)
 	else:
-		print("선택된 항목에 경로 정보가 없습니다.")
+		print("선택된 항목이 유효한 JSON 파일이 아닙니다: ", path)
+

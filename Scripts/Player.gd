@@ -128,7 +128,7 @@ func load_player():
 
 # 새로운 데이터 생성, 이때는 미리 만든 player파일을 가져옴 
 func reset_player():
-	var new_player = DataManager.get_data("init_player")
+	var new_player = DataManager.get_data("player")
 	
 	data = new_player
 	
