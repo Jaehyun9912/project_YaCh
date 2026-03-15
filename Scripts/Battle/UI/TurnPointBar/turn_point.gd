@@ -44,7 +44,7 @@ func set_max_point(new_point):
 	
 # 현재 행동력 입력받아 바 수정 
 func set_point(current):
-	print("change point ", current, ", max: ", max_value)
+	# print("change point ", current, ", max: ", max_value)
 	if current > max_value or current < 0: 
 		current = max_value
 	

@@ -4,7 +4,7 @@ extends Control
 func _on_button_1_pressed():
 	PlayerData.reset_player()
 	PlayerData.save_player()
-	print("Player Data Reset: ", PlayerData.skills)
+	print("Player Data Reset: ", SkillManager.player_skill)
 
 
 # NOTE : 임시용 인벤토리 패널 표시
