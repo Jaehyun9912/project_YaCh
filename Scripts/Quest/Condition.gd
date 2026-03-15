@@ -1,9 +1,13 @@
 class_name Condition
 # 조건 관련 유틸을 넣어놓은 클래스
+# 조건문은 두 종류(명령문, 비교문)이 존재한다.
+# 명령문 -> 비교문으로 변환 가능하나 역은 불가하다.
+# 
 
-static var conditionTypes = ["tag", "stat", "item", "artifact", "renown", "money", "map"]
 
-# 무조건 array[0] = boolean, 마지막 = int, 그 직전값은 부등호를 사용
+static var conditionTypes = ["tag", "stat", "item", "artifact", "renown", "money", "map", "time"]
+
+# string 형태의 조건문을 string 배열 형태의 명령문/비교문으로 변환한다.
 static func string_to_condition(condition: String) -> Array:
 	var values = []
 	# 긍정 부정 확인
@@ -20,6 +24,7 @@ static func string_to_condition(condition: String) -> Array:
 	values.append_array(arr)
 	return values
 
+# 명령문을 비교문으로 변환한다.
 static func cmd_to_cmp(submit: String) -> String:
 	var condition = submit
 	# 아티펙트 회수나 지역 잠금인지 확인
@@ -61,10 +66,20 @@ static func check_condition(condition: String) -> bool:
 	elif list[1] == "map":
 		# format = [negative,map,맵,location] 또는 [negative,map,맵]
 		check = PlayerData.cmp_map(list.slice(1))
+	elif list[1] == "time":
+		# format = [negative, time, ><= Time(int)]
+		check = PlayerData.cmp_time(list[2])
 	# 그 외 조건이 있는지 확인하고 없으면 데이터 에러로 판별
 	else:
 		printerr("데이터 형식 오류 : ", condition)
 		return false
 	if list[0] == check:
 		return false
+	return true
+
+# 조건 리스트 내부의 조건 확인, 모두 만족할 경우 true 반환
+static func check_conditions(conditions: PackedStringArray) -> bool:
+	for i in conditions:
+		if !check_condition(i):
+			return false
 	return true

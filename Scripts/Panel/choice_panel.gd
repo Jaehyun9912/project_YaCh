@@ -7,7 +7,7 @@ func _on_button_1_pressed():
 	print("Player Data Reset: ", SkillManager.player_skill)
 
 
-#디버그용으로 잠시
+# NOTE : 임시용 인벤토리 패널 표시
 func _on_button_2_pressed():
 	var _panel = ViewManager.push_panel("InventoryPanel", ViewManager.SCREEN.BOTTOM, {"mode": "full"})
 	

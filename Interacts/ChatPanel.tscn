@@ -1,10 +1,10 @@
 [gd_scene load_steps=2 format=3 uid="uid://3o67kjhyc38h"]
 
-[ext_resource type="Script" path="res://Scripts/Panel/LogPanel.gd" id="1_d0xjk"]
+[ext_resource type="Script" path="res://Scripts/Panel/ChatPanel.gd" id="1_d0xjk"]
 
-[node name="TextLogPanel" type="Control"]
+[node name="ChatPanel" type="Control"]
 layout_mode = 3
-anchor_top = 0.5
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
@@ -39,7 +39,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
-alignment = 2
 
 [node name="Button" type="Button" parent="ColorRect"]
 layout_mode = 1

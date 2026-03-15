@@ -8,8 +8,8 @@ const PANEL_PATH = "res://Interacts/"
 var current_scene: Node = null
 var world_instance: Node3D = null
 var current_panel: Node = null
-var top_panel : Node = null
-var bottom_panel : Node = null
+var top_panel: Node = null
+var bottom_panel: Node = null
 
 var side_panel: SidePanel = null
 
@@ -17,8 +17,6 @@ var cur_meta_data: Dictionary
 
 var old_map: String
 var old_panel: String
-
-
 
 
 func get_view():
@@ -128,8 +126,6 @@ func erase_panel(panel):
 		return
 	pass
 	
-
-
 
 func update_panels_size():
 	get_view()
