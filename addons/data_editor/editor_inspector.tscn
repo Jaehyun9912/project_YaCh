@@ -1,0 +1,71 @@
+[gd_scene load_steps=2 format=3 uid="uid://d15dld32egoyn"]
+
+[ext_resource type="Script" path="res://addons/data_editor/scripts/editor_inspector.gd" id="1_5d18a"]
+
+[node name="EditorInspector" type="PanelContainer"]
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_5d18a")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="KeyLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "KEY: —"
+
+[node name="TypeLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "TYPE: —"
+
+[node name="CommentLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+visible = false
+modulate = Color(0.7, 0.7, 0.7, 1)
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="DefaultLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+visible = false
+modulate = Color(0.62, 0.85, 0.62, 1)
+custom_minimum_size = Vector2(10, 10)
+layout_mode = 2
+autowrap_mode = 3
+
+[node name="OmitDefaultCheckbox" type="CheckBox" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+button_pressed = true
+text = "기본값이면 키 생략(삭제)"
+
+[node name="HSeparator" type="HSeparator" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="ControlContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ApplyButton" type="Button" parent="MarginContainer/VBoxContainer"]
+visible = false
+layout_mode = 2
+text = "Apply"
+
+[node name="StatusLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="PathFileDialog" type="FileDialog" parent="."]
+title = "Select Resource Path"
+ok_button_text = "열기"
+file_mode = 0
