@@ -1,11 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://p6i634j8rs6u"]
+[gd_scene load_steps=5 format=3 uid="uid://p6i634j8rs6u"]
 
 [ext_resource type="Script" path="res://Scripts/Battle/UI/skill_button_manager.gd" id="1_6ahvc"]
 [ext_resource type="PackedScene" uid="uid://dd7ne0vnk7lh7" path="res://Objects/UI/Battle/RoundButton/round_button.tscn" id="2_ddtok"]
 [ext_resource type="PackedScene" uid="uid://dxudhlmb10ph1" path="res://Objects/UI/Battle/choice_button_manager.tscn" id="4_8kkgl"]
 [ext_resource type="Texture2D" uid="uid://h3udoxqqu1wd" path="res://Objects/UI/Battle/RoundButton/round_button.png" id="5_cj4fw"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_7x350"]
 
 [node name="SkillButtonManager" type="ColorRect"]
 anchors_preset = -1
@@ -27,7 +25,6 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_vertical = 3
 size_flags_stretch_ratio = 1.15
-theme_override_styles/panel = SubResource("StyleBoxEmpty_7x350")
 
 [node name="SkillButton" parent="SkillButtons" instance=ExtResource("2_ddtok")]
 layout_mode = 1

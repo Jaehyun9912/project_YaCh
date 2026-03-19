@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://wgqkwug48a02"]
+[gd_scene load_steps=4 format=3 uid="uid://wgqkwug48a02"]
 
 [ext_resource type="Script" path="res://Scripts/MainScreen.gd" id="1_3aloh"]
 
@@ -6,6 +6,9 @@
 font_size = 60
 outline_size = 10
 outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_311hu"]
+bg_color = Color(0.866667, 0.662745, 0.294118, 1)
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -24,7 +27,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-color = Color(0.25098, 0.501961, 0.752941, 1)
+color = Color(0.117647, 0.254902, 0.454902, 1)
 
 [node name="Title" type="Label" parent="."]
 layout_mode = 1
@@ -52,6 +55,7 @@ offset_right = -80.0
 offset_bottom = -72.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_311hu")
 text = "게임 시작"
 
 [connection signal="pressed" from="Button" to="." method="load_main_scene"]
