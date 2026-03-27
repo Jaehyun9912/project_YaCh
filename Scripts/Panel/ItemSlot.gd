@@ -24,7 +24,7 @@ func get_title():
 	return item_data["name"]
 
 func get_description():
-	return item_data["description"]
+	return item_data["description"].format(item_data)
 
 func get_slot_method_list(condition: Dictionary) -> Array:
 	var arr = ["discard"]
