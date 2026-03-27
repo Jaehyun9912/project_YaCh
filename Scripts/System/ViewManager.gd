@@ -97,6 +97,7 @@ enum SCREEN {
 	BOTTOM,
 	FULL
 }
+
 # 패널 추가(메타 데이터, 현재 월드에 대한 의존성 필요 시 주입)
 func push_panel(panel_name: String, screen_location: SCREEN, meta_data: Dictionary = {}, world: Node = null):
 	get_view()
@@ -106,6 +107,8 @@ func push_panel(panel_name: String, screen_location: SCREEN, meta_data: Dictiona
 		bottom_panel.add_child(panel as Node)
 	elif screen_location == SCREEN.TOP:
 		top_panel.add_child(panel as Node)
+	else:
+		current_panel.add_child(panel as Node)
 	#_set_screen_size(panel, screen_location)
 	if panel.has_signal("on_exit"):
 		panel.on_exit.connect(erase_panel.bind(panel))
@@ -120,11 +123,10 @@ func push_panel(panel_name: String, screen_location: SCREEN, meta_data: Dictiona
 func erase_panel(panel):
 	if top_panel.get_children().has(panel):
 		top_panel.remove_child(panel)
-		return
-	if bottom_panel.get_children().has(panel):
+	elif bottom_panel.get_children().has(panel):
 		bottom_panel.remove_child(panel)
-		return
-	pass
+	elif current_panel.get_children().has(panel):
+		current_panel.remove_child(panel)
 	
 
 func update_panels_size():

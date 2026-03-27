@@ -33,12 +33,11 @@ func initialize(meta_data: Dictionary):
 
 	if meta_data.has("mode"):
 		if meta_data["mode"] == "full":
-			detail_panel.show()
+			detail_panel.set_panel(true)
 			on_select_changed.connect(set_item_description)
-			pass
 		elif meta_data["mode"] == "half":
-			detail_panel.hide()
-			pass
+			detail_panel.set_panel(false)
+
 	isBattle = false
 	if meta_data.has("isBattle"):
 		isBattle = meta_data["isBattle"]
@@ -143,8 +142,8 @@ func change_category(direction: int):
 # 현재 선택한 슬롯에 대한 디테일 표시
 func set_item_description(slot: InventorySlot):
 	if slot == null:
-		detail_panel.hide()
+		detail_panel.set_panel(false)
 		return
-	detail_panel.show()
+	detail_panel.set_panel(true)
 	detail_panel.set_slot_info(slot)
 	print(slot.data)
