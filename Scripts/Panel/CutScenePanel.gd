@@ -7,9 +7,8 @@ var _cut_scene:
 		return $"TextureRect" as TextureRect
 
 # TODO : meta데이터에서 그림 받아오기 또는 그림 파일 경로 받아와서 표시하기
-func initialize(data: Dictionary):
+func initialize(_data: Dictionary):
 	print("CutScene")
-	pass
 
 
 # TODO : 개별적으로 설정하지 않으면 view매니저에서 이미지 가져오기 및 세팅

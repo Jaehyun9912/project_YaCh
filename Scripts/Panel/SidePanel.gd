@@ -51,7 +51,7 @@ func set_budget_panel():
 func set_info_panel(type_str: String, text_str: String):
 	type.text = type_str
 	text.text = text_str
-	var len = text_str.length()
+	# var len = text_str.length()
 	_set_length(0.5)
 
 # 일정 시간동안만 표시

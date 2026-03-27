@@ -39,5 +39,5 @@ func set_highlight(highlight: bool):
 		color = Color("7cc3b2")
 
 # 해당 슬롯을 선택했을 때 사용 가능한 기능 함수 이름 리스트 반환
-func get_slot_method_list(condition: Dictionary) -> Array:
+func get_slot_method_list(_condition: Dictionary) -> Array:
 	return Array()
