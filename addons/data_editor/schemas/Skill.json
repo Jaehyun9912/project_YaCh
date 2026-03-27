@@ -1,67 +1,77 @@
 {
-  "display": {
-	"type": "object",
-	"comment": "스킬의 시각적 표현에 대한 정보입니다.",
-	"default": {
-	  "name": { "type": "string", "comment": "스킬의 이름입니다.", "default": "" },
-	  "description": { "type": "string", "comment": "스킬의 설명입니다.", "default": "" },
-	  "owner_type": { "type": "enum:player,enemy,peer,special", "comment": "소유자 유형", "default": "player" },
-	  "icon": { "type": "path", "comment": "아이콘 경로", "default": "res://icon.svg" }
-	}
-  },
-  "requirements": {
-	"type": "object",
-	"comment": "스킬 사용 요구사항입니다.",
-	"default": {
-	  "cost": {
-		"type": "map",
-		"value_type": "number",
-		"comment": "필요 자원 (예: {'point': 10, 'mana': 20})",
-		"default": {}
-	  },
-	  "condition": {
+	"type": "map",
+	"value_type": "object",
+	"comment": "스킬 목록 딕셔너리입니다. key는 skill id입니다.",
+	"default": {},
+	"entry_schema": {
 		"type": "object",
-		"comment": "스킬 발동 조건 (특정 스탯 이상 등)",
+		"comment": "스킬 1개 엔트리",
 		"default": {
-		  "stat": { "type": "string", "comment": "체크할 스탯명", "default": "" },
-		  "op": { "type": "enum:>,<,==,>=,<=", "comment": "비교 연산자", "default": "==" },
-		  "value": { "type": "any", "comment": "비교 대상 값", "default": 0 }
-		}
-	  },
-	  "cooldown": { "type": "number", "comment": "재사용 대기시간 (턴)", "default": 0 }
-	}
-  },
-  "execution": {
-	"type": "object",
-	"comment": "스킬 실행 시 발생하는 효과입니다.",
-	"default": {
-	  "target": { 
-		"type": "enum:one,all,self,team,field", 
-		"comment": "대상 범위", 
-		"default": "one" 
-	  },
-	  "actions": {
-		"type": "array",
-		"comment": "실행될 액션들의 목록입니다.",
-		"item_schema": {
-		  "type": "object",
-		  "default": {
-			"type": { "type": "enum:damage,buff,debuff,summon,field", "default": "damage" },
-			"formula": {
-			  "type": "object",
-			  "default": {
-				"base": { "type": "number", "default": 0 },
-				"scaling_stat": { "type": "string", "default": "atk" },
-				"multiplier": { "type": "number", "default": 1.0 }
-			  }
+			"display": {
+				"type": "object",
+				"comment": "스킬의 시각적 표현에 대한 정보입니다.",
+				"default": {
+					"name": { "type": "string", "comment": "스킬의 이름입니다.", "default": "" },
+					"description": { "type": "string", "comment": "스킬의 설명입니다.", "default": "" },
+					"owner_type": { "type": "enum:player,enemy,peer,special", "comment": "소유자 유형", "default": "player" },
+					"icon": { "type": "path", "comment": "아이콘 경로", "default": "res://icon.svg" }
+				}
 			},
-			"element": { "type": "string", "comment": "속성 (선택)", "default": "none" },
-			"effect_id": { "type": "string", "comment": "상태이상/이펙트 ID", "default": "" },
-			"chance": { "type": "number", "comment": "발동 확률 (0~1)", "default": 1.0 }
-		  }
-		},
-		"default": []
-	  }
+			"requirements": {
+				"type": "object",
+				"comment": "스킬 사용 요구사항입니다.",
+				"default": {
+					"cost": {
+						"type": "map",
+						"value_type": "number",
+						"comment": "필요 자원 (예: {'point': 10, 'mana': 20})",
+						"default": {}
+					},
+					"condition": {
+						"type": "object",
+						"comment": "스킬 발동 조건 (특정 스탯 이상 등)",
+						"default": {
+							"stat": { "type": "enum:", "enum_options": ["", "hp", "max_hp", "atk", "def", "speed", "mana", "mana_max"], "enum_append_keys_from": "res://Data/attribute_info.json", "comment": "체크할 스탯명", "default": "" },
+							"op": { "type": "enum:>,<,==,>=,<=", "comment": "비교 연산자", "default": "==" },
+							"value": { "type": "any", "comment": "비교 대상 값", "default": 0 }
+						}
+					},
+					"cooldown": { "type": "number", "comment": "재사용 대기시간 (턴)", "default": 0 }
+				}
+			},
+			"execution": {
+				"type": "object",
+				"comment": "스킬 실행 시 발생하는 효과입니다.",
+				"default": {
+					"target": {
+						"type": "enum:one,all,self,team,field",
+						"comment": "대상 범위",
+						"default": "one"
+					},
+					"actions": {
+						"type": "array",
+						"comment": "실행될 액션들의 목록입니다.",
+						"item_schema": {
+							"type": "object",
+							"default": {
+								"type": { "type": "enum:damage,buff,debuff,summon,field", "default": "damage" },
+								"formula": {
+									"type": "object",
+									"default": {
+										"base": { "type": "number", "default": 0 },
+										"scaling_stat": { "type": "enum:", "enum_options": ["atk", "def", "hp", "max_hp", "speed", "mana", "mana_max"], "default": "atk" },
+										"multiplier": { "type": "number", "default": 1.0 }
+									}
+								},
+								"element": { "type": "enum:", "enum_options": ["none"], "enum_append_keys_from": "res://Data/attribute_info.json", "comment": "속성 (선택)", "default": "none" },
+								"effect_id": { "type": "string", "comment": "상태이상/이펙트 ID", "default": "" },
+								"chance": { "type": "number", "comment": "발동 확률 (0~1)", "default": 1.0 }
+							}
+						},
+						"default": []
+					}
+				}
+			}
+		}
 	}
-  }
 }

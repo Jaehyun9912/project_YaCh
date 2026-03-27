@@ -117,16 +117,11 @@ func _on_item_selected() -> void:
 
 
 func apply_external_edit(path: Array, new_value: Variant, edit_options: Dictionary = {}) -> void:
-	# Inspector는 "기본값이면 키 생략" 옵션을 넘기고, 실제 JSON 반영은 여기서 일관되게 처리합니다.
-	# 즉 Inspector는 입력 UI만 담당하고, 데이터 구조 변경 책임은 Editor가 가져갑니다.
-	var has_default = bool(edit_options.get("has_default", false))
-	var can_omit = bool(edit_options.get("can_omit", false))
-	var should_omit_default = bool(edit_options.get("omit_if_default", false))
-	var default_value = edit_options.get("default_value", null)
-	var should_remove_key = should_omit_default and can_omit and has_default and new_value == default_value
-
-	if should_remove_key:
-		_remove_value_by_path(current_data, path)
+	# Inspector 입력값을 path 위치에 그대로 반영합니다.
+	# 기본값이라도 키를 생략하지 않고 항상 명시적으로 저장합니다.
+	if path.is_empty():
+		# 루트 값 전체 교체(예: root array append)는 경로 탐색 없이 바로 반영합니다.
+		current_data = new_value
 		_set_dirty(true)
 		_refresh_tree_view()
 		return
@@ -137,6 +132,90 @@ func apply_external_edit(path: Array, new_value: Variant, edit_options: Dictiona
 
 	_set_dirty(true)
 	_refresh_tree_view()
+
+
+func delete_entry(path: Array) -> Dictionary:
+	# 배열 원소(index) 또는 map 엔트리(key)를 한 단계만 삭제합니다.
+	if path.is_empty():
+		return {"ok": false, "message": "루트는 삭제할 수 없습니다."}
+
+	var parent_path = path.slice(0, path.size() - 1)
+	var target_key = path[path.size() - 1]
+	var parent_node: Variant = current_data if parent_path.is_empty() else _get_value_by_path(current_data, parent_path)
+
+	if parent_node is Array:
+		if not (target_key is int):
+			return {"ok": false, "message": "배열 인덱스가 아닙니다."}
+
+		var parent_array: Array = parent_node
+		var index: int = target_key
+		if index < 0 or index >= parent_array.size():
+			return {"ok": false, "message": "배열 인덱스 범위를 벗어났습니다."}
+
+		parent_array.remove_at(index)
+		_set_dirty(true)
+		_refresh_tree_view()
+		return {"ok": true, "message": "배열 원소 삭제 완료"}
+
+	if parent_node is Dictionary:
+		var parent_dict: Dictionary = parent_node
+		var resolved_key = target_key
+		if not parent_dict.has(resolved_key):
+			var key_text = str(target_key)
+			if parent_dict.has(key_text):
+				resolved_key = key_text
+			else:
+				return {"ok": false, "message": "삭제할 key를 찾을 수 없습니다."}
+
+		parent_dict.erase(resolved_key)
+		_set_dirty(true)
+		_refresh_tree_view()
+		return {"ok": true, "message": "map 엔트리 삭제 완료"}
+
+	return {"ok": false, "message": "상위 항목이 배열/map이 아닙니다."}
+
+
+func rename_map_key(path: Array, new_key: String) -> Dictionary:
+	# path 마지막 키를 같은 부모 Dictionary 안에서 새 이름으로 교체합니다.
+	if path.is_empty():
+		return {"ok": false, "message": "루트 key는 변경할 수 없습니다."}
+
+	var trimmed_new_key = new_key.strip_edges()
+	if trimmed_new_key.is_empty():
+		return {"ok": false, "message": "새 key 이름이 비어 있습니다."}
+
+	var parent_path = path.slice(0, path.size() - 1)
+	var old_key = path[path.size() - 1]
+	var parent_node: Variant = current_data if parent_path.is_empty() else _get_value_by_path(current_data, parent_path)
+	if not (parent_node is Dictionary):
+		return {"ok": false, "message": "상위 항목이 map(Dictionary)이 아닙니다."}
+
+	var parent_dict: Dictionary = parent_node
+	var resolved_old_key = old_key
+	if not parent_dict.has(resolved_old_key):
+		var old_key_text = str(old_key)
+		if parent_dict.has(old_key_text):
+			resolved_old_key = old_key_text
+		else:
+			return {"ok": false, "message": "기존 key를 찾을 수 없습니다."}
+
+	if str(resolved_old_key) == trimmed_new_key:
+		return {"ok": false, "message": "같은 key 이름입니다."}
+
+	if parent_dict.has(trimmed_new_key):
+		return {"ok": false, "message": "이미 존재하는 key입니다: %s" % trimmed_new_key}
+
+	if not _rename_dictionary_key_preserve_order(parent_dict, resolved_old_key, trimmed_new_key):
+		return {"ok": false, "message": "key 변경에 실패했습니다."}
+
+	_set_dirty(true)
+	_refresh_tree_view()
+	return {
+		"ok": true,
+		"message": "key 변경 완료",
+		"old_key": str(resolved_old_key),
+		"new_key": trimmed_new_key
+	}
 
 
 func save_current_file() -> Dictionary:
@@ -204,6 +283,57 @@ func _variant_to_text(value: Variant) -> String:
 		TYPE_NIL: return "null"
 		TYPE_BOOL: return "true" if value else "false"
 		_: return str(value)
+
+
+func _get_value_by_path(root: Variant, path: Array) -> Variant:
+	# path로 부모 노드를 찾아 key 변경 같은 구조 편집에 재사용합니다.
+	var node: Variant = root
+	for raw_key in path:
+		if node is Dictionary:
+			var dict_node: Dictionary = node
+			var resolved_key = raw_key
+			if not dict_node.has(resolved_key):
+				var string_key = str(raw_key)
+				if dict_node.has(string_key):
+					resolved_key = string_key
+				else:
+					return null
+			node = dict_node[resolved_key]
+			continue
+
+		if node is Array:
+			if not (raw_key is int):
+				return null
+
+			var array_node: Array = node
+			var index: int = raw_key
+			if index < 0 or index >= array_node.size():
+				return null
+			node = array_node[index]
+			continue
+
+		return null
+
+	return node
+
+
+func _rename_dictionary_key_preserve_order(dict_node: Dictionary, old_key: Variant, new_key: String) -> bool:
+	# Dictionary 순서를 유지하려고 재구성 방식으로 key를 교체합니다.
+	if not dict_node.has(old_key):
+		return false
+
+	var rebuilt := {}
+	for existing_key in dict_node.keys():
+		if existing_key == old_key:
+			rebuilt[new_key] = dict_node[existing_key]
+		else:
+			rebuilt[existing_key] = dict_node[existing_key]
+
+	dict_node.clear()
+	for rebuilt_key in rebuilt.keys():
+		dict_node[rebuilt_key] = rebuilt[rebuilt_key]
+
+	return true
 
 
 func _set_value_by_path(root: Variant, path: Variant, new_value: Variant) -> bool:

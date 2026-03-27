@@ -9,6 +9,21 @@ static func build_root_schema(schema: Dictionary, data: Variant) -> Dictionary:
 	if schema.is_empty():
 		return {}
 
+	if schema.has("type"):
+		var root_type = str(schema.get("type", ""))
+		if root_type == "array" and data is Dictionary and looks_like_id_map(data):
+			# 루트를 array로 선언해도 기존 ID -> object 파일은 map으로 호환 렌더링합니다.
+			var item_schema = get_array_item_schema(schema)
+			var item_field_map = get_object_child_schema_map(item_schema)
+			if item_field_map.is_empty() or not has_overlapping_keys(item_field_map, data):
+				return {
+					"type": "map",
+					"value_type": "object",
+					"entry_schema": item_schema if item_schema is Dictionary else {"type": "object", "default": {}}
+				}
+
+		return schema
+
 	if is_schema_field_map(schema):
 		# 데이터의 최상위 키가 ID 맵이면, 각 엔트리에 동일 스키마를 적용합니다.
 		if data is Dictionary and looks_like_id_map(data) and not has_overlapping_keys(schema, data):
@@ -18,9 +33,6 @@ static func build_root_schema(schema: Dictionary, data: Variant) -> Dictionary:
 				"entry_schema": {"type": "object", "default": schema}
 			}
 		return {"type": "object", "default": schema}
-
-	if schema.has("type"):
-		return schema
 
 	return {"type": "object", "default": schema}
 

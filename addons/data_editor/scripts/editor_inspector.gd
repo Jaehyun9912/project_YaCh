@@ -3,6 +3,8 @@ class_name DE_EditorInspector
 extends PanelContainer
 
 signal value_confirmed(path: Array, new_value: Variant, edit_options: Dictionary)
+signal map_key_rename_requested(path: Array, new_key: String)
+signal entry_delete_requested(path: Array)
 
 const SchemaUtils = preload("res://addons/data_editor/scripts/editor_schema_utils.gd")
 
@@ -23,11 +25,11 @@ var _path_line_edit: LineEdit = null
 @onready var _path_file_dialog: FileDialog = $PathFileDialog
 
 
-func _ready() -> void:
-	# Inspector의 정적 레이아웃은 scene가 담당하고, 스크립트는 동작과 동적 컨트롤만 관리합니다.
+func _ready():
 	_comment_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_default_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_omit_default_checkbox.visible = false
 	_path_file_dialog.access = FileDialog.ACCESS_RESOURCES
 	_path_file_dialog.file_mode = FileDialog.FILE_MODE_OPEN_FILE
 	_path_file_dialog.title = "Select Resource Path"
@@ -35,6 +37,12 @@ func _ready() -> void:
 		_apply_button.pressed.connect(_on_apply_pressed)
 	if not _path_file_dialog.file_selected.is_connected(_on_path_file_selected):
 		_path_file_dialog.file_selected.connect(_on_path_file_selected)
+
+
+func trigger_add_array_element(meta: Dictionary) -> void:
+	# MainPanel에서 array 선택 후 + 버튼으로 호출되는 공개 메서드입니다.
+	_current_meta = meta.duplicate(true)
+	_on_add_array_element_pressed()
 
 
 func show_field(meta: Dictionary) -> void:
@@ -54,20 +62,17 @@ func show_field(meta: Dictionary) -> void:
 	_comment_label.visible = not comment.is_empty()
 
 	var has_default = bool(meta.get("has_default", false))
-	var can_omit = bool(meta.get("can_omit", false))
 	if has_default:
 		var default_text = "기본값: %s" % _value_to_text(meta.get("default_value", null))
-		if can_omit:
-			default_text += " (생략 가능)"
 		_default_label.text = default_text
 		_default_label.visible = true
-		_omit_default_checkbox.visible = can_omit
-		_omit_default_checkbox.button_pressed = can_omit
 	else:
 		_default_label.visible = false
-		_omit_default_checkbox.visible = false
 
-	if has_default and can_omit and not bool(meta.get("has_explicit_value", true)):
+	_omit_default_checkbox.visible = false
+	_omit_default_checkbox.button_pressed = false
+
+	if has_default and bool(meta.get("can_omit", false)) and not bool(meta.get("has_explicit_value", true)):
 		# 실제 파일에는 키가 없고 기본값만 적용 중이라는 점을 별도 상태 문구로 알려 줍니다.
 		_status_label.modulate = Color(0.95, 0.86, 0.48)
 		_status_label.text = "현재 파일에는 키가 없고 기본값이 적용 중입니다."
@@ -83,6 +88,13 @@ func _rebuild_control(expected_type: String, current_value: Variant) -> void:
 	_current_control = null
 	_path_line_edit = null
 	_apply_button.visible = true
+
+	if bool(_current_meta.get("is_map_entry", false)):
+		# map 엔트리는 값 타입과 무관하게 key 변경 입력을 먼저 제공합니다.
+		_add_map_key_rename_controls()
+
+	if _is_entry_deletable():
+		_add_entry_delete_controls()
 
 	if SchemaUtils.is_enum_schema_type(expected_type):
 		# enum은 자유 입력보다 선택식 UI가 안전하므로 OptionButton만 사용합니다.
@@ -131,7 +143,26 @@ func _rebuild_control(expected_type: String, current_value: Variant) -> void:
 			check.button_pressed = bool(current_value)
 			_control_container.add_child(check)
 			_current_control = check
-		"object", "array":
+		"array":
+			# 배열은 현재 값 전체를 다시 써 넣는 방식으로 안전하게 원소를 추가합니다.
+			var row = HBoxContainer.new()
+			row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+			var count_label = Label.new()
+			var count = current_value.size() if current_value is Array else 0
+			count_label.text = "원소 수: %d" % count
+			count_label.modulate = Color(0.75, 0.75, 0.75)
+			count_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			row.add_child(count_label)
+
+			var add_button = Button.new()
+			add_button.text = "원소 추가"
+			add_button.pressed.connect(_on_add_array_element_pressed)
+			row.add_child(add_button)
+
+			_control_container.add_child(row)
+			_apply_button.visible = false
+		"object", "map":
 			# 복합 타입은 현재 Inspector에서 부분 편집을 지원하지 않아 읽기 전용 안내만 표시합니다.
 			var lbl = Label.new()
 			lbl.text = "(복합 타입은 직접 편집할 수 없습니다)"
@@ -150,6 +181,155 @@ func _rebuild_control(expected_type: String, current_value: Variant) -> void:
 			)
 			_control_container.add_child(line_edit)
 			_current_control = line_edit
+
+
+func _on_add_array_element_pressed() -> void:
+	# 현재 배열 값을 복사해 새 원소를 append한 뒤 Editor로 전달합니다.
+	var path: Array = _current_meta.get("path", [])
+	var last_value = _current_meta.get("last_value", null)
+	if not (last_value is Array):
+		_status_label.modulate = Color(1, 0.4, 0.4)
+		_status_label.text = "배열 값을 찾을 수 없습니다."
+		return
+
+	var next_array: Array = last_value.duplicate(true)
+	var next_value = _build_default_array_item_value(last_value)
+	next_array.append(next_value)
+
+	value_confirmed.emit(path, next_array, {})
+	_current_meta["last_value"] = next_array
+
+	_status_label.modulate = Color(0.4, 1, 0.4)
+	_status_label.text = "✓ 배열 원소가 추가되었습니다"
+
+	await get_tree().create_timer(1.5).timeout
+	if is_inside_tree():
+		_status_label.text = ""
+
+
+func _build_default_array_item_value(current_array: Array) -> Variant:
+	# item_schema가 있으면 스키마 기본값을 우선 사용하고, 없으면 현재 배열 원소 타입으로 보정합니다.
+	var item_schema = _current_meta.get("array_item_schema", {})
+	if item_schema is Dictionary:
+		var default_info = SchemaUtils.get_schema_default_info(item_schema)
+		if bool(default_info.get("has_default", false)):
+			return _duplicate_variant(default_info.get("value", null))
+
+		var placeholder = SchemaUtils.get_missing_placeholder(item_schema)
+		if placeholder != null:
+			return placeholder
+
+	if current_array.size() > 0:
+		var sample = current_array[0]
+		match typeof(sample):
+			TYPE_DICTIONARY:
+				return {}
+			TYPE_ARRAY:
+				return []
+			TYPE_STRING:
+				return ""
+			TYPE_INT:
+				return 0
+			TYPE_FLOAT:
+				return 0.0
+			TYPE_BOOL:
+				return false
+
+	return null
+
+
+func _duplicate_variant(value: Variant) -> Variant:
+	if value is Dictionary or value is Array:
+		return value.duplicate(true)
+	return value
+
+
+func _add_map_key_rename_controls() -> void:
+	var row = HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var key_edit = LineEdit.new()
+	key_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	key_edit.placeholder_text = "map key"
+	key_edit.text = _get_current_map_key_text()
+	key_edit.gui_input.connect(func(event):
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.keycode == KEY_ENTER or event.keycode == KEY_KP_ENTER:
+				_on_rename_map_key_pressed(key_edit.text)
+	)
+	row.add_child(key_edit)
+
+	var rename_button = Button.new()
+	rename_button.text = "키 변경"
+	rename_button.pressed.connect(func():
+		_on_rename_map_key_pressed(key_edit.text)
+	)
+	row.add_child(rename_button)
+
+	_control_container.add_child(row)
+
+
+func _get_current_map_key_text() -> String:
+	var path: Array = _current_meta.get("path", [])
+	if path.is_empty():
+		return str(_current_meta.get("map_key", ""))
+
+	return str(_current_meta.get("map_key", path[path.size() - 1]))
+
+
+func _on_rename_map_key_pressed(raw_new_key: String) -> void:
+	var path: Array = _current_meta.get("path", [])
+	if path.is_empty():
+		_status_label.modulate = Color(1, 0.4, 0.4)
+		_status_label.text = "변경할 key 경로가 없습니다."
+		return
+
+	var old_key = str(path[path.size() - 1]).strip_edges()
+	var new_key = raw_new_key.strip_edges()
+	if new_key.is_empty():
+		_status_label.modulate = Color(1, 0.4, 0.4)
+		_status_label.text = "새 key를 입력하세요."
+		return
+
+	if new_key == old_key:
+		_status_label.modulate = Color(0.95, 0.86, 0.48)
+		_status_label.text = "같은 key 이름입니다."
+		return
+
+	map_key_rename_requested.emit(path, new_key)
+
+
+func _is_entry_deletable() -> bool:
+	# 배열 원소 또는 map 엔트리만 삭제 버튼을 노출합니다.
+	if bool(_current_meta.get("is_array_entry", false)):
+		return true
+
+	if bool(_current_meta.get("is_map_entry", false)):
+		return true
+
+	return false
+
+
+func _add_entry_delete_controls() -> void:
+	var row = HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var delete_button = Button.new()
+	delete_button.text = "원소 삭제"
+	delete_button.pressed.connect(_on_delete_entry_pressed)
+	row.add_child(delete_button)
+
+	_control_container.add_child(row)
+
+
+func _on_delete_entry_pressed() -> void:
+	var path: Array = _current_meta.get("path", [])
+	if path.is_empty():
+		_status_label.modulate = Color(1, 0.4, 0.4)
+		_status_label.text = "삭제할 항목 경로가 없습니다."
+		return
+
+	entry_delete_requested.emit(path)
 
 
 func _on_pick_path_pressed() -> void:
@@ -203,30 +383,18 @@ func _on_apply_pressed() -> void:
 	var new_value = result.get("value")
 	var path: Array = _current_meta.get("path", [])
 	var has_default = bool(_current_meta.get("has_default", false))
-	var can_omit = bool(_current_meta.get("can_omit", false))
 	var default_value = _current_meta.get("default_value", null)
-	var omit_if_default = has_default and can_omit and _omit_default_checkbox.visible and _omit_default_checkbox.button_pressed
 
-	# 실제 삭제 여부는 editor.gd가 판단하지만, 여기서 의도를 옵션으로 함께 전달합니다.
-	var edit_options := {
-		"has_default": has_default,
-		"can_omit": can_omit,
-		"default_value": default_value,
-		"omit_if_default": omit_if_default
-	}
-
-	value_confirmed.emit(path, new_value, edit_options)
+	# 기본값 생략 없이 항상 명시적으로 값을 저장합니다.
+	value_confirmed.emit(path, new_value, {})
 
 	_current_meta["last_value"] = new_value
 	_current_meta["is_default_value"] = has_default and new_value == default_value
-	_current_meta["has_explicit_value"] = not (omit_if_default and has_default and can_omit and new_value == default_value)
+	_current_meta["has_explicit_value"] = true
 
 	# 같은 필드를 연속 편집해도 상태 문구가 어긋나지 않도록 로컬 metadata도 즉시 갱신합니다.
 	_status_label.modulate = Color(0.4, 1, 0.4)
-	if omit_if_default and has_default and can_omit and new_value == default_value:
-		_status_label.text = "✓ 기본값으로 유지되어 키를 생략합니다"
-	else:
-		_status_label.text = "✓ 적용됨"
+	_status_label.text = "✓ 적용됨"
 
 	await get_tree().create_timer(1.5).timeout
 	if is_inside_tree():

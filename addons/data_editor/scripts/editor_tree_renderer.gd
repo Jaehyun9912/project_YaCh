@@ -35,7 +35,8 @@ static func render_data(tree: Tree, data: Variant, root_schema: Dictionary) -> v
 	if data is Dictionary:
 		_render_dictionary(tree, root, data, root_schema, root_path, false, show_implicit_default_fields)
 	elif data is Array:
-		_render_array(tree, root, data, SchemaUtils.get_array_item_schema(root_schema), root_path, false, show_implicit_default_fields)
+		# 루트가 배열일 때도 선택 가능한 컨테이너를 하나 두어 Inspector에서 원소 추가를 수행할 수 있게 합니다.
+		_add_value_item(tree, root, "root", data, root_schema, root_path, {"has_explicit_value": true}, false, show_implicit_default_fields)
 	else:
 		_add_value_item(tree, root, "value", data, root_schema, root_path, {"has_explicit_value": true}, false, show_implicit_default_fields)
 
@@ -122,6 +123,12 @@ static func _render_dictionary(tree: Tree, parent: TreeItem, data_dict: Dictiona
 			"is_default_value": has_default and value == default_value
 		}
 
+		if is_map_schema:
+			# map 엔트리는 key 변경 UI를 띄울 수 있도록 부모 경로/현재 key를 메타로 남깁니다.
+			field_state["is_map_entry"] = true
+			field_state["map_key"] = key_text
+			field_state["map_parent_path"] = base_path.duplicate()
+
 		_add_value_item(tree, parent, key_text, value, field_schema, child_path, field_state, parent_virtual_default, show_implicit_default_fields)
 
 
@@ -145,6 +152,7 @@ static func _render_array(tree: Tree, parent: TreeItem, data_array: Array, item_
 			"default_value": default_value,
 			"is_default_value": has_default and value == default_value
 		}
+		field_state["is_array_entry"] = true
 
 		_add_value_item(tree, parent, key_text, value, item_schema, child_path, field_state, parent_virtual_default, show_implicit_default_fields)
 
@@ -171,6 +179,9 @@ static func _add_value_item(tree: Tree, parent: TreeItem, key_text: String, valu
 	var can_omit = bool(field_state.get("can_omit", false))
 	var default_value = field_state.get("default_value", null)
 	var is_default_value = bool(field_state.get("is_default_value", false))
+	var expected_type = schema_type
+	if expected_type.is_empty():
+		expected_type = _infer_precise_type(value)
 
 	if has_default and not field_state.has("is_default_value"):
 		is_default_value = value == default_value
@@ -197,6 +208,35 @@ static func _add_value_item(tree: Tree, parent: TreeItem, key_text: String, valu
 	for column in range(tree.columns):
 		item.set_tooltip_text(column, tooltip_text)
 
+	# 원시 타입/복합 타입 모두 Inspector가 같은 인터페이스로 읽을 수 있도록 공통 메타를 구성합니다.
+	var value_meta := {
+		"path": value_path.duplicate(),
+		"expected_type": expected_type,
+		"last_value": _duplicate_variant(value),
+		"has_explicit_value": has_explicit_value,
+		"has_default": has_default,
+		"can_omit": can_omit,
+		"default_value": default_value,
+		"is_default_value": is_default_value
+	}
+
+	if not comment_text.is_empty():
+		value_meta["comment"] = comment_text
+
+	if bool(field_state.get("is_map_entry", false)):
+		value_meta["is_map_entry"] = true
+		value_meta["map_key"] = str(field_state.get("map_key", key_text))
+		var map_parent_path = field_state.get("map_parent_path", [])
+		if map_parent_path is Array:
+			value_meta["map_parent_path"] = (map_parent_path as Array).duplicate()
+
+	if bool(field_state.get("is_array_entry", false)):
+		value_meta["is_array_entry"] = true
+
+	if SchemaUtils.is_enum_schema(schema_node):
+		# 동적 enum 계산은 렌더 시 한 번만 수행하고 Inspector는 이 목록을 그대로 사용합니다.
+		value_meta["enum_options"] = SchemaUtils.get_schema_enum_options(schema_node)
+
 	if has_default and can_omit and not has_explicit_value:
 		# 파일에 실제로 없는 가상 필드는 옅은 색으로 표시해 구분합니다.
 		item.set_custom_color(0, Color(0.70, 0.70, 0.70, 1.0))
@@ -206,6 +246,7 @@ static func _add_value_item(tree: Tree, parent: TreeItem, key_text: String, valu
 		if has_default and is_default_value:
 			object_text += " (default)"
 		item.set_text(2, object_text)
+		item.set_metadata(2, value_meta)
 
 		# 자식도 같은 virtual default 상태를 이어받아 explicit 여부 판단이 일관되게 유지됩니다.
 		var child_virtual_default = parent_virtual_default or not has_explicit_value
@@ -218,33 +259,15 @@ static func _add_value_item(tree: Tree, parent: TreeItem, key_text: String, valu
 			array_text += " (default)"
 		item.set_text(2, array_text)
 
+		var item_schema = SchemaUtils.get_array_item_schema(schema_node)
+		if item_schema is Dictionary:
+			value_meta["array_item_schema"] = item_schema
+		item.set_metadata(2, value_meta)
+
 		# 배열 자식 역시 부모의 virtual default 상태를 그대로 상속받습니다.
 		var child_virtual_default = parent_virtual_default or not has_explicit_value
-		_render_array(tree, item, value, SchemaUtils.get_array_item_schema(schema_node), value_path, child_virtual_default, show_implicit_default_fields)
+		_render_array(tree, item, value, item_schema, value_path, child_virtual_default, show_implicit_default_fields)
 		return
-
-	var expected_type = schema_type
-	if expected_type.is_empty():
-		expected_type = _infer_precise_type(value)
-
-	# Inspector가 별도 스키마 탐색 없이 즉시 편집기를 만들 수 있도록 필요한 메타데이터를 모두 실어 둡니다.
-	var value_meta := {
-		"path": value_path.duplicate(),
-		"expected_type": expected_type,
-		"last_value": value,
-		"has_explicit_value": has_explicit_value,
-		"has_default": has_default,
-		"can_omit": can_omit,
-		"default_value": default_value,
-		"is_default_value": is_default_value
-	}
-
-	if not comment_text.is_empty():
-		value_meta["comment"] = comment_text
-
-	if SchemaUtils.is_enum_schema(schema_node):
-		# 동적 enum 계산은 렌더 시 한 번만 수행하고 Inspector는 이 목록을 그대로 사용합니다.
-		value_meta["enum_options"] = SchemaUtils.get_schema_enum_options(schema_node)
 
 	item.set_cell_mode(2, TreeItem.CELL_MODE_STRING)
 	item.set_editable(2, false)
@@ -259,6 +282,13 @@ static func _add_value_item(tree: Tree, parent: TreeItem, key_text: String, valu
 		item.set_custom_color(2, Color(0.74, 0.74, 0.74, 1.0))
 
 	item.set_metadata(2, value_meta)
+
+
+static func _duplicate_variant(value: Variant) -> Variant:
+	# metadata로 전달되는 값이 Array/Dictionary면 deep copy해 Inspector 편집 중 원본 참조가 섞이지 않게 합니다.
+	if value is Dictionary or value is Array:
+		return value.duplicate(true)
+	return value
 
 
 static func _build_tooltip_text(comment_text: String, has_default: bool, can_omit: bool, default_value: Variant, has_explicit_value: bool) -> String:

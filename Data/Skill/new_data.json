@@ -1,0 +1,25 @@
+{
+	"test_item": {
+		"display": {
+			"name": "",
+			"description": "",
+			"owner_type": "player",
+			"icon": "res://icon.svg"
+		},
+		"requirements": {
+			"cost": {
+
+			},
+			"condition": {
+				"stat": "",
+				"op": "==",
+				"value": 0
+			},
+			"cooldown": 0
+		},
+		"execution": {
+			"target": "one",
+			"actions": []
+		}
+	}
+}
