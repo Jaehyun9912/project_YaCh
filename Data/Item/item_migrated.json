@@ -1,0 +1,59 @@
+{
+    "potion": {
+        "display": {
+            "name": "하급 포션",
+            "description": "체력을 {value}만큼 회복합니다",
+            "category": "useable",
+            "rarity": "common",
+            "icon": "res://icon.svg"
+        },
+        "logic": {
+            "max_stack": 99,
+            "effects": [
+                {
+                    "target": "hp",
+                    "value_type": "add",
+                    "value": 10.0,
+                    "apply_type": "once"
+                }
+            ]
+        },
+        "tags": ""
+    },
+    "bomb": {
+        "display": {
+            "name": "폭탄",
+            "description": "적 전체에게 {value}의 데미지를 줍니다",
+            "category": "useable",
+            "rarity": "common",
+            "icon": "res://icon.svg"
+        },
+        "logic": {
+            "max_stack": 99,
+            "effects": [
+                {
+                    "target": "all_enemies",
+                    "value_type": "add",
+                    "value": -20.0,
+                    "apply_type": "once"
+                }
+            ]
+        },
+        "tags": ""
+    },
+    "pandora_cube": {
+        "display": {
+            "name": "판도라 큐브",
+            "description": "",
+            "category": "artifact",
+            "rarity": "rare",
+            "icon": "res://icon.svg"
+        },
+        "logic": {
+            "max_stack": 1,
+            "location_limit": "forest",
+            "effects": []
+        },
+        "tags": ""
+    }
+}

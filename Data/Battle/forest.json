@@ -1,0 +1,40 @@
+{
+    "forest_battle": {
+        "display": {
+            "name": "숲의 전투",
+            "description": "숲에서 만나는 적들과의 조우입니다."
+        },
+        "environment": {
+            "attribute_limit": 100.0,
+            "initial_points": 100.0
+        },
+        "waves": [
+            {
+                "wave_name": "Wave 1",
+                "enemies": [
+                    {
+                        "enemy_id": "enemy1"
+                    },
+                    {
+                        "enemy_id": "enemy2"
+                    }
+                ]
+            }
+        ],
+        "rewards": {
+            "gold": 0,
+            "items": [
+                {
+                    "id": "item:potion",
+                    "count": 1,
+                    "chance": 1.0
+                },
+                {
+                    "id": "artifact:pandora_cube",
+                    "count": 1,
+                    "chance": 1.0
+                }
+            ]
+        }
+    }
+}

@@ -107,14 +107,5 @@
             "type": "turn",
             "value": 1
         }
-    },
-    "test_location": {
-        "target": "speed",
-        "value": 50,
-        "location": "forest",
-        "duration": {
-            "type": "turn",
-            "value": 99
-        }
     }
 }

@@ -1,21 +1,48 @@
 {
-	"Guild": "GuildName",
-	"Points":[
-		{
-			"Location" : "TestCountry",
-			"xPos" : 100,
-			"yPos" : 122
-		}
-	],
-	"Conditions":{
-		"SubLocation1":{
-			"xPos":150,
-			"yPos":200
-		},
-		"SubLocation3":{
-			"xPos":150,
-			"yPos":200
-		}
-	}
-	
+    "map_config": {
+        "name": "GuildName",
+        "theme": "meadow",
+        "background": "",
+        "auto_connect_range": 1.5,
+        "grid_size": 32
+    },
+    "points": {
+        "TestCountry": {
+            "display_name": "TestCountry",
+            "type": "path",
+            "position": {
+                "x": 100,
+                "y": 122
+            },
+            "visibility": "visible",
+            "metadata": {
+                "description": ""
+            }
+        },
+        "SubLocation1": {
+            "display_name": "SubLocation1",
+            "type": "interest",
+            "position": {
+                "x": 150,
+                "y": 200
+            },
+            "visibility": "hidden",
+            "metadata": {
+                "description": "Condition Point"
+            }
+        },
+        "SubLocation3": {
+            "display_name": "SubLocation3",
+            "type": "interest",
+            "position": {
+                "x": 150,
+                "y": 200
+            },
+            "visibility": "hidden",
+            "metadata": {
+                "description": "Condition Point"
+            }
+        }
+    },
+    "navigation_overrides": []
 }

@@ -1,0 +1,72 @@
+{
+    "none": {
+        "display": {
+            "name": "none",
+            "color": 2829625599
+        },
+        "overdrive": {
+            "type": "EXPLODE",
+            "threshold": 0.8,
+            "threshold_end": 0.6,
+            "effects": []
+        }
+    },
+    "fire": {
+        "display": {
+            "name": "fire",
+            "color": 4278190335
+        },
+        "overdrive": {
+            "threshold": 0.8,
+            "threshold_end": 0.6,
+            "type": "KEEP",
+            "effects": [
+                {
+                    "target": "hp",
+                    "value_type": "add",
+                    "apply_type": "tick",
+                    "restore": false,
+                    "value": -10,
+                    "description": "매 턴 전체에게 화염 데미지 (도트딜)"
+                },
+                {
+                    "target": "water",
+                    "value": -0.5,
+                    "description": "물 속성 위력 약화 (디버프)"
+                }
+            ]
+        }
+    },
+    "water": {
+        "display": {
+            "name": "water",
+            "color": 65535
+        },
+        "overdrive": {
+            "threshold": 0.8,
+            "type": "EXPLODE",
+            "effects": [
+                {
+                    "target": "hp",
+                    "value_type": "add",
+                    "apply_type": "once",
+                    "restore": false,
+                    "value": -50,
+                    "description": "폭발 시 전체 큰 데미지"
+                }
+            ]
+        }
+    },
+    "dirt": {
+        "display": {
+            "name": "dirt",
+            "color": 2319782911
+        },
+        "overdrive": {
+            "type": "EXPLODE",
+            "threshold": 0.8,
+            "threshold_end": 0.6,
+            "effects": []
+        }
+    }
+}

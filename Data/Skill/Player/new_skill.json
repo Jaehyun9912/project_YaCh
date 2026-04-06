@@ -1,106 +1,140 @@
 {
-  "base_attack": {
-    "display": {
-      "name": "기본 공격",
-      "description": "적을 1명 10데미지로 공격한다.\n행동력 10을 소모한다.",
-      "owner_type": "player",
-      "icon": "res://assets/icons/skills/attack.png"
-    },
-    "requirements": {
-      "cost": { "point": 10 },
-      "cooldown": 0
-    },
-    "execution": {
-      "target": "one",
-      "actions": [
-        {
-          "type": "damage",
-          "formula": { "base": 10, "scaling_stat": "attack", "multiplier": 1.0 },
-          "element": "none",
-          "chance": 1.0
-        }
-      ]
-    }
-  },
-  "base_fire": {
-    "display": {
-      "name": "기본 불 공격",
-      "description": "적을 전부 10데미지로 공격하며 불 원소 10을 쌓는다.\n행동력 10을 소모한다.",
-      "owner_type": "player",
-      "icon": "res://assets/icons/skills/fire_attack.png"
-    },
-    "requirements": {
-      "cost": { "point": 4 },
-      "cooldown": 0
-    },
-    "execution": {
-      "target": "all",
-      "actions": [
-        {
-          "type": "damage",
-          "formula": { "base": 10, "scaling_stat": "attack", "multiplier": 1.0 },
-          "element": "fire",
-          "effect_id": "fire_element_stack",
-          "effect_override": { "value": 10 },
-          "chance": 1.0
-        }
-      ]
-    }
-  },
-  "base_water": {
-    "display": {
-      "name": "회복하기",
-      "description": "나의 체력을 10 회복한다. 물 원소 11을 쌓는다.\n행동력 10과 흙 원소 1을 소모한다.",
-      "owner_type": "player",
-      "icon": "res://assets/icons/skills/heal.png"
-    },
-    "requirements": {
-      "cost": { "point": 4, "dirt": 1 },
-      "cooldown": 0
-    },
-    "execution": {
-      "target": "self",
-      "actions": [
-        {
-          "type": "buff",
-          "formula": { "base": 10, "scaling_stat": "max_hp", "multiplier": 0.0 },
-          "element": "water",
-          "effect_id": "water_element_stack",
-          "effect_override": { "value": 11 },
-          "chance": 1.0
-        }
-      ]
-    }
-  },
-  "base_dirt": {
-    "display": {
-      "name": "기본 땅 공격",
-      "description": "적을 1명 10데미지로 공격하며 흙 원소 45를 쌓는다.\n행동력 10을 소모한다.\n나에게 최대체력 100을 1턴간 부여한다.",
-      "owner_type": "player",
-      "icon": "res://assets/icons/skills/dirt_attack.png"
-    },
-    "requirements": {
-      "cost": { "point": 10 },
-      "cooldown": 0
-    },
-    "execution": {
-      "target": "one",
-      "actions": [
-        {
-          "type": "damage",
-          "formula": { "base": 10, "scaling_stat": "attack", "multiplier": 1.0 },
-          "element": "dirt",
-          "effect_id": "dirt_element_stack",
-          "effect_override": { "value": 45 },
-          "chance": 1.0
+    "base_attack": {
+        "display": {
+            "name": "기본 공격",
+            "description": "적을 1명 10데미지로 공격한다.\n행동력 10을 소모한다.",
+            "owner_type": "player",
+            "icon": "res://assets/icons/skills/attack.png"
         },
-        {
-          "type": "buff",
-          "effect_id": "test_common_add",
-          "effect_override": { "duration": 1, "value": 100 },
-          "chance": 1.0
+        "requirements": {
+            "cost": {
+                "point": 10
+            },
+            "cooldown": 0
+        },
+        "execution": {
+            "target": "one",
+            "actions": [
+                {
+                    "type": "damage",
+                    "formula": {
+                        "base": 10,
+                        "scaling_stat": "atk",
+                        "multiplier": 1.0
+                    },
+                    "element": "none",
+                    "chance": 1.0
+                }
+            ]
         }
-      ]
+    },
+    "base_fire": {
+        "display": {
+            "name": "기본 불 공격",
+            "description": "적을 전부 10데미지로 공격하며 불 원소 10을 쌓는다.\n행동력 10을 소모한다.",
+            "owner_type": "player",
+            "icon": "res://assets/icons/skills/fire_attack.png"
+        },
+        "requirements": {
+            "cost": {
+                "point": 4
+            },
+            "cooldown": 0
+        },
+        "execution": {
+            "target": "all",
+            "actions": [
+                {
+                    "type": "damage",
+                    "formula": {
+                        "base": 10,
+                        "scaling_stat": "atk",
+                        "multiplier": 1.0
+                    },
+                    "element": "fire",
+                    "effect_id": "fire_element_stack",
+                    "effect_override": {
+                        "value": 10
+                    },
+                    "chance": 1.0
+                }
+            ]
+        }
+    },
+    "base_water": {
+        "display": {
+            "name": "회복하기",
+            "description": "나의 체력을 10 회복한다. 물 원소 11을 쌓는다.\n행동력 10과 흙 원소 1을 소모한다.",
+            "owner_type": "player",
+            "icon": "res://assets/icons/skills/heal.png"
+        },
+        "requirements": {
+            "cost": {
+                "point": 4,
+                "dirt": 1
+            },
+            "cooldown": 0
+        },
+        "execution": {
+            "target": "self",
+            "actions": [
+                {
+                    "type": "buff",
+                    "formula": {
+                        "base": 10,
+                        "scaling_stat": "max_hp",
+                        "multiplier": 0.0
+                    },
+                    "element": "water",
+                    "effect_id": "water_element_stack",
+                    "effect_override": {
+                        "value": 11
+                    },
+                    "chance": 1.0
+                }
+            ]
+        }
+    },
+    "base_dirt": {
+        "display": {
+            "name": "기본 땅 공격",
+            "description": "적을 1명 10데미지로 공격하며 흙 원소 45를 쌓는다.\n행동력 10을 소모한다.\n나에게 최대체력 100을 1턴간 부여한다.",
+            "owner_type": "player",
+            "icon": "res://assets/icons/skills/dirt_attack.png"
+        },
+        "requirements": {
+            "cost": {
+                "point": 10
+            },
+            "cooldown": 0
+        },
+        "execution": {
+            "target": "one",
+            "actions": [
+                {
+                    "type": "damage",
+                    "formula": {
+                        "base": 10,
+                        "scaling_stat": "atk",
+                        "multiplier": 1.0
+                    },
+                    "element": "dirt",
+                    "effect_id": "dirt_element_stack",
+                    "effect_override": {
+                        "value": 45
+                    },
+                    "chance": 1.0
+                },
+                {
+                    "type": "buff",
+                    "effect_id": "test_common_add",
+                    "effect_override": {
+                        "duration": 1,
+                        "value": 100
+                    },
+                    "chance": 1.0
+                }
+            ]
+        }
     }
-  }
 }
