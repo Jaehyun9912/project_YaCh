@@ -9,7 +9,7 @@ func _ready():
 	# attribute["water"] = Color.BLUE
 	# attribute["dirt"] = Color.SADDLE_BROWN
 	# attribute["none"] = Color.DARK_GRAY
-	attribute = DataManager.get_data("attribute_info.json")
+	attribute = DataManager.get_data_folder("Attributes")
 	if attribute == null:
 		printerr("Attribute info data load failed!")
 		attribute = {}

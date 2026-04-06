@@ -80,6 +80,20 @@ func show_field(meta: Dictionary) -> void:
 	_rebuild_control(expected_type, meta.get("last_value"))
 
 
+func clear_inspector() -> void:
+	# 인스펙터의 모든 표시 정보와 컨트롤을 초기화합니다.
+	_current_meta = {}
+	_key_label.text = "선택된 항목 없음"
+	_type_label.text = ""
+	_comment_label.text = ""
+	_default_label.text = ""
+	_status_label.text = ""
+	for child in _control_container.get_children():
+		child.queue_free()
+	_current_control = null
+	_apply_button.visible = false
+
+
 func _rebuild_control(expected_type: String, current_value: Variant) -> void:
 	# 선택한 값의 타입에 맞는 단일 편집 컨트롤만 다시 생성합니다.
 	# 이전 컨트롤은 모두 폐기해 패널 상태가 누적되지 않게 합니다.

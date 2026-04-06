@@ -1,0 +1,55 @@
+{
+  "type": "map",
+  "value_type": "object",
+  "comment": "속성(Attribute) 정보 목록입니다.",
+  "default": {},
+  "entry_schema": {
+    "type": "object",
+    "comment": "단일 속성 정의",
+    "default": {
+      "display": {
+        "type": "object",
+        "comment": "UI 표시 정보",
+        "default": {
+          "name": { "type": "string", "comment": "게임 내 표시 이름", "default": "" },
+          "color": { "type": "number", "comment": "RGBA 색상값 (정수형)", "default": 4294967295 }
+        }
+      },
+      "overdrive": {
+        "type": "object",
+        "comment": "임계점(Overdrive) 발생 시의 로직 설정",
+        "default": {
+          "type": { 
+            "type": "enum:EXPLODE,KEEP", 
+            "comment": "EXPLODE: 발동 후 초기화, KEEP: 일정 수치 유지 동안 지속", 
+            "default": "EXPLODE" 
+          },
+          "threshold": { "type": "number", "comment": "이벤트 시작 임계점 (0.0 ~ 1.0)", "default": 0.8 },
+          "threshold_end": { "type": "number", "comment": "이벤트 종료 임계점 (KEEP 타입 전용)", "default": 0.6 },
+          "effects": {
+            "type": "array",
+            "comment": "임계점 도달 시 발생하는 효과 리스트",
+            "item_schema": {
+              "type": "object",
+              "default": {
+                "description": { "type": "string", "comment": "효과에 대한 간단한 설명", "default": "" },
+                "target": { 
+                  "type": "enum:", 
+                  "enum_options": ["hp", "max_hp", "all_enemies", "player"],
+                  "enum_append_keys_from": "res://Data/attribute_info.json",
+                  "comment": "적용 대상 (능력치, 대상, 또는 타 속성 ID)", 
+                  "default": "hp" 
+                },
+                "apply_type": { "type": "enum:once,tick,constant", "comment": "적용 타이밍", "default": "once" },
+                "value_type": { "type": "enum:add,multiplier", "comment": "연산 방식", "default": "add" },
+                "value": { "type": "number", "comment": "수치", "default": 0.0 },
+                "restore": { "type": "boolean", "comment": "효과 종료 시 복구 여부", "default": false }
+              }
+            },
+            "default": []
+          }
+        }
+      }
+    }
+  }
+}

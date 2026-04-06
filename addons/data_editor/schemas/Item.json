@@ -1,0 +1,74 @@
+{
+  "type": "map",
+  "value_type": "object",
+  "comment": "아이템(일반, 아티팩트, 퀘스트 등) 데이터 목록입니다.",
+  "default": {},
+  "entry_schema": {
+    "type": "object",
+    "default": {
+      "display": {
+        "type": "object",
+        "comment": "UI 및 표시 정보",
+        "default": {
+          "name": { "type": "string", "comment": "아이템 이름", "default": "" },
+          "description": { "type": "string", "comment": "아이템 설명 ({value} 포맷 사용 가능)", "default": "" },
+          "category": { 
+            "type": "enum:none,useable,quest,equipment,artifact", 
+            "comment": "아이템 대분류", 
+            "default": "none" 
+          },
+          "rarity": { 
+            "type": "enum:common,rare,epic,legendary", 
+            "comment": "아이템 희귀도", 
+            "default": "common" 
+          },
+          "icon": { "type": "path", "comment": "아이템 아이콘 경로 (res://)", "default": "res://icon.svg" },
+          "sound": { "type": "path", "comment": "효과음 경로 (선택 사항)", "default": "", "optional": true }
+        }
+      },
+      "logic": {
+        "type": "object",
+        "comment": "게임 로직 관련 데이터",
+        "default": {
+          "max_stack": { "type": "number", "comment": "최대 중첩 개수", "default": 1 },
+          "buy": { "type": "number", "comment": "상점 구매가", "default": 0, "optional": true },
+          "sell": { "type": "number", "comment": "상점 판매가", "default": 0, "optional": true },
+          "consume_on_use": { "type": "boolean", "comment": "사용 시 소모 여부", "default": true },
+          "location_limit": { "type": "string", "comment": "사용 가능 지역 제한 (선택 사항)", "default": "", "optional": true },
+          "effects": {
+            "type": "array",
+            "comment": "아이템 효과 리스트",
+            "item_schema": {
+              "type": "object",
+              "default": {
+                "target": { 
+                  "type": "enum:", 
+                  "enum_options": ["hp", "max_hp", "player", "all_enemies"],
+                  "enum_append_keys_from": "res://Data/Attributes/attribute_info.json",
+                  "comment": "효과 적용 대상 (속성 ID 등)", 
+                  "default": "hp" 
+                },
+                "value_type": { "type": "enum:add,multiplier", "comment": "연산 방식", "default": "add" },
+                "value": { "type": "number", "comment": "효과 수치", "default": 0.0 },
+                "priority": { "type": "number", "comment": "적용 우선순위", "default": 0 },
+                "apply_type": { "type": "enum:once,every,end", "comment": "적용 타이밍", "default": "once" },
+                "restore": { "type": "boolean", "comment": "효과 종료 시 복구 여부", "default": false },
+                "duration": {
+                  "type": "object",
+                  "comment": "지속 시간 설정",
+                  "default": {
+                    "type": { "type": "enum:turn,time,permanent", "default": "turn" },
+                    "value": { "type": "number", "default": 0 }
+                  }
+                },
+                "next_buff": { "type": "string", "comment": "연계 될 버프 ID (선택 사항)", "default": "", "optional": true }
+              }
+            },
+            "default": []
+          }
+        }
+      },
+      "tags": { "type": "string", "comment": "시스템 태그 (예: Item.useable.health)", "default": "" }
+    }
+  }
+}

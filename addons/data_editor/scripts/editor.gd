@@ -106,6 +106,16 @@ func set_show_implicit_default_fields(show_all: bool) -> void:
 		_refresh_tree_view()
 
 
+func clear_editor() -> void:
+	# 편집 중인 데이터와 경로를 모두 초기화하고 화면을 비웁니다.
+	current_data = {}
+	current_schema = {}
+	current_file_path = ""
+	_set_dirty(false)
+	TreeRenderer.configure_columns(self)
+	# root 가 숨겨져 있으므로 configure_columns 만으로도 비워집니다.
+
+
 func _on_item_selected() -> void:
 	# 컬럼 2 metadata에는 Inspector가 바로 사용할 path, expected_type, default 정보가 들어 있습니다.
 	var selected_item = get_selected()

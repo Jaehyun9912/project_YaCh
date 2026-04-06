@@ -1,3 +1,75 @@
 {
-  
+  "type": "map",
+  "value_type": "object",
+  "comment": "효과(버프/디버프) 목록입니다. Key는 EFFECT_ID입니다.",
+  "default": {},
+  "entry_schema": {
+    "type": "object",
+    "comment": "단일 효과 정의",
+    "default": {
+      "target": {
+        "type": "enum:",
+        "enum_options": ["hp", "max_hp", "attack", "defense", "speed", "mana"],
+        "enum_append_keys_from": "res://Data/attribute_info.json",
+        "comment": "효과가 적용될 대상 능력치 이름입니다.",
+        "default": "attack"
+      },
+      "value_type": {
+        "type": "enum:add,multiplier",
+        "comment": "능력치에 적용할 연산 방식 (add: 더하기, multiplier: 곱하기)",
+        "default": "add"
+      },
+      "value": {
+        "type": "number",
+        "comment": "연산될 수치입니다. (디버프는 음수 입력)",
+        "default": 0.0
+      },
+      "priority": {
+        "type": "number",
+        "comment": "적용 우선순위. 숫자가 클수록 먼저 적용됩니다.",
+        "default": 0
+      },
+      "apply_type": {
+        "type": "enum:once,every,end",
+        "comment": "적용 타이밍 (once: 즉시 1회, every: 매 틱마다, end: 만료 시 1회)",
+        "default": "once"
+      },
+      "restore": {
+        "type": "boolean",
+        "comment": "효과 종료 시, 적용되었던 수치를 다시 복구할지 여부입니다.",
+        "default": false
+      },
+      "next_buff": {
+        "type": "string",
+        "comment": "이 효과 만료 후 자동으로 발동될 다음 효과의 ID (선택)",
+        "default": ""
+      },
+      "duration": {
+        "type": "object",
+        "comment": "지속 시간 설정 (객체가 없으면 영구 유지)",
+        "default": {
+          "type": {
+            "type": "enum:time,turn,point,attribute_under,attribute_upper",
+            "comment": "지속 시간 종료 기준",
+            "default": "turn"
+          },
+          "value": {
+            "type": "number",
+            "comment": "타입에 따른 기준 수치",
+            "default": 1
+          },
+          "attribute": {
+            "type": "string",
+            "comment": "attribute_under/upper 타입일 때 체크할 대상 속성 ID",
+            "default": ""
+          },
+          "skip_first_tick": {
+            "type": "boolean",
+            "comment": "첫 번째 틱(부여 시점)을 건너뛸지 여부",
+            "default": false
+          }
+        }
+      }
+    }
+  }
 }

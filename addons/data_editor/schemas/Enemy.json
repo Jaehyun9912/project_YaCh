@@ -1,0 +1,43 @@
+{
+  "type": "map",
+  "value_type": "object",
+  "comment": "적(Enemy) 데이터 목록입니다. Key는 ENEMY_ID입니다.",
+  "default": {},
+  "entry_schema": {
+    "type": "object",
+    "comment": "단일 적 정의",
+    "default": {
+      "display": {
+        "type": "object",
+        "comment": "표시 및 에셋 정보",
+        "default": {
+          "name": { "type": "string", "comment": "적의 이름", "default": "" },
+          "description": { "type": "string", "comment": "적에 대한 설명", "default": "" },
+          "asset": { "type": "path", "comment": "전투 시 사용할 에셋 경로", "default": "res://icon.svg" }
+        }
+      },
+      "stats": {
+        "type": "object",
+        "comment": "기본 능력치",
+        "default": {
+          "hp": { "type": "number", "comment": "최대 체력", "default": 100.0 },
+          "attack": { "type": "number", "comment": "기본 공격력", "default": 10.0 },
+          "defense": { "type": "number", "comment": "방어력", "default": 0.0 },
+          "speed": { "type": "number", "comment": "행동 속도", "default": 10.0 },
+          "mana": { "type": "number", "comment": "최대 마나", "default": 0.0 }
+        }
+      },
+      "skills": {
+        "type": "array",
+        "comment": "사용 스킬 ID 목록",
+        "item_schema": { "type": "string", "default": "" },
+        "default": []
+      },
+      "ai_type": {
+        "type": "string",
+        "comment": "AI 행동 패턴 유형 (선택)",
+        "default": "default"
+      }
+    }
+  }
+}

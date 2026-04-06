@@ -13,11 +13,13 @@ const SchemaUtils = preload("res://addons/data_editor/scripts/editor_schema_util
 @export var open_folder_button: Button
 @export var add_file_button: Button
 @export var add_folder_button: Button
+@export var delete_button: Button
 
 var package_path = "res://Data"
 var _view_mode_selector: OptionButton
 var _status_label: Label
 var _add_file_dialog: FileDialog
+var _delete_confirm_dialog: ConfirmationDialog
 var _loaded_file_path := ""
 var _status_message_serial := 0
 
@@ -27,6 +29,7 @@ func _ready():
 	_setup_save_controls()
 	_setup_add_array_element_controls()
 	_setup_new_file_dialog_controls()
+	_setup_delete_controls()
 	_setup_view_mode_selector()
 	editor.set_show_implicit_default_fields(false)
 
@@ -455,11 +458,12 @@ func _refresh_header_text() -> void:
 
 
 func _update_save_button_state() -> void:
-	# 현재는 파일이 선택된 경우에만 저장 버튼을 활성화합니다.
-	if save_button == null:
-		return
-
-	save_button.disabled = _loaded_file_path.is_empty()
+	# 현재는 파일이 선택된 경우에만 저장/삭제 버튼을 활성화합니다.
+	var is_file_open = not _loaded_file_path.is_empty()
+	if save_button != null:
+		save_button.disabled = not is_file_open
+	if delete_button != null:
+		delete_button.disabled = not is_file_open
 
 
 func _set_status_message(text: String, color: Color, clear_after: float = 0.0) -> void:
@@ -517,4 +521,57 @@ func _on_file_system_item_selected():
 		editor.load_json_data(path)
 	else:
 		print("선택된 항목이 유효한 JSON 파일이 아닙니다: ", path)
+
+
+# --- 삭제 관련 추가 로직 ---
+
+func _setup_delete_controls() -> void:
+	if delete_button != null and not delete_button.pressed.is_connected(_on_delete_pressed):
+		delete_button.pressed.connect(_on_delete_pressed)
+		delete_button.tooltip_text = "현재 파일 삭제"
+		# 에디터 내장 아이콘 설정 (코드로 강제 설정)
+		delete_button.icon = get_theme_icon("Remove", "EditorIcons")
+
+	# 확인 대화상자 생성
+	_delete_confirm_dialog = ConfirmationDialog.new()
+	_delete_confirm_dialog.title = "파일 삭제 확인"
+	_delete_confirm_dialog.dialog_text = "정말로 이 파일을 삭제하시겠습니까?\n이 작업은 되돌릴 수 없습니다."
+	_delete_confirm_dialog.confirmed.connect(_on_delete_confirmed)
+	add_child(_delete_confirm_dialog)
+
+
+func _on_delete_pressed() -> void:
+	if _loaded_file_path.is_empty():
+		return
+	_delete_confirm_dialog.popup_centered()
+
+
+func _on_delete_confirmed() -> void:
+	if _loaded_file_path.is_empty():
+		return
+	
+	var path_to_delete = _loaded_file_path
+	var dir = DirAccess.open("res://")
+	if dir.file_exists(path_to_delete):
+		var err = dir.remove(path_to_delete)
+		if err == OK:
+			_set_status_message("파일 삭제됨: " + path_to_delete, Color(0.9, 0.4, 0.4), 2.0)
+			
+			# 현재 열린 파일이 삭제된 것이라면 에디터 비우기
+			editor.clear_editor()
+			inspector.clear_inspector()
+			_loaded_file_path = ""
+			
+			# UI 갱신
+			load_package(package_path)
+			_refresh_header_text()
+			_update_save_button_state()
+			
+			# 에디터 파일 시스템 동기화 (가능한 경우)
+			if Engine.is_editor_hint():
+				var afs = EditorInterface.get_resource_filesystem()
+				if afs:
+					afs.scan()
+		else:
+			_set_status_message("파일 삭제 실패 (에러코드: %d)" % err, Color(1.0, 0.3, 0.3), 3.0)
 
