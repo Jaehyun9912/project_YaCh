@@ -1,13 +1,5 @@
 class_name AttributeBar extends Control
 
-# 속성 임계점 도달 시 동작 방식
-enum ThresholdActiveType {
-	# 광역 효과, 속성치 리셋
-	EXPLODE,
-	# 전체 버프, 속성치 유지
-	KEEP,
-}
-
 var max_value: float
 var total_value: float
 
@@ -15,7 +7,7 @@ var total_value: float
 var threshold_exceeded: String
 
 # 속성 수치가 임계점을 넘었을 때
-signal attribute_threshold_exceeded(attribute_name: String, active_type: ThresholdActiveType)
+signal attribute_threshold_exceeded(attribute_name: String, active_type: AttributeData.Overdrive.OverdriveType)
 # 속성 수치가 임계점 아래로 감소하였을 때 (KEEP에서 버프 제거용)
 signal attribute_threshold_recovered(attribute_name: String)
 
@@ -104,31 +96,31 @@ func add_value(attribute_name: String, amount: float):
 	update_value()
 
 	# 임계점 도달 확인
-	var overdrive = AttributeInformation.get_attribute(attribute_name).get("overdrive", null)
+	var overdrive = AttributeInformation.get_attribute(attribute_name).overdrive
 	if overdrive == null:
 		return
 
-	var threshold_value = max_value * overdrive.get("threshold", 2)
-	var threshold_type = ThresholdActiveType.get(overdrive.get("type", "EXPLODE").to_upper())
+	var threshold_value = max_value * overdrive.threshold
+	var threshold_type = overdrive.type
 
 	# 유형별 처리
 	match threshold_type:
-		ThresholdActiveType.KEEP:
+		AttributeData.Overdrive.OverdriveType.KEEP:
 			# 임계점 넘기면
 			if threshold_value <= type[attribute_name][0]:
 				attribute_threshold_exceeded.emit(attribute_name, threshold_type)
-			var threshold_end = max_value * overdrive.get("threshold_end", threshold_value)
+			var threshold_end = max_value * overdrive.threshold_end
 			if attribute_name == threshold_exceeded and threshold_end > type[attribute_name][0]:
 				# 임계점 아래로 내려갔을 때
 				attribute_threshold_recovered.emit(attribute_name)
 
-		ThresholdActiveType.EXPLODE:
+		AttributeData.Overdrive.OverdriveType.EXPLODE:
 			# 임계점 넘기면
 			if threshold_value <= type[attribute_name][0]:
 				attribute_threshold_exceeded.emit(attribute_name, threshold_type)
 
 		_:
-			printerr("Unknown ThresholdActiveType:", threshold_type)
+			printerr("Unknown AttributeData.Overdrive.OverdriveType:", threshold_type)
 			return
 			
 
@@ -181,14 +173,14 @@ func find_min(skip: String) -> String:
 			n = i
 	return n
 
-func _on_threshold_exceeded(attribute_name: String, active_type: ThresholdActiveType):
+func _on_threshold_exceeded(attribute_name: String, active_type: AttributeData.Overdrive.OverdriveType):
 	match active_type:
-		ThresholdActiveType.EXPLODE:
+		AttributeData.Overdrive.OverdriveType.EXPLODE:
 			# 임계점 넘긴 속성은 0으로 초기화
 			reset_value(attribute_name)
 
 		# 임계점 넘긴 속성 강조 표시
-		ThresholdActiveType.KEEP:
+		AttributeData.Overdrive.OverdriveType.KEEP:
 			threshold_exceeded = attribute_name
 			var co = AttributeInformation.get_attribute_color(attribute_name)
 			co = co.darkened(0.5)

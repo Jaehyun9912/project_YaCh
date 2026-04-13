@@ -96,7 +96,6 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 		return
 
 	# 1. 버프 처리
-	var event = BuffHandler.BuffEvent.new()
-	event.type = BuffHandler.BuffEvent.Type.TURN
+	var event = BuffHandler.BuffEvent.new(BuffHandler.BuffEvent.Type.TURN)
 	new_character.stat_manager.update_buffs(event)
 

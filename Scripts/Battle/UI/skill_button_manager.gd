@@ -133,14 +133,13 @@ func on_skillbutton_down(btn, index):
 	tween.tween_property(cancel_area, "scale", cancel_button_size, 0.1)
 	
 	# 사이드 패널에 정보 띄우기 
-	ViewManager.side_panel.set_info_panel(skill.get("name", ""), skill.get("description", ""))
+	ViewManager.side_panel.set_info_panel(skill.display.name, skill.display.description)
 	
 	# 스킬 정보에 따라 선택 버튼 생성
 	var skill_target = SkillManager.get_target(skill)
 	button_cnt = 0
 	
 	# 대상에게 적용하기
-	# 문자열일 때 (attack, effect(self))
 	is_ally = false
 	match skill_target:
 		"one":
@@ -154,23 +153,18 @@ func on_skillbutton_down(btn, index):
 			button_cnt = 0
 		"team":
 			is_ally = true
+			current_choice_mode = ChoiceMode.ONE
+			button_cnt = len(battle_panel.get_all_ally())
 		"field":
-			pass
-		
-	# Dictionary일 때 (effect, summon, field)
-	# elif skill_target is Dictionary:
-	# 	is_ally = skill_target.get("team", false)
-	# 	var is_all = skill_target.get("is_all", false)
-	# 	if is_all:
-	# 		current_choice_mode = ChoiceMode.ALL
-	# 	else:
-	# 		current_choice_mode = ChoiceMode.ONE
-		
-	# 	# 타겟 유형에 따라 적/아군 개수 가져오기 
-	# 	if is_ally:
-	# 		button_cnt = len(battle_panel.get_all_ally())
-	# 	else:
-	# 		button_cnt = len(battle_panel.get_all_enemy())
+			current_choice_mode = ChoiceMode.ALL # 필드는 모든 캐릭터 대상 혹은 별도 처리
+			button_cnt = len(battle_panel.get_all_enemy()) + len(battle_panel.get_all_ally())
+		"team_all": # 필요한 경우 추가
+			is_ally = true
+			current_choice_mode = ChoiceMode.ALL
+			button_cnt = len(battle_panel.get_all_ally())
+		_:
+			current_choice_mode = ChoiceMode.NONE
+			button_cnt = 0
 		
 	# 선택 시작
 	# 0 -> 오른쪽에 적 버튼 생성

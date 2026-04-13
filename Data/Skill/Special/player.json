@@ -8,7 +8,8 @@
         },
         "requirements": {
             "cost": {},
-            "cooldown": 0
+            "cooldown": 0,
+            "category": "special_counter"
         }
     },
     "parrying1": {
@@ -20,7 +21,8 @@
         },
         "requirements": {
             "cost": {},
-            "cooldown": 0
+            "cooldown": 0,
+            "category": "special_parry"
         }
     }
 }

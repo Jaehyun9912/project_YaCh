@@ -191,25 +191,21 @@ func change_now_char(new_char : BattleCharacter, point):
 
 #region Skill func
 # 코스트 제거하기 
-func remove_cost(skill):
-	var cost = skill.get("cost", {})
+func remove_cost(skill: SkillData):
+	var cost = skill.requirements.cost
 	
-	if cost is int or cost is float:
-		turn_cost -= cost
-		return
-
 	for i in cost:
 		if i == SkillManager.ACTION_POINT_ID:
 			turn_cost -= cost.get(i, 0)
 		else:
 			attribute_bar.remove_value(i, cost[i])
 
-func set_attribute_change(attribute):
-	for type in attribute:
+func set_attribute_change(element_changes: Dictionary):
+	for type in element_changes:
 		if type == SkillManager.ACTION_POINT_ID:
-			now_character.point += attribute[type]
+			now_character.point += element_changes[type]
 		else:
-			attribute_bar.add_value(type, attribute[type])
+			attribute_bar.add_value(type, element_changes[type])
 	
 
 # 버튼 눌렀을때

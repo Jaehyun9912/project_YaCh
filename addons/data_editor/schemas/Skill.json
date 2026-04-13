@@ -28,15 +28,20 @@
 						"default": {}
 					},
 					"condition": {
-						"type": "object",
-						"comment": "스킬 발동 조건 (특정 스탯 이상 등)",
-						"default": {
-							"stat": { "type": "enum:", "enum_options": ["", "hp", "max_hp", "atk", "def", "speed", "mana", "mana_max"], "enum_append_keys_from": "res://Data/attribute_info.json", "comment": "체크할 스탯명", "default": "" },
-							"op": { "type": "enum:>,<,==,>=,<=", "comment": "비교 연산자", "default": "==" },
-							"value": { "type": "any", "comment": "비교 대상 값", "default": 0 }
-						}
+						"type": "array",
+						"comment": "스킬 발동 조건 목록 (모두 충족해야 함)",
+						"item_schema": {
+							"type": "object",
+							"default": {
+								"stat": { "type": "enum:", "enum_options": ["", "hp", "max_hp", "atk", "def", "speed", "mana", "mana_max"], "enum_append_keys_from": "res://Data/attribute_info.json", "comment": "체크할 스탯명", "default": "" },
+								"op": { "type": "enum:>,<,==,>=,<=", "comment": "비교 연산자", "default": "==" },
+								"value": { "type": "any", "comment": "비교 대상 값", "default": 0 }
+							}
+						},
+						"default": []
 					},
-					"cooldown": { "type": "number", "comment": "재사용 대기시간 (턴)", "default": 0 }
+					"cooldown": { "type": "number", "comment": "재사용 대기시간 (턴)", "default": 0 },
+					"category": { "type": "enum:normal,special_parry,special_counter,peer", "comment": "스킬 카테고리", "default": "normal" }
 				}
 			},
 			"execution": {
@@ -63,12 +68,18 @@
 										"multiplier": { "type": "number", "default": 1.0 }
 									}
 								},
-								"element": { "type": "enum:", "enum_options": ["none"], "enum_append_keys_from": "res://Data/attribute_info.json", "comment": "속성 (선택)", "default": "none" },
+								"element": { "type": "enum:", "enum_options": ["none"], "enum_append_keys_from": "res://Data/Attribute/attribute_info.json", "comment": "속성 타입 (데미지 계산 등에 사용)", "default": "none" },
 								"effect_id": { "type": "string", "comment": "상태이상/이펙트 ID", "default": "" },
 								"chance": { "type": "number", "comment": "발동 확률 (0~1)", "default": 1.0 }
 							}
 						},
 						"default": []
+					},
+					"element": {
+						"type": "map",
+						"value_type": "number",
+						"comment": "스킬 실행 결과 원소 수치 변화량 (예: {'fire': 10, 'water': -5})",
+						"default": {}
 					}
 				}
 			}

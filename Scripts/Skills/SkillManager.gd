@@ -1,142 +1,131 @@
+## [SkillManager] 플레이어, 동료, 특수 스킬 및 버프 데이터를 관리하는 싱글톤 매니저입니다.
 extends Node
 
-# 플레이어의 스킬을 관리함
-# 적의 스킬은 EnemyManager에서 관리함 
+# 로드된 데이터 저장소 (Dictionary<String, SkillData/EffectData>)
+var skills: Dictionary = {}          # 일반 스킬 정보
+var special_skills: Dictionary = {}  # 특수 스킬 정보
+var peer_skills: Dictionary = {}     # 동료 스킬 정보
+var buff_data: Dictionary = {}       # 버프(EffectData) 정보
 
-enum SpecialSkillType {
-	COUNTER,
-	PARRYING
-}
+# 플레이어 현재 보유 스킬 ID 리스트 (PlayerData 참조)
+var player_skill: Array:
+	get: return PlayerData.data.get("skills", [])
 
-var skills	# 스킬 정보 딕셔너리
-var special_skills	# 특수 스킬 정보 딕셔너리
-var peer_skills	# 동료 스킬 정보 딕셔너리
-var buff_data	# 버프 정보 딕셔너리
-
-var player_skill: 
-	get: return PlayerData.data.get("skills", []) # 리스트가 없으면 빈 배열 반환
-
-var player_special_skill:
+var player_special_skill: Array:
 	get: return PlayerData.data.get("special_skills", [])
 
-var player_peer_skill_id:
+var player_peer_skill_id: String:
 	get: return PlayerData.data.get("peer_skill", "")
 
+# 상수 설정
 const ACTION_POINT_ID = "point"
-# 스킬 시전 시간
 const SKILL_ACTIVE_TIME = 0.5
-# 스킬 구축 시간 상수 (행동력 소모량에 곱해짐)
 const SKILL_CASTING_CONSTANT = 0.3
-# 최소 스킬 구축 시간
 const SKILL_MIN_CASTING_TIME = 0.5
 
 func _ready():
-	#skills = DataManager.get_data("Skill/skill_info")
-	skills = DataManager.get_data_folder("Skill/Player")
-	special_skills = DataManager.get_data_folder("Skill/Special")
-	peer_skills = DataManager.get_data_folder("Skill/Peer")
-	
-	buff_data = DataManager.get_data_folder("Skill/Effect")
+	# 1. JSON 데이터 로드
+	# var json_skills = DataManager.get_data_folder("Skill/Player")
+	# var json_special_skills = DataManager.get_data_folder("Skill/Special")
+	# var json_peer_skills = DataManager.get_data_folder("Skill/Peer")
+	# var json_buff_data = DataManager.get_data_folder("Effect")
 
-# 버프 ID로 SkillBuff 객체를 생성하여 반환
+	# # 2. 데이터를 클래스 객체로 변환하여 저장
+	# skills = DataManager.create_data_class(json_skills, SkillData)
+	# special_skills = DataManager.create_data_class(json_special_skills, SkillData)
+	# peer_skills = DataManager.create_data_class(json_peer_skills, SkillData)
+	# buff_data = DataManager.create_data_class(json_buff_data, EffectData)
+	skills = DataManager.load_datas_dict("Skill/Player", SkillData)
+	special_skills = DataManager.load_datas_dict("Skill/Special", SkillData)
+	peer_skills = DataManager.load_datas_dict("Skill/Peer", SkillData)
+	buff_data = DataManager.load_datas_dict("Effect", EffectData)
+
+## 버프 ID로 실시간 버프 인스턴스(SkillBuff)를 생성하여 반환
 func get_buff(id: String) -> SkillBuff:
 	if id in buff_data:
-		return SkillBuff.create_from_dict(id, buff_data[id])
-	printerr("잘못된 버프 ID! : " + id)
+		return SkillBuff.new(buff_data[id])
+	printerr("[SkillManager] 잘못된 버프 ID! : ", id)
 	return null
 
-# 플레이어의 스킬 얻어오기 
-func get_player_skill(index: int) -> Dictionary:
-	if 0 <= index and index < len(player_skill):
+## 플레이어 인덱스로 스킬 데이터 반환
+func get_player_skill(index: int) -> SkillData:
+	if 0 <= index and index < player_skill.size():
 		return get_skill(player_skill[index])
+	printerr("[SkillManager] 잘못된 스킬 인덱스! : ", index)
+	return null
 
-	printerr("잘못된 스킬 인덱스! : " + str(index))
-	return Dictionary()
-
-# 들어온 ID에 해당하는 스킬의 정보가 담긴 딕셔너리 반환 
-func get_skill(id : String):
+## ID로 일반 스킬 데이터 반환
+func get_skill(id: String) -> SkillData:
 	if id in skills:
 		return skills[id]
-	else:
-		printerr("잘못된 스킬 ID! : " + id)
-		return null
+	printerr("[SkillManager] 잘못된 스킬 ID! : ", id)
+	return null
 
-func check_requirement_battle(skill: Dictionary, battle_manager: BattleManager) -> bool:
+## 전투 상황에서 스킬 사용 가능 여부 확인
+func check_requirement_battle(skill: SkillData, battle_manager: BattleManager) -> bool:
 	return check_requirement(skill, battle_manager.now_character.current_point, battle_manager.attribute_bar)
-# 스킬이 사용 가능한지 확인하는 함수
-func check_requirement(skill: Dictionary, current_action_point: int, attribute_bar) -> bool:
-	# var skill = get_player_skill(player_skill_index)
+
+## 스킬 발동 조건(비용 및 요구 능력치) 확인
+func check_requirement(skill: SkillData, current_ap: int, attribute_bar: Node) -> bool:
+	var req = skill.requirements
 	
-	# 1. cost와 requirements 변환
-	var requirements_dict = _get_standardized_points(skill.get("requirement", {}))
-	var cost_dict = _get_standardized_points(skill.get("cost", {}))
-	
-	# 2. requirements를 cost의 수치 이상으로 보장
-	for type in cost_dict:
-		var cost_value = cost_dict[type]
-		var required_value = requirements_dict.get(type, 0.0)
-		requirements_dict[type] = max(required_value, cost_value)
-	
-	# 3. 행동력(ActionPoint) 조건 확인
-	var required_ap = requirements_dict.get(ACTION_POINT_ID, -1)
-	if current_action_point < required_ap:
+	# 1. 행동력(ActionPoint) 체크
+	var cost_ap = req.cost.get(ACTION_POINT_ID, 0)
+	if current_ap < cost_ap:
 		return false
-	
-	# 4. 기타 속성치(element) 조건 확인
-	for type in requirements_dict:
-		if type == ACTION_POINT_ID:
-			continue
-			
-		var player_amount = attribute_bar.get_element(type)
-		var required_amount = requirements_dict[type]
 		
-		if player_amount < required_amount:
-			return false
+	# 2. 추가 조건(Condition) 체크
+	for cond in req.conditions:
+		if cond.stat != "":
+			var player_stat_val = attribute_bar.get_element(cond.stat)
+			var target_val = cond.value
+			
+			match cond.op:
+				">": if not (player_stat_val > target_val): return false
+				"<": if not (player_stat_val < target_val): return false
+				"==": if not (player_stat_val == target_val): return false
+				">=": if not (player_stat_val >= target_val): return false
+				"<=": if not (player_stat_val <= target_val): return false
 	
+	# 3. 추가 자원 비용 체크 (행동력 제외)
+	for res_name in req.cost:
+		if res_name == ACTION_POINT_ID: continue
+		if attribute_bar.get_element(res_name) < req.cost[res_name]:
+			return false
+			
 	return true
 
-# 입력된 cost 또는 requirements를 표준화된 딕셔너리 형태로 변환하기
-func _get_standardized_points(data) -> Dictionary:
-	if data is float or data is int:
-		# 단일 float/int 값일 경우 행동력으로 간주
-		return {ACTION_POINT_ID : data}
-	elif data is Dictionary:
-		return data
-	return {}
-			
-# 스킬의 target 정보를 얻어오는 함수 (기본값 "one")
-func get_target(skill: Dictionary):
-	# var skill = get_player_skill(player_skill_index)
-	if skill.get("type", "") in ["counter", "parrying"]:
+## 스킬의 타겟 범위 반환 (특수 스킬 예외 처리 포함)
+func get_target(skill: SkillData) -> String:
+	# 특수 타입(카운터/패링)은 무조건 자신 대상
+	if skill.display.owner_type == "special":
 		return "self"
-	return skill.get("target", "one")
+	return skill.execution.target
 
-# 사용 가능한 특수 스킬 얻어오기
-func get_useable_special_skills(special_type: SpecialSkillType, point, attribute_bar):
-	var type = "counter"
-	if special_type == SpecialSkillType.PARRYING:
-		type = "parrying"
-
-	var useable_skills = []
-	for skill in player_special_skill:
-		var info = special_skills.get(skill, {})
+## 현재 사용 가능한 특수 스킬 목록 반환
+func get_useable_special_skills(special_type: SkillData.SkillType, ap: int, attribute_bar: Node) -> Array[String]:
+	var useable_skills: Array[String] = []
+	
+	for skill_id in player_special_skill:
+		var skill: SkillData = special_skills.get(skill_id, null)
+		if not skill: continue
 		
-		if info.get("type") == type and check_requirement(info, point, attribute_bar):
-			useable_skills.append(skill)
+		# 요구 조건 및 타입 확인
+		if skill.requirements.category == special_type and check_requirement(skill, ap, attribute_bar):
+			useable_skills.append(skill_id)
+			
 	return useable_skills
 
-# 스킬의 구축 시간 계산하기
-func get_casting_time(skill: Dictionary, attribute_bar):
-	#(소모 행동력 X 구축상수) X (1 - (해당 속성 누적치 / 2)
-	var cost = _get_standardized_points(skill.get("cost", {}))
-	var action_point_cost = cost.get(ACTION_POINT_ID, 0)
+## 스킬의 구축(캐스팅) 시간 계산
+func get_casting_time(skill: SkillData, attribute_bar: Node) -> float:
+	# 공식: (소모 행동력 X 구축상수) X (1 - (해당 속성 누적치 / 전체 누적치 / 2))
+	var cost_ap = skill.requirements.cost.get(ACTION_POINT_ID, 0)
 	var element = AttributeInformation.get_attribute_by_skill(skill)
 	var attribute_amount = attribute_bar.get_element(element)
 
-	# 구축 시간 계산
-	var casting_time = (action_point_cost * SKILL_CASTING_CONSTANT) * (1 - ((attribute_amount / attribute_bar.total_value) / 2.0))
-	casting_time = max(casting_time, SKILL_MIN_CASTING_TIME)
-	return casting_time
+	var casting_time = (cost_ap * SKILL_CASTING_CONSTANT) * (1.0 - ((attribute_amount / attribute_bar.total_value) / 2.0))
+	return max(casting_time, SKILL_MIN_CASTING_TIME)
 
-func get_peer_skill(id: String):
+## 동료 스킬 데이터 반환
+func get_peer_skill(id: String) -> SkillData:
 	return peer_skills.get(id, null)

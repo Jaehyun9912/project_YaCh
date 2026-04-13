@@ -1,137 +1,107 @@
-class_name EnemyManager extends Node
+extends Node
+class_name EnemyManager
 
-@onready var timer = $EnemyTimer as Timer
-var battle : BattleManager
+# TODO: BattleManager에서 적 정보 가져오는 로직 수정 필요 
+@onready var battle = $".." as BattleManager
+@onready var character_manager = $"../CharacterManager" as CharacterManager
 
-#enum AttackStatus 
-#{
-	#Ready,
-	#End
-#}
-#var status = AttackStatus.End
-	#get: return status
-	#set(value):
-		#status = value
-		#battle.attack_status_changed.emit(status)
-
-#@onready var upper = $"../Interact/UpperPanel" as UpperPanel
-
-var skill_info : Dictionary
-var current_skill : Dictionary
-
-var player: 
+var current_character: BattleCharacter:
+	get: return battle.now_character
+var current_skill: SkillData
+var player: BattleCharacter:
 	get: return battle.player_character
 
-var current_character: BattleCharacter
+var damage: float
+var effect_id: String
 
-var damage
-var effect_id
+var timer: Timer
+
+func _ready():
+	timer = Timer.new() as Timer
+	add_child(timer)
+
+func init(_battle_manager: BattleManager):
+	battle = _battle_manager
+	battle.turn_character_changed.connect(_on_turn_character_changed)
+
+func _on_turn_character_changed(new_character: BattleCharacter):
+	if new_character == null or new_character.is_player:
+		return
 	
-func init(battle_manager: BattleManager):
-	battle = battle_manager
-	skill_info = DataManager.get_data_folder("Skill/Enemy")
+	# 적 턴이면 행동 개시
+	_enemy_turn()
 
-# 적의 행동 수행 
-func _on_battle_scene_turn_character_changed(turn_char: BattleCharacter):
-	if turn_char == null: return
-	if turn_char.is_player == true: return
-
-	current_character = turn_char
-
-	# 잠시 대기 
-	timer.start(1)
+func _enemy_turn():
+	# 0.5초 대기 후 행동
+	timer.start(0.5)
 	await timer.timeout
-	
-	# 플레이어 타겟팅 
-	player.set_hp_outline_red()
-	
-	#timer.start(1.5)
-	
-	# 사용할 스킬과 그 스킬의 데미지 계산 
-	current_skill = get_next_skill(current_character.skills)
-	if current_skill == null:
-		# 가능한 스킬이 없으면 턴 종료
+
+	# 1. 스킬 선택 (현재는 첫 번째 스킬 고정)
+	var skills = current_character.skills
+	if skills.size() == 0:
 		battle.turn_end.emit()
 		return
-	print("Enemy will Use: " + str(current_skill))
-
-	damage = get_damage_by_skill(current_skill)
-	damage *= battle.field_stat.get(AttributeInformation.get_attribute_by_skill(current_skill), 1.0)
-
-	effect_id = current_skill.get("effect_id", "")
-
-	# 정보 패널 띄우기
-	#upper.set_panel_with_time(current_skill.name, current_skill.description % damage, 2)
-	ViewManager.side_panel.set_info_panel_with_time(current_skill.name, current_skill.description % damage, 2)
-	battle.add_attack_log(current_character.name, "Player", damage, player.hp)
-
-	battle.remove_cost(current_skill)
-
-	# 대기했다가 공격 후 종료
-	battle.set_casting_panel("마법 구축 중", SkillManager.get_casting_time(current_skill, battle.attribute_bar), CastingPanel.CastingButtonType.Counter, _on_end_casting)
-	#await timer.timeout
+		
+	var skill_id = skills[0]
+	current_skill = SkillManager.get_skill(skill_id) # Enemy skill도 SkillManager에서 관리한다고 가정
 	
+	if current_skill == null:
+		battle.turn_end.emit()
+		return
+		
+	# 2. 데미지 계산 및 로그
+	# 첫 번째 액션의 데미지 공식을 기준으로 함
+	damage = 0
+	if current_skill.execution.actions.size() > 0:
+		var action = current_skill.execution.actions[0]
+		if action.type == "damage":
+			damage = calculate_formula(action.formula, current_character)
+			damage *= battle.field_stat.get(action.element, 1.0)
+	
+	ViewManager.side_panel.set_info_panel_with_time(current_skill.display.name, current_skill.display.description % damage, 2)
+	
+	# 3. 비용 제거 및 캐스팅 시작
+	battle.remove_cost(current_skill)
+	battle.set_casting_panel("마법 구축 중", SkillManager.get_casting_time(current_skill, battle.attribute_bar), CastingPanel.CastingButtonType.Counter, _on_end_casting)
+
+func calculate_formula(formula: SkillData.Execution.Action.Formula, caster: BattleCharacter) -> float:
+	var stat_val = caster.stat_manager.get_stat(formula.scaling_stat, 0.0)
+	return formula.base + (stat_val * formula.multiplier)
+
 func _on_end_casting(is_success):
 	if is_success:
 		timer.start(0.1)
-		await timer.timeout	
+		await timer.timeout
 		battle.set_casting_panel("마법 시전 중", SkillManager.SKILL_ACTIVE_TIME, CastingPanel.CastingButtonType.Parrying, _on_end_spell)
 	else:
-		battle.apply_counter(battle.now_character, player)
+		battle.turn_end.emit()
 
 func _on_end_spell(is_success):
 	if is_success:
-		# TODO: Self 스킬 구현
-		player.apply_damage(damage)
-		var attribute = current_skill.get("attribute", {})
-		if attribute.size() > 0:
-			battle.set_attribute_change(attribute)
-
-		if effect_id != "":
-			if current_skill.get("effect_self", false) == true:
-				player.add_buff(effect_id, 1)	# 내가 남한테 건 버프는 지속시간 1턴 증가
-			else:
-				# 나한테 버프 걸기
-				current_character.add_buff(effect_id)
-
-
-		# 일단 한번 공격하면 턴 종료하도록
-		battle.turn_end.emit()
-		battle.check_dead_char()
-	else:
-		pass
-	battle.skill_used.emit()
-	player.set_hp_outline_default()
+		# 스킬 효과 적용
+		apply_skill_effects()
 	
-# 적 데이터를 읽고 다음에 수행할 스킬을 반환함 
-func get_next_skill(skills):
-	var rng = RandomNumberGenerator.new()
+	battle.turn_end.emit()
 
-	var useable_skills = []
-	for i in skills:
-		if SkillManager.check_requirement_battle(skill_info[i], battle):
-			useable_skills.append(i)
-
-	if useable_skills.size() == 0:
-		return null
-
-	var rn = rng.randi_range(0, len(useable_skills)-1)
-	return skill_info[useable_skills[rn]]
+func apply_skill_effects():
+	# AttackManager의 로직과 유사하게 처리 (중복 제거를 위해 AttackManager 기능을 활용할 수도 있음)
+	var execution = current_skill.execution
 	
-# skill 읽어서 데미지 계산 후 반환 
-func get_damage_by_skill(skill):
-	# var level = SkillManager.get_value(skill).get("level", 0)
-	var level = skill.get("value", 0)
+	for action in execution.actions:
+		if randf() > action.chance: continue
+		
+		match action.type:
+			"damage":
+				var val = calculate_formula(action.formula, current_character)
+				val *= battle.field_stat.get(action.element, 1.0)
+				var actual_dmg = player.apply_damage(val)
+				battle.add_attack_log(current_character.name, player.name, actual_dmg, player.hp)
+			"buff", "debuff":
+				if action.effect_id != "":
+					player.add_buff(action.effect_id, 1) # 적이 거는 버프/디버프
+			
+	# 원소 변화 적용
+	if execution.element.size() > 0:
+		battle.set_attribute_change(execution.element)
 	
-	var stat = skill.get("stat", null)
-	if stat == null:
-		return level
-	else:
-		var char_attack = battle.now_character.attack
-		match stat.get("type", ""):
-			"multiply":
-				level *= char_attack
-			_:
-				level += char_attack
-	level *= stat.get("coefficient", 1)
-	return level
+	ViewManager.side_panel.set_hp_panel()

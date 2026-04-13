@@ -3,11 +3,11 @@ extends Node
 const DEFAULT_PATH = "res://Data/"
 const USER_PATH = "user://"
 
-@onready var items = get_data("Item/item")
-@onready var artifacts = get_data("Item/artifact")
+# Item 리팩토링 이전 임시 리소스
+@onready var items = get_data_folder("Item")
+@onready var artifacts = get_data_folder("Item")
 
-# 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 null 반환)
-# 기존에 Dictionary를 반환하던 표시는 JSON Array를 반환하지 못해 제거
+## 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 null 반환)
 func get_data(data_path: String):
 	var path = DEFAULT_PATH + data_path
 	if not data_path.ends_with(".json"):
@@ -135,3 +135,26 @@ func get_artifact_data(id: String) -> Dictionary:
 	else:
 		printerr("잘못된 아티팩트 ID! : " + id)
 		return Dictionary()
+
+## 데이터 로드 함수
+func create_data_dict(json: Dictionary, data_class: GDScript) -> Dictionary:
+	if json == null:
+		printerr("create_data_dict received null json!")
+		return {}
+	if not data_class.has_method("from_dict"):
+		printerr("create_data_dict received invalid data_class: " + str(data_class))
+		return {}
+
+	var dict = {}
+	for key in json:
+		dict[key] = data_class.from_dict(key, json[key])
+	return dict
+
+## 데이터 로드 함수 (특정 폴더의 모든 json 파일을 읽어서 합쳐오는 함수)
+func load_datas_dict(data_path: String, data_class: GDScript) -> Dictionary:
+	var json_data = get_data_folder(data_path)
+	if json_data != null:
+		return create_data_dict(json_data, data_class)
+	else:
+		printerr("load_datas_dict failed to load data from: " + data_path)
+		return {}

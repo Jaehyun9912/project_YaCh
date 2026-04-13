@@ -14,12 +14,12 @@ class Display:
 		return d
 
 ## 전투 환경 관련 설정 클래스
-class BEnvironment:
+class Env:
 	var attribute_limit: float = 100   # 속성치 최대 제한
 	var initial_points: float = 100    # 초기 행동 포인트
 
-	static func from_dict(dict: Dictionary) -> BEnvironment:
-		var e = BEnvironment.new()
+	static func from_dict(dict: Dictionary) -> Env:
+		var e = Env.new()
 		e.attribute_limit = dict.get("attribute_limit", 100)
 		e.initial_points = dict.get("initial_points", 100)
 		return e
@@ -102,7 +102,7 @@ class Transitions:
 
 var id: String = ""                    # 전투 고유 ID
 var display: Display                   # 표시 정보
-var environment: BEnvironment           # 환경 설정 정보
+var environment: Env           # 환경 설정 정보
 var waves: Array[Wave] = []            # 웨이브 구성 정보
 var rewards: Rewards                   # 보상 정보
 var transitions: Transitions           # 전이 정보
@@ -111,7 +111,7 @@ static func from_dict(battle_id: String, dict: Dictionary) -> BattleData:
 	var battle = BattleData.new()
 	battle.id = battle_id
 	battle.display = Display.from_dict(dict.get("display", {}))
-	battle.environment = BEnvironment.from_dict(dict.get("environment", {}))
+	battle.environment = Env.from_dict(dict.get("environment", {}))
 	for w_dict in dict.get("waves", []):
 		battle.waves.append(Wave.from_dict(w_dict))
 	battle.rewards = Rewards.from_dict(dict.get("rewards", {}))

@@ -3,7 +3,7 @@ class_name AttackManager
 
 @onready var battle = $".." as BattleManager
 
-var cur_skill : Dictionary
+var cur_skill : SkillData
 
 var target_info
 
@@ -19,12 +19,14 @@ func _on_battle_use_skill(index, target, is_casting):
 	# target_info는 이미 스킬 정보를 통해 가져온 정보이므로 굳이 검사X  
 	target_info = target
 	
-	if index is Dictionary:
+	if index is SkillData:
 		cur_skill = index
+	elif index is Dictionary:
+		cur_skill = SkillData.from_dict("temp", index)
 	else:
 		cur_skill = SkillManager.get_player_skill(index)
 
-	if cur_skill == null or cur_skill.is_empty():
+	if cur_skill == null:
 		printerr("Skill is null!")
 		return
 
@@ -47,33 +49,41 @@ func _on_end_spell(is_success):
 		# 스킬 발동 실패 
 		pass
 
-func skill_active(skill: Dictionary, target):
+func skill_active(skill: SkillData, target):
 	# 스킬의 정보에 따라 발동
-	var value = skill.get("value", null)
-	var main_attribute = AttributeInformation.get_attribute_by_skill(skill)
+	var execution = skill.execution
 
-	if value != null:
-		do_attack(value, target, main_attribute)
+	# 1. 액션들 실행 (데미지, 버프 등)
+	for action in execution.actions:
+		if randf() > action.chance:
+			continue
+			
+		match action.type:
+			"damage":
+				var value = calculate_formula(action.formula, battle.now_character)
+				do_attack(value, target, action.element)
+			"buff", "debuff":
+				do_effect(action.effect_id, target)
+			"summon":
+				do_summon()
+			"field":
+				do_field()
 
-	var effect_id = skill.get("effect_id", "")
-	var effect_self = skill.get("effect_self", false)
-	if effect_id != "":
-		var effect_target = target if not effect_self else "self"
-		do_effect(effect_id, effect_target)
-
-	# TODO: summon, field 구현
-
-	var attribute = skill.get("attribute", {})
-	if attribute.size() > 0:
-		battle.set_attribute_change(attribute)	
+	# 2. 원소 수치 변화 적용
+	if execution.element.size() > 0:
+		battle.set_attribute_change(execution.element)	
 		
 	battle.check_dead_char()
 	battle.skill_used.emit()
 	ViewManager.side_panel.set_hp_panel()
 
+func calculate_formula(formula: SkillData.Execution.Action.Formula, caster: BattleCharacter) -> float:
+	var stat_val = caster.stat_manager.get_stat(formula.scaling_stat, 0.0)
+	return formula.base + (stat_val * formula.multiplier)
+
 # 공격 함수 
-func do_attack(value, target, attribute_type):
-	# self 전용 구현 
+func do_attack(value: float, target, attribute_type: String):
+	# 필드 보정 적용 (예: 속성 배율)
 	value *= battle.field_stat.get(attribute_type, 1.0)
 
 	if target is String and target == "self":
@@ -85,20 +95,19 @@ func do_attack(value, target, attribute_type):
 			var damage = enemy.apply_damage(value)
 			battle.add_attack_log(battle.now_character.name, enemy.name, damage, enemy.hp)
 		
-func do_effect(effect_id, target):
-	# self 전용 구현 
+func do_effect(effect_id: String, target):
+	if effect_id == "": return
+	
+	# target이 "self"인 경우 또는 배열인 경우 처리
 	if target is String and target == "self":
 		battle.now_character.add_buff(effect_id)
 	elif target is Array:
-		# 설정된 적 적용 
 		for i in target:
 			var enemy = battle.enemy_character[i]
-			enemy.add_buff(effect_id, 1)	# 내가 남한테 건 버프는 지속시간 1턴 증가
+			enemy.add_buff(effect_id, 1)	# 상대에게 거는 버프는 지속시간 보정
 	
 func do_summon():
-	#var summon_id = skill.get("summon_id", "")
 	pass
 	
 func do_field():
 	pass
-
