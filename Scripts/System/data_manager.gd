@@ -7,6 +7,9 @@ const USER_PATH = "user://"
 @onready var items = get_data_folder("Item")
 @onready var artifacts = get_data_folder("Item")
 
+@onready var enemy_data = load_datas_dict("Enemy", EnemyData)
+@onready var battle_data = load_datas_dict("Battle", BattleData)
+
 ## 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 null 반환)
 func get_data(data_path: String):
 	var path = DEFAULT_PATH + data_path

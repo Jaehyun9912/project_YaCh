@@ -58,7 +58,10 @@
                     },
                     "chance": 1.0
                 }
-            ]
+            ],
+            "element": {
+                "fire": 10
+            }
         }
     },
     "base_water": {
@@ -92,7 +95,10 @@
                     },
                     "chance": 1.0
                 }
-            ]
+            ],
+            "element": {
+                "water": 11
+            }
         }
     },
     "base_dirt": {
@@ -134,7 +140,10 @@
                     },
                     "chance": 1.0
                 }
-            ]
+            ],
+            "element": {
+                "dirt": 45
+            }
         }
     }
 }

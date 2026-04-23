@@ -25,17 +25,10 @@ const SKILL_MIN_CASTING_TIME = 0.5
 
 func _ready():
 	# 1. JSON 데이터 로드
-	# var json_skills = DataManager.get_data_folder("Skill/Player")
-	# var json_special_skills = DataManager.get_data_folder("Skill/Special")
-	# var json_peer_skills = DataManager.get_data_folder("Skill/Peer")
-	# var json_buff_data = DataManager.get_data_folder("Effect")
-
-	# # 2. 데이터를 클래스 객체로 변환하여 저장
-	# skills = DataManager.create_data_class(json_skills, SkillData)
-	# special_skills = DataManager.create_data_class(json_special_skills, SkillData)
-	# peer_skills = DataManager.create_data_class(json_peer_skills, SkillData)
-	# buff_data = DataManager.create_data_class(json_buff_data, EffectData)
 	skills = DataManager.load_datas_dict("Skill/Player", SkillData)
+	var enemy_skills = DataManager.load_datas_dict("Skill/Enemy", SkillData)
+	
+	skills.merge(enemy_skills) # Enemy 스킬도 SkillManager에서 관리함
 	special_skills = DataManager.load_datas_dict("Skill/Special", SkillData)
 	peer_skills = DataManager.load_datas_dict("Skill/Peer", SkillData)
 	buff_data = DataManager.load_datas_dict("Effect", EffectData)

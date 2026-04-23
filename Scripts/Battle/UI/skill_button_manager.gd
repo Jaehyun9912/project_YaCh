@@ -126,7 +126,11 @@ func on_skillbutton_down(btn, index):
 	cancel_area.visible = true
 	cancel_area.position = btn.position
 	var element = AttributeInformation.get_attribute_by_skill(skill)
-	var color = AttributeInformation.get_attribute_color(element)
+	var attribute_info = AttributeInformation.get_attribute(element)
+	var color = Color(1, 1, 1)
+	if attribute_info != null:
+		color = attribute_info.display.color
+
 	cancel_area.modulate = color
 	button_enable_color = color
 	var tween = create_tween()

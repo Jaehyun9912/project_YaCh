@@ -31,6 +31,31 @@ class Stats:
 		s.speed = dict.get("speed", 10.0)
 		s.mana = dict.get("mana", 0.0)
 		return s
+		
+	func clone() -> Stats:
+		var s = Stats.new()
+		s.hp = hp
+		s.attack = attack
+		s.defense = defense
+		s.speed = speed
+		s.mana = mana
+		return s
+		
+	func apply_overrides(overrides: Dictionary) -> void:
+		if overrides.has("hp"): hp = overrides["hp"]
+		if overrides.has("attack"): attack = overrides["attack"]
+		if overrides.has("defense"): defense = overrides["defense"]
+		if overrides.has("speed"): speed = overrides["speed"]
+		if overrides.has("mana"): mana = overrides["mana"]
+
+	func to_dict() -> Dictionary:
+		return {
+			"hp": hp,
+			"attack": attack,
+			"defense": defense,
+			"speed": speed,
+			"mana": mana
+		}
 
 var id: String = ""                    # 적 고유 ID
 var display: Display                   # 표시 정보
@@ -38,12 +63,27 @@ var stats: Stats                       # 능력치 정보
 var skills: Array[String] = []         # 보유 스킬 ID 리스트
 var ai_type: String = "default"        # 행동 패턴 AI 타입
 
+func clone() -> EnemyData:
+	var enemy = EnemyData.new()
+	enemy.id = id
+	enemy.display = display # Display는 보통 읽기 전용이므로 참조 복사
+	enemy.stats = stats.clone()
+	enemy.skills = skills.duplicate()
+	enemy.ai_type = ai_type
+	return enemy
+
+func to_dict() -> Dictionary:
+	var dict = stats.to_dict()
+	dict["id"] = id
+	dict["skills"] = skills.duplicate()
+	dict["ai_type"] = ai_type
+	return dict
+
 static func from_dict(enemy_id: String, dict: Dictionary) -> EnemyData:
 	var enemy = EnemyData.new()
 	enemy.id = enemy_id
 	enemy.display = Display.from_dict(dict.get("display", {}))
 	enemy.stats = Stats.from_dict(dict.get("stats", {}))
-	enemy.skills = []
 	for s in dict.get("skills", []):
 		enemy.skills.append(str(s))
 	enemy.ai_type = dict.get("ai_type", "default")

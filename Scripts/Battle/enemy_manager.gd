@@ -43,7 +43,7 @@ func _enemy_turn():
 		return
 		
 	var skill_id = skills[0]
-	current_skill = SkillManager.get_skill(skill_id) # Enemy skill도 SkillManager에서 관리한다고 가정
+	current_skill = SkillManager.get_skill(skill_id)
 	
 	if current_skill == null:
 		battle.turn_end.emit()

@@ -1,5 +1,5 @@
 {
-    "forest_battle": {
+    "forest": {
         "display": {
             "name": "숲의 전투",
             "description": "숲에서 만나는 적들과의 조우입니다."
@@ -13,10 +13,38 @@
                 "wave_name": "Wave 1",
                 "enemies": [
                     {
-                        "enemy_id": "enemy1"
+                        "enemy_id": "enemy1",
+                        "tag": "SmallSlime"
                     },
                     {
-                        "enemy_id": "enemy2"
+                        "enemy_id": "enemy1",
+                        "tag": "ToughSlime",
+                        "override_stats": {
+                            "hp": 10.0,
+                            "attack": 2.0,
+                            "speed": 80.0
+                        }
+                    },
+                    {
+                        "tag": "HiddenBoss",
+                        "inline_enemy": {
+                            "display": {
+                                "name": "숲의 숨겨진 적",
+                                "description": "가끔씩 나타나는 강력한 적입니다.",
+                                "asset": "res://icon.svg"
+                            },
+                            "stats": {
+                                "hp": 50.0,
+                                "attack": 3.0,
+                                "defense": 1.0,
+                                "speed": 100.0,
+                                "mana": 200.0
+                            },
+                            "skills": [
+                                "strong_attack"
+                            ],
+                            "ai_type": "aggressive"
+                        }
                     }
                 ]
             }

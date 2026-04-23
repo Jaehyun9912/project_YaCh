@@ -16,23 +16,5 @@
             "default_attack"
         ],
         "ai_type": "default"
-    },
-    "enemy2": {
-        "display": {
-            "name": "적 2",
-            "description": "숲의 두 번째 적입니다.",
-            "asset": "res://icon.svg"
-        },
-        "stats": {
-            "hp": 10.0,
-            "attack": 2.0,
-            "defense": 0.0,
-            "speed": 80.0,
-            "mana": 100.0
-        },
-        "skills": [
-            "default_attack"
-        ],
-        "ai_type": "default"
     }
 }

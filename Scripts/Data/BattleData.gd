@@ -29,15 +29,37 @@ class Wave:
 	## 웨이브에 등장하는 개별 적 엔트리 클래스
 	class EnemyEntry:
 		var enemy_id: String = ""      # Enemy 데이터 ID 참조
+		var tag: String = "Unknown"    # 개별 유닛 식별용 태그 (boss 등)
 		var override_stats: Dictionary = {} # 능력치 덮어쓰기 설정
 		var inline_enemy: Dictionary = {} # 직접 정의된 적 데이터
 
 		static func from_dict(dict: Dictionary) -> EnemyEntry:
 			var e = EnemyEntry.new()
 			e.enemy_id = dict.get("enemy_id", "")
+			e.tag = dict.get("tag", "Unknown")
 			e.override_stats = dict.get("override_stats", {})
 			e.inline_enemy = dict.get("inline_enemy", {})
 			return e
+			
+		## 실제 전투에서 사용할 EnemyData 객체 생성
+		func instantiate_enemy(base_enemies: Dictionary) -> EnemyData:
+			var final_enemy: EnemyData
+			
+			if not inline_enemy.is_empty():
+				# 1. 인라인 정의가 있으면 우선 사용
+				final_enemy = EnemyData.from_dict("inline_" + str(Time.get_ticks_msec()), inline_enemy)
+			elif base_enemies.has(enemy_id):
+				# 2. ID 참조가 있으면 원본 복제
+				final_enemy = base_enemies[enemy_id].clone()
+			else:
+				printerr("[BattleData] Enemy 정보를 찾을 수 없음: ", enemy_id)
+				return null
+				
+			# 3. 오버라이드 능력치 적용
+			if not override_stats.is_empty():
+				final_enemy.stats.apply_overrides(override_stats)
+				
+			return final_enemy
 
 	var wave_name: String = ""         # 웨이브 이름
 	var bg_image: String = ""          # 웨이브 전용 배경 이미지
