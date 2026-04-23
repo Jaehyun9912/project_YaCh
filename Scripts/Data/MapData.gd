@@ -60,7 +60,6 @@ class Point:
 		p.position = Position.from_dict(dict.get("position", {}))
 		p.visibility = dict.get("visibility", "visible")
 		p.content_id = dict.get("content_id", "")
-		p.unlock_conditions = []
 		for s in dict.get("unlock_conditions", []):
 			p.unlock_conditions.append(str(s))
 		p.metadata = Metadata.from_dict(dict.get("metadata", {}))
@@ -94,7 +93,6 @@ static func from_dict(dict: Dictionary) -> MapData:
 	for p_id in points_dict:
 		m.points[p_id] = Point.from_dict(p_id, points_dict[p_id])
 		
-	m.navigation_overrides = []
 	for n_dict in dict.get("navigation_overrides", []):
 		m.navigation_overrides.append(NavigationOverride.from_dict(n_dict))
 		

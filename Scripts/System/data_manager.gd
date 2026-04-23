@@ -13,7 +13,7 @@ func get_data(data_path: String):
 	if not data_path.ends_with(".json"):
 		path += ".json"
 	
-	# 경로에 파일이 없을 경우 빈 딕셔너리 반환 
+	# 경로에 파일이 없을 경우 null 반환
 	if not FileAccess.file_exists(path):
 		printerr("NoFileInPath " + path)
 		return null

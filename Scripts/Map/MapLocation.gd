@@ -1,42 +1,22 @@
 class_name MapLocation
 extends Node2D
 
-# 맵에 위치하는 지역 데이터
-var _location_data: Dictionary
+var point_data: MapData.Point
 
-# 맵 상하좌우에 있는 지역 이름
-var left:
-	get:
-		if _location_data.has("Left"):
-			return _location_data["Left"]
-		return location
-var right:
-	get:
-		if _location_data.has("Right"):
-			return _location_data["Right"]
-		return location
-var up:
-	get:
-		if _location_data.has("Up"):
-			return _location_data["Up"]
-		return location
-var down:
-	get:
-		if _location_data.has("Down"):
-			return _location_data["Down"]
-		return location
+var up: MapLocation
+var down: MapLocation
+var left: MapLocation
+var right: MapLocation
 
-# 해당 지역 이름
-var location:
-	get:
-		return _location_data["Location"]
+var location: String:
+	get: return point_data.id if point_data else ""
 
+var display_name: String:
+	get: return point_data.display_name if point_data else ""
 
-# 각 지역을 맵에 직접 배치
-func set_location(data):
-	_location_data = data
-	position.x = data["xPos"]
-	position.y = data["yPos"]
+func set_location(data: MapData.Point) -> void:
+	point_data = data
+	position = Vector2(data.position.x, data.position.y)
 
 # 해당 월드로 이동
 func enter_world():
