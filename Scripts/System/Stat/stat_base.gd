@@ -53,10 +53,15 @@ func get_max_mana() -> float:
 	var buff_data = get_buff_stats("mana", base_mana)
 	return buff_data
 
+# 체력 기초값 계산 (기획: 기초 마나 최대치 * 체력 배율 상수)
+func _get_base_max_hp_logic() -> float:
+	var base_mana = _get_base_max_mana_logic()
+	return base_mana * HP_SCALE_CONST
+
 # 체력 최대치
 func get_max_hp() -> float:
-	var base_mana = _get_base_max_mana_logic()
-	var buff_data = get_buff_stats("max_hp", base_mana * HP_SCALE_CONST)
+	var base_hp = _get_base_max_hp_logic()
+	var buff_data = get_buff_stats("max_hp", base_hp)
 	return buff_data
 
 # 속도 계산
@@ -190,11 +195,14 @@ func _recalculate_buff_cache(stat_name: String):
 					mult_total *= buff.data.value
 			m = mult_total
 			a = add_total
+		"attack":
+			# 공격력은 기획에 없으나 일단 합산 처리 (추후 별도 공식 필요 시 수정)
+			for buff in buffs:
+				a += buff.data.value
+			m = 1.0
 		_:
 			# 나머지: 모두 더하기
 			for buff in buffs:
-				# 여기서 buff.data.value가 0인지, 혹은 합연산인지 확인
-				# print(" - Processing Buff: %s Value: %s" % [buff.id, buff.data.value])
 				a += buff.data.value
 			m = 1.0
 

@@ -33,7 +33,7 @@
 						"item_schema": {
 							"type": "object",
 							"default": {
-								"stat": { "type": "enum:", "enum_options": ["", "hp", "max_hp", "atk", "def", "speed", "mana", "mana_max"], "enum_append_keys_from": "res://Data/attribute_info.json", "comment": "체크할 스탯명", "default": "" },
+								"stat": { "type": "enum:", "enum_options": ["", "hp", "max_hp", "attack", "defense", "speed", "mana", "mana_max"], "enum_append_keys_from": "res://Data/attribute_info.json", "comment": "체크할 스탯명", "default": "" },
 								"op": { "type": "enum:>,<,==,>=,<=", "comment": "비교 연산자", "default": "==" },
 								"value": { "type": "any", "comment": "비교 대상 값", "default": 0 }
 							}
@@ -64,7 +64,7 @@
 									"type": "object",
 									"default": {
 										"base": { "type": "number", "default": 0 },
-										"scaling_stat": { "type": "enum:", "enum_options": ["atk", "def", "hp", "max_hp", "speed", "mana", "mana_max"], "default": "atk" },
+										"scaling_stat": { "type": "enum:", "enum_options": ["attack", "defense", "hp", "max_hp", "speed", "mana", "mana_max"], "default": "attack" },
 										"multiplier": { "type": "number", "default": 1.0 }
 									}
 								},

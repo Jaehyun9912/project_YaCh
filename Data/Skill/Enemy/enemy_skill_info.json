@@ -19,7 +19,7 @@
                     "type": "damage",
                     "formula": {
                         "base": 1,
-                        "scaling_stat": "atk",
+                        "scaling_stat": "attack",
                         "multiplier": 1.2
                     },
                     "element": "none",

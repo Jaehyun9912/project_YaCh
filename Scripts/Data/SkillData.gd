@@ -67,13 +67,13 @@ class Execution:
 		## 수치 계산식 클래스
 		class Formula:
 			var base: float = 0        # 기본값
-			var scaling_stat: String = "atk" # 계수 적용 능력치
+			var scaling_stat: String = "attack" # 계수 적용 능력치
 			var multiplier: float = 1.0 # 계수 배율
 
 			static func from_dict(dict: Dictionary) -> Formula:
 				var f = Formula.new()
 				f.base = dict.get("base", 0)
-				f.scaling_stat = dict.get("scaling_stat", "atk")
+				f.scaling_stat = dict.get("scaling_stat", "attack")
 				f.multiplier = dict.get("multiplier", 1.0)
 				return f
 
