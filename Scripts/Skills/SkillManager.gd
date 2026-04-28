@@ -9,13 +9,15 @@ var buff_data: Dictionary = {}       # 버프(EffectData) 정보
 
 # 플레이어 현재 보유 스킬 ID 리스트 (PlayerData 참조)
 var player_skill: Array:
-	get: return PlayerData.data.get("skills", [])
+	get: return PlayerData.get_player_skills(SkillData.SkillType.NORMAL).get("active", [])
 
 var player_special_skill: Array:
-	get: return PlayerData.data.get("special_skills", [])
+	get: return PlayerData.get_player_skills(SkillData.SkillType.SPECIAL_PARRY).get("active", [])
 
 var player_peer_skill_id: String:
-	get: return PlayerData.data.get("peer_skill", "")
+	get: 
+		var peer_active = PlayerData.get_player_skills(SkillData.SkillType.PEER).get("active", [])
+		return peer_active[0] if peer_active.size() > 0 else ""
 
 # 상수 설정
 const ACTION_POINT_ID = "point"

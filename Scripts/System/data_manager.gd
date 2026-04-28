@@ -4,9 +4,10 @@ const DEFAULT_PATH = "res://Data/"
 const USER_PATH = "user://"
 
 # Item 리팩토링 이전 임시 리소스
-@onready var items = get_data_folder("Item")
-@onready var artifacts = get_data_folder("Item")
+# @onready var items = get_data_folder("Item")
+# @onready var artifacts = get_data_folder("Item")
 
+# 임시 리소스
 @onready var enemy_data = load_datas_dict("Enemy", EnemyData)
 @onready var battle_data = load_datas_dict("Battle", BattleData)
 
@@ -32,7 +33,7 @@ func get_data(data_path: String):
 		printerr(json.get_error_message())
 		return null
 	
-# 프로젝트의 Data 폴더에서 특정 폴더의 모든 json 파일을 읽어서 합쳐오는 함수
+## 프로젝트의 Data 폴더에서 특정 폴더의 모든 json 파일을 읽어서 합쳐오는 함수
 func get_data_folder(data_path: String):
 	var path = DEFAULT_PATH + data_path
 	var combined_data = {}
@@ -76,7 +77,7 @@ func get_data_folder(data_path: String):
 	return combined_data
 		
 	
-# 프로젝의 user 경로에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
+## 프로젝의 user 경로에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
 func load_data(data_path: String) -> Dictionary:
 	var path = USER_PATH + data_path + ".json"
 	
@@ -107,37 +108,37 @@ func save_data(save: Dictionary, data_path: String) -> void:
 	
 	save_file.store_line(json_string)
 		
-# 네임스페이스 관계 없이 아이템 정보 가져오기 
-func get_item_artifact_data(id: String):
-	var sp = id.split(":")
-	if sp.size() == 1 or sp[0] == "item":
-		return get_item_data(id)
-	else:
-		return get_artifact_data(id)
+# # 네임스페이스 관계 없이 아이템 정보 가져오기 
+# func get_item_artifact_data(id: String):
+# 	var sp = id.split(":")
+# 	if sp.size() == 1 or sp[0] == "item":
+# 		return get_item_data(id)
+# 	else:
+# 		return get_artifact_data(id)
 		
-# 들어온 ID에 해당하는 아이템의 정보가 담긴 딕셔너리 반환 
-func get_item_data(id: String) -> Dictionary:
-	var sp = id.split(":")
-	if sp.size() > 1 and sp[0] == "item":
-		id = sp[1]
+# # 들어온 ID에 해당하는 아이템의 정보가 담긴 딕셔너리 반환 
+# func get_item_data(id: String) -> Dictionary:
+# 	var sp = id.split(":")
+# 	if sp.size() > 1 and sp[0] == "item":
+# 		id = sp[1]
 		
-	if items.has(id):
-		return items[id]
-	else:
-		printerr("잘못된 아이템 ID! : " + id)
-		return Dictionary()
+# 	if items.has(id):
+# 		return items[id]
+# 	else:
+# 		printerr("잘못된 아이템 ID! : " + id)
+# 		return Dictionary()
 		
-# 들어온 ID에 해당하는 아티팩트의 정보가 담긴 딕셔너리 반환 
-func get_artifact_data(id: String) -> Dictionary:
-	var sp = id.split(":")
-	if sp.size() > 1 and sp[0] == "artifact":
-		id = sp[1]
+# # 들어온 ID에 해당하는 아티팩트의 정보가 담긴 딕셔너리 반환 
+# func get_artifact_data(id: String) -> Dictionary:
+# 	var sp = id.split(":")
+# 	if sp.size() > 1 and sp[0] == "artifact":
+# 		id = sp[1]
 	
-	if artifacts.has(id):
-		return artifacts[id]
-	else:
-		printerr("잘못된 아티팩트 ID! : " + id)
-		return Dictionary()
+# 	if artifacts.has(id):
+# 		return artifacts[id]
+# 	else:
+# 		printerr("잘못된 아티팩트 ID! : " + id)
+# 		return Dictionary()
 
 ## 데이터 로드 함수
 func create_data_dict(json: Dictionary, data_class: GDScript) -> Dictionary:

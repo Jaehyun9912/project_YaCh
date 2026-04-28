@@ -8,7 +8,7 @@
             "icon": "res://icon.svg"
         },
         "logic": {
-            "max_stack": 99,
+            "is_usable": true,
             "effects": [
                 {
                     "target": "hp",
@@ -29,7 +29,8 @@
             "icon": "res://icon.svg"
         },
         "logic": {
-            "max_stack": 99,
+            "is_usable": true,
+            "battle_only": true,
             "effects": [
                 {
                     "target": "all_enemies",
@@ -50,7 +51,7 @@
             "icon": "res://icon.svg"
         },
         "logic": {
-            "max_stack": 1,
+            "is_usable": true,
             "location_limit": "forest",
             "effects": []
         },

@@ -53,12 +53,12 @@
             "gold": 0,
             "items": [
                 {
-                    "id": "item:potion",
+                    "id": "potion",
                     "count": 1,
                     "chance": 1.0
                 },
                 {
-                    "id": "artifact:pandora_cube",
+                    "id": "pandora_cube",
                     "count": 1,
                     "chance": 1.0
                 }

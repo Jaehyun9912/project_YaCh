@@ -31,11 +31,14 @@ func _calculate_and_give_rewards(rewards: BattleData.Rewards) -> String:
 			printerr("No Item ID in rewards!")
 			continue
 
-		var item = DataManager.get_item_artifact_data(item_id)
+		var item = ItemManager.get_item(item_id)
+		if not item:
+			continue
+			
 		var count = i.count
 
 		# 텍스트 추가
-		reward_str += item.get("display", {}).get("name", "알 수 없는 아이템")
+		reward_str += item.display.name
 		if count > 1:
 			reward_str += " " + str(count) + "개"
 		reward_str += "\n"

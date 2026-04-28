@@ -1,10 +1,8 @@
 extends Node
 # class_name Player
 
-# 아이템 변화 시 (id,count), 아티펙트 변화 시 (id)
-signal on_inventory_changed
-
-const max_inventory_slots = 9
+# 아이템 변화 시 발생하는 시그널 (id, total_count)
+signal on_inventory_changed(id: String, total_count: int)
 
 var stat_manager: PlayerStat
 
@@ -34,7 +32,6 @@ var speed:
 		return stat_manager.get_speed()
 
 var mana: # 현재 mana
-# ? mana를 현재 저장할 필요가 있는지 확인 필요 (전투 때 매번 최대치인가?)
 	get:
 		return stat_manager.get_stat("mana")
 	set(value):
@@ -54,18 +51,7 @@ var skill_level:
 	get:
 		return stat_manager.get_skill_level()
 
-var inventory:
-	get:
-		return data["inventory"]
-	set(value):
-		data["inventory"] = value
-var inventory_slot_status: Array[bool]
-
-var artifact:
-	get:
-		return data["artifacts"]
-	set(value):
-		data["artifacts"] = value
+var inventory: InventoryContainer
 
 # 스탯 비교
 func cmp_stat(condition: String) -> bool:
@@ -73,15 +59,18 @@ func cmp_stat(condition: String) -> bool:
 	for i in comparer:
 		var partial_tag = condition.split(i, true, 2)
 		if partial_tag.size() == 2:
-			print(data[partial_tag[0]], " ", i, " ", partial_tag[1])
-			# 태그 보유 여부 확인
-			if !data.has(partial_tag[0]):
+			var stats = data.get("stats", {})
+			if !stats.has(partial_tag[0]):
 				return false
-			if i == ">" && data[partial_tag[0]] > partial_tag[1].to_int():
+			
+			var val = stats[partial_tag[0]]
+			var target = partial_tag[1].to_int()
+			
+			if i == ">" && val > target:
 				return true
-			elif i == "<" && data[partial_tag[0]] < partial_tag[1].to_int():
+			elif i == "<" && val < target:
 				return true
-			elif i == "=" && data[partial_tag[0]] == partial_tag[1].to_int():
+			elif i == "=" && val == target:
 				return true
 			else:
 				return false
@@ -90,24 +79,68 @@ func cmp_stat(condition: String) -> bool:
 #endregion
 
 #region Data
+## 실제로 저장되는 데이터
 var data: Dictionary
-# data 저장 
+
+var skills:
+	get:
+		return data.get("skills", {})
+	set(value):
+		data["skills"] = value
+
+## 플레이어가 보유한 스킬 정보 반환 (카테고리별, {"active": Array, "unlocked": Array} 형태, 오류 발생시 빈 딕셔너리 반환)
+func get_player_skills(type: SkillData.SkillType) -> Dictionary:
+	match (type):
+		SkillData.SkillType.NORMAL:
+			return skills.get("normal", {})
+		SkillData.SkillType.SPECIAL_PARRY or SkillData.SkillType.SPECIAL_COUNTER:
+			return skills.get("special", {})
+		SkillData.SkillType.PEER:
+			return skills.get("peer", {})
+		_:
+			return {}
 
 var cur_location:
 	get:
-		if data.has("location"):
-			return data["location"]
+		var meta = data.get("data", {})
+		if meta.has("current_location"):
+			return meta["current_location"]
 		else:
-			data["location"] = "TestMap"
-			return data["location"]
+			meta["current_location"] = "TestMap"
+			data["data"] = meta
+			return meta["current_location"]
 	set(value):
-		data["location"] = value
+		if not data.has("data"): data["data"] = {}
+		data["data"]["current_location"] = value
 
 
 func save_player():
+	var inv_contents = inventory.get_inventory_contents()
+	
+	# 구조 보장
+	if not data.has("data"): data["data"] = {}
+	if not data.has("stats"): data["stats"] = {}
+	if not data.has("inventory"): data["inventory"] = {}
+	if not data.has("progress"): data["progress"] = {}
+	if not data.has("economy"): data["economy"] = {}
+
+	var init_player = DataManager.get_data("player")
+	
+	# 메타데이터 업데이트
+	data["data"]["saved_versions"] = init_player.get("data", {}).get("saved_versions", "0.0.0")
+	data["data"]["last_played"] = Time.get_datetime_string_from_system()
+	
+	# 계산된 스탯 저장 (스키마 준수용)
+	data["stats"]["max_hp"] = max_hp
+	data["stats"]["max_mana"] = mana_max
+	data["stats"]["speed"] = speed
+	
+	# 인벤토리 동기화 (모든 아이템이 items 리스트에 저장됨)
+	data["inventory"]["items"] = inv_contents
+	
 	DataManager.save_data(data, "player")
 
-# user 경로에 저장된 데이터 불러오기 
+## user 경로에 저장된 데이터 불러오기 
 func load_player():
 	var load_data = DataManager.load_data("player") as Dictionary
 	
@@ -116,103 +149,47 @@ func load_player():
 		reset_player()
 		return
 	
+	# 버전 체크
+	var saved_version = load_data.get("data", {}).get("saved_versions", "0.0.0")
+	var init_player = DataManager.get_data("player")
+	var current_version = init_player.get("data", {}).get("saved_versions", "0.0.0")
+	if saved_version != current_version:
+		printerr("[PlayerData] 세이브 데이터 버전 불일치 (%s -> %s). 개발 중인 버전이므로 데이터를 초기화합니다." % [saved_version, current_version])
+		reset_player()
+		return
+	
 	# 불러온 데이터 입력하기 
 	data = load_data
-	inventory_slot_status.resize(max_inventory_slots)
 	
-	for i in inventory:
-		inventory_slot_status[i["slot"]] = true
+	# 인벤토리 초기화
+	inventory = InventoryContainer.new()
+	
+	var inv_data = {
+		"items": data.get("inventory", {}).get("items", [])
+	}
+	inventory.set_all_item(inv_data)
+	inventory.item_changed.connect(_on_inventory_changed)
 
-	stat_manager.setup(self, data)
+	# 스탯 매니저 설정 (stats 서브 딕셔너리 전달)
+	if not data.has("stats"): data["stats"] = {}
+	stat_manager.setup(self, data["stats"])
 	
 
-# 새로운 데이터 생성, 이때는 미리 만든 player파일을 가져옴 
+## 새로운 데이터 생성, 이때는 미리 만든 player파일을 가져옴 
 func reset_player():
 	var new_player = DataManager.get_data("player")
-	
 	data = new_player
-	
 	DataManager.save_data(data, "player")
+	load_player()
 #endregion
 
 #region Inventory
-
+## 아이템 추가, count는 아이템 개수 (음수일 때는 제거)
 func add_new_item(id: String, count: int):
-	var sp = id.split(":")
-	var item
-	# 아이템 로드 및 검증 
-	if sp.size() == 1:
-		item = DataManager.get_item_data(sp[0])
-		id = "item:" + sp[0]
-	elif sp[0] == "item":
-		item = DataManager.get_item_data(sp[1])
-	elif sp[0] == "artifact":
-		_get_artifact(sp[1])
-		return
-	else:
-		printerr("Wrong Namespace! " + id)
-		return
-	
-	if item.size() == 0:
-		printerr("Wrong Item ID " + id)
-		return
-	if item.has("type") == false:
-		printerr("No item type " + id)
-		return
-	
-	# 아이템 넣기 
-	# 이미 아이템 있을 때는 count에 추가 
-	var flag = false
-	for i in inventory:
-		if i["id"] == id:
-			i.count += count
-			on_inventory_changed.emit(id, i.count)
-			if i.count == 0:
-				inventory.erase(i)
-				print(inventory)
-			flag = true
-			break
-	# 없을 때는 새로 추가 
-	if flag == false:
-		if count <= 0:
-			return
-		var first_slot = null
-		for i in range(max_inventory_slots):
-			if inventory_slot_status[i] == false:
-				first_slot = i
-				inventory_slot_status[i] = true
-				break
-		if first_slot == null:
-			print("inventory is full")
-			return
-		var new_item = {"id": id, "count": count, "slot": first_slot}
-		inventory.push_back(new_item)
-		on_inventory_changed.emit(id, count)
-	print(id)
-	print(inventory)
+	inventory.add_item(id, count)
 
-# 아티팩트 획득 
-func _get_artifact(id: String):
-	var item = DataManager.get_artifact_data(id)
-	print(id, " : ", item)
-	# 파일 형식 체크 
-	if item.size() == 0:
-		printerr("Wrong Artifact ID! " + id)
-	elif item.has("location") == false:
-		printerr("No Location " + id)
-	elif ViewManager.cur_meta_data["World"] != item["location"]:
-		printerr("need same location " + ViewManager.now_map_name + " != " + item["location"])
-		return
-	elif item.has("type") == false:
-		printerr("No type " + id)
-	elif artifact.has(id) == true:
-		print("Already has Artifact! " + id)
-	else:
-		# 아이템 부여 
-		artifact[id] = true
-		print(artifact)
-		on_inventory_changed.emit(id)
-
+func _on_inventory_changed(id: String, total_count: int):
+	on_inventory_changed.emit(id, total_count)
 #endregion
 
 #region Quest
@@ -251,7 +228,7 @@ func cmp_item(condition: String) -> bool:
 		var partial_tag = condition.split(i, true, 2)
 		if partial_tag.size() == 2:
 			# 아이템이 인벤토리에 얼마나 있는지 확인
-			item_count = get_item_count(partial_tag[0])
+			item_count = inventory.get_item_count(partial_tag[0])
 			print(partial_tag[0], ".count : ", item_count)
 			if i == ">" && item_count > partial_tag[1].to_int():
 				return true
@@ -261,7 +238,7 @@ func cmp_item(condition: String) -> bool:
 				return true
 			else:
 				return false
-	item_count = get_item_count(condition)
+	item_count = inventory.get_item_count(condition)
 	if item_count > 0:
 		return true
 	return false
@@ -269,23 +246,19 @@ func cmp_item(condition: String) -> bool:
 
 # 아티펙트 보유 여부 확인
 func cmp_artifact(condition: String) -> bool:
-	return artifact.has(condition)
+	return inventory.get_item_count(condition) > 0
 
 
 # 보유 중인 아이템 개수 가져오기
 func get_item_count(id: String) -> int:
-	for i in inventory:
-		if i["id"] == "item:" + id:
-			return i["count"]
-	return 0
+	return inventory.get_item_count(id)
 
 
 # 현재 해금된 지역 확인
 func cmp_map(arr: Array) -> bool:
-	var dict = PlayerData.data
+	var dict = data.get("progress", {}).get("map", {})
 	var last_index = arr.size() - 1
 	for i in range(0, last_index):
-		print(dict, arr[i])
 		if dict.has(arr[i]):
 			dict = dict[arr[i]]
 		else:
@@ -370,36 +343,27 @@ func execute_cmd(cmd: String) -> void:
 #region Money
 
 func get_money(money_name: String) -> int:
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			return money[money_name]
+	if money_name == "gold":
+		return data.get("economy", {}).get("gold", 0)
 	return 0
 
 func set_money(money_name: String, amount: int):
-	if data.has("money"):
-		var money = data["money"]
-		money[money_name] = amount
-	else:
-		data["money"] = {money_name: amount}
+	if money_name == "gold":
+		if not data.has("economy"): data["economy"] = {}
+		data["economy"]["gold"] = amount
 
 func add_money(money_name: String, amount: int):
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			money[money_name] += amount
-		else:
-			money[money_name] = amount
-	else:
-		data["money"] = {money_name: amount}
+	if money_name == "gold":
+		if not data.has("economy"): data["economy"] = {}
+		var current = data["economy"].get("gold", 0)
+		data["economy"]["gold"] = current + amount
 
 func pay_money(money_name: String, amount: int) -> bool:
-	if data.has("money"):
-		var money = data["money"]
-		if money.has(money_name):
-			if money[money_name] >= amount:
-				money[money_name] -= amount
-				return true
+	if money_name == "gold":
+		var current = data.get("economy", {}).get("gold", 0)
+		if current >= amount:
+			data["economy"]["gold"] = current - amount
+			return true
 	return false
 
 #endregion
@@ -407,43 +371,35 @@ func pay_money(money_name: String, amount: int) -> bool:
 #region Map
 
 func get_unlock_maps(mapName: String) -> Array:
-	if data.has("map"):
-		var map = data["map"]
-		if map.has(mapName):
-			return map[mapName]
-	return []
+	return data.get("progress", {}).get("map", {}).get(mapName, [])
 
 func unlock_map(mapName: String, locationName: String, lock = false):
-	if !data.has("map"):
-		data["map"] = {}
+	if !data.has("progress"): data["progress"] = {}
+	if !data["progress"].has("map"): data["progress"]["map"] = {}
 	
-	var arr = get_unlock_maps(mapName)
+	var map_dict = data["progress"]["map"]
+	if !map_dict.has(mapName): map_dict[mapName] = []
+	
+	var arr = map_dict[mapName]
 	if lock:
 		arr.erase(locationName)
 	else:
 		if !arr.has(locationName):
 			arr.append(locationName)
-	data["map"][mapName] = arr
-
+	map_dict[mapName] = arr
 
 #endregion
 
 #region Renown
 
 func get_guild_renown(guildId: String) -> int:
-	if data.has("renown"):
-		var guild = data["renown"]
-		if guild.has(guildId):
-			return guild[guildId]
-	return 0
+	return data.get("economy", {}).get("guild", {}).get(guildId, 0)
 
 func set_guild_renown(guildId: String, renown: int):
-	if !data.has("renown"):
-		data["renown"] = {}
+	if !data.has("economy"): data["economy"] = {}
+	if !data["economy"].has("guild"): data["economy"]["guild"] = {}
 	
-	var guild = data["renown"]
-	guild[guildId] = renown
-
+	data["economy"]["guild"][guildId] = renown
 
 #endregion
 

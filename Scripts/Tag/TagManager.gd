@@ -140,7 +140,7 @@ func _remove_tag(node: Node, tag: String) -> bool:
 
 # 단일 태그 추가(외부 사용 X)
 func _add_tag(node: Node, tag: String, count = 1) -> void:
-	var upper = tag.split(".", true, 1)
+	# var upper = tag.split(".", true, 1)
 	# 태그가 1개 이상 있을 경우
 	if dict.has(node):
 		var tags = dict[node] as Dictionary

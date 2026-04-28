@@ -27,9 +27,9 @@ var restore: bool = false              # 만료 시 수치 복구 여부
 var next_buff: String = ""             # 만료 후 자동 발동 효과 ID
 var duration: Duration                 # 지속 조건 설정
 
-static func from_dict(effect_id: String, dict: Dictionary) -> EffectData:
+static func from_dict(effect_id, dict: Dictionary) -> EffectData:
 	var effect = EffectData.new()
-	effect.id = effect_id
+	effect.id = effect_id if effect_id is String and effect_id != "" else dict.get("id", "")
 	effect.target = dict.get("target", "attack")
 	effect.value_type = dict.get("value_type", "add")
 	effect.value = dict.get("value", 0.0)
@@ -39,3 +39,21 @@ static func from_dict(effect_id: String, dict: Dictionary) -> EffectData:
 	effect.next_buff = dict.get("next_buff", "")
 	effect.duration = Duration.from_dict(dict.get("duration", {}))
 	return effect
+
+func to_dict() -> Dictionary:
+	return {
+		"id": id,
+		"target": target,
+		"value_type": value_type,
+		"value": value,
+		"priority": priority,
+		"apply_type": apply_type,
+		"restore": restore,
+		"next_buff": next_buff,
+		"duration": {
+			"type": duration.type,
+			"value": duration.value,
+			"attribute": duration.attribute,
+			"skip_first_tick": duration.skip_first_tick
+		}
+	}

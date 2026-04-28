@@ -1,43 +1,55 @@
 {
-	"max_hp": 50,
-	"hp": 50,
-	"speed": 100,
-	"mana": 100,
-	"mana_max": 100,
-	"skill_exp": 0,
-	
-	"skills": [
-		"base_attack",
-		"base_fire",
-		"base_water",
-		"base_dirt"
-	],
-	"special_skills": [
-		"counter1",
-		"parrying1"
-	],
-	"peer_skill": "peer_heal1",
-	
-	"inventory": [
-		{
-			"id": "item:potion",
-			"count": 9,
-			"slot": 0
-		},
-		{
-			"id": "item:bomb",
-			"count": 6,
-			"slot": 1
-		}
-	],
-	
-	"artifacts" : {},
-	"map":{
-		"TestCountry":[
-			"forest","Mountain"
-		]
-	},
-	"guild":{
-		"void":100
-	}
+  "data": {
+    "saved_versions": "0.0.1",
+    "last_played": "2026-04-28T12:00:00",
+    "current_location": "TestCountry"
+  },
+  "stats": {
+    "max_hp": 100,
+    "hp": 100,
+    "speed": 10,
+    "mana": 50,
+    "max_mana": 50,
+    "skill_exp": 0,
+    "mana_bonus": 0,
+    "speed_bonus": 0
+  },
+  "skills": {
+    "normal": {
+      "active": ["base_attack", "base_fire", "base_water", "base_dirt"],
+      "unlocked": ["base_attack", "base_fire", "base_water", "base_dirt"]
+    },
+    "special": {
+      "active": ["counter1", "parrying1", null, null],
+      "unlocked": ["counter1", "parrying1"]
+    },
+    "peer": {
+      "active": ["peer_heal1", null, null, null],
+      "unlocked": ["peer_heal1"]
+    }
+  },
+  "inventory": {
+    "items": [
+      { "item": "potion", "count": 9 },
+      { "item": "bomb", "count": 6 },
+      { "item": "pandora_cube", "count": 1 }
+    ],
+    "equipped": {
+      "head": null,
+      "body": null,
+      "weapon": null
+    }
+  },
+  "economy": {
+    "gold": 100,
+    "guild": {
+      "void": 100
+    }
+  },
+  "progress": {
+    "quests": {},
+    "map": {
+      "TestCountry": ["forest", "Mountain"]
+    }
+  }
 }
