@@ -31,7 +31,7 @@ func _calculate_and_give_rewards(rewards: BattleData.Rewards) -> String:
 			printerr("No Item ID in rewards!")
 			continue
 
-		var item = ItemManager.get_item(item_id)
+		var item = DataManager.item_data.get(item_id)
 		if not item:
 			continue
 			

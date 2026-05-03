@@ -70,9 +70,9 @@ func _update_panel():
 
 
 # 단일 버튼 생성 후 퀘스트와 바인딩
-func _set_quest_button(parent, quest, mode):
+func _set_quest_button(parent, quest: QuestData, mode):
 	var button = Button.new()
-	button.text = quest["title"]
+	button.text = quest.title
 	button.pressed.connect(_show_quest_detail.bind(quest,mode))
 	parent.add_child(button)
 	return button

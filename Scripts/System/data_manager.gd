@@ -10,6 +10,8 @@ const USER_PATH = "user://"
 # 임시 리소스
 @onready var enemy_data = load_datas_dict("Enemy", EnemyData)
 @onready var battle_data = load_datas_dict("Battle", BattleData)
+@onready var item_data = load_datas_dict("Item", ItemData)
+@onready var quest_data = load_quest_data()
 
 ## 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 null 반환)
 func get_data(data_path: String):
@@ -107,38 +109,6 @@ func save_data(save: Dictionary, data_path: String) -> void:
 	var json_string = JSON.stringify(save)
 	
 	save_file.store_line(json_string)
-		
-# # 네임스페이스 관계 없이 아이템 정보 가져오기 
-# func get_item_artifact_data(id: String):
-# 	var sp = id.split(":")
-# 	if sp.size() == 1 or sp[0] == "item":
-# 		return get_item_data(id)
-# 	else:
-# 		return get_artifact_data(id)
-		
-# # 들어온 ID에 해당하는 아이템의 정보가 담긴 딕셔너리 반환 
-# func get_item_data(id: String) -> Dictionary:
-# 	var sp = id.split(":")
-# 	if sp.size() > 1 and sp[0] == "item":
-# 		id = sp[1]
-		
-# 	if items.has(id):
-# 		return items[id]
-# 	else:
-# 		printerr("잘못된 아이템 ID! : " + id)
-# 		return Dictionary()
-		
-# # 들어온 ID에 해당하는 아티팩트의 정보가 담긴 딕셔너리 반환 
-# func get_artifact_data(id: String) -> Dictionary:
-# 	var sp = id.split(":")
-# 	if sp.size() > 1 and sp[0] == "artifact":
-# 		id = sp[1]
-	
-# 	if artifacts.has(id):
-# 		return artifacts[id]
-# 	else:
-# 		printerr("잘못된 아티팩트 ID! : " + id)
-# 		return Dictionary()
 
 ## 데이터 로드 함수
 func create_data_dict(json: Dictionary, data_class: GDScript) -> Dictionary:
@@ -162,3 +132,46 @@ func load_datas_dict(data_path: String, data_class: GDScript) -> Dictionary:
 	else:
 		printerr("load_datas_dict failed to load data from: " + data_path)
 		return {}
+
+## 퀘스트 데이터를 로드하여 QuestData 객체로 캐싱하는 함수
+func load_quest_data() -> Dictionary:
+	var result = {}
+	var path = DEFAULT_PATH + "Quest"
+	
+	if not DirAccess.dir_exists_absolute(path):
+		printerr("Quest folder not found at: ", path)
+		return {}
+
+	var dir_access = DirAccess.open(path)
+	if dir_access:
+		dir_access.list_dir_begin()
+		var file_name = dir_access.get_next()
+		
+		while file_name != "":
+			if file_name == "." or file_name == "..":
+				file_name = dir_access.get_next()
+				continue
+				
+			if not dir_access.current_is_dir() and file_name.ends_with(".json"):
+				var npc_name = file_name.replace(".json", "")
+				var raw_data = get_data("Quest/" + npc_name)
+				
+				if raw_data:
+					var parsed_npc_data = {}
+					for key in raw_data:
+						if typeof(raw_data[key]) == TYPE_ARRAY:
+							var quest_list = []
+							for q_dict in raw_data[key]:
+								quest_list.append(QuestData.from_dict(q_dict))
+							parsed_npc_data[key] = quest_list
+						else:
+							# guild ID 등 메타데이터 보존
+							parsed_npc_data[key] = raw_data[key]
+					result[npc_name] = parsed_npc_data
+			
+			file_name = dir_access.get_next()
+		dir_access.list_dir_end()
+	else:
+		printerr("Failed to open Quest directory: ", path)
+		
+	return result

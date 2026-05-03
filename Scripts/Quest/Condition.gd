@@ -19,7 +19,6 @@ static func string_to_condition(condition: String) -> Array:
 	var arr = condition.split(":", true)
 	# default문 일 경우 tag삽입
 	if !conditionTypes.has(arr[0]):
-		print(arr[0])
 		arr.insert(0, "tag")
 	values.append_array(arr)
 	return values

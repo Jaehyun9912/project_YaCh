@@ -14,7 +14,7 @@ func set_all_item(data: Dictionary):
 	for item_info in items_data:
 		var item_id = item_info.get("item", "")
 		var count = item_info.get("count", 0)
-		if ItemManager.get_item(item_id): # 존재하는 아이템인지 확인
+		if DataManager.item_data.get(item_id): # 존재하는 아이템인지 확인
 			items[item_id] = count
 
 ## 현재 인벤토리 상태를 딕셔너리로 반환
@@ -31,7 +31,7 @@ func get_inventory_contents() -> Array:
 func get_entries() -> Array:
 	var result = []
 	for id in items:
-		var item_data = ItemManager.get_item(id)
+		var item_data = DataManager.item_data.get(id)
 		if item_data:
 			result.append({
 				"item": item_data,
@@ -47,7 +47,7 @@ func add_item(id: String, count: int):
 		_remove_item(id, abs(count))
 
 func _add_item(id: String, count: int):
-	if not ItemManager.get_item(id): return
+	if not DataManager.item_data.get(id): return
 	
 	items[id] = items.get(id, 0) + count
 	item_changed.emit(id, items[id])

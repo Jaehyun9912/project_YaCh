@@ -202,21 +202,21 @@ var quest_list: Array
 @onready var tag_service = TagService
 
 # 퀘스트 수주(수주중 태그 추가)
-func receive_quest(quest):
+func receive_quest(quest: QuestData):
 	quest_list.append(quest)
 	#quest.quest_activate()
 	if tag_service.has_method("change_tag_tree"):
-		tag_service.change_tag_tree(PlayerData, "Quest.process." + quest["id"], 1)
-	print(quest["id"], " Receive, Current QuestCount :", quest_list.size())
+		tag_service.change_tag_tree(PlayerData, "Quest.process." + quest.id, 1)
+	print(quest.id, " Receive, Current QuestCount :", quest_list.size())
 	quest_updated.emit(quest, true)
 
 
 # 퀘스트 클리어(클리어 태그 추가)
-func clear_quest(quest):
+func clear_quest(quest: QuestData):
 	PlayerData.quest_list.erase(quest)
 	if tag_service.has_method("change_tag_tree"):
-		tag_service.change_tag_tree(PlayerData, "Quest.process." + quest["id"], 0)
-		tag_service.change_tag_tree(PlayerData, "Quest.clear." + quest["id"], 1)
+		tag_service.change_tag_tree(PlayerData, "Quest.process." + quest.id, 0)
+		tag_service.change_tag_tree(PlayerData, "Quest.clear." + quest.id, 1)
 	quest_updated.emit(quest, false)
 
 
@@ -246,6 +246,7 @@ func cmp_item(condition: String) -> bool:
 
 # 아티펙트 보유 여부 확인
 func cmp_artifact(condition: String) -> bool:
+	print("Player: Checking artifact condition: ", condition, " clear: ", inventory.get_item_count(condition) > 0)
 	return inventory.get_item_count(condition) > 0
 
 
@@ -256,14 +257,28 @@ func get_item_count(id: String) -> int:
 
 # 현재 해금된 지역 확인
 func cmp_map(arr: Array) -> bool:
-	var dict = data.get("progress", {}).get("map", {})
-	var last_index = arr.size() - 1
-	for i in range(0, last_index):
-		if dict.has(arr[i]):
-			dict = dict[arr[i]]
-		else:
-			return false
-	return dict.has(arr[last_index])
+	var params = arr.duplicate()
+	if params.size() > 0 and params[0] == "map":
+		params.remove_at(0)
+	
+	if params.size() == 0:
+		return false
+		
+	var map_dict = data.get("progress", {}).get("map", {})
+	var map_name = params[0]
+	
+	if params.size() == 1:
+		# 맵 전체 해금 여부 확인
+		return map_dict.has(map_name)
+	
+	# 특정 지역 해금 여부 확인
+	var location_name = params[1]
+	if map_dict.has(map_name):
+		var locations = map_dict[map_name]
+		if typeof(locations) == TYPE_ARRAY:
+			return locations.has(location_name)
+			
+	return false
 
 # 길드 평판 비교
 func cmp_renown(condition: String) -> bool:

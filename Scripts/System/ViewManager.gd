@@ -27,7 +27,7 @@ func get_view():
 		top_panel = current_panel.get_child(0).get_child(0)
 		bottom_panel = current_panel.get_child(0).get_child(1)
 		side_panel = current_scene.get_node("SidePanelLayer/SidePanel")
-		print(side_panel.name)
+		# print(side_panel.name)
 	pass
 
 
