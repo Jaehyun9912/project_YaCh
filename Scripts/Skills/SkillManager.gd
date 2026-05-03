@@ -25,7 +25,7 @@ const SKILL_ACTIVE_TIME = 0.5
 const SKILL_CASTING_CONSTANT = 0.3
 const SKILL_MIN_CASTING_TIME = 0.5
 
-func _ready():
+func load_data_async():
 	# 1. JSON 데이터 로드
 	skills = DataManager.load_datas_dict("Skill/Player", SkillData)
 	var enemy_skills = DataManager.load_datas_dict("Skill/Enemy", SkillData)

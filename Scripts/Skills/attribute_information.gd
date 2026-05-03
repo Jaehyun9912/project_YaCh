@@ -4,7 +4,7 @@ var attribute : Dictionary
 
 const NONE_ATTRIBUTE = "none"
 
-func _ready():
+func load_data_async():
 	# attribute["fire"] = Color.RED
 	# attribute["water"] = Color.BLUE
 	# attribute["dirt"] = Color.SADDLE_BROWN

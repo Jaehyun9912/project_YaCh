@@ -7,11 +7,35 @@ const USER_PATH = "user://"
 # @onready var items = get_data_folder("Item")
 # @onready var artifacts = get_data_folder("Item")
 
-# 임시 리소스
-@onready var enemy_data = load_datas_dict("Enemy", EnemyData)
-@onready var battle_data = load_datas_dict("Battle", BattleData)
-@onready var item_data = load_datas_dict("Item", ItemData)
-@onready var quest_data = load_quest_data()
+var is_ready: bool = false
+signal loading_finished
+
+# 데이터 변수들을 초기화하지 않은 상태로 선언
+var enemy_data: Dictionary = {}
+var battle_data: Dictionary = {}
+var item_data: Dictionary = {}
+var quest_data: Dictionary = {}
+
+func _ready():
+	WorkerThreadPool.add_task(_load_all_data_async)
+
+func _load_all_data_async():
+	print("[DataManager] Async loading started...")
+	
+	enemy_data = load_datas_dict("Enemy", EnemyData)
+	battle_data = load_datas_dict("Battle", BattleData)
+	item_data = load_datas_dict("Item", ItemData)
+	quest_data = load_quest_data()
+	
+	# 다른 매니저의 비동기 로딩 호출
+	if SkillManager.has_method("load_data_async"):
+		SkillManager.load_data_async()
+	if AttributeInformation.has_method("load_data_async"):
+		AttributeInformation.load_data_async()
+	
+	is_ready = true
+	print("[DataManager] Async loading finished.")
+	call_deferred("emit_signal", "loading_finished")
 
 ## 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 null 반환)
 func get_data(data_path: String):

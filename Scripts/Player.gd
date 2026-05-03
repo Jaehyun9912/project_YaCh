@@ -9,7 +9,10 @@ var stat_manager: PlayerStat
 func _ready():
 	stat_manager = PlayerStat.new()
 
-	load_player()
+	if not DataManager.is_ready:
+		DataManager.loading_finished.connect(load_player)
+	else:
+		load_player()
 	
 #region Stat
 # data에서 알아서 값을 뽑아오거나 넣어줌 

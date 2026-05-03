@@ -1,7 +1,18 @@
 extends Control
 
-
-
+func _ready():
+	var start_button = get_node_or_null("Button")
+	if start_button:
+		if not DataManager.is_ready:
+			start_button.disabled = true
+			start_button.text = "데이터 로딩 중..."
+			DataManager.loading_finished.connect(func(): 
+				start_button.disabled = false
+				start_button.text = "게임 시작"
+			)
+		else:
+			start_button.disabled = false
+			start_button.text = "게임 시작"
 
 func show_side_panel():
 	#var side = ViewManager.current_scene.get_node("SidePanelLayer")
