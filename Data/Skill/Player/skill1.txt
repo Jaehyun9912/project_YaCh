@@ -1,4 +1,5 @@
 {
+    "comment": "옛날 파일 txt로 냄겨둔 것",
     "base_attack": {
         "type": "attack",
         "name": "기본 공격",

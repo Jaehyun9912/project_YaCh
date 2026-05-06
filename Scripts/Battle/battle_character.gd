@@ -42,36 +42,49 @@ var current_point: int
 @export var is_player := false
 var tag_service
 
+var character_data
+
 func _ready():
     tag_service = TagService
     # 플레이어라면 PlayerData에 이미 생성된 stat_manager가 있을 것이므로 
     # set_character에서 연결만 해줌.
 
 func _exit_tree():
+    if stat_manager:
+        stat_manager.stat_changed.disconnect(_on_stat_changed)
     if is_player and stat_manager and is_instance_valid(PlayerData):
         stat_manager.update_target(PlayerData)
 
 # 캐릭터 정보 설정 
-func set_character(data: Dictionary, tag_id: String):
-    if is_player:
-        # 플레이어는 PlayerData에 있는 stat_manager를 그대로 참조
-        stat_manager = PlayerData.stat_manager
-        stat_manager.update_target(self )
-    else:
-        # 적은 새로운 Stat 매니저 생성 및 데이터 주입
+func set_character(data, tag_id: String):
+
+    character_data = data
+
+    if data is EnemyData:
         stat_manager = EnemyStat.new()
-        stat_manager.setup(self , data)
+        stat_manager.setup(self , data.stats.to_dict())
+
+        _hp = max_hp # 초기 HP는 최대 HP로 설정
+
+        skills = data.skills
+    else:
+        set_player_character(data)
     
+    _hp_label.text = hp_text_string % [int(_hp), int(max_hp)]
     stat_manager.stat_changed.connect(_on_stat_changed)
     
-    # 초기 HP 설정 (데이터에 없으면 max_hp로 설정)
-    _hp = data.get("hp", max_hp)
-    _hp_label.text = hp_text_string % [int(_hp), int(max_hp)]
-    
-    skills = data.get("skills", [])
     tag = "Battle." + tag_id
     if tag_service.has_method("change_tag_tree"):
         tag_service.change_tag_tree(self , tag, 1)
+
+func set_player_character(data: Dictionary):
+    stat_manager = PlayerData.stat_manager
+    stat_manager.update_target(self)
+    
+    # 초기 HP 설정 (데이터에 없으면 max_hp로 설정)
+    _hp = data.get("hp", max_hp)
+    
+    skills = data.get("skills", [])
 
 # 내부 공용 UI 업데이트 함수
 func _refresh_hp_status(diff: float):

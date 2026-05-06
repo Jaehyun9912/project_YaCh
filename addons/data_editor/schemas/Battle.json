@@ -1,0 +1,99 @@
+{
+  "type": "map",
+  "value_type": "object",
+  "comment": "전투(Battle) 데이터 목록입니다. Key는 BATTLE_ID입니다.",
+  "default": {},
+  "entry_schema": {
+    "type": "object",
+    "comment": "단일 전투 정의",
+    "default": {
+      "display": {
+        "type": "object",
+        "comment": "표시 정보 (현재 미사용)",
+        "default": {
+          "name": { "type": "string", "default": "" },
+          "description": { "type": "string", "default": "" }
+        }
+      },
+      "environment": {
+        "type": "object",
+        "comment": "전투 환경 설정",
+        "default": {
+          "attribute_limit": { "type": "number", "comment": "속성치 최대값", "default": 100 },
+          "initial_points": { "type": "number", "comment": "초기 행동력", "default": 100 }
+        }
+      },
+      "waves": {
+        "type": "array",
+        "comment": "전투 웨이브 구성",
+        "item_schema": {
+          "type": "object",
+          "default": {
+            "wave_name": { "type": "string", "default": "" },
+            "bg_image": { "type": "path", "comment": "웨이브 전용 배경 (선택)", "default": "" },
+            "enemies": {
+              "type": "array",
+              "comment": "등장하는 적 목록",
+              "item_schema": {
+                "type": "object",
+                "default": {
+                  "enemy_id": { "type": "string", "comment": "Enemy 데이터 참조 ID", "default": "" },
+                  "tag": { "type": "string", "comment": "개별 유닛 식별용 태그 (예: boss, minion1)", "default": "Unknown" },
+                  "override_stats": {
+                    "type": "map",
+                    "value_type": "number",
+                    "comment": "능력치 덮어쓰기 (예: {'hp': 500})",
+                    "default": {}
+                  },
+                  "inline_enemy": { "type": "object", "comment": "일회성 적 직접 정의 (Enemy 스키마 구조)", "default": {} }
+                }
+              },
+              "default": []
+            }
+          }
+        },
+        "default": []
+      },
+      "rewards": {
+        "type": "object",
+        "comment": "전투 승리 보상",
+        "default": {
+          "gold": { "type": "any", "comment": "골드 보상 (숫자 또는 {min: n, max: m})", "default": 0 },
+          "items": {
+            "type": "array",
+            "item_schema": {
+              "type": "object",
+              "default": {
+                "id": { "type": "string", "comment": "아이템 ID", "default": "" },
+                "count": { "type": "number", "default": 1 },
+                "chance": { "type": "number", "comment": "획력 확률 (0.0~1.0)", "default": 1.0 }
+              }
+            },
+            "default": []
+          }
+        }
+      },
+      "transitions": {
+        "type": "object",
+        "comment": "전투 종료 후 이동 및 처리",
+        "default": {
+          "entry_location": { "type": "string", "comment": "진입 시 위치 ID (선택)", "default": "" },
+          "on_win": {
+            "type": "object",
+            "default": {
+              "to_location": { "type": "string", "comment": "승리 시 이동할 위치", "default": "" },
+              "message": { "type": "string", "comment": "승리 메시지", "default": "전투 승리!" }
+            }
+          },
+          "on_lose": {
+            "type": "object",
+            "default": {
+              "to_location": { "type": "string", "comment": "패배 시 이동할 위치", "default": "" },
+              "message": { "type": "string", "comment": "패배 메시지", "default": "전투 패배..." }
+            }
+          }
+        }
+      }
+    }
+  }
+}

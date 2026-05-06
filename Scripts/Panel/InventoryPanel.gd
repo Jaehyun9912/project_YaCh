@@ -22,7 +22,7 @@ var isBattle: bool
 var action_list = ["use", "discard", "read"]
 
 # 인벤토리 카테고리
-var category = [["battle", "배틀 아이템"], ["consume", "소모 아이템"], ["artifact", "아티펙트"], ["quest", "퀘스트"]]
+var category = [["useable", "소모품"], ["artifact", "아티펙트"], ["quest", "퀘스트"]]
 
 var cur_category: int
 var read_panel: Control
@@ -56,42 +56,28 @@ func clear_slot():
 # 인벤토리 아이템 데이터 세팅
 func set_item_slot():
 	clear_slot()
-	inventory_data = PlayerData.inventory
-	for i in inventory_data:
-		var item_data = DataManager.get_item_data(i["id"])
-		if item_data["category"] != category[cur_category][0]:
+	var entries = PlayerData.inventory.get_entries()
+	for entry in entries:
+
+		# 카테고리 필터링 (객체 프로퍼티 접근)
+		if entry.item.display.category != category[cur_category][0]:
 			continue
-		var slot = slot_prefab.instantiate()
-		slot.set_script(ItemSlot)
-		slot.set_slot(i)
-		slot.tree_exited.connect(set_slot_info.bind(null))
-		slotContainer.add_child(slot)
-		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
-		slot.set_highlight(false)
+
+		var slot_ui = slot_prefab.instantiate()
+		slot_ui.set_script(ItemSlot)
+		slot_ui.set_slot(entry) # ItemEntry 객체 전달
+		slot_ui.tree_exited.connect(set_slot_info.bind(null))
+		slotContainer.add_child(slot_ui)
+		slot_ui.OnSlotClicked.connect(set_slot_info.bind(slot_ui))
+		slot_ui.set_highlight(false)
 
 # 퀘스트 데이터 세팅
 func set_quest_slot():
-	clear_slot()
-	inventory_data = PlayerData.quest_list
-	for i in inventory_data:
-		var slot = slot_prefab.instantiate()
-		slot.set_script(QuestSlot)
-		slot.set_slot(i)
-		slotContainer.add_child(slot)
-		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
-		slot.set_highlight(false)
+	set_item_slot() # 통합된 로직 사용
 
-# 아티펙트 데이터 세팅
+# 아티팩트 데이터 세팅
 func set_artifact_slot():
-	clear_slot()
-	inventory_data = PlayerData.artifact
-	for i in inventory_data:
-		var slot = slot_prefab.instantiate()
-		slot.set_script(ArtifactSlot)
-		slot.set_slot(i)
-		slotContainer.add_child(slot)
-		slot.OnSlotClicked.connect(set_slot_info.bind(slot))
-		slot.set_highlight(false)
+	set_item_slot() # 통합된 로직 사용
 #endregion
 
 # 슬롯 클릭 시 그 아이템에 맞는 UI 세팅

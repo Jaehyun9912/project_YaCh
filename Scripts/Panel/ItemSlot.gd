@@ -1,35 +1,58 @@
 extends InventorySlot
 class_name ItemSlot
 
-var item_data
+var item_data: ItemData:
+	get: return data.item if data else null
 
 # 아이템 데이터 세팅
-func set_slot(_data):
-	data = _data
-	item_data = DataManager.get_item_data(data["id"])
+func set_slot(_slot_obj):
+	data = _slot_obj
 	countText.show()
 	update_slot()
 
 # 아이템 개수 변동 시 정보 갱신
 func update_slot():
-	nameText.text = item_data["name"]
-	if data.has("count"):
-		countText.text = "x" + str(data["count"])
-		if data["count"] == 0:
+	if item_data:
+		nameText.text = item_data.display.name
+		if data.count > 0:
+			countText.text = "x" + str(data.count)
+		else:
 			self.queue_free()
 	else:
-		countText.hide()
+		self.queue_free()
 
 func get_title():
-	return item_data["name"]
+	return item_data.display.name if item_data else ""
 
 func get_description():
-	return item_data["description"].format(item_data)
+	if item_data:
+		if item_data.logic.effects.size() > 0:
+			return item_data.display.description.format(item_data.logic.effects[0].to_dict())
+		else:
+			return item_data.display.description
+	else:
+		return ""
 
 func get_slot_method_list(condition: Dictionary) -> Array:
 	var arr = ["discard"]
-	if (condition["isBattle"] == true) == (item_data["category"] == "battle"):
+	if item_data == null:
+		return arr
+	
+	# 카테고리가 useable이거나, 효과(effects)가 정의되어 있는 경우 사용 가능으로 판단
+	var can_use = (item_data.display.category == "useable") or (item_data.logic.effects.size() > 0)
+	
+	if not can_use:
+		return arr
+
+	var is_battle = condition.get("isBattle", false)
+	
+	# battle_only 체크
+	if item_data.logic.battle_only:
+		if is_battle:
+			arr.insert(0, "use")
+	else:
 		arr.insert(0, "use")
+		
 	return arr
 
 func use():
@@ -38,10 +61,5 @@ func use():
 
 
 func discard():
-	if data.has("count"):
-		data["count"] -= 1
-		if data["count"] == 0:
-			queue_free()
-			return
-	else:
-		queue_free()
+	if item_data:
+		PlayerData.add_new_item(item_data.id, -1)

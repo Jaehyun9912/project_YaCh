@@ -20,7 +20,7 @@ var ally_count:
 
 var total_speed = 0
 
-func init(battle_characters: Array[Node], map_data: Dictionary, total_point: int):
+func init(battle_characters: Array[Node], wave_data: BattleData.Wave, total_point: int):
 	# turn_char 초기화
 	turn_char.clear()
 	for node in battle_characters:
@@ -29,6 +29,8 @@ func init(battle_characters: Array[Node], map_data: Dictionary, total_point: int
 			
 	enemy_character.clear()
 	ally_character.clear()
+
+	# TODO: 웨이브 데이터에 따라 적 캐릭터 수 설정하기 - 현재는 3명 고정
 	
 	var idx = 0
 	# 행동력 총합 및 캐릭터 정보 설정하기.
@@ -40,9 +42,10 @@ func init(battle_characters: Array[Node], map_data: Dictionary, total_point: int
 		else:
 			enemy_character.append(i)
 			# 적 정보 및 태그 설정
-			if map_data.has("enemys") and idx < map_data["enemys"].size():
-				var data = map_data["enemys"][idx]
-				i.set_character(data, "Enemy." + data.get("tag", "Unknown"))
+			if idx < wave_data.enemies.size():
+				var entry = wave_data.enemies[idx]
+				var enemy_data = entry.instantiate_enemy(DataManager.enemy_data)
+				i.set_character(enemy_data, entry.tag)
 				idx += 1
 			
 		if not i.character_died.is_connected(_on_character_died):
@@ -96,7 +99,6 @@ func _on_battle_scene_turn_character_changed(new_character: BattleCharacter):
 		return
 
 	# 1. 버프 처리
-	var event = BuffHandler.BuffEvent.new()
-	event.type = BuffHandler.BuffEvent.Type.TURN
+	var event = BuffHandler.BuffEvent.new(BuffHandler.BuffEvent.Type.TURN)
 	new_character.stat_manager.update_buffs(event)
 

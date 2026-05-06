@@ -1,0 +1,17 @@
+{
+    "pandora_cube": {
+        "display": {
+            "name": "판도라 큐브",
+            "description": "",
+            "category": "artifact",
+            "rarity": "common",
+            "icon": "res://icon.svg"
+        },
+        "logic": {
+            "max_stack": 1,
+            "location_limit": "forest",
+            "effects": []
+        },
+        "tags": ""
+    }
+}

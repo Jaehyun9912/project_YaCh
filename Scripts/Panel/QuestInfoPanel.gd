@@ -7,6 +7,6 @@ signal on_exit
 @export var description : RichTextLabel
 
 
-func set_quest_info(quest):
-	title.text = quest["title"]
-	description.text = quest["description"]
+func set_quest_info(quest: QuestData):
+	title.text = quest.title
+	description.text = quest.description

@@ -44,7 +44,6 @@ mouse_filter = 2
 [node name="BottomPanel" type="Control" parent="InteractLayer/PanelList"]
 layout_mode = 2
 size_flags_vertical = 3
-size_flags_stretch_ratio = 1.2
 
 [node name="MapUI" parent="InteractLayer/PanelList/BottomPanel" node_paths=PackedStringArray("map") instance=ExtResource("3_nmvnj")]
 layout_mode = 1

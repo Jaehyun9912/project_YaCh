@@ -1,14 +1,32 @@
 {
-	"default_attack": {
-		"type": "attack",
-		"name": "기본 공격",
-		"description": "%d 데미지로 공격한다.\n행동력 10을 소모한다.",
-		"target": "one",
-		"value": 1,
-		"cost": 10,
-		"stat": {
-			"apply_type": "add",
-			"coefficient": 1.2
-		}
-	}
+    "default_attack": {
+        "display": {
+            "name": "기본 공격",
+            "description": "%d 데미지로 공격한다.\n행동력 10을 소모한다.",
+            "owner_type": "enemy",
+            "icon": "res://icon.svg"
+        },
+        "requirements": {
+            "cost": {
+                "point": 10
+            },
+            "cooldown": 0
+        },
+        "execution": {
+            "target": "one",
+            "actions": [
+                {
+                    "type": "damage",
+                    "formula": {
+                        "base": 1,
+                        "scaling_stat": "attack",
+                        "multiplier": 1.2
+                    },
+                    "element": "none",
+                    "effect_id": "",
+                    "chance": 1.0
+                }
+            ]
+        }
+    }
 }

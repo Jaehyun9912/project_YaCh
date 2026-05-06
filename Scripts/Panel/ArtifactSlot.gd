@@ -1,21 +1,22 @@
 extends InventorySlot
 class_name ArtifactSlot
 
-var artifact_data
+var item_data: ItemData:
+	get: return data.item if data else null
 
 # 인벤토리의 아티펙트 슬롯 설정
-func set_slot(_data):
-	data = _data
-	artifact_data = DataManager.get_artifact_data(data)
+func set_slot(_slot_obj):
+	data = _slot_obj
 	countText.hide()
 	update_slot()
 		
 # 슬롯 업데이트
 func update_slot():
-	nameText.text = artifact_data["name"]
+	if item_data:
+		nameText.text = item_data.display.name
 
 func get_title():
-	return artifact_data["name"]
+	return item_data.display.name if item_data else ""
 
 func get_description():
-	return artifact_data["type"]
+	return item_data.display.category if item_data else ""

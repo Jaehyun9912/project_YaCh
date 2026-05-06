@@ -63,7 +63,7 @@ func _ready():
 		if skill == null:
 			btn.lock_disable = true
 		else:
-			btn.set_text(skill.get("name", "Skill"))
+			btn.set_text(skill.display.name)
 	#manager.turn_end.emit()
 	$CastingPanel.battle_panel = self
 
@@ -205,7 +205,7 @@ func _on_peer_skill_button_button_clicked():
 	if skill == null:
 		return
 
-	peer_cooldown = skill.get("cooldown", 0)
+	peer_cooldown = skill.requirements.cooldown
 	print("peer cooldown : ", peer_cooldown)
 
 	peer_button.disabled = true

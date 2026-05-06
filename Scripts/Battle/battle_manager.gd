@@ -69,14 +69,11 @@ var turn_cost:
 	set(value):
 		now_character.current_point = value
 
-# 맵의 JSON 데이터
-var map_data : Dictionary
+# 해당 전투의 데이터
+var battle_data : BattleData
 
 # 전투 종료 여부
 var is_battle_end := false
-
-# 맵 데이터 체크하는 변수들
-var _check = ["enemys"]
 #endregion
 
 #region other funcs
@@ -120,28 +117,22 @@ func add_turn_end_log():
 # 맵 정보 불러오기, 캐릭터 정보 할당하기, 행동력 구해주고 턴 순서에 맞추어 정렬하기
 func _battle_set():
 	# 맵 정보 불러오기
-	var map_name = "World/" + ViewManager.cur_meta_data["World"]
-	map_data = DataManager.get_data(map_name)
-	
-	# 필수 정보 확인하기 
-	if map_data.size() == 0:
-		printerr("No MapData!")
+	var battle_id = ViewManager.cur_meta_data["World"]
+	battle_data = DataManager.battle_data.get(battle_id, null)
+
+	if battle_data == null:
+		printerr("[BattleManager] No BattleData for battle id: ", battle_id)
 		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
-	
-	for i in _check:
-		if map_data.has(i) == false:
-			printerr("No " + i)
-			ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
-			return
+		return
 	
 	# 속성 정보 세팅 
-	attribute_bar.init(map_data.get("attribute", 100))
-	total_point = map_data.get("point", 100)
+	attribute_bar.init(battle_data.environment.attribute_limit)
+	total_point = battle_data.environment.initial_points
 	total_point_add = total_point * 0.2
 	init_total_point = total_point
 
 	# 캐릭터 매니저에게 캐릭터 설정 위임
-	character_manager.init(get_tree().get_nodes_in_group("battle_characters"), map_data, total_point)
+	character_manager.init(get_tree().get_nodes_in_group("battle_characters"), battle_data.waves[0], total_point)
 
 
 # 전투를 관리하는 함수 (await 이용) 
@@ -191,25 +182,21 @@ func change_now_char(new_char : BattleCharacter, point):
 
 #region Skill func
 # 코스트 제거하기 
-func remove_cost(skill):
-	var cost = skill.get("cost", {})
+func remove_cost(skill: SkillData):
+	var cost = skill.requirements.cost
 	
-	if cost is int or cost is float:
-		turn_cost -= cost
-		return
-
 	for i in cost:
 		if i == SkillManager.ACTION_POINT_ID:
 			turn_cost -= cost.get(i, 0)
 		else:
 			attribute_bar.remove_value(i, cost[i])
 
-func set_attribute_change(attribute):
-	for type in attribute:
+func set_attribute_change(element_changes: Dictionary):
+	for type in element_changes:
 		if type == SkillManager.ACTION_POINT_ID:
-			now_character.point += attribute[type]
+			now_character.point += element_changes[type]
 		else:
-			attribute_bar.add_value(type, attribute[type])
+			attribute_bar.add_value(type, element_changes[type])
 	
 
 # 버튼 눌렀을때
@@ -276,12 +263,13 @@ func battle_end(type: END_TYPE):
 			result_panel.process_run()
 			
 		END_TYPE.WIN:
-			result_panel.process_win(map_data)
+			result_panel.process_win(battle_data.rewards)
 
 		END_TYPE.LOSE:
 			result_panel.process_lose()
 
 func _on_end_button_pressed():
+	# TODO: battle_data.transitions 를 바탕으로 다음 맵이나 패널로 이동하기
 	if is_battle_end:
 		ViewManager.load_world(ViewManager.old_map, ViewManager.old_panel)
 		ViewManager.side_panel.set_hide_panel()

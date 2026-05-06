@@ -17,12 +17,12 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-PlayerData="*res://Scripts/Player.gd"
-ViewManager="*res://Scripts/System/ViewManager.gd"
 DataManager="*res://Scripts/System/data_manager.gd"
 SkillManager="*res://Scripts/Skills/SkillManager.gd"
 AttributeInformation="*res://Scripts/Skills/attribute_information.gd"
+ViewManager="*res://Scripts/System/ViewManager.gd"
 TagService="*res://Scripts/Tag/TagManager.gd"
+PlayerData="*res://Scripts/Player.gd"
 
 [display]
 
@@ -35,6 +35,10 @@ window/handheld/orientation=1
 [dotnet]
 
 project/assembly_name="YaCh"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/data_editor/plugin.cfg")
 
 [filesystem]
 

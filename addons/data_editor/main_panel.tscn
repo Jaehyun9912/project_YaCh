@@ -1,0 +1,263 @@
+[gd_scene load_steps=17 format=3 uid="uid://bbtq03s0r3onq"]
+
+[ext_resource type="Theme" uid="uid://do1u7rodrg2g5" path="res://addons/data_editor/assets/editor_theme.tres" id="1_8vgpy"]
+[ext_resource type="Script" path="res://addons/data_editor/scripts/main_panel.gd" id="2_e6kjt"]
+[ext_resource type="Texture2D" uid="uid://cm7dhl5grbtro" path="res://addons/data_editor/assets/add-folder-icon.png" id="3_3g1di"]
+[ext_resource type="Texture2D" uid="uid://bq0suw1abonbx" path="res://addons/data_editor/assets/save-icon.png" id="3_hlnnn"]
+[ext_resource type="Texture2D" uid="uid://ky2ewgvbuc2j" path="res://addons/data_editor/assets/open-folder-outline-icon.png" id="4_04fny"]
+[ext_resource type="Texture2D" uid="uid://u6ddsqxh3njt" path="res://addons/data_editor/assets/plus-icon.png" id="5_ers2c"]
+[ext_resource type="Script" path="res://addons/data_editor/scripts/file_system.gd" id="7_dilvo"]
+[ext_resource type="Script" path="res://addons/data_editor/scripts/editor.gd" id="8_7ubte"]
+[ext_resource type="PackedScene" uid="uid://d15dld32egoyn" path="res://addons/data_editor/editor_inspector.tscn" id="9_owfh7"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_q240q"]
+bg_color = Color(0.113725, 0.133333, 0.176471, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ta8xu"]
+
+[sub_resource type="Image" id="Image_l7qyu"]
+data = {
+"data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_ndkqm"]
+image = SubResource("Image_l7qyu")
+
+[sub_resource type="LabelSettings" id="LabelSettings_22qf7"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_yd2ax"]
+font_size = 20
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bt6m7"]
+
+[node name="MainPanel" type="PanelContainer" node_paths=PackedStringArray("package_title", "file_system", "editor", "inspector", "save_button", "open_folder_button", "add_file_button", "add_folder_button", "delete_button")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 778.0
+offset_bottom = 312.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_8vgpy")
+theme_override_styles/panel = SubResource("StyleBoxFlat_q240q")
+script = ExtResource("2_e6kjt")
+package_title = NodePath("VBoxContainer/TopBar/MarginContainer/HBoxContainer/CurrentFile")
+file_system = NodePath("VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/FileSystem")
+editor = NodePath("VBoxContainer/MainArea/HBoxContainer/RightSplit/MainEditor/Editor")
+inspector = NodePath("VBoxContainer/MainArea/HBoxContainer/RightSplit/RightSidebar/Inspector")
+save_button = NodePath("VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left/Save")
+open_folder_button = NodePath("VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left/Load")
+add_file_button = NodePath("VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left/Add")
+add_folder_button = NodePath("VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer/Button")
+delete_button = NodePath("VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left/Delete")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="TopBar" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.4
+theme = ExtResource("1_8vgpy")
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/TopBar"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/TopBar/MarginContainer"]
+layout_mode = 2
+
+[node name="Left" type="HBoxContainer" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Title" type="Label" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 2.0
+text = "Godot JSON Editor"
+label_settings = SubResource("LabelSettings_ta8xu")
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="Save" type="Button" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+tooltip_text = "현재 JSON 파일 저장 (Ctrl+S)"
+disabled = true
+icon = ExtResource("3_hlnnn")
+flat = true
+expand_icon = true
+metadata/_edit_use_anchors_ = true
+
+[node name="Load" type="Button" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+text = "
+"
+icon = ExtResource("4_04fny")
+flat = true
+expand_icon = true
+metadata/_edit_use_anchors_ = true
+
+[node name="Add" type="Button" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+tooltip_text = "현재 파일 기준 항목 추가"
+text = "
+"
+icon = ExtResource("5_ers2c")
+flat = true
+expand_icon = true
+
+[node name="Delete" type="Button" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+tooltip_text = "현재 파일 삭제"
+disabled = true
+text = "
+"
+icon = SubResource("ImageTexture_ndkqm")
+flat = true
+expand_icon = true
+
+[node name="Control" type="Control" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer/Left"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.3
+
+[node name="CurrentFile" type="Label" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = ExtResource("1_8vgpy")
+text = "Package: res://Data"
+label_settings = SubResource("LabelSettings_22qf7")
+
+[node name="Search" type="LineEdit" parent="VBoxContainer/TopBar/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Search..."
+
+[node name="MainArea" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 20.0
+theme = ExtResource("1_8vgpy")
+
+[node name="HBoxContainer" type="HSplitContainer" parent="VBoxContainer/MainArea"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+theme_override_constants/autohide = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/MainArea/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MainArea/HBoxContainer/PanelContainer"]
+layout_mode = 2
+theme = ExtResource("1_8vgpy")
+theme_override_constants/margin_top = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="Control" parent="VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.1
+
+[node name="Title" type="Label" parent="VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+offset_right = 263.0
+offset_bottom = 31.0
+size_flags_horizontal = 3
+size_flags_vertical = 1
+size_flags_stretch_ratio = 3.81
+theme = ExtResource("1_8vgpy")
+text = "   File System"
+label_settings = SubResource("LabelSettings_yd2ax")
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 1.0
+anchor_top = 0.352
+anchor_right = 1.0
+anchor_bottom = 0.352
+offset_left = -41.0
+offset_top = -15.488
+offset_right = -9.00003
+offset_bottom = 15.512
+grow_horizontal = 0
+grow_vertical = 2
+tooltip_text = "경로를 선택해 새 JSON 파일 생성"
+icon = ExtResource("3_3g1di")
+flat = true
+expand_icon = true
+
+[node name="HSeparator" type="HSeparator" parent="VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 1
+anchors_preset = -1
+anchor_top = 0.955
+anchor_right = 1.0
+anchor_bottom = 0.955
+offset_top = -2.02
+offset_bottom = 1.98
+metadata/_edit_use_anchors_ = true
+
+[node name="FileSystem" type="Tree" parent="VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 2.2
+theme = ExtResource("1_8vgpy")
+hide_root = true
+script = ExtResource("7_dilvo")
+
+[node name="RightSplit" type="HSplitContainer" parent="VBoxContainer/MainArea/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+size_flags_stretch_ratio = 3.5
+theme_override_constants/separation = 12
+theme_override_constants/autohide = 0
+
+[node name="MainEditor" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer/RightSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 3.0
+
+[node name="Editor" type="Tree" parent="VBoxContainer/MainArea/HBoxContainer/RightSplit/MainEditor"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("1_8vgpy")
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bt6m7")
+columns = 3
+column_titles_visible = true
+hide_root = true
+select_mode = 1
+script = ExtResource("8_7ubte")
+
+[node name="RightSidebar" type="VBoxContainer" parent="VBoxContainer/MainArea/HBoxContainer/RightSplit"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+
+[node name="Inspector" parent="VBoxContainer/MainArea/HBoxContainer/RightSplit/RightSidebar" instance=ExtResource("9_owfh7")]
+layout_mode = 2
+
+[connection signal="item_selected" from="VBoxContainer/MainArea/HBoxContainer/PanelContainer/MarginContainer/VBoxContainer/FileSystem" to="." method="_on_file_system_item_selected"]

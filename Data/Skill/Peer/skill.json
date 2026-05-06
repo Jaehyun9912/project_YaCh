@@ -1,13 +1,35 @@
 {
     "peer_heal1": {
-        "name": "Peer Heal I",
-        "description": "자신을 약간 치유합니다.",
-        "type": "attack",
-        "target": "self",
-        "value": -10,
-        "cooldown": 3,
-        "requirement": {
-            "fire": 10
+        "display": {
+            "name": "Peer Heal I",
+            "description": "자신을 약간 치유합니다.",
+            "owner_type": "peer",
+            "icon": "res://icon.svg"
+        },
+        "requirements": {
+            "cost": {},
+            "condition": {
+                "stat": "fire",
+                "op": ">=",
+                "value": 10
+            },
+            "cooldown": 3
+        },
+        "execution": {
+            "target": "self",
+            "actions": [
+                {
+                    "type": "buff",
+                    "formula": {
+                        "base": 10,
+                        "scaling_stat": "max_hp",
+                        "multiplier": 0.0
+                    },
+                    "element": "none",
+                    "effect_id": "",
+                    "chance": 1.0
+                }
+            ]
         }
     }
-}   
+}

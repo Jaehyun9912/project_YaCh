@@ -3,17 +3,47 @@ extends Node
 const DEFAULT_PATH = "res://Data/"
 const USER_PATH = "user://"
 
-@onready var items = get_data("Item/item")
-@onready var artifacts = get_data("Item/artifact")
+# Item 리팩토링 이전 임시 리소스
+# @onready var items = get_data_folder("Item")
+# @onready var artifacts = get_data_folder("Item")
 
-# 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 null 반환)
-# 기존에 Dictionary를 반환하던 표시는 JSON Array를 반환하지 못해 제거
+var is_ready: bool = false
+signal loading_finished
+
+# 데이터 변수들을 초기화하지 않은 상태로 선언
+var enemy_data: Dictionary = {}
+var battle_data: Dictionary = {}
+var item_data: Dictionary = {}
+var quest_data: Dictionary = {}
+
+func _ready():
+	WorkerThreadPool.add_task(_load_all_data_async)
+
+func _load_all_data_async():
+	print("[DataManager] Async loading started...")
+	
+	enemy_data = load_datas_dict("Enemy", EnemyData)
+	battle_data = load_datas_dict("Battle", BattleData)
+	item_data = load_datas_dict("Item", ItemData)
+	quest_data = load_quest_data()
+	
+	# 다른 매니저의 비동기 로딩 호출
+	if SkillManager.has_method("load_data_async"):
+		SkillManager.load_data_async()
+	if AttributeInformation.has_method("load_data_async"):
+		AttributeInformation.load_data_async()
+	
+	is_ready = true
+	print("[DataManager] Async loading finished.")
+	call_deferred("emit_signal", "loading_finished")
+
+## 프로젝트의 Data 폴더에서 json 파일을 가져오는 함수 (실패시 null 반환)
 func get_data(data_path: String):
 	var path = DEFAULT_PATH + data_path
 	if not data_path.ends_with(".json"):
 		path += ".json"
 	
-	# 경로에 파일이 없을 경우 빈 딕셔너리 반환 
+	# 경로에 파일이 없을 경우 null 반환
 	if not FileAccess.file_exists(path):
 		printerr("NoFileInPath " + path)
 		return null
@@ -29,7 +59,7 @@ func get_data(data_path: String):
 		printerr(json.get_error_message())
 		return null
 	
-# 프로젝트의 Data 폴더에서 특정 폴더의 모든 json 파일을 읽어서 합쳐오는 함수
+## 프로젝트의 Data 폴더에서 특정 폴더의 모든 json 파일을 읽어서 합쳐오는 함수
 func get_data_folder(data_path: String):
 	var path = DEFAULT_PATH + data_path
 	var combined_data = {}
@@ -73,7 +103,7 @@ func get_data_folder(data_path: String):
 	return combined_data
 		
 	
-# 프로젝의 user 경로에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
+## 프로젝의 user 경로에서 json 파일을 가져오는 함수 (실패시 빈 딕셔너리 반환)
 func load_data(data_path: String) -> Dictionary:
 	var path = USER_PATH + data_path + ".json"
 	
@@ -103,35 +133,69 @@ func save_data(save: Dictionary, data_path: String) -> void:
 	var json_string = JSON.stringify(save)
 	
 	save_file.store_line(json_string)
-		
-# 네임스페이스 관계 없이 아이템 정보 가져오기 
-func get_item_artifact_data(id: String):
-	var sp = id.split(":")
-	if sp.size() == 1 or sp[0] == "item":
-		return get_item_data(id)
+
+## 데이터 로드 함수
+func create_data_dict(json: Dictionary, data_class: GDScript) -> Dictionary:
+	if json == null:
+		printerr("create_data_dict received null json!")
+		return {}
+	if not data_class.has_method("from_dict"):
+		printerr("create_data_dict received invalid data_class: " + str(data_class))
+		return {}
+
+	var dict = {}
+	for key in json:
+		dict[key] = data_class.from_dict(key, json[key])
+	return dict
+
+## 데이터 로드 함수 (특정 폴더의 모든 json 파일을 읽어서 합쳐오는 함수)
+func load_datas_dict(data_path: String, data_class: GDScript) -> Dictionary:
+	var json_data = get_data_folder(data_path)
+	if json_data != null:
+		return create_data_dict(json_data, data_class)
 	else:
-		return get_artifact_data(id)
-		
-# 들어온 ID에 해당하는 아이템의 정보가 담긴 딕셔너리 반환 
-func get_item_data(id: String) -> Dictionary:
-	var sp = id.split(":")
-	if sp.size() > 1 and sp[0] == "item":
-		id = sp[1]
-		
-	if items.has(id):
-		return items[id]
-	else:
-		printerr("잘못된 아이템 ID! : " + id)
-		return Dictionary()
-		
-# 들어온 ID에 해당하는 아티팩트의 정보가 담긴 딕셔너리 반환 
-func get_artifact_data(id: String) -> Dictionary:
-	var sp = id.split(":")
-	if sp.size() > 1 and sp[0] == "artifact":
-		id = sp[1]
+		printerr("load_datas_dict failed to load data from: " + data_path)
+		return {}
+
+## 퀘스트 데이터를 로드하여 QuestData 객체로 캐싱하는 함수
+func load_quest_data() -> Dictionary:
+	var result = {}
+	var path = DEFAULT_PATH + "Quest"
 	
-	if artifacts.has(id):
-		return artifacts[id]
+	if not DirAccess.dir_exists_absolute(path):
+		printerr("Quest folder not found at: ", path)
+		return {}
+
+	var dir_access = DirAccess.open(path)
+	if dir_access:
+		dir_access.list_dir_begin()
+		var file_name = dir_access.get_next()
+		
+		while file_name != "":
+			if file_name == "." or file_name == "..":
+				file_name = dir_access.get_next()
+				continue
+				
+			if not dir_access.current_is_dir() and file_name.ends_with(".json"):
+				var npc_name = file_name.replace(".json", "")
+				var raw_data = get_data("Quest/" + npc_name)
+				
+				if raw_data:
+					var parsed_npc_data = {}
+					for key in raw_data:
+						if typeof(raw_data[key]) == TYPE_ARRAY:
+							var quest_list = []
+							for q_dict in raw_data[key]:
+								quest_list.append(QuestData.from_dict(q_dict))
+							parsed_npc_data[key] = quest_list
+						else:
+							# guild ID 등 메타데이터 보존
+							parsed_npc_data[key] = raw_data[key]
+					result[npc_name] = parsed_npc_data
+			
+			file_name = dir_access.get_next()
+		dir_access.list_dir_end()
 	else:
-		printerr("잘못된 아티팩트 ID! : " + id)
-		return Dictionary()
+		printerr("Failed to open Quest directory: ", path)
+		
+	return result

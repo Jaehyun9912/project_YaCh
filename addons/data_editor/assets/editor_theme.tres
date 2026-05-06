@@ -1,0 +1,19 @@
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://do1u7rodrg2g5"]
+
+[ext_resource type="FontFile" uid="uid://by3bmsr10n5a2" path="res://addons/data_editor/assets/zed-mono-extended.ttf" id="1_got0v"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n33pr"]
+bg_color = Color(0.184314, 0.203922, 0.25098, 1)
+border_color = Color(0.0862745, 0.0862745, 0.0862745, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6dohu"]
+bg_color = Color(0.184314, 0.203922, 0.25098, 1)
+
+[resource]
+Label/fonts/font = ExtResource("1_got0v")
+MarginContainer/constants/margin_bottom = 3
+MarginContainer/constants/margin_left = 3
+MarginContainer/constants/margin_right = 3
+MarginContainer/constants/margin_top = 3
+PanelContainer/styles/panel = SubResource("StyleBoxFlat_n33pr")
+Tree/styles/panel = SubResource("StyleBoxFlat_6dohu")

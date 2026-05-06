@@ -1,0 +1,84 @@
+{
+  "type": "object",
+  "comment": "월드 맵 데이터 스키마 (격자 기반 v2.1)",
+  "default": {
+    "map_config": {
+      "type": "object",
+      "comment": "맵 전역 설정",
+      "default": {
+        "name": { "type": "string", "comment": "맵 이름", "default": "" },
+        "theme": { "type": "string", "comment": "테마 (meadow, desert, urban 등)", "default": "meadow" },
+        "background": { "type": "path", "comment": "배경 텍스처 경로", "default": "" },
+        "auto_connect_range": { "type": "number", "comment": "격자 자동 연결 범위 (기본: 1.5)", "default": 1.5 },
+        "grid_size": { "type": "number", "comment": "UI 격자 픽셀 크기", "default": 32 }
+      }
+    },
+    "points": {
+      "type": "map",
+      "value_type": "object",
+      "comment": "지역/노드 리스트 (Key: LOCATION_ID)",
+      "default": {},
+      "entry_schema": {
+        "type": "object",
+        "default": {
+          "display_name": { "type": "string", "comment": "표시 이름", "default": "" },
+          "type": { 
+            "type": "enum:settlement,path,dungeon,interest", 
+            "comment": "지점 유형", 
+            "default": "path" 
+          },
+          "position": {
+            "type": "object",
+            "comment": "격자 좌표",
+            "default": {
+              "x": { "type": "number", "default": 0 },
+              "y": { "type": "number", "default": 0 }
+            }
+          },
+          "visibility": {
+            "type": "enum:visible,hidden,fog_of_war",
+            "comment": "가시성 설정",
+            "default": "visible"
+          },
+          "content_id": { "type": "string", "comment": "콘텐츠 ID (선택)", "default": "", "optional": true },
+          "unlock_conditions": {
+            "type": "array",
+            "comment": "해금 조건 (포맷: node:id:state:cleared)",
+            "item_schema": { "type": "string", "default": "" },
+            "default": []
+          },
+          "metadata": {
+            "type": "object",
+            "comment": "기타 메타데이터",
+            "default": {
+              "has_facility": { "type": "boolean", "comment": "시설 존재 여부", "default": false },
+              "description": { "type": "string", "comment": "상세 설명", "default": "" }
+            }
+          }
+        }
+      }
+    },
+    "navigation_overrides": {
+      "type": "array",
+      "comment": "경로 예외 처리 및 스타일 설정",
+      "item_schema": {
+        "type": "object",
+        "default": {
+          "from": { "type": "string", "comment": "시작 노드 ID", "default": "" },
+          "to": { "type": "string", "comment": "대상 노드 ID", "default": "" },
+          "type": { 
+            "type": "enum:blocked,one_way,hidden_path", 
+            "comment": "경로 특성", 
+            "default": "blocked" 
+          },
+          "line_style": { 
+            "type": "enum:default,hazard,shortcut", 
+            "comment": "UI 연결선 스타일", 
+            "default": "default" 
+          }
+        }
+      },
+      "default": []
+    }
+  }
+}

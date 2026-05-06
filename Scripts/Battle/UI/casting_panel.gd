@@ -49,9 +49,9 @@ func _on_end_tween():
 func _set_button_by_type(button_type: CastingButtonType):
 	match button_type:
 		CastingButtonType.Counter:
-			useable_skills = SkillManager.get_useable_special_skills(SkillManager.SpecialSkillType.COUNTER, battle_panel.current_charcter.point, battle_panel.manager.attribute_bar)
+			useable_skills = SkillManager.get_useable_special_skills(SkillData.SkillType.SPECIAL_COUNTER, battle_panel.now_character.current_point, battle_panel.attribute_bar)
 		CastingButtonType.Parrying:
-			useable_skills = SkillManager.get_useable_special_skills(SkillManager.SpecialSkillType.PARRYING, battle_panel.current_charcter.point, battle_panel.manager.attribute_bar)
+			useable_skills = SkillManager.get_useable_special_skills(SkillData.SkillType.SPECIAL_PARRY, battle_panel.now_character.current_point, battle_panel.attribute_bar)
 		_:
 			useable_skills = []
 
@@ -59,7 +59,7 @@ func _set_button_by_type(button_type: CastingButtonType):
 	var index = 0
 	for i in useable_skills:
 		button_manager.buttons[index].visible = true
-		button_manager.buttons[index].set_text(SkillManager.special_skills[i].get("name", ""))
+		button_manager.buttons[index].set_text(SkillManager.special_skills[i].display.name)
 		index += 1
 		if index >= 4:
 			break
@@ -80,8 +80,8 @@ func _on_skill_button_manager_skill_activated(button_index, _target):
 	callback_func.call(false)
 
 	# 카운터/패링 스킬 코스트, 이펙트 적용
-	var skill = SkillManager.special_skills[useable_skills[button_index]]
+	var skill: SkillData = SkillManager.special_skills[useable_skills[button_index]]
 	battle_panel.manager.remove_cost(skill)
-	battle_panel.manager.set_attribute_change(skill)
+	battle_panel.manager.set_attribute_change(skill.execution.element)
 	
 	visible = false
